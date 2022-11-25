@@ -1,6 +1,6 @@
 {
   "name": "@kuflow/kuflow-engine-client-sample",
-  "version": "0.2.0-next.0",
+  "version": "0.2.0-next.1",
   "private": true,
   "scripts": {
     "build": "npm run build:typescript",
@@ -20,8 +20,8 @@
     ]
   },
   "dependencies": {
-    "@kuflow/kuflow-engine-client-activity-kuflow": "0.2.0-next.0",
-    "@kuflow/kuflow-engine-client-core": "0.2.0-next.0",
+    "@kuflow/kuflow-engine-client-activity-kuflow": "0.2.0-next.1",
+    "@kuflow/kuflow-engine-client-core": "0.2.0-next.1",
     "@kuflow/kuflow-rest-client": "0.0.2-4",
     "@temporalio/activity": "1.4.4",
     "@temporalio/client": "1.4.4",
