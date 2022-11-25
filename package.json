@@ -35,7 +35,8 @@
     "pack": "npm pack 2>&1",
     "prettier": "npm run prettier:check",
     "prettier:check": "prettier --check .",
-    "prettier:write": "prettier --write ."
+    "prettier:write": "prettier --write .",
+    "release": "release-it"
   },
   "devDependencies": {
     "@tsconfig/node16": "1.0.3",
