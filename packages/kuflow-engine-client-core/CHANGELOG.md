@@ -1,5 +1,11 @@
 # @kuflow/kuflow-engine-client-core
 
+## 0.2.0-next.2
+
+### Patch Changes
+
+- Add package.json keywords
+
 ## 0.2.0-next.1
 
 ### Patch Changes

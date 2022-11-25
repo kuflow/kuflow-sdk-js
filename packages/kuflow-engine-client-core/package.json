@@ -1,6 +1,13 @@
 {
   "name": "@kuflow/kuflow-engine-client-core",
-  "version": "0.2.0-next.1",
+  "version": "0.2.0-next.2",
+  "keywords": [
+    "node",
+    "typescript",
+    "kuflow",
+    "workflows",
+    "temporalio"
+  ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [

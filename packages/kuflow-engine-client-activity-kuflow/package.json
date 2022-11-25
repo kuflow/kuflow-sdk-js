@@ -1,6 +1,13 @@
 {
   "name": "@kuflow/kuflow-engine-client-activity-kuflow",
-  "version": "0.2.0-next.1",
+  "version": "0.2.0-next.2",
+  "keywords": [
+    "node",
+    "typescript",
+    "kuflow",
+    "workflows",
+    "temporalio"
+  ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -14,7 +21,7 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-engine-client-core": "0.2.0-next.1",
+    "@kuflow/kuflow-engine-client-core": "0.2.0-next.2",
     "@kuflow/kuflow-rest-client": "0.0.2-4",
     "@temporalio/activity": "1.4.4"
   },
