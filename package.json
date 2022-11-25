@@ -25,11 +25,14 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "build:watch": "npm run build:watch --workspaces",
+    "clean": "npm run clean --workspaces",
     "format": "npm run format:write",
     "format:write": "npm run prettier:write && npm run lint:fix",
     "lint": "npm run lint:check",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
+    "prepack": "npm run build",
+    "pack": "npm pack 2>&1",
     "prettier": "npm run prettier:check",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write ."
