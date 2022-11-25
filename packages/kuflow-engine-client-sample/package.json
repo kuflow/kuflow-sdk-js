@@ -27,5 +27,8 @@
     "@temporalio/client": "1.4.4",
     "@temporalio/worker": "1.4.4",
     "@temporalio/workflow": "1.4.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

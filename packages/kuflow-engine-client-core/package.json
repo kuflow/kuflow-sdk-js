@@ -16,5 +16,8 @@
   "dependencies": {
     "@kuflow/kuflow-rest-client": "0.0.2-4",
     "@temporalio/worker": "1.4.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
