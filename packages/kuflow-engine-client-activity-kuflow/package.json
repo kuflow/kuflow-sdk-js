@@ -1,0 +1,24 @@
+{
+  "name": "@kuflow/kuflow-engine-client-activity-kuflow",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc --build",
+    "build:watch": "npm run clean && npm run build:typescript -- --watch",
+    "clean": "rimraf lib tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@kuflow/kuflow-engine-client-core": "file:../kuflow-engine-client-core",
+    "@kuflow/kuflow-rest-client": "0.0.2-4",
+    "@temporalio/activity": "1.4.4"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.0"
+  }
+}

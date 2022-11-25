@@ -1,0 +1,31 @@
+{
+  "name": "@kuflow/kuflow-engine-client-sample",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc --build",
+    "build:watch": "npm run clean && npm run build:typescript -- --watch",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "start": "ts-node src/worker.ts",
+    "start:watch": "nodemon src/worker.ts"
+  },
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "ext": "ts",
+    "watch": [
+      "src"
+    ]
+  },
+  "dependencies": {
+    "@kuflow/kuflow-engine-client-activity-kuflow": "file:../kuflow-engine-client-activity-kuflow",
+    "@kuflow/kuflow-engine-client-core": "file:../kuflow-engine-client-core",
+    "@kuflow/kuflow-rest-client": "0.0.2-4",
+    "@temporalio/activity": "1.4.4",
+    "@temporalio/client": "1.4.4",
+    "@temporalio/worker": "1.4.4",
+    "@temporalio/workflow": "1.4.4"
+  }
+}
