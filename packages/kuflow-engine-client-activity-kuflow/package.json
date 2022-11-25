@@ -14,11 +14,8 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-engine-client-core": "file:../kuflow-engine-client-core",
+    "@kuflow/kuflow-engine-client-core": "0.1.0",
     "@kuflow/kuflow-rest-client": "0.0.2-4",
     "@temporalio/activity": "1.4.4"
-  },
-  "devDependencies": {
-    "prettier": "^2.8.0"
   }
 }

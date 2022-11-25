@@ -1,5 +1,6 @@
 # Ignore all dot files except
 .*
+!.changeset
 !.eslintignore
 !.eslintrc.json
 !.nvmrc
@@ -8,7 +9,6 @@
 !.editorconfig
 !.gitattributes
 !.gitignore
-!.release-it.json
 
 ######################
 # Node

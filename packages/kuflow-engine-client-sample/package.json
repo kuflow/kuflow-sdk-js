@@ -20,8 +20,8 @@
     ]
   },
   "dependencies": {
-    "@kuflow/kuflow-engine-client-activity-kuflow": "file:../kuflow-engine-client-activity-kuflow",
-    "@kuflow/kuflow-engine-client-core": "file:../kuflow-engine-client-core",
+    "@kuflow/kuflow-engine-client-activity-kuflow": "0.1.0",
+    "@kuflow/kuflow-engine-client-core": "0.1.0",
     "@kuflow/kuflow-rest-client": "0.0.2-4",
     "@temporalio/activity": "1.4.4",
     "@temporalio/client": "1.4.4",
