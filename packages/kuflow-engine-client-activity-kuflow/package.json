@@ -8,6 +8,16 @@
     "workflows",
     "temporalio"
   ],
+  "homepage": "https://github.com/kuflow/kuflow-engine-client-js",
+  "bugs": {
+    "url": "https://github.com/kuflow/kuflow-engine-client-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuflow/kuflow-engine-client-js.git"
+  },
+  "license": "MIT",
+  "author": "KuFlow S.L.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -22,7 +32,6 @@
   },
   "dependencies": {
     "@kuflow/kuflow-engine-client-core": "0.2.0-next.2",
-    "@kuflow/kuflow-rest-client": "0.0.2-4",
     "@temporalio/activity": "1.4.4"
   },
   "publishConfig": {

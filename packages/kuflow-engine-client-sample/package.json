@@ -9,6 +9,16 @@
     "workflows",
     "temporalio"
   ],
+  "homepage": "https://github.com/kuflow/kuflow-engine-client-js",
+  "bugs": {
+    "url": "https://github.com/kuflow/kuflow-engine-client-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuflow/kuflow-engine-client-js.git"
+  },
+  "license": "MIT",
+  "author": "KuFlow S.L.",
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc --build",

@@ -150,14 +150,6 @@ export interface KuFlowActivities {
   KuFlow_Engine_createTask: (request: CreateTaskRequest) => Promise<CreateTaskResponse>
 
   /**
-   * Create a Task and optionally fill its elements. The activity is finished when the <strong>"COMPLETED"</strong> or
-   * <strong>"CANCELLED"</strong> event is received from KuFlow. This is useful in KuFlow tasks where you have to wait for an external
-   * agent, usually a human, to complete it.
-   *
-   * @param request must not be {@literal null}.
-   */
-  KuFlow_Engine_createTaskAndWaitFinished: (request: CreateTaskRequest) => Promise<void>
-  /**
    * Complete a task.
    *
    * <p>Allow to complete a claimed task by the principal.
@@ -196,7 +188,7 @@ export interface KuFlowActivities {
 /**
  * KuFlow activities to be used in Temporal.
  */
-export const createKuFlowActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowActivities => {
+export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowActivities => {
   const kuflowRestClient = kuFlowEngine.kuflowRestClient
 
   return {
@@ -210,7 +202,6 @@ export const createKuFlowActivities = (kuFlowEngine: KuFlowEngineConnection): Ku
     KuFlow_Engine_findTasks,
     KuFlow_Engine_retrieveTask,
     KuFlow_Engine_createTask,
-    KuFlow_Engine_createTaskAndWaitFinished,
     KuFlow_Engine_completeTask,
     KuFlow_Engine_claimTask,
     KuFlow_Engine_assignTask,
@@ -320,13 +311,6 @@ export const createKuFlowActivities = (kuFlowEngine: KuFlowEngineConnection): Ku
     }
   }
 
-  async function KuFlow_Engine_createTaskAndWaitFinished(request: CreateTaskRequest): Promise<void> {
-    const activityToken = Context.current().info.base64TaskToken
-    await kuflowRestClient.taskOperations.createTask(request.task, { activityToken })
-
-    throw new CompleteAsyncError()
-  }
-
   async function KuFlow_Engine_completeTask(request: CompleteTaskRequest): Promise<CompleteTaskResponse> {
     const task = await kuflowRestClient.taskOperations.actionsTaskComplete(request.taskId)
 
@@ -361,5 +345,34 @@ export const createKuFlowActivities = (kuFlowEngine: KuFlowEngineConnection): Ku
     return {
       task,
     }
+  }
+}
+
+export interface KuFlowAsyncActivities {
+  /**
+   * Create a Task and optionally fill its elements. The activity is finished when the <strong>"COMPLETED"</strong> or
+   * <strong>"CANCELLED"</strong> event is received from KuFlow. This is useful in KuFlow tasks where you have to wait for an external
+   * agent, usually a human, to complete it.
+   *
+   * @param request must not be {@literal null}.
+   */
+  KuFlow_Engine_createTaskAndWaitFinished: (request: CreateTaskRequest) => Promise<void>
+}
+
+/**
+ * KuFlow Async activities to be used in Temporal.
+ */
+export const createKuFlowAsyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowAsyncActivities => {
+  const kuflowRestClient = kuFlowEngine.kuflowRestClient
+
+  return {
+    KuFlow_Engine_createTaskAndWaitFinished,
+  }
+
+  async function KuFlow_Engine_createTaskAndWaitFinished(request: CreateTaskRequest): Promise<void> {
+    const activityToken = Context.current().info.base64TaskToken
+    await kuflowRestClient.taskOperations.createTask(request.task, { activityToken })
+
+    throw new CompleteAsyncError()
   }
 }

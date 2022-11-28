@@ -21,11 +21,20 @@
  * THE SOFTWARE.
  */
 // Only import the activity types
-import type { createKuFlowActivities } from '@kuflow/kuflow-engine-client-activity-kuflow'
+import type {
+  createKuFlowAsyncActivities,
+  createKuFlowSyncActivities,
+} from '@kuflow/kuflow-engine-client-activity-kuflow'
 import { LoggerSinks, proxyActivities, proxySinks } from '@temporalio/workflow'
 
-const kuFlowActivities = proxyActivities<ReturnType<typeof createKuFlowActivities>>({
-  startToCloseTimeout: '1 minute',
+const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({
+  startToCloseTimeout: '10 minutes',
+  scheduleToCloseTimeout: '356 days',
+})
+
+const kuFlowAsyncActivities = proxyActivities<ReturnType<typeof createKuFlowAsyncActivities>>({
+  startToCloseTimeout: '1 day',
+  scheduleToCloseTimeout: '356 days',
 })
 
 interface WorkflowRequest {
@@ -39,10 +48,10 @@ interface WorkflowResponse {
 const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
 
 /** A workflow that simply calls an activity */
-export async function MyWorkfow(request: WorkflowRequest): Promise<WorkflowResponse> {
-  logger.info('Entra', {})
+export async function MyWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
+  logger.info('Start', {})
 
-  await kuFlowActivities.KuFlow_Engine_createTaskAndWaitFinished({
+  await kuFlowAsyncActivities.KuFlow_Engine_createTaskAndWaitFinished({
     task: {
       objectType: 'TASK',
       processId: request.processId,
@@ -52,11 +61,11 @@ export async function MyWorkfow(request: WorkflowRequest): Promise<WorkflowRespo
     },
   })
 
-  await kuFlowActivities.KuFlow_Engine_completeProcess({
+  await kuFlowSyncActivities.KuFlow_Engine_completeProcess({
     processId: request.processId,
   })
 
-  logger.info('Sale', {})
+  logger.info('End', {})
   return {
     message: 'OK',
   }

@@ -28,7 +28,7 @@ import {
 } from '@kuflow/kuflow-rest-client'
 import { NativeConnection } from '@temporalio/worker'
 
-const NOOP = ():void => {}
+const NOOP = (): void => {}
 
 export interface KuFlowEngineConnectionBackoff {
   /**

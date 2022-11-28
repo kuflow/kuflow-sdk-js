@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { createKuFlowActivities } from '@kuflow/kuflow-engine-client-activity-kuflow'
+import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-engine-client-activity-kuflow'
 import { KuFlowEngineConnection } from '@kuflow/kuflow-engine-client-core'
 import { NativeConnection, Worker } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
@@ -43,7 +43,8 @@ async function run({
   kuflowRestClientApiUsername,
   kuflowRestClientApiPassword,
 }: Env): Promise<void> {
-  const serverRootCACertificate = serverRootCACertificatePath != null ? fs.readFileSync(serverRootCACertificatePath) : undefined
+  const serverRootCACertificate =
+    serverRootCACertificatePath != null ? fs.readFileSync(serverRootCACertificatePath) : undefined
 
   const connection = await NativeConnection.connect({
     address,
@@ -60,8 +61,8 @@ async function run({
   const kuFlowEngineConnection = KuFlowEngineConnection.connect(
     connection,
     {
-      username: kuflowRestClientApiUsername,
-      password: kuflowRestClientApiPassword,
+      clientId: kuflowRestClientApiUsername,
+      clientSecret: kuflowRestClientApiPassword,
     },
     {
       endpoint: kuflowRestClientApiEndpoint,
@@ -73,7 +74,10 @@ async function run({
     connection,
     namespace,
     workflowsPath: require.resolve('./workflows'),
-    activities: createKuFlowActivities(kuFlowEngineConnection),
+    activities: {
+      ...createKuFlowSyncActivities(kuFlowEngineConnection),
+      ...createKuFlowAsyncActivities(kuFlowEngineConnection),
+    },
     taskQueue,
   })
   console.log('Worker connection successfully established')
