@@ -18,7 +18,7 @@ rules:
   '@typescript-eslint/restrict-plus-operands': ['off']
   '@typescript-eslint/restrict-template-expressions': ['off']
 ignorePatterns:
-  - 'coverage/*'
-  - 'lib/*'
+  - '**/coverage/*'
+  - '**/lib/*'
+  - '**/*.js'
   - 'etc/*'
-  - '*.js'

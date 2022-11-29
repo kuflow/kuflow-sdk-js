@@ -22,7 +22,13 @@
  */
 import * as logger from '@azure/logger'
 import { describe, test } from '@jest/globals'
-import { Document, KuFlowRestClient, Process, Task, TaskSaveElementValueDocumentCommand } from '@kuflow/kuflow-rest-client'
+import {
+  Document,
+  KuFlowRestClient,
+  Process,
+  Task,
+  TaskSaveElementValueDocumentCommand,
+} from '@kuflow/kuflow-rest-client'
 import * as fs from 'fs'
 
 describe('E2E Test', () => {

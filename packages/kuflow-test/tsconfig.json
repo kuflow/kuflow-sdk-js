@@ -5,7 +5,10 @@
     "outDir": "./lib",
     "rootDir": "./test"
   },
-  "references": [{ "path": "../kuflow-engine-client-activity-kuflow" }, { "path": "../kuflow-engine-client-core" }, {
-    "path": "../kuflow-rest-client" }],
+  "references": [
+    { "path": "../kuflow-engine-client-activity-kuflow" },
+    { "path": "../kuflow-engine-client-core" },
+    { "path": "../kuflow-rest-client" }
+  ],
   "include": ["./test/**/*.ts"]
 }
