@@ -1,5 +1,5 @@
 {
-  "name": "@kuflow/kuflow-engine-client-sample",
+  "name": "@kuflow/kuflow-test",
   "version": "0.2.0-next.2",
   "private": true,
   "keywords": [
@@ -25,7 +25,9 @@
     "build:watch": "npm run clean && npm run build:typescript -- --watch",
     "clean": "rimraf lib tsconfig.tsbuildinfo",
     "start": "ts-node src/worker.ts",
-    "start:watch": "nodemon src/worker.ts"
+    "start:watch": "nodemon src/worker.ts",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "nodemonConfig": {
     "execMap": {

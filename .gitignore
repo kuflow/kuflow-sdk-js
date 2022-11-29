@@ -2,7 +2,7 @@
 .*
 !.changeset
 !.eslintignore
-!.eslintrc.json
+!.eslintrc.yaml
 !.nvmrc
 !.prettierignore
 !.prettierrc

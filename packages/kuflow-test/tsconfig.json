@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "version": "4.4.2",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "rootDir": "./test"
+  },
+  "references": [{ "path": "../kuflow-engine-client-activity-kuflow" }, { "path": "../kuflow-engine-client-core" }, {
+    "path": "../kuflow-rest-client" }],
+  "include": ["./test/**/*.ts"]
+}
