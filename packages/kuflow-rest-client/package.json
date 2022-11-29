@@ -1,6 +1,6 @@
 {
   "name": "@kuflow/kuflow-rest-client",
-  "version": "0.2.0-next.2",
+  "version": "0.2.0-next.3",
   "description": "REST SDK for KuFlow.",
   "keywords": [
     "node",

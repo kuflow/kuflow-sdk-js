@@ -1,5 +1,15 @@
 # @kuflow/kuflow-engine-client-activity-kuflow
 
+## 0.2.0-next.3
+
+### Patch Changes
+
+- 5f613df: Integrate kuflow-rest-client
+- 2cecc38: Update to the latest version of kuflow-rest-client
+- Updated dependencies [5f613df]
+- Updated dependencies [2cecc38]
+  - @kuflow/kuflow-engine-client-core@0.2.0-next.3
+
 ## 0.2.0-next.2
 
 ### Patch Changes
