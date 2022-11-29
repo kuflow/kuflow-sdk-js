@@ -1,21 +1,20 @@
 {
-  "name": "@kuflow/kuflow-engine-client-core",
+  "name": "@kuflow/kuflow-rest-client",
   "version": "0.2.0-next.2",
-  "description": "Core library used by KuFlow SDKs and Temporal.",
+  "description": "REST SDK for KuFlow.",
   "keywords": [
     "node",
     "typescript",
     "kuflow",
-    "workflows",
-    "temporalio"
+    "workflows"
   ],
-  "homepage": "https://github.com/kuflow/kuflow-engine-client-js",
+  "homepage": "https://github.com/kuflow/kuflow-rest-client-js",
   "bugs": {
-    "url": "https://github.com/kuflow/kuflow-engine-client-js/issues"
+    "url": "https://github.com/kuflow/kuflow-rest-client-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kuflow/kuflow-engine-client-js.git"
+    "url": "https://github.com/kuflow/kuflow-rest-client-js.git"
   },
   "license": "MIT",
   "author": "KuFlow S.L.",
@@ -32,8 +31,12 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-rest-client": "0.0.2-next.0",
-    "@temporalio/worker": "1.4.4"
+    "@azure/core-auth": "1.4.0",
+    "@azure/core-client": "1.6.1",
+    "@azure/core-rest-pipeline": "1.10.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   },
   "publishConfig": {
     "access": "public"

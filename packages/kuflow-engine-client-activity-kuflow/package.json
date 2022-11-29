@@ -1,6 +1,7 @@
 {
   "name": "@kuflow/kuflow-engine-client-activity-kuflow",
   "version": "0.2.0-next.2",
+  "description": "Temporal activities for KuFlow.",
   "keywords": [
     "node",
     "typescript",
