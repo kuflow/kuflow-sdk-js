@@ -27,7 +27,7 @@ import {
   ProcessChangeInitiatorCommand,
   ProcessDeleteElementCommand,
   ProcessSaveElementCommand,
-  TaskAssignCommand,
+  TaskAssignCommand, TaskDeleteElementCommand, TaskDeleteElementValueDocumentCommand, TaskSaveElementCommand,
 } from '@kuflow/kuflow-rest-client'
 import { CompleteAsyncError, Context } from '@temporalio/activity'
 
@@ -48,6 +48,9 @@ import {
   CreateTaskResponse,
   DeleteProcessElementRequest,
   DeleteProcessElementResponse,
+  DeleteTaskElementRequest,
+  DeleteTaskElementResponse, DeleteTaskElementValueDocumentRequest,
+  DeleteTaskElementValueDocumentResponse,
   FindProcessesRequest,
   FindProcessesResponse,
   FindTasksRequest,
@@ -60,6 +63,8 @@ import {
   RetrieveTaskResponse,
   SaveProcessElementRequest,
   SaveProcessElementResponse,
+  SaveTaskElementRequest,
+  SaveTaskElementResponse,
 } from './models'
 
 export interface KuFlowActivities {
@@ -174,6 +179,45 @@ export interface KuFlowActivities {
    * @return task assigned
    */
   KuFlow_Engine_assignTask: (request: AssignTaskRequest) => Promise<AssignTaskResponse>
+
+  /**
+   * Allow to save an element i.e., a field, a decision, a form, a principal or document.
+   *
+   * In the case of document type elements, this method only allows references to be made to other existing document
+   * type elements for the purpose of copying that file into the element. To do this you need to pass a reference to the
+   * document using the 'uri' attribute. In case you want to add a new document, you should create a Temporal activity
+   * specific to your needs and use our rest client to upload the document. This is because it is not recommended to save
+   * binaries in the history of Temporal.
+   *
+   * If values already exist for the provided element code, it replaces them with the new ones, otherwise it
+   * creates them. The values of the previous elements that no longer exist will be deleted. To remove an element, use
+   * the appropriate API method.
+   *
+   * @param request must not be {@literal null}.
+   * @return task updated
+   */
+  KuFlow_Engine_saveTaskElement: (request: SaveTaskElementRequest) => Promise<SaveTaskElementResponse>
+
+  /**
+   * Allow to delete task element by specifying the item definition code.
+   *
+   * Remove all the element values.
+   *
+   * @param request must not be {@literal null}.
+   * @return task updated
+   */
+  KuFlow_Engine_deleteTaskElement: (request: DeleteTaskElementRequest) => Promise<DeleteTaskElementResponse>
+
+  /**
+   * Allow to delete a specific document from an element of document type using its id.
+   *
+   * Note: If it is a multiple item, it will only delete the specified document. If it is a single element, in addition to the document, it will also delete the element.
+   *
+   * @param request must not be {@literal null}.
+   * @return task updated
+   */
+  KuFlow_Engine_deleteTaskElementValueDocument: (request: DeleteTaskElementValueDocumentRequest) => Promise<DeleteTaskElementValueDocumentResponse>
+
   /**
    * Append a log to the task.
    *
@@ -205,6 +249,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
     KuFlow_Engine_completeTask,
     KuFlow_Engine_claimTask,
     KuFlow_Engine_assignTask,
+    KuFlow_Engine_saveTaskElement,
+    KuFlow_Engine_deleteTaskElement,
+    KuFlow_Engine_deleteTaskElementValueDocument,
     KuFlow_Engine_appendTaskLog,
   }
 
@@ -333,6 +380,40 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
       principalId: request.principalId,
     }
     const task = await kuflowRestClient.taskOperations.actionsTaskAssign(request.taskId, command)
+
+    return {
+      task,
+    }
+  }
+
+  async function KuFlow_Engine_saveTaskElement(request: SaveTaskElementRequest): Promise<SaveTaskElementResponse> {
+    const command: TaskSaveElementCommand = {
+      elementDefinitionCode: request.elementDefinitionCode,
+      elementValues: request.elementValues,
+    }
+    const task = await kuflowRestClient.taskOperations.actionsTaskSaveElement(request.taskId, command)
+
+    return {
+      task,
+    }
+  }
+
+  async function KuFlow_Engine_deleteTaskElement(request: DeleteTaskElementRequest): Promise<DeleteTaskElementResponse> {
+    const command: TaskDeleteElementCommand = {
+      elementDefinitionCode: request.elementDefinitionCode,
+    }
+    const task = await kuflowRestClient.taskOperations.actionsTaskDeleteElement(request.taskId, command)
+
+    return {
+      task,
+    }
+  }
+
+  async function KuFlow_Engine_deleteTaskElementValueDocument(request: DeleteTaskElementValueDocumentRequest): Promise<DeleteTaskElementValueDocumentResponse> {
+    const command: TaskDeleteElementValueDocumentCommand = {
+      documentId: request.documentId,
+    }
+    const task = await kuflowRestClient.taskOperations.actionsTaskDeleteElementValueDocument(request.taskId, command)
 
     return {
       task,

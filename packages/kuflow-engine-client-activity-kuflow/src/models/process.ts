@@ -25,7 +25,7 @@ import { Process, ProcessElementValueNumber, ProcessElementValueString, ProcessP
 export interface FindProcessesRequest {
   page?: number
   size?: number
-  sort?: string[]
+  sorts?: string[]
 }
 
 export interface FindProcessesResponse {

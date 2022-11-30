@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Log, Task, TaskPage, TaskState } from '@kuflow/kuflow-rest-client'
+import { Log, Task, TaskElementValueUnion, TaskPage, TaskState } from '@kuflow/kuflow-rest-client'
 
 export interface FindTasksRequest {
   page?: number
   size?: number
-  sort?: string[]
+  sorts?: string[]
   processIds?: string[]
   states?: TaskState[]
   taskDefinitionCodes?: string[]
@@ -64,6 +64,34 @@ export interface ClaimTaskRequest {
 }
 
 export interface ClaimTaskResponse {
+  task: Task
+}
+
+export interface SaveTaskElementRequest {
+  taskId: string
+  elementDefinitionCode: string
+  elementValues?: TaskElementValueUnion[]
+}
+
+export interface SaveTaskElementResponse {
+  task: Task
+}
+
+export interface DeleteTaskElementRequest {
+  taskId: string
+  elementDefinitionCode: string
+}
+
+export interface DeleteTaskElementResponse {
+  task: Task
+}
+
+export interface DeleteTaskElementValueDocumentRequest {
+  taskId: string
+  documentId: string
+}
+
+export interface DeleteTaskElementValueDocumentResponse {
   task: Task
 }
 
