@@ -6,9 +6,9 @@
     "rootDir": "./test"
   },
   "references": [
-    { "path": "../kuflow-engine-client-activity-kuflow" },
-    { "path": "../kuflow-engine-client-core" },
-    { "path": "../kuflow-rest-client" }
+    { "path": "../kuflow-temporal-activity-kuflow" },
+    { "path": "../kuflow-temporal-core" },
+    { "path": "../kuflow-rest" }
   ],
   "include": ["./test/**/*.ts"]
 }

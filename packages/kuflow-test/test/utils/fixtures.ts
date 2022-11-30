@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Principal, PrincipalPage, Process, ProcessPage, Task, TaskPage } from '@kuflow/kuflow-rest-client'
+import { Principal, PrincipalPage, Process, ProcessPage, Task, TaskPage } from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
 
 export function mockPrincipalPage(): PrincipalPage {

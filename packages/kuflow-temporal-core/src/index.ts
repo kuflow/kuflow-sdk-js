@@ -25,7 +25,7 @@ import {
   KuFlowRestClient,
   KuFlowRestClientCredential,
   KuFlowRestClientOptionals,
-} from '@kuflow/kuflow-rest-client'
+} from '@kuflow/kuflow-rest'
 import { NativeConnection } from '@temporalio/worker'
 
 const NOOP = (): void => {}

@@ -28,7 +28,7 @@ import {
   ProcessDeleteElementCommand,
   ProcessSaveElementCommand,
   ProcessSaveUserActionValueDocumentCommand,
-} from '@kuflow/kuflow-rest-client'
+} from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
 

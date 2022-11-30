@@ -1,7 +1,7 @@
 {
-  "name": "@kuflow/kuflow-engine-client-activity-kuflow",
+  "name": "@kuflow/kuflow-temporal-core",
   "version": "0.2.0-next.3",
-  "description": "Temporal activities for KuFlow.",
+  "description": "Core library used by KuFlow SDKs and Temporal.",
   "keywords": [
     "node",
     "typescript",
@@ -32,8 +32,8 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-engine-client-core": "0.2.0-next.3",
-    "@temporalio/activity": "1.4.4"
+    "@kuflow/kuflow-rest": "0.2.0-next.3",
+    "@temporalio/worker": "1.4.4"
   },
   "publishConfig": {
     "access": "public"

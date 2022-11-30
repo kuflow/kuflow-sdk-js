@@ -33,7 +33,7 @@ source-code-folder-path: ./src/generated
 
 openapi-type: data-plane
 add-credential: true
-package-name: '@kuflow/kuflow-rest-client'
+package-name: '@kuflow/kuflow-rest'
 package-version: '0.0.1'
 
 generate-metadata: false

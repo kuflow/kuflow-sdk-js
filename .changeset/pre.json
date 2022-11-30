@@ -2,9 +2,9 @@
   "mode": "pre",
   "tag": "next",
   "initialVersions": {
-    "@kuflow/kuflow-engine-client-activity-kuflow": "0.2.0-next.0",
-    "@kuflow/kuflow-engine-client-core": "0.2.0-next.0",
-    "@kuflow/kuflow-engine-client-sample": "0.2.0-next.0",
+    "@kuflow/kuflow-temporal-activity-kuflow": "0.2.0-next.0",
+    "@kuflow/kuflow-temporal-core": "0.2.0-next.0",
+    "@kuflow/kuflow-temporal-sample": "0.2.0-next.0",
     "@kuflow/kuflow-rest-client": "0.2.0-next.2",
     "@kuflow/kuflow-test": "0.2.0-next.2"
   },

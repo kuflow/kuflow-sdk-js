@@ -5,6 +5,6 @@
     "outDir": "./lib",
     "rootDir": "./src"
   },
-  "references": [{ "path": "../kuflow-engine-client-core" }],
+  "references": [{ "path": "../kuflow-temporal-core" }],
   "include": ["./src/**/*.ts"]
 }

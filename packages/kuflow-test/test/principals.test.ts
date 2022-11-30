@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 import { describe, expect, test } from '@jest/globals'
-import { KuFlowRestClient } from '@kuflow/kuflow-rest-client'
+import { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import nock from 'nock'
 
 import { mockPrincipalPage, mockPrincipalUser } from './utils/fixtures'

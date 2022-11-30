@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Log, Task, TaskElementValueUnion, TaskPage, TaskState } from '@kuflow/kuflow-rest-client'
+import { Log, Task, TaskElementValueUnion, TaskPage, TaskState } from '@kuflow/kuflow-rest'
 
 export interface FindTasksRequest {
   page?: number

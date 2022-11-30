@@ -28,7 +28,7 @@ import {
   Process,
   Task,
   TaskSaveElementValueDocumentCommand,
-} from '@kuflow/kuflow-rest-client'
+} from '@kuflow/kuflow-rest'
 import * as fs from 'fs'
 
 describe('E2E Test', () => {

@@ -13,7 +13,7 @@ KuFlow is an implementation language agnostic Cloud platform. This repository is
 This API is documented in OpenAPI format. This file allows you to create REST clients with the technology of your
 choice automatically.
 
-[Package (NPM)](https://www.npmjs.com/package/@kuflow/kuflow-rest-client)
+[Package (NPM)](https://www.npmjs.com/package/@kuflow/kuflow-rest)
 
 # Documentation
 
@@ -21,12 +21,12 @@ Documentation on how to integrate with KuFlow using Javascript is available [her
 
 ## Getting started
 
-### Install the `@kuflow/kuflow-rest-client` package
+### Install the `@kuflow/kuflow-rest` package
 
 Install the KuFlow client library for JavaScript with `npm`:
 
 ```bash
-npm install @kuflow/kuflow-rest-client
+npm install @kuflow/kuflow-rest
 ```
 
 ### Code generation

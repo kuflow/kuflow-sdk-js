@@ -1,4 +1,4 @@
-# @kuflow/kuflow-engine-client-activity-kuflow
+# @kuflow/kuflow-temporal-activity-kuflow
 
 ## 0.2.0-next.3
 
@@ -8,7 +8,7 @@
 - 2cecc38: Update to the latest version of kuflow-rest-client
 - Updated dependencies [5f613df]
 - Updated dependencies [2cecc38]
-  - @kuflow/kuflow-engine-client-core@0.2.0-next.3
+  - @kuflow/kuflow-temporal-core@0.2.0-next.3
 
 ## 0.2.0-next.2
 
@@ -16,7 +16,7 @@
 
 - Add package.json keywords
 - Updated dependencies
-  - @kuflow/kuflow-engine-client-core@0.2.0-next.2
+  - @kuflow/kuflow-temporal-core@0.2.0-next.2
 
 ## 0.2.0-next.1
 
@@ -24,7 +24,7 @@
 
 - Upgrade README
 - Updated dependencies
-  - @kuflow/kuflow-engine-client-core@0.2.0-next.1
+  - @kuflow/kuflow-temporal-core@0.2.0-next.1
 
 ## 0.2.0-next.0
 
@@ -35,4 +35,4 @@
 ### Patch Changes
 
 - Updated dependencies [fac5e79]
-  - @kuflow/kuflow-engine-client-core@0.2.0-next.0
+  - @kuflow/kuflow-temporal-core@0.2.0-next.0

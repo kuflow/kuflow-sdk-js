@@ -5,6 +5,6 @@
     "outDir": "./lib",
     "rootDir": "./src"
   },
-  "references": [{ "path": "../kuflow-rest-client" }],
+  "references": [{ "path": "../kuflow-rest" }],
   "include": ["./src/**/*.ts"]
 }

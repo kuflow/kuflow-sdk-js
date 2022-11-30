@@ -24,7 +24,7 @@
 import type {
   createKuFlowAsyncActivities,
   createKuFlowSyncActivities,
-} from '@kuflow/kuflow-engine-client-activity-kuflow'
+} from '@kuflow/kuflow-temporal-activity-kuflow'
 import { LoggerSinks, proxyActivities, proxySinks } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({

@@ -21,14 +21,14 @@
  * THE SOFTWARE.
  */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { KuFlowEngineConnection } from '@kuflow/kuflow-engine-client-core'
 import {
   Process,
   ProcessChangeInitiatorCommand,
   ProcessDeleteElementCommand,
   ProcessSaveElementCommand,
   TaskAssignCommand, TaskDeleteElementCommand, TaskDeleteElementValueDocumentCommand, TaskSaveElementCommand,
-} from '@kuflow/kuflow-rest-client'
+} from '@kuflow/kuflow-rest'
+import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
 import { CompleteAsyncError, Context } from '@temporalio/activity'
 
 import {

@@ -20,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-engine-client-activity-kuflow'
-import { KuFlowEngineConnection } from '@kuflow/kuflow-engine-client-core'
+import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
+import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
 import { NativeConnection, Worker } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
 import fs from 'fs'
