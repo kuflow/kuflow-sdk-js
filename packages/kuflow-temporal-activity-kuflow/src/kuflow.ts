@@ -26,7 +26,10 @@ import {
   ProcessChangeInitiatorCommand,
   ProcessDeleteElementCommand,
   ProcessSaveElementCommand,
-  TaskAssignCommand, TaskDeleteElementCommand, TaskDeleteElementValueDocumentCommand, TaskSaveElementCommand,
+  TaskAssignCommand,
+  TaskDeleteElementCommand,
+  TaskDeleteElementValueDocumentCommand,
+  TaskSaveElementCommand,
 } from '@kuflow/kuflow-rest'
 import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
 import { CompleteAsyncError, Context } from '@temporalio/activity'
@@ -49,7 +52,8 @@ import {
   DeleteProcessElementRequest,
   DeleteProcessElementResponse,
   DeleteTaskElementRequest,
-  DeleteTaskElementResponse, DeleteTaskElementValueDocumentRequest,
+  DeleteTaskElementResponse,
+  DeleteTaskElementValueDocumentRequest,
   DeleteTaskElementValueDocumentResponse,
   FindProcessesRequest,
   FindProcessesResponse,
@@ -216,7 +220,9 @@ export interface KuFlowActivities {
    * @param request must not be {@literal null}.
    * @return task updated
    */
-  KuFlow_Engine_deleteTaskElementValueDocument: (request: DeleteTaskElementValueDocumentRequest) => Promise<DeleteTaskElementValueDocumentResponse>
+  KuFlow_Engine_deleteTaskElementValueDocument: (
+    request: DeleteTaskElementValueDocumentRequest,
+  ) => Promise<DeleteTaskElementValueDocumentResponse>
 
   /**
    * Append a log to the task.
@@ -398,7 +404,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
     }
   }
 
-  async function KuFlow_Engine_deleteTaskElement(request: DeleteTaskElementRequest): Promise<DeleteTaskElementResponse> {
+  async function KuFlow_Engine_deleteTaskElement(
+    request: DeleteTaskElementRequest,
+  ): Promise<DeleteTaskElementResponse> {
     const command: TaskDeleteElementCommand = {
       elementDefinitionCode: request.elementDefinitionCode,
     }
@@ -409,7 +417,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
     }
   }
 
-  async function KuFlow_Engine_deleteTaskElementValueDocument(request: DeleteTaskElementValueDocumentRequest): Promise<DeleteTaskElementValueDocumentResponse> {
+  async function KuFlow_Engine_deleteTaskElementValueDocument(
+    request: DeleteTaskElementValueDocumentRequest,
+  ): Promise<DeleteTaskElementValueDocumentResponse> {
     const command: TaskDeleteElementValueDocumentCommand = {
       documentId: request.documentId,
     }

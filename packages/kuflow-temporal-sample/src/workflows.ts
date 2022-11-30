@@ -21,10 +21,7 @@
  * THE SOFTWARE.
  */
 // Only import the activity types
-import type {
-  createKuFlowAsyncActivities,
-  createKuFlowSyncActivities,
-} from '@kuflow/kuflow-temporal-activity-kuflow'
+import type { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
 import { LoggerSinks, proxyActivities, proxySinks } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({

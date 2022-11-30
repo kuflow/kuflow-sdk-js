@@ -51,7 +51,7 @@ export const AbstractAudited: coreClient.CompositeMapper = {
         serializedName: 'createdAt',
         readOnly: true,
         type: {
-          name: 'DateTime',
+          name: 'String',
         },
       },
       lastModifiedBy: {
@@ -65,7 +65,7 @@ export const AbstractAudited: coreClient.CompositeMapper = {
         serializedName: 'lastModifiedAt',
         readOnly: true,
         type: {
-          name: 'DateTime',
+          name: 'String',
         },
       },
     },
@@ -81,7 +81,7 @@ export const DefaultError: coreClient.CompositeMapper = {
         serializedName: 'timestamp',
         required: true,
         type: {
-          name: 'DateTime',
+          name: 'String',
         },
       },
       status: {
@@ -511,7 +511,7 @@ export const Log: coreClient.CompositeMapper = {
         serializedName: 'createdAt',
         readOnly: true,
         type: {
-          name: 'DateTime',
+          name: 'String',
         },
       },
       message: {
@@ -705,7 +705,7 @@ export const WebhookEvent: coreClient.CompositeMapper = {
         serializedName: 'timestamp',
         required: true,
         type: {
-          name: 'DateTime',
+          name: 'String',
         },
       },
     },
@@ -822,7 +822,7 @@ export const Authentication: coreClient.CompositeMapper = {
         serializedName: 'expiredAt',
         readOnly: true,
         type: {
-          name: 'DateTime',
+          name: 'String',
         },
       },
     },

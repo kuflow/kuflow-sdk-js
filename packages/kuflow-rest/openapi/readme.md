@@ -60,3 +60,23 @@ directive:
         $.operationId = $.tags[1] + '_' + $.operationId;
       }
 ```
+
+### Change date-time format to string due to temporal doesn't handle it
+
+```yaml
+directive:
+  - from: openapi-document
+    where: $.components.schemas[*].properties[*]
+    transform: |
+      if ($.format === 'date-time') {
+        $.format = undefined;
+        $.description = `${$.description ? ($.description + ' - ') : ''}date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z`;
+      }
+  - from: openapi-document
+    where: $.components.schemas[*].allOf[*].properties[*]
+    transform: |
+      if ($.format === 'date-time') {
+        $.format = undefined;
+        $.description = `${$.description ? ($.description + ' - ') : ''}date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z`;
+      }
+```

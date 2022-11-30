@@ -43,26 +43,26 @@ export interface AbstractAudited {
    */
   readonly createdBy?: string
   /**
-   * When this model was created.
+   * When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly createdAt?: Date
+  readonly createdAt?: string
   /**
    * Who was last update this model.
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly lastModifiedBy?: string
   /**
-   * When this model type was last updated.
+   * When this model type was last updated. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly lastModifiedAt?: Date
+  readonly lastModifiedAt?: string
 }
 
 /** Default error */
 export interface DefaultError {
-  /** Timestamp indicating when the error happened. */
-  timestamp: Date
+  /** Timestamp indicating when the error happened. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  timestamp: string
   /** HTTP Status */
   status: number
   /** Message Status */
@@ -156,10 +156,10 @@ export interface TaskElementValue {
 export interface Log {
   id?: string
   /**
-   * When this model was created.
+   * When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
-  readonly createdAt?: Date
+  readonly createdAt?: string
   message: string
   level: LogLevel
 }
@@ -203,7 +203,8 @@ export interface WebhookEvent {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: 'PROCESS.STATE_CHANGED' | 'TASK.STATE_CHANGED'
   id: string
-  timestamp: Date
+  /** date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  timestamp: string
 }
 
 export interface TaskElementValueDocumentItem {
@@ -229,8 +230,11 @@ export interface Authentication extends AbstractAudited {
   type?: 'ENGINE'
   /** NOTE: This property will not be serialized. It can only be populated by the server. */
   readonly token?: string
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly expiredAt?: Date
+  /**
+   * date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly expiredAt?: string
 }
 
 export interface Process extends AbstractAudited {
