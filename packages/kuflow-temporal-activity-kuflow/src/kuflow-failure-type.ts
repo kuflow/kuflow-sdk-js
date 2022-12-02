@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export enum KuFlowFailures {
+export enum KuFlowFailureType {
   ACTIVITIES_FAILURE = 'KuFlowActivities.Failure',
 
   ACTIVITIES_REST_FAILURE = 'KuFlowActivities.RestFailure',

@@ -24,7 +24,7 @@ import { RestError } from '@azure/core-rest-pipeline'
 import { CompleteAsyncError } from '@temporalio/activity'
 import { ApplicationFailure, TemporalFailure } from '@temporalio/common'
 
-import { KuFlowFailures } from './kuflow-failures'
+import { KuFlowFailureType } from './kuflow-failure-type'
 
 export const catchAllErrors = <T extends any[], U, R extends Promise<U>>(cb: (...args: T) => R) => {
   return async (...args: T): Promise<Awaited<R>> => {
@@ -44,7 +44,7 @@ export const catchAllErrors = <T extends any[], U, R extends Promise<U>>(cb: (..
 
         throw ApplicationFailure.create({
           message: 'Rest Invocation error',
-          type: KuFlowFailures.ACTIVITIES_REST_FAILURE,
+          type: KuFlowFailureType.ACTIVITIES_REST_FAILURE,
           details: e.details != null ? [e.details] : undefined,
           cause: e,
           nonRetryable,
@@ -53,7 +53,7 @@ export const catchAllErrors = <T extends any[], U, R extends Promise<U>>(cb: (..
 
       throw ApplicationFailure.create({
         message: 'Invocation error',
-        type: KuFlowFailures.ACTIVITIES_FAILURE,
+        type: KuFlowFailureType.ACTIVITIES_FAILURE,
         cause: e as Error,
       })
     }

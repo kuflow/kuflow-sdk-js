@@ -22,7 +22,7 @@
  */
 import { ApplicationFailure } from '@temporalio/activity'
 
-import { KuFlowFailures } from './kuflow-failures'
+import { KuFlowFailureType } from './kuflow-failure-type'
 import {
   AppendTaskLogRequest,
   AssignTaskRequest,
@@ -43,144 +43,147 @@ import {
 
 export function validateRetrievePrincipalRequest(request: RetrievePrincipalRequest): void {
   if (request.principalId == null) {
-    throw ApplicationFailure.nonRetryable("'principalId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'principalId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateRetrieveProcessRequest(request: RetrieveProcessRequest): void {
   if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateSaveProcessElementRequest(request: SaveProcessElementRequest): void {
   if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.elementDefinitionCode == null) {
     throw ApplicationFailure.nonRetryable(
       "'elementDefinitionCode' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateDeleteProcessElementRequest(request: DeleteProcessElementRequest): void {
   if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.elementDefinitionCode == null) {
     throw ApplicationFailure.nonRetryable(
       "'elementDefinitionCode' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateCompleteProcessRequest(request: CompleteProcessRequest): void {
   if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateChangeProcessInitiatorRequest(request: ChangeProcessInitiatorRequest): void {
   if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.email == null && request.principalId == null) {
     throw ApplicationFailure.nonRetryable(
       "'email' or 'principalId' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateRetrieveTaskRequest(request: RetrieveTaskRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateCreateTaskRequest(request: CreateTaskRequest): void {
   if (request.task.id == null) {
-    throw ApplicationFailure.nonRetryable("'task.id' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'task.id' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.task.processId == null) {
-    throw ApplicationFailure.nonRetryable("'task.processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable(
+      "'task.processId' is required",
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
+    )
   }
   if (request.task.taskDefinition.code == null) {
     throw ApplicationFailure.nonRetryable(
       "'task.taskDefinition.code' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateCompleteTaskRequest(request: CompleteTaskRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateClaimTaskRequest(request: ClaimTaskRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateAssignTaskRequest(request: AssignTaskRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.email == null && request.principalId == null) {
     throw ApplicationFailure.nonRetryable(
       "'email' or 'principalId' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateSaveTaskElementRequest(request: SaveTaskElementRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.elementDefinitionCode == null) {
     throw ApplicationFailure.nonRetryable(
       "'elementDefinitionCode' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateDeleteTaskElementRequest(request: DeleteTaskElementRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.elementDefinitionCode == null) {
     throw ApplicationFailure.nonRetryable(
       "'elementDefinitionCode' is required",
-      KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE,
+      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
 }
 
 export function validateDeleteTaskElementValueDocumentRequest(request: DeleteTaskElementValueDocumentRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.documentId == null) {
-    throw ApplicationFailure.nonRetryable("'documentId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'documentId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
 export function validateAppendTaskLogRequest(request: AppendTaskLogRequest): void {
   if (request.taskId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.log.level == null) {
-    throw ApplicationFailure.nonRetryable("'log.level' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'log.level' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
   if (request.log.message == null) {
-    throw ApplicationFailure.nonRetryable("'log.message' is required", KuFlowFailures.ACTIVITIES_VALIDATION_FAILURE)
+    throw ApplicationFailure.nonRetryable("'log.message' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
