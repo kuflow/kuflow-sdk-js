@@ -1,5 +1,5 @@
-![GitHub](https://img.shields.io/github/license/kuflow/kuflow-sdk-js?style=flat-square)
-![npm](https://img.shields.io/npm/v/@kuflow/kuflow-rest?style=flat-square)
+[![GitHub](https://img.shields.io/github/license/kuflow/kuflow-sdk-js?label=License&style=flat-square)](https://github.com/kuflow/kuflow-sdk-js/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/v/@kuflow/kuflow-rest?style=flat-square)](https://www.npmjs.com/search?q=author%3Akuflow-org)
 
 # KuFlow Engine Client JavaScript
 
