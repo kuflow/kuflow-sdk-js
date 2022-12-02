@@ -40,7 +40,7 @@ export function mockPrincipalUser(): Principal {
   return {
     id: randomUUID(),
     type: 'USER',
-    name: `Hommer ${randomInt(1, 1_000)}`,
+    name: `Homer ${randomInt(1, 1_000)}`,
     user: {
       id: randomUUID(),
       email: `dummy-${randomInt(1, 1_000)}@example.com`,
@@ -102,9 +102,9 @@ export function mockProcess(): Process {
     initiator: mockPrincipalUser(),
 
     createdBy: randomUUID(),
-    createdAt: new Date(),
+    createdAt: new Date().toString(),
     lastModifiedBy: randomUUID(),
-    lastModifiedAt: new Date(),
+    lastModifiedAt: new Date().toString(),
   }
 }
 
@@ -151,8 +151,8 @@ export function mockTask(): Task {
     owner: mockPrincipalUser(),
 
     createdBy: randomUUID(),
-    createdAt: new Date(),
+    createdAt: new Date().toString(),
     lastModifiedBy: randomUUID(),
-    lastModifiedAt: new Date(),
+    lastModifiedAt: new Date().toString(),
   }
 }

@@ -115,8 +115,9 @@ export class KuFlowEngineConnection {
           authorization: `Bearer ${authentication.token}`,
         })
       }
-      const refreshInMs =
-        authentication.expiredAt == null ? 0 : (authentication.expiredAt.getTime() - new Date().getTime()) / 2
+
+      const expiredAtDate = authentication.expiredAt != null ? new Date(authentication.expiredAt) : undefined
+      const refreshInMs = expiredAtDate == null ? 0 : (expiredAtDate.getTime() - new Date().getTime()) / 2
 
       this.scheduleAuthorizationTokenRenovation(refreshInMs)
     } catch {
