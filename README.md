@@ -1,3 +1,6 @@
+![GitHub](https://img.shields.io/github/license/kuflow/kuflow-sdk-js?style=flat-square)
+![npm](https://img.shields.io/npm/v/@kuflow/kuflow-rest?style=flat-square)
+
 # KuFlow Engine Client JavaScript
 
 > **_"KuFlow is a platform on which you can design and execute your business processes"_**
@@ -11,6 +14,16 @@ KuFlow is an implementation language agnostic Cloud platform. This repository is
 ## Documentation
 
 Documentation on how to integrate with KuFlow using Javascript is available [here](https://docs.kuflow.com/developers/guides/javascript).
+
+## Packages
+
+This monorepo contains the following packages:
+
+| Subfolder                                                                                | Package                                                                                                            | Version                                                                                        | 
+|------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| [`packages/kuflow-rest/`](packages/kuflow-rest/)                                         | [`@kuflow/kuflow-rest`](https://www.npmjs.com/package/@kuflow/kuflow-rest)                                         | ![npm](https://img.shields.io/npm/v/@kuflow/kuflow-rest?style=flat-square)                     |
+| [`packages/kuflow-temporal-activity-kuflow/`](packages/kuflow-temporal-activity-kuflow/) | [`@kuflow/kuflow-temporal-activity-kuflow`](https://www.npmjs.com/package/@kuflow/kuflow-temporal-activity-kuflow) | ![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-activity-kuflow?style=flat-square) |
+| [`packages/kuflow-temporal-core/`](packages/kuflow-temporal-core/)                       | [`@kuflow/kuflow-temporal-core`](https://www.npmjs.com/package/@kuflow/kuflow-temporal-core)                       | ![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-core?style=flat-square)            |
 
 ## Contributing
 
