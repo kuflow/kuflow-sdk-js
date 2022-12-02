@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "version": "4.4.2",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "rootDir": "./src"
+  },
+  "references": [{ "path": "../kuflow-temporal-activity-kuflow" }, { "path": "../kuflow-temporal-core" }],
+  "include": ["./src/**/*.ts"]
+}

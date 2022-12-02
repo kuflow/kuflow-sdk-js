@@ -1,0 +1,44 @@
+{
+  "name": "@kuflow/kuflow-rest",
+  "version": "0.2.0-next.3",
+  "description": "REST SDK for KuFlow.",
+  "keywords": [
+    "node",
+    "typescript",
+    "kuflow",
+    "workflows"
+  ],
+  "homepage": "https://github.com/kuflow/kuflow-sdk-js",
+  "bugs": {
+    "url": "https://github.com/kuflow/kuflow-sdk-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuflow/kuflow-sdk-js.git"
+  },
+  "license": "MIT",
+  "author": "KuFlow S.L.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc --build",
+    "build:watch": "npm run clean && npm run build:typescript -- --watch",
+    "clean": "rimraf lib tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@azure/core-auth": "1.4.0",
+    "@azure/core-client": "1.6.1",
+    "@azure/core-rest-pipeline": "1.10.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@kuflow/kuflow-temporal-activity-kuflow",
+  "version": "0.2.0-next.3",
+  "description": "KuFlow SDK :: Temporal activities for KuFlow.",
+  "keywords": [
+    "node",
+    "typescript",
+    "kuflow",
+    "workflows",
+    "temporalio"
+  ],
+  "homepage": "https://github.com/kuflow/kuflow-sdk-js",
+  "bugs": {
+    "url": "https://github.com/kuflow/kuflow-sdk-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuflow/kuflow-sdk-js.git"
+  },
+  "license": "MIT",
+  "author": "KuFlow S.L.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "build": "npm run build:typescript",
+    "build:typescript": "tsc --build",
+    "build:watch": "npm run clean && npm run build:typescript -- --watch",
+    "clean": "rimraf lib tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@kuflow/kuflow-temporal-core": "0.2.0-next.3",
+    "@temporalio/activity": "1.4.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

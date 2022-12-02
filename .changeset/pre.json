@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "@kuflow/kuflow-temporal-activity-kuflow": "0.2.0-next.0",
+    "@kuflow/kuflow-temporal-core": "0.2.0-next.0",
+    "@kuflow/kuflow-temporal-sample": "0.2.0-next.0",
+    "@kuflow/kuflow-rest-client": "0.2.0-next.2",
+    "@kuflow/kuflow-test": "0.2.0-next.2"
+  },
+  "changesets": ["five-birds-shop", "seven-years-float", "tidy-islands-knock", "wicked-houses-shave"]
+}

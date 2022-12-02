@@ -1,0 +1,33 @@
+# Ignore all dot files except
+.*
+!.changeset
+!.eslintignore
+!.eslintrc.yaml
+!.nvmrc
+!.prettierignore
+!.prettierrc
+!.editorconfig
+!.gitattributes
+!.gitignore
+
+######################
+# Node
+######################
+node_modules/
+tsconfig.tsbuildinfo
+
+######################
+# Intellij Idea
+######################
+*.iml
+.idea/
+
+######################
+# Visual Studio Code
+######################
+.vscode/
+
+######################
+# Project
+######################
+lib/
