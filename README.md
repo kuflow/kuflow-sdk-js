@@ -1,4 +1,4 @@
-# KuFlow Engine Client Javascript
+# KuFlow Engine Client JavaScript
 
 > **_"KuFlow is a platform on which you can design and execute your business processes"_**
 
