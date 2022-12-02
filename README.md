@@ -19,11 +19,11 @@ Documentation on how to integrate with KuFlow using Javascript is available [her
 
 This monorepo contains the following packages:
 
-| Subfolder                                                                                | Package                                                                                                            | Version                                                                                        | 
-|------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| [`packages/kuflow-rest/`](packages/kuflow-rest/)                                         | [`@kuflow/kuflow-rest`](https://www.npmjs.com/package/@kuflow/kuflow-rest)                                         | ![npm](https://img.shields.io/npm/v/@kuflow/kuflow-rest?style=flat-square)                     |
-| [`packages/kuflow-temporal-activity-kuflow/`](packages/kuflow-temporal-activity-kuflow/) | [`@kuflow/kuflow-temporal-activity-kuflow`](https://www.npmjs.com/package/@kuflow/kuflow-temporal-activity-kuflow) | ![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-activity-kuflow?style=flat-square) |
-| [`packages/kuflow-temporal-core/`](packages/kuflow-temporal-core/)                       | [`@kuflow/kuflow-temporal-core`](https://www.npmjs.com/package/@kuflow/kuflow-temporal-core)                       | ![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-core?style=flat-square)            |
+| Subfolder                                                                                | Package                                                                                                                                                                                                               |
+|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`packages/kuflow-rest/`](packages/kuflow-rest/)                                         | [![npm](https://img.shields.io/npm/v/@kuflow/kuflow-rest?style=flat-square&label=@kuflow/kuflow-rest)](https://www.npmjs.com/package/@kuflow/kuflow-rest)                                                             |
+| [`packages/kuflow-temporal-activity-kuflow/`](packages/kuflow-temporal-activity-kuflow/) | [![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-activity-kuflow?style=flat-square&label=@kuflow/kuflow-temporal-activity-kuflow)](https://www.npmjs.com/package/@kuflow/kuflow-temporal-activity-kuflow) |
+| [`packages/kuflow-temporal-core/`](packages/kuflow-temporal-core/)                       | [![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-core?style=flat-square&label=@kuflow/kuflow-temporal-core)](https://www.npmjs.com/package/@kuflow/kuflow-temporal-core)                                  | 
 
 ## Contributing
 

@@ -1,4 +1,6 @@
-# KuFlow Engine Client Java
+[![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-activity-kuflow?style=flat-square&label=@kuflow/kuflow-temporal-activity-kuflow)](https://www.npmjs.com/package/@kuflow/kuflow-temporal-activity-kuflow)
+
+# KuFlow Temporal activity KuFlow
 
 > **_"KuFlow is a platform on which you can design and execute your business processes"_**
 
