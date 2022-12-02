@@ -18,7 +18,7 @@
     "url": "https://github.com/kuflow/kuflow-sdk-js.git"
   },
   "license": "MIT",
-  "author": "KuFlow S.L.",
+  "author": "KuFlow S.L. <kuflow@kuflow.com>",
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc --build",
