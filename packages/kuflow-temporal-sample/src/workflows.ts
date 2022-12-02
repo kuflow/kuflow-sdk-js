@@ -22,7 +22,7 @@
  */
 // Only import the activity types
 import type { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
-import { LoggerSinks, proxyActivities, proxySinks } from '@temporalio/workflow'
+import { LoggerSinks, proxyActivities, proxySinks, uuid4 } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({
   startToCloseTimeout: '10 minutes',
@@ -51,6 +51,7 @@ export async function MyWorkflow(request: WorkflowRequest): Promise<WorkflowResp
   await kuFlowAsyncActivities.KuFlow_Engine_createTaskAndWaitFinished({
     task: {
       objectType: 'TASK',
+      id: uuid4(),
       processId: request.processId,
       taskDefinition: {
         code: 'TASK_0001',

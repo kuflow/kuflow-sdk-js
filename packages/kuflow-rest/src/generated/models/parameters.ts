@@ -367,7 +367,7 @@ export const command6: OperationParameter = {
 export const accept2: OperationParameter = {
   parameterPath: 'accept',
   mapper: {
-    defaultValue: 'application/octet-stream',
+    defaultValue: 'application/octet-stream, application/json',
     isConstant: true,
     serializedName: 'Accept',
     type: {
@@ -390,7 +390,7 @@ export const documentId: OperationQueryParameter = {
 export const accept3: OperationParameter = {
   parameterPath: 'accept',
   mapper: {
-    defaultValue: 'application/pdf, application/zip',
+    defaultValue: 'application/pdf, application/zip, application/json',
     isConstant: true,
     serializedName: 'Accept',
     type: {

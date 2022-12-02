@@ -75,7 +75,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
       userAgentOptions: {
         userAgentPrefix,
       },
-      baseUri:
+      endpoint:
         options.endpoint ??
         // eslint-disable-next-line deprecation/deprecation
         options.baseUri ??

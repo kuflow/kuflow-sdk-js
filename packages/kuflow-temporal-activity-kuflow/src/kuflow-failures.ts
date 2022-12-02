@@ -20,7 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './kuflow-activities-async'
-export * from './kuflow-activities-failure'
-export * from './kuflow-activities-sync'
-export * from './models'
+export enum KuFlowFailures {
+  ACTIVITIES_FAILURE = 'KuFlowActivities.Failure',
+
+  ACTIVITIES_REST_FAILURE = 'KuFlowActivities.RestFailure',
+
+  ACTIVITIES_VALIDATION_FAILURE = 'KuFlowActivities.ValidationFailure',
+}

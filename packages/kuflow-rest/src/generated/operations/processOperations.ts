@@ -366,6 +366,9 @@ const actionsProcessSaveUserActionValueDocumentOperationSpec: coreClient.Operati
       bodyMapper: Mappers.Process,
     },
     304: {},
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
   },
   requestBody: Parameters.file,
   queryParameters: [Parameters.fileContentType, Parameters.fileName, Parameters.userActionValueId],

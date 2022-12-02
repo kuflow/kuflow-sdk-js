@@ -351,6 +351,9 @@ const retrieveTaskOperationSpec: coreClient.OperationSpec = {
     200: {
       bodyMapper: Mappers.Task,
     },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
   },
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept],
@@ -412,6 +415,9 @@ const actionsTaskSaveElementValueDocumentOperationSpec: coreClient.OperationSpec
     200: {
       bodyMapper: Mappers.Task,
     },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
   },
   requestBody: Parameters.file,
   queryParameters: [
@@ -467,6 +473,9 @@ const actionsTaskDownloadElementValueDocumentOperationSpec: coreClient.Operation
     200: {
       bodyMapper: { type: { name: 'Stream' }, serializedName: 'parsedResponse' },
     },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
   },
   queryParameters: [Parameters.documentId],
   urlParameters: [Parameters.$host, Parameters.id],
@@ -479,6 +488,9 @@ const actionsTaskDownloadElementValueRenderedOperationSpec: coreClient.Operation
   responses: {
     200: {
       bodyMapper: { type: { name: 'Stream' }, serializedName: 'parsedResponse' },
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
     },
   },
   queryParameters: [Parameters.elementDefinitionCode],
@@ -493,6 +505,9 @@ const actionsTaskCompleteOperationSpec: coreClient.OperationSpec = {
     200: {
       bodyMapper: Mappers.Task,
     },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
   },
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept],
@@ -504,6 +519,9 @@ const actionsTaskAppendLogOperationSpec: coreClient.OperationSpec = {
   responses: {
     200: {
       bodyMapper: Mappers.Task,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
     },
   },
   requestBody: Parameters.log,

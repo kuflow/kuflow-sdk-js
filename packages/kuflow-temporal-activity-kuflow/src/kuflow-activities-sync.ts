@@ -32,8 +32,8 @@ import {
   TaskSaveElementCommand,
 } from '@kuflow/kuflow-rest'
 import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
-import { CompleteAsyncError, Context } from '@temporalio/activity'
 
+import { catchAllErrors } from './kuflow-activities-failure'
 import {
   AppendTaskLogRequest,
   AppendTaskLogResponse,
@@ -70,8 +70,25 @@ import {
   SaveTaskElementRequest,
   SaveTaskElementResponse,
 } from './models'
+import {
+  validateAppendTaskLogRequest,
+  validateAssignTaskRequest,
+  validateChangeProcessInitiatorRequest,
+  validateClaimTaskRequest,
+  validateCompleteProcessRequest,
+  validateCompleteTaskRequest,
+  validateCreateTaskRequest,
+  validateDeleteProcessElementRequest,
+  validateDeleteTaskElementRequest,
+  validateDeleteTaskElementValueDocumentRequest,
+  validateRetrievePrincipalRequest,
+  validateRetrieveProcessRequest,
+  validateRetrieveTaskRequest,
+  validateSaveProcessElementRequest,
+  validateSaveTaskElementRequest,
+} from './validations'
 
-export interface KuFlowActivities {
+export interface KuFlowSyncActivities {
   /**
    * Retrieve a Principal.
    * @param request must not be {@literal null}.
@@ -238,33 +255,35 @@ export interface KuFlowActivities {
 /**
  * KuFlow activities to be used in Temporal.
  */
-export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowActivities => {
-  const kuflowRestClient = kuFlowEngine.kuflowRestClient
+export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowSyncActivities => {
+  const kuFlowRestClient = kuFlowEngine.kuflowRestClient
 
   return {
-    KuFlow_Engine_retrievePrincipal,
-    KuFlow_Engine_findProcesses,
-    KuFlow_Engine_retrieveProcess,
-    KuFlow_Engine_saveProcessElement,
-    KuFlow_Engine_deleteProcessElement,
-    KuFlow_Engine_completeProcess,
-    KuFlow_Engine_changeProcessInitiator,
-    KuFlow_Engine_findTasks,
-    KuFlow_Engine_retrieveTask,
-    KuFlow_Engine_createTask,
-    KuFlow_Engine_completeTask,
-    KuFlow_Engine_claimTask,
-    KuFlow_Engine_assignTask,
-    KuFlow_Engine_saveTaskElement,
-    KuFlow_Engine_deleteTaskElement,
-    KuFlow_Engine_deleteTaskElementValueDocument,
-    KuFlow_Engine_appendTaskLog,
+    KuFlow_Engine_retrievePrincipal: catchAllErrors(KuFlow_Engine_retrievePrincipal),
+    KuFlow_Engine_findProcesses: catchAllErrors(KuFlow_Engine_findProcesses),
+    KuFlow_Engine_retrieveProcess: catchAllErrors(KuFlow_Engine_retrieveProcess),
+    KuFlow_Engine_saveProcessElement: catchAllErrors(KuFlow_Engine_saveProcessElement),
+    KuFlow_Engine_deleteProcessElement: catchAllErrors(KuFlow_Engine_deleteProcessElement),
+    KuFlow_Engine_completeProcess: catchAllErrors(KuFlow_Engine_completeProcess),
+    KuFlow_Engine_changeProcessInitiator: catchAllErrors(KuFlow_Engine_changeProcessInitiator),
+    KuFlow_Engine_findTasks: catchAllErrors(KuFlow_Engine_findTasks),
+    KuFlow_Engine_retrieveTask: catchAllErrors(KuFlow_Engine_retrieveTask),
+    KuFlow_Engine_createTask: catchAllErrors(KuFlow_Engine_createTask),
+    KuFlow_Engine_completeTask: catchAllErrors(KuFlow_Engine_completeTask),
+    KuFlow_Engine_claimTask: catchAllErrors(KuFlow_Engine_claimTask),
+    KuFlow_Engine_assignTask: catchAllErrors(KuFlow_Engine_assignTask),
+    KuFlow_Engine_saveTaskElement: catchAllErrors(KuFlow_Engine_saveTaskElement),
+    KuFlow_Engine_deleteTaskElement: catchAllErrors(KuFlow_Engine_deleteTaskElement),
+    KuFlow_Engine_deleteTaskElementValueDocument: catchAllErrors(KuFlow_Engine_deleteTaskElementValueDocument),
+    KuFlow_Engine_appendTaskLog: catchAllErrors(KuFlow_Engine_appendTaskLog),
   }
 
   async function KuFlow_Engine_retrievePrincipal(
     request: RetrievePrincipalRequest,
   ): Promise<RetrievePrincipalResponse> {
-    const principal = await kuflowRestClient.principalOperations.retrievePrincipal(request.principalId)
+    validateRetrievePrincipalRequest(request)
+
+    const principal = await kuFlowRestClient.principalOperations.retrievePrincipal(request.principalId)
 
     return {
       principal,
@@ -272,7 +291,7 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_findProcesses(request: FindProcessesRequest): Promise<FindProcessesResponse> {
-    const processes = await kuflowRestClient.processOperations.findProcesses({
+    const processes = await kuFlowRestClient.processOperations.findProcesses({
       ...request,
     })
 
@@ -282,7 +301,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_retrieveProcess(request: RetrieveProcessRequest): Promise<RetrieveProcessResponse> {
-    const process: Process = await kuflowRestClient.processOperations.retrieveProcess(request.processId)
+    validateRetrieveProcessRequest(request)
+
+    const process: Process = await kuFlowRestClient.processOperations.retrieveProcess(request.processId)
 
     return {
       process,
@@ -292,11 +313,13 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   async function KuFlow_Engine_saveProcessElement(
     request: SaveProcessElementRequest,
   ): Promise<SaveProcessElementResponse> {
+    validateSaveProcessElementRequest(request)
+
     const command: ProcessSaveElementCommand = {
       elementDefinitionCode: request.elementDefinitionCode,
       elementValues: request.elementValues,
     }
-    const process = await kuflowRestClient.processOperations.actionsProcessSaveElement(request.processId, command)
+    const process = await kuFlowRestClient.processOperations.actionsProcessSaveElement(request.processId, command)
 
     return {
       process,
@@ -306,10 +329,12 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   async function KuFlow_Engine_deleteProcessElement(
     request: DeleteProcessElementRequest,
   ): Promise<DeleteProcessElementResponse> {
+    validateDeleteProcessElementRequest(request)
+
     const command: ProcessDeleteElementCommand = {
       elementDefinitionCode: request.elementDefinitionCode,
     }
-    const process = await kuflowRestClient.processOperations.actionsProcessDeleteElement(request.processId, command)
+    const process = await kuFlowRestClient.processOperations.actionsProcessDeleteElement(request.processId, command)
 
     return {
       process,
@@ -317,7 +342,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_completeProcess(request: CompleteProcessRequest): Promise<CompleteProcessResponse> {
-    const process = await kuflowRestClient.processOperations.actionsProcessComplete(request.processId)
+    validateCompleteProcessRequest(request)
+
+    const process = await kuFlowRestClient.processOperations.actionsProcessComplete(request.processId)
 
     return {
       process,
@@ -327,11 +354,13 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   async function KuFlow_Engine_changeProcessInitiator(
     request: ChangeProcessInitiatorRequest,
   ): Promise<ChangeProcessInitiatorResponse> {
+    validateChangeProcessInitiatorRequest(request)
+
     const command: ProcessChangeInitiatorCommand = {
       email: request.email,
       principalId: request.principalId,
     }
-    const process = await kuflowRestClient.processOperations.actionsProcessChangeInitiator(request.processId, command)
+    const process = await kuFlowRestClient.processOperations.actionsProcessChangeInitiator(request.processId, command)
 
     return {
       process,
@@ -339,7 +368,7 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_findTasks(request: FindTasksRequest): Promise<FindTasksResponse> {
-    const tasks = await kuflowRestClient.taskOperations.findTasks({
+    const tasks = await kuFlowRestClient.taskOperations.findTasks({
       ...request,
     })
 
@@ -349,7 +378,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_retrieveTask(request: RetrieveTaskRequest): Promise<RetrieveTaskResponse> {
-    const task = await kuflowRestClient.taskOperations.retrieveTask(request.taskId)
+    validateRetrieveTaskRequest(request)
+
+    const task = await kuFlowRestClient.taskOperations.retrieveTask(request.taskId)
 
     return {
       task,
@@ -357,7 +388,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_createTask(request: CreateTaskRequest): Promise<CreateTaskResponse> {
-    const task = await kuflowRestClient.taskOperations.createTask(request.task)
+    validateCreateTaskRequest(request)
+
+    const task = await kuFlowRestClient.taskOperations.createTask(request.task)
 
     return {
       task,
@@ -365,7 +398,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_completeTask(request: CompleteTaskRequest): Promise<CompleteTaskResponse> {
-    const task = await kuflowRestClient.taskOperations.actionsTaskComplete(request.taskId)
+    validateCompleteTaskRequest(request)
+
+    const task = await kuFlowRestClient.taskOperations.actionsTaskComplete(request.taskId)
 
     return {
       task,
@@ -373,7 +408,9 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_claimTask(request: ClaimTaskRequest): Promise<ClaimTaskResponse> {
-    const task = await kuflowRestClient.taskOperations.actionsTaskClaim(request.taskId)
+    validateClaimTaskRequest(request)
+
+    const task = await kuFlowRestClient.taskOperations.actionsTaskClaim(request.taskId)
 
     return {
       task,
@@ -381,11 +418,13 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_assignTask(request: AssignTaskRequest): Promise<AssignTaskResponse> {
+    validateAssignTaskRequest(request)
+
     const command: TaskAssignCommand = {
       email: request.email,
       principalId: request.principalId,
     }
-    const task = await kuflowRestClient.taskOperations.actionsTaskAssign(request.taskId, command)
+    const task = await kuFlowRestClient.taskOperations.actionsTaskAssign(request.taskId, command)
 
     return {
       task,
@@ -393,11 +432,13 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_saveTaskElement(request: SaveTaskElementRequest): Promise<SaveTaskElementResponse> {
+    validateSaveTaskElementRequest(request)
+
     const command: TaskSaveElementCommand = {
       elementDefinitionCode: request.elementDefinitionCode,
       elementValues: request.elementValues,
     }
-    const task = await kuflowRestClient.taskOperations.actionsTaskSaveElement(request.taskId, command)
+    const task = await kuFlowRestClient.taskOperations.actionsTaskSaveElement(request.taskId, command)
 
     return {
       task,
@@ -407,10 +448,12 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   async function KuFlow_Engine_deleteTaskElement(
     request: DeleteTaskElementRequest,
   ): Promise<DeleteTaskElementResponse> {
+    validateDeleteTaskElementRequest(request)
+
     const command: TaskDeleteElementCommand = {
       elementDefinitionCode: request.elementDefinitionCode,
     }
-    const task = await kuflowRestClient.taskOperations.actionsTaskDeleteElement(request.taskId, command)
+    const task = await kuFlowRestClient.taskOperations.actionsTaskDeleteElement(request.taskId, command)
 
     return {
       task,
@@ -420,10 +463,12 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   async function KuFlow_Engine_deleteTaskElementValueDocument(
     request: DeleteTaskElementValueDocumentRequest,
   ): Promise<DeleteTaskElementValueDocumentResponse> {
+    validateDeleteTaskElementValueDocumentRequest(request)
+
     const command: TaskDeleteElementValueDocumentCommand = {
       documentId: request.documentId,
     }
-    const task = await kuflowRestClient.taskOperations.actionsTaskDeleteElementValueDocument(request.taskId, command)
+    const task = await kuFlowRestClient.taskOperations.actionsTaskDeleteElementValueDocument(request.taskId, command)
 
     return {
       task,
@@ -431,39 +476,12 @@ export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection)
   }
 
   async function KuFlow_Engine_appendTaskLog(request: AppendTaskLogRequest): Promise<AppendTaskLogResponse> {
-    const task = await kuflowRestClient.taskOperations.actionsTaskAppendLog(request.taskId, request.log)
+    validateAppendTaskLogRequest(request)
+
+    const task = await kuFlowRestClient.taskOperations.actionsTaskAppendLog(request.taskId, request.log)
 
     return {
       task,
     }
-  }
-}
-
-export interface KuFlowAsyncActivities {
-  /**
-   * Create a Task and optionally fill its elements. The activity is finished when the <strong>"COMPLETED"</strong> or
-   * <strong>"CANCELLED"</strong> event is received from KuFlow. This is useful in KuFlow tasks where you have to wait for an external
-   * agent, usually a human, to complete it.
-   *
-   * @param request must not be {@literal null}.
-   */
-  KuFlow_Engine_createTaskAndWaitFinished: (request: CreateTaskRequest) => Promise<void>
-}
-
-/**
- * KuFlow Async activities to be used in Temporal.
- */
-export const createKuFlowAsyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowAsyncActivities => {
-  const kuflowRestClient = kuFlowEngine.kuflowRestClient
-
-  return {
-    KuFlow_Engine_createTaskAndWaitFinished,
-  }
-
-  async function KuFlow_Engine_createTaskAndWaitFinished(request: CreateTaskRequest): Promise<void> {
-    const activityToken = Context.current().info.base64TaskToken
-    await kuflowRestClient.taskOperations.createTask(request.task, { activityToken })
-
-    throw new CompleteAsyncError()
   }
 }
