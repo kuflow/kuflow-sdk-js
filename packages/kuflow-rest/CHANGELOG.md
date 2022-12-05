@@ -1,5 +1,11 @@
 # @kuflow/kuflow-rest
 
+## 0.2.2
+
+### Patch Changes
+
+- aa00b55: Test release process
+
 ## 0.2.2-next.0
 
 ### Patch Changes
