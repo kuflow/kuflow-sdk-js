@@ -1,5 +1,13 @@
 # @kuflow/kuflow-temporal-activity-kuflow
 
+## 0.2.3-next.0
+
+### Patch Changes
+
+- 9942b94: Test release process
+- Updated dependencies [9942b94]
+  - @kuflow/kuflow-temporal-core@0.2.3-next.0
+
 ## 0.2.2
 
 ### Patch Changes

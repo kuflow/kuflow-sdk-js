@@ -8,5 +8,7 @@
     "@kuflow/kuflow-temporal-sample": "0.2.2",
     "@kuflow/kuflow-test": "0.2.2"
   },
-  "changesets": []
+  "changesets": [
+    "swift-dolls-stare"
+  ]
 }
