@@ -2,5 +2,10 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
   "version": "0.3.1",
-  "exact": true
+  "exact": true,
+  "command": {
+    "version": {
+      "exact": true
+    }
+  }
 }
