@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "next",
   "initialVersions": {
     "@kuflow/kuflow-temporal-activity-kuflow": "0.2.0-next.0",
