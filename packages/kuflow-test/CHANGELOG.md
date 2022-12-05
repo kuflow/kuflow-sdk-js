@@ -1,5 +1,15 @@
 # @kuflow/kuflow-test
 
+## 0.2.2-next.0
+
+### Patch Changes
+
+- aa00b55: Test release process
+- Updated dependencies [aa00b55]
+  - @kuflow/kuflow-rest@0.2.2-next.0
+  - @kuflow/kuflow-temporal-activity-kuflow@0.2.2-next.0
+  - @kuflow/kuflow-temporal-core@0.2.2-next.0
+
 ## 0.2.1
 
 ### Patch Changes

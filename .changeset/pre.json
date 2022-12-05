@@ -8,5 +8,7 @@
     "@kuflow/kuflow-temporal-sample": "0.2.1",
     "@kuflow/kuflow-test": "0.2.1"
   },
-  "changesets": []
+  "changesets": [
+    "twelve-flies-burn"
+  ]
 }
