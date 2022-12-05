@@ -1,5 +1,12 @@
 # @kuflow/kuflow-rest
 
+## 0.2.3
+
+### Patch Changes
+
+- 9942b94: Test release process
+- 0682b9d: Upgrade Contributing file
+
 ## 0.2.3-next.0
 
 ### Patch Changes

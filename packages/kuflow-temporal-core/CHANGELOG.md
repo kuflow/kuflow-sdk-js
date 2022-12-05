@@ -1,5 +1,15 @@
 # @kuflow/kuflow-temporal-core
 
+## 0.2.3
+
+### Patch Changes
+
+- 9942b94: Test release process
+- 0682b9d: Upgrade Contributing file
+- Updated dependencies [9942b94]
+- Updated dependencies [0682b9d]
+  - @kuflow/kuflow-rest@0.2.3
+
 ## 0.2.3-next.0
 
 ### Patch Changes
