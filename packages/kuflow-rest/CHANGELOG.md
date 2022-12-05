@@ -1,5 +1,12 @@
 # @kuflow/kuflow-rest
 
+## 0.2.0
+
+### Patch Changes
+
+- a1e1b85: Update package.json
+- 81a2ed3: Integrate kuflow-rest
+
 ## 0.2.0-next.4
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @kuflow/kuflow-temporal-activity-kuflow
 
+## 0.2.0
+
+### Patch Changes
+
+- 81a2ed3: Upgrade README
+- a1e1b85: Update package.json
+- 81a2ed3: Integrate kuflow-rest
+- 81a2ed3: Add package.json keywords
+- 81a2ed3: Update to the latest version of kuflow-rest-client
+- Updated dependencies [81a2ed3]
+- Updated dependencies [a1e1b85]
+- Updated dependencies [81a2ed3]
+- Updated dependencies [81a2ed3]
+- Updated dependencies [81a2ed3]
+  - @kuflow/kuflow-temporal-core@0.2.0
+
 ## 0.2.0-next.4
 
 ### Patch Changes
