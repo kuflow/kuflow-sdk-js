@@ -39,7 +39,6 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@changesets/cli": "2.25.2",
     "@tsconfig/node16": "1.0.3",
     "@types/node": "16.11.9",
     "@typescript-eslint/eslint-plugin": "5.44.0",
