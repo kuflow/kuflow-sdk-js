@@ -1,5 +1,11 @@
 # @kuflow/kuflow-rest
 
+## 0.2.1
+
+### Patch Changes
+
+- b9068c9: Test release process
+
 ## 0.2.0
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @kuflow/kuflow-temporal-sample
 
+## 0.2.1
+
+### Patch Changes
+
+- b9068c9: Test release process
+- Updated dependencies [b9068c9]
+  - @kuflow/kuflow-rest@0.2.1
+  - @kuflow/kuflow-temporal-activity-kuflow@0.2.1
+  - @kuflow/kuflow-temporal-core@0.2.1
+
 ## 0.2.0
 
 ### Patch Changes
