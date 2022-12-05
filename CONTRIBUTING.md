@@ -1,10 +1,10 @@
-# Developing kuflow-engine-client-js
+# Developing kuflow-sdk-js
 
-This doc is intended for contributors to `kuflow-engine-client-js`
+This doc is intended for contributors to `kuflow-sdk-js`
 
 ## Development Environment
 
-- Node 16
+- Node v18
 
 ## Test and Build
 
