@@ -32,7 +32,7 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-rest": "0.2.3",
+    "@kuflow/kuflow-rest": "^0.2.3",
     "@temporalio/worker": "1.4.4"
   },
   "publishConfig": {

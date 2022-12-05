@@ -39,9 +39,9 @@
     ]
   },
   "dependencies": {
-    "@kuflow/kuflow-temporal-activity-kuflow": "0.2.3",
-    "@kuflow/kuflow-temporal-core": "0.2.3",
-    "@kuflow/kuflow-rest": "0.2.3",
+    "@kuflow/kuflow-rest": "^0.2.3",
+    "@kuflow/kuflow-temporal-activity-kuflow": "^0.2.3",
+    "@kuflow/kuflow-temporal-core": "^0.2.3",
     "@temporalio/activity": "1.4.4",
     "@temporalio/client": "1.4.4",
     "@temporalio/worker": "1.4.4",
