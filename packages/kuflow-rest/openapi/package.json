@@ -9,6 +9,6 @@
     "autorest": "autorest",
     "generate": "npm run generate:autorest && npm run generate:format",
     "generate:autorest": "autorest --version=3.9.3 readme.md",
-    "generate:format": "cd ../../../ && npm run format"
+    "generate:format": "cd ../../../ && npm run format:write"
   }
 }

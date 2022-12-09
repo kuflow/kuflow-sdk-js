@@ -156,14 +156,12 @@ export const Principal: coreClient.CompositeMapper = {
     modelProperties: {
       id: {
         serializedName: 'id',
-        required: true,
         type: {
           name: 'Uuid',
         },
       },
       type: {
         serializedName: 'type',
-        required: true,
         type: {
           name: 'Enum',
           allowedValues: ['USER', 'APPLICATION', 'SYSTEM'],
@@ -171,7 +169,6 @@ export const Principal: coreClient.CompositeMapper = {
       },
       name: {
         serializedName: 'name',
-        required: true,
         type: {
           name: 'String',
         },

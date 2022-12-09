@@ -79,9 +79,9 @@ export interface DefaultErrorInfo {
 }
 
 export interface Principal {
-  id: string
-  type: PrincipalType
-  name: string
+  id?: string
+  type?: PrincipalType
+  name?: string
   user?: PrincipalUser
   application?: PrincipalApplication
 }

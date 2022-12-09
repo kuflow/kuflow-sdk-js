@@ -18,8 +18,8 @@ npm run build
 
 From `main` branch do
 
-````bash
+```bash
 npx lerna version
-````
+```
 
 Select the version that you want to release and follow the lerna instructions.
