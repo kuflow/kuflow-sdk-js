@@ -13,3 +13,13 @@ Run all the tests with:
 ```bash
 npm run build
 ```
+
+## Release a new version
+
+From `main` branch do
+
+````bash
+npx lerna version
+````
+
+Select the version that you want to release and follow the lerna instructions.
