@@ -5,7 +5,8 @@
   "exact": true,
   "command": {
     "version": {
-      "exact": true
+      "exact": true,
+      "message": "Release: %s"
     }
   }
 }
