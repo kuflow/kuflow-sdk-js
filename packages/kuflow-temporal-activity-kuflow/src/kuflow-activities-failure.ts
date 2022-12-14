@@ -40,14 +40,11 @@ export const catchAllErrors = <T extends any[], U, R extends Promise<U>>(cb: (..
       }
 
       if (e instanceof RestError) {
-        const nonRetryable = e.statusCode != null && e.statusCode >= 400 && e.statusCode < 500 && e.statusCode !== 429
-
         throw ApplicationFailure.create({
           message: 'Rest Invocation error',
           type: KuFlowFailureType.ACTIVITIES_REST_FAILURE,
           details: e.details != null ? [e.details] : undefined,
           cause: e,
-          nonRetryable,
         })
       }
 
