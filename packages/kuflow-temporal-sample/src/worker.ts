@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
-import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
+import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
 import { NativeConnection, Worker } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
 import fs from 'fs'
@@ -58,7 +58,7 @@ async function run({
       },
     },
   })
-  const kuFlowEngineConnection = KuFlowEngineConnection.connect(
+  const kuFlowEngineConnection = KuFlowTemporalConnection.connect(
     connection,
     {
       clientId: kuflowRestClientApiUsername,

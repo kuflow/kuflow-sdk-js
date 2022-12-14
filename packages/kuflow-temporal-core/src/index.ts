@@ -30,7 +30,7 @@ import { NativeConnection } from '@temporalio/worker'
 
 const NOOP = (): void => {}
 
-export interface KuFlowEngineConnectionBackoff {
+export interface KuFlowTemporalConnectionBackoff {
   /**
    * Milliseconds between errors
    */
@@ -47,18 +47,18 @@ export interface KuFlowEngineConnectionBackoff {
   exponentialRate?: number
 }
 
-export interface KuFlowEngineConnectionOptionals {
-  backoff?: KuFlowEngineConnectionBackoff
+export interface KuFlowTemporalConnectionOptionals {
+  backoff?: KuFlowTemporalConnectionBackoff
 }
 
-export type KuFlowEngineConnectionOptions = KuFlowEngineConnectionOptionals & KuFlowRestClientOptionals
+export type KuFlowTemporalConnectionOptions = KuFlowTemporalConnectionOptionals & KuFlowRestClientOptionals
 
-export class KuFlowEngineConnection {
+export class KuFlowTemporalConnection {
   public readonly kuflowRestClient: KuFlowRestClient
 
   public readonly connection: NativeConnection
 
-  private readonly backoff: Required<KuFlowEngineConnectionBackoff>
+  private readonly backoff: Required<KuFlowTemporalConnectionBackoff>
 
   private consecutiveFailures = 0
 
@@ -67,21 +67,21 @@ export class KuFlowEngineConnection {
   public static connect(
     connection: NativeConnection,
     credentials: KuFlowRestClientCredential,
-    options?: KuFlowEngineConnectionOptions,
-  ): KuFlowEngineConnection {
+    options?: KuFlowTemporalConnectionOptions,
+  ): KuFlowTemporalConnection {
     const { backoff, ...kuFlowRestClientOptions } = options ?? {}
     const kuflowRestClient = new KuFlowRestClient(credentials, kuFlowRestClientOptions)
 
-    const kuFlowEngineConnection = new KuFlowEngineConnection(kuflowRestClient, connection)
-    kuFlowEngineConnection.scheduleAuthorizationTokenRenovation()
+    const kuFlowTemporalConnection = new KuFlowTemporalConnection(kuflowRestClient, connection)
+    kuFlowTemporalConnection.scheduleAuthorizationTokenRenovation()
 
-    return kuFlowEngineConnection
+    return kuFlowTemporalConnection
   }
 
   private constructor(
     kuflowRestClient: KuFlowRestClient,
     connection: NativeConnection,
-    backoff?: KuFlowEngineConnectionBackoff,
+    backoff?: KuFlowTemporalConnectionBackoff,
   ) {
     this.kuflowRestClient = kuflowRestClient
     this.connection = connection

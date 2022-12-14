@@ -22,7 +22,7 @@
  */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
+import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
 import { CompleteAsyncError, Context } from '@temporalio/activity'
 
 import { catchAllErrors } from './kuflow-activities-failure'
@@ -43,7 +43,7 @@ export interface KuFlowAsyncActivities {
 /**
  * KuFlow Async activities to be used in Temporal.
  */
-export const createKuFlowAsyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowAsyncActivities => {
+export const createKuFlowAsyncActivities = (kuFlowEngine: KuFlowTemporalConnection): KuFlowAsyncActivities => {
   const kuFlowRestClient = kuFlowEngine.kuflowRestClient
 
   return {

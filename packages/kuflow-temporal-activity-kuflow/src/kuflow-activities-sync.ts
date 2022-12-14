@@ -31,7 +31,7 @@ import {
   TaskDeleteElementValueDocumentCommand,
   TaskSaveElementCommand,
 } from '@kuflow/kuflow-rest'
-import { KuFlowEngineConnection } from '@kuflow/kuflow-temporal-core'
+import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
 
 import { catchAllErrors } from './kuflow-activities-failure'
 import {
@@ -255,7 +255,7 @@ export interface KuFlowSyncActivities {
 /**
  * KuFlow activities to be used in Temporal.
  */
-export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowEngineConnection): KuFlowSyncActivities => {
+export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowTemporalConnection): KuFlowSyncActivities => {
   const kuFlowRestClient = kuFlowEngine.kuflowRestClient
 
   return {

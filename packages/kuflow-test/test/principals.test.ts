@@ -168,7 +168,7 @@ describe('API /principals', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, expectedObject)
 
-      const principal = await kuFlowRestClient.principalOperations.retrievePrincipal(expectedObject.id)
+      const principal = await kuFlowRestClient.principalOperations.retrievePrincipal(expectedObject.id ?? '')
 
       scope.done()
 
