@@ -43,8 +43,8 @@ export interface KuFlowAsyncActivities {
 /**
  * KuFlow Async activities to be used in Temporal.
  */
-export const createKuFlowAsyncActivities = (kuFlowEngine: KuFlowTemporalConnection): KuFlowAsyncActivities => {
-  const kuFlowRestClient = kuFlowEngine.kuflowRestClient
+export const createKuFlowAsyncActivities = (kuFlowTemporal: KuFlowTemporalConnection): KuFlowAsyncActivities => {
+  const kuFlowRestClient = kuFlowTemporal.kuflowRestClient
 
   return {
     KuFlow_Engine_createTaskAndWaitFinished: catchAllErrors(KuFlow_Engine_createTaskAndWaitFinished),

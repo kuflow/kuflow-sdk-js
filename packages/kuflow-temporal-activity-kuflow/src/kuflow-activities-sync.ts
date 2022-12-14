@@ -255,8 +255,8 @@ export interface KuFlowSyncActivities {
 /**
  * KuFlow activities to be used in Temporal.
  */
-export const createKuFlowSyncActivities = (kuFlowEngine: KuFlowTemporalConnection): KuFlowSyncActivities => {
-  const kuFlowRestClient = kuFlowEngine.kuflowRestClient
+export const createKuFlowSyncActivities = (kuFlowTemporal: KuFlowTemporalConnection): KuFlowSyncActivities => {
+  const kuFlowRestClient = kuFlowTemporal.kuflowRestClient
 
   return {
     KuFlow_Engine_retrievePrincipal: catchAllErrors(KuFlow_Engine_retrievePrincipal),
