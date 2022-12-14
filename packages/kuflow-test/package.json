@@ -1,6 +1,6 @@
 {
   "name": "@kuflow/kuflow-test",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "private": true,
   "keywords": [
     "node",
@@ -39,9 +39,9 @@
     ]
   },
   "dependencies": {
-    "@kuflow/kuflow-rest": "0.3.2",
-    "@kuflow/kuflow-temporal-activity-kuflow": "0.3.2",
-    "@kuflow/kuflow-temporal-core": "0.3.2",
+    "@kuflow/kuflow-rest": "0.4.0",
+    "@kuflow/kuflow-temporal-activity-kuflow": "0.4.0",
+    "@kuflow/kuflow-temporal-core": "0.4.0",
     "@temporalio/activity": "1.4.4",
     "@temporalio/client": "1.4.4",
     "@temporalio/worker": "1.4.4",
