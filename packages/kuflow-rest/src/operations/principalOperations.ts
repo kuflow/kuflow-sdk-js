@@ -50,11 +50,6 @@ export class PrincipalOperations {
   async findPrincipals(options?: PrincipalFindPrincipalsOptionalExtParams): Promise<PrincipalFindPrincipalsResponse> {
     const { sort, groupId, ...optionsRest } = options ?? {}
 
-    // *Note:* the method this.principalOperations.findPrincipals expect a 'typeParam' option that is WRONG and
-    // is never considered when the URL is generated (see: Parameters.typeParam). We had solved this thanks
-    // this method expects a 'type' option and then is spread, so when the URL is generated, the param is found.
-    // Typescript doesn't fail because it is not totally strict
-
     return await this.principalOperations.findPrincipals({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,

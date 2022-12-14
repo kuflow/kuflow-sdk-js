@@ -122,7 +122,7 @@ export const sort: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const typeParam: OperationQueryParameter = {
+export const type: OperationQueryParameter = {
   parameterPath: ['options', 'type'],
   mapper: {
     serializedName: 'type',

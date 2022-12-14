@@ -27,7 +27,7 @@ typescript: true
 title: KuFlow
 override-client-name: KuFlowRestClientGenerated
 
-input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/ceaa45b2da31244ac8e6279e8092ef6ff9b00b6a/specs/api.kuflow.com/v2022-10-08/openapi.yaml
+input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/63afd4373554be5197f198664ee2dac33657295c/specs/api.kuflow.com/v2022-10-08/openapi.yaml
 output-folder: ../
 source-code-folder-path: ./src/generated
 
@@ -42,7 +42,7 @@ generate-sample: false
 hide-clients: true
 
 use-extension:
-  '@autorest/typescript': '6.0.0-rc.3'
+  '@autorest/typescript': '6.0.0-rc.5'
   '@autorest/modelerfour': '4.25.0'
 
 modelerfour:

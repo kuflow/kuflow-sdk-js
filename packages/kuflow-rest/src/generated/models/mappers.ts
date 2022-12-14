@@ -426,10 +426,10 @@ export const ProcessDeleteElementCommand: coreClient.CompositeMapper = {
   },
 }
 
-export const TasksDefinitionSummary: coreClient.CompositeMapper = {
+export const TaskDefinitionSummary: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TasksDefinitionSummary',
+    className: 'TaskDefinitionSummary',
     modelProperties: {
       id: {
         serializedName: 'id',
@@ -916,7 +916,7 @@ export const Task: coreClient.CompositeMapper = {
         serializedName: 'taskDefinition',
         type: {
           name: 'Composite',
-          className: 'TasksDefinitionSummary',
+          className: 'TaskDefinitionSummary',
         },
       },
       processId: {

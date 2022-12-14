@@ -139,7 +139,7 @@ export interface ProcessDeleteElementCommand {
 }
 
 /** In creation task, one of 'id, version or code' is mandatory. */
-export interface TasksDefinitionSummary {
+export interface TaskDefinitionSummary {
   id?: string
   version?: string
   code?: string
@@ -259,7 +259,7 @@ export interface Task extends AbstractAudited {
   /** Task state */
   state?: TaskState
   /** In creation task, one of 'id, version or code' is mandatory. */
-  taskDefinition: TasksDefinitionSummary
+  taskDefinition: TaskDefinitionSummary
   processId: string
   /** Task element values, en ElementValueDocument is not allowed. */
   elementValues?: { [propertyName: string]: TaskElementValueUnion[] }
@@ -390,7 +390,7 @@ export interface PrincipalFindPrincipalsOptionalParams extends coreClient.Operat
    */
   sort?: string[]
   /** Filter principals by type. */
-  typeParam?: PrincipalType
+  type?: PrincipalType
   /** Filter principals that exists in one of group ids. */
   groupId?: string[]
 }

@@ -82,7 +82,7 @@ const findPrincipalsOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  queryParameters: [Parameters.size, Parameters.page, Parameters.sort, Parameters.typeParam, Parameters.groupId],
+  queryParameters: [Parameters.size, Parameters.page, Parameters.sort, Parameters.type, Parameters.groupId],
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.accept],
   serializer,
