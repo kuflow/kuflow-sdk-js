@@ -22,7 +22,14 @@
  */
 import * as logger from '@azure/logger'
 import { describe, test } from '@jest/globals'
-import { Document, KuFlowRestClient, Process, Task, TaskSaveElementValueDocumentCommand } from '@kuflow/kuflow-rest'
+import {
+  Document,
+  KuFlowRestClient,
+  Process,
+  Task,
+  TaskSaveElementCommand,
+  TaskSaveElementValueDocumentCommand,
+} from '@kuflow/kuflow-rest'
 import * as fs from 'fs'
 
 describe('E2E Test', () => {
@@ -79,37 +86,44 @@ describe('E2E Test', () => {
       return
     }
 
-    // await kuflowClient.taskOperations.actionsTaskClaim(taskCreated.id)
+    await kuFlowRestClient.taskOperations.actionsTaskClaim(taskCreated.id)
 
-    // const command1: TaskSaveElementCommand = {
-    //   elementDefinitionCode: 'TEXT_001',
-    //   values: [{
-    //     type: "STRING",
-    //     value: "Valor del bueno"
-    //   }]
-    // }
-    // await kuflowClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command1)
-    //
-    // const command2: TaskSaveElementCommand = {
-    //   elementDefinitionCode: 'TEXT_002',
-    //   values: [{
-    //     type: "STRING",
-    //     value: "Valor del bueno uno"
-    //   }, {
-    //     type: "STRING",
-    //     value: "Valor del bueno dos"
-    //   }]
-    // }
-    // await kuflowClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command2)
-    //
-    // const command3: TaskSaveElementCommand = {
-    //   elementDefinitionCode: 'NUMBER_001',
-    //   values: [{
-    //     type: "NUMBER",
-    //     value: 50
-    //   }]
-    // }
-    // await kuflowClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command3)
+    const command1: TaskSaveElementCommand = {
+      elementDefinitionCode: 'TEXT_001',
+      elementValues: [
+        {
+          type: 'STRING',
+          value: 'Valor del bueno',
+        },
+      ],
+    }
+    await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command1)
+
+    const command2: TaskSaveElementCommand = {
+      elementDefinitionCode: 'TEXT_002',
+      elementValues: [
+        {
+          type: 'STRING',
+          value: 'Valor del bueno uno',
+        },
+        {
+          type: 'STRING',
+          value: 'Valor del bueno dos',
+        },
+      ],
+    }
+    await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command2)
+
+    const command3: TaskSaveElementCommand = {
+      elementDefinitionCode: 'NUMBER_001',
+      elementValues: [
+        {
+          type: 'NUMBER',
+          value: 50,
+        },
+      ],
+    }
+    await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command3)
 
     const command4: TaskSaveElementValueDocumentCommand = {
       elementDefinitionCode: 'DOC_001',

@@ -7,8 +7,9 @@
   },
   "scripts": {
     "autorest": "autorest",
-    "generate": "npm run generate:autorest && npm run generate:format",
+    "generate": "npm run generate:autorest && npm run generate:workaround && npm run generate:format",
     "generate:autorest": "autorest --version=3.9.3 readme.md",
+    "generate:workaround": "scripts/remove-unnecesary-union-options.js",
     "generate:format": "cd ../../../ && npm run format:write"
   }
 }
