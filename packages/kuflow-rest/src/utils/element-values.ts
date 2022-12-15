@@ -101,7 +101,7 @@ export function getElementValueValidAt(
   elementDefinitionCode: string,
   index: number,
 ): boolean | undefined {
-  const elementValues = getElementValues(mode, elementDefinitionCode)
+  const elementValues = getElementValues(model, elementDefinitionCode)
   if (elementValues[index] == null) {
     throw new Error(`Index ${index} not found`)
   }
@@ -328,7 +328,7 @@ export function getElementValueAsStringList(model: Process | Task, elementDefini
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process object itself.
  */
 export function setElementValueAsString(
@@ -342,7 +342,7 @@ export function setElementValueAsString(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Task object itself.
  */
 export function setElementValueAsString(
@@ -356,7 +356,7 @@ export function setElementValueAsString(
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the passed process or task.
  */
 export function setElementValueAsString(
@@ -437,7 +437,7 @@ export function setElementValueAsStringList(
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process passed.
  */
 export function addElementValueAsString(
@@ -451,7 +451,7 @@ export function addElementValueAsString(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Task passed.
  */
 export function addElementValueAsString(
@@ -465,7 +465,7 @@ export function addElementValueAsString(
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process or Task passed.
  */
 export function addElementValueAsString(
@@ -670,7 +670,7 @@ export function getElementValueAsNumberList(model: Process | Task, elementDefini
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process passed.
  */
 export function setElementValueAsNumber(
@@ -684,7 +684,7 @@ export function setElementValueAsNumber(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Task passed.
  */
 export function setElementValueAsNumber(
@@ -698,7 +698,7 @@ export function setElementValueAsNumber(
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process or Task passed.
  */
 export function setElementValueAsNumber(
@@ -779,7 +779,7 @@ export function setElementValueAsNumberList(
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process passed.
  */
 export function addElementValueAsNumber(
@@ -793,7 +793,7 @@ export function addElementValueAsNumber(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Task passed.
  */
 export function addElementValueAsNumber(
@@ -807,7 +807,7 @@ export function addElementValueAsNumber(
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process or Task passed.
  */
 export function addElementValueAsNumber(
@@ -1012,7 +1012,7 @@ export function getElementValueAsDateList(model: Process | Task, elementDefiniti
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process passed.
  */
 export function setElementValueAsDate(
@@ -1026,7 +1026,7 @@ export function setElementValueAsDate(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Task passed.
  */
 export function setElementValueAsDate(task: Task, elementDefinitionCode: string, elementValue: Date | undefined): Task
@@ -1036,7 +1036,7 @@ export function setElementValueAsDate(task: Task, elementDefinitionCode: string,
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process or Task passed.
  */
 export function setElementValueAsDate(
@@ -1117,7 +1117,7 @@ export function setElementValueAsDateList(
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process passed.
  */
 export function addElementValueAsDate(
@@ -1131,7 +1131,7 @@ export function addElementValueAsDate(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Task passed.
  */
 export function addElementValueAsDate(task: Task, elementDefinitionCode: string, elementValue: Date | undefined): Task
@@ -1141,7 +1141,7 @@ export function addElementValueAsDate(task: Task, elementDefinitionCode: string,
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process or Task passed.
  */
 export function addElementValueAsDate(
@@ -1349,7 +1349,7 @@ export function getElementValueAsObjectList(model: Process | Task, elementDefini
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process passed.
  */
 export function setElementValueAsObject(
@@ -1363,7 +1363,7 @@ export function setElementValueAsObject(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Task passed.
  */
 export function setElementValueAsObject(
@@ -1377,7 +1377,7 @@ export function setElementValueAsObject(
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Process or Task passed.
  */
 export function setElementValueAsObject(
@@ -1458,7 +1458,7 @@ export function setElementValueAsObjectList(
  *
  * @param process Process
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process passed.
  */
 export function addElementValueAsObject(
@@ -1472,7 +1472,7 @@ export function addElementValueAsObject(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Task passed.
  */
 export function addElementValueAsObject(
@@ -1486,7 +1486,7 @@ export function addElementValueAsObject(
  *
  * @param model Process or Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Process or Task passed.
  */
 export function addElementValueAsObject(
@@ -1615,7 +1615,7 @@ export function getElementValueAsDocumentList(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Task passed.
  */
 export function setElementValueAsDocument(
@@ -1654,7 +1654,7 @@ export function setElementValueAsDocumentList(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Task passed.
  */
 export function addElementValueAsDocument(
@@ -1742,7 +1742,7 @@ export function getElementValueAsPrincipalList(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is null all current values are removed
+ * @param elementValue Element value, if the value is undefined all current values are removed
  * @return the Task object itself.
  */
 export function setElementValueAsPrincipal(
@@ -1781,7 +1781,7 @@ export function setElementValueAsPrincipalList(
  *
  * @param task Task
  * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is null the value is not added
+ * @param elementValue Element value, if the values is undefined the value is not added
  * @return the Task passed.
  */
 export function addElementValueAsPrincipal(
@@ -1822,6 +1822,18 @@ function addElementValue(
 ): Process
 
 function addElementValue(
+  task: Task,
+  elementDefinitionCode: string,
+  elementValues: TaskElementValueUnion[] | undefined,
+): Task
+
+function addElementValue(
+  model: Process | Task,
+  elementDefinitionCode: string,
+  elementValues: ProcessElementValueUnion[] | TaskElementValueUnion[] | undefined,
+): Process | Task
+
+function addElementValue(
   model: Process | Task,
   elementDefinitionCode: string,
   elementValues: TaskElementValueUnion[] | undefined,
@@ -1836,6 +1848,12 @@ function setElementValue(
   elementDefinitionCode: string,
   elementValues: ProcessElementValueUnion[] | undefined,
 ): Process
+
+function setElementValue(
+  task: Task,
+  elementDefinitionCode: string,
+  elementValues: TaskElementValueUnion[] | undefined,
+): Task
 
 function setElementValue(
   model: Process | Task,
