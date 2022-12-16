@@ -40,6 +40,9 @@ export interface KuFlowRestClientOptionals extends CommonClientOptions {
 }
 
 export class KuFlowRestClient {
+
+  public static readonly API_VERSION = "v2022-10-08"
+
   /**
    * Authentication API operations.
    */
@@ -66,6 +69,8 @@ export class KuFlowRestClient {
    * @param options The parameter options
    */
   constructor(credentials: KuFlowRestClientCredential, options?: KuFlowRestClientOptionals) {
+    options = this.normalizeOptions(options)
+
     const tokenCredential = kuflowTokenCredential(credentials)
     const clientGenerated = new KuFlowRestClientGenerated(tokenCredential, options)
 
@@ -73,6 +78,21 @@ export class KuFlowRestClient {
     this.principalOperations = new PrincipalOperations(clientGenerated)
     this.processOperations = new ProcessOperations(clientGenerated)
     this.taskOperations = new TaskOperations(clientGenerated)
+  }
+
+  private normalizeOptions(options: KuFlowRestClientOptionals | undefined): KuFlowRestClientOptionals | undefined {
+    if (options == null) {
+      return undefined
+    }
+
+    if (options.endpoint != null) {
+      options.endpoint = options.endpoint.trim();
+      if (!options.endpoint.endsWith(`/${KuFlowRestClient.API_VERSION}`)) {
+        options.endpoint = `${options.endpoint}/${KuFlowRestClient.API_VERSION}`;
+      }
+    }
+
+    return options
   }
 }
 
