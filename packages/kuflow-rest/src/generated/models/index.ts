@@ -22,17 +22,16 @@
  */
 import * as coreClient from '@azure/core-client'
 
-export type AbstractAuditedUnion = AbstractAudited | Authentication | Process | Task
-export type PageUnion = Page | PrincipalPage | ProcessPage | TaskPage
-export type ProcessElementValueUnion = ProcessElementValue | ProcessElementValueString | ProcessElementValueNumber
+export type AbstractAuditedUnion = Authentication | Process | Task
+export type PageUnion = PrincipalPage | ProcessPage | TaskPage
+export type ProcessElementValueUnion = ProcessElementValueString | ProcessElementValueNumber
 export type TaskElementValueUnion =
-  | TaskElementValue
   | TaskElementValueString
   | TaskElementValueNumber
   | TaskElementValueObject
   | TaskElementValueDocument
   | TaskElementValuePrincipal
-export type WebhookEventUnion = WebhookEvent | WebhookEventProcessStateChanged | WebhookEventTaskStateChanged
+export type WebhookEventUnion = WebhookEventProcessStateChanged | WebhookEventTaskStateChanged
 
 export interface AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
