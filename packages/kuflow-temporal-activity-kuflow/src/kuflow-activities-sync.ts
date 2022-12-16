@@ -22,6 +22,7 @@
  */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+  KuFlowRestClient,
   Process,
   ProcessChangeInitiatorCommand,
   ProcessDeleteElementCommand,
@@ -31,7 +32,6 @@ import {
   TaskDeleteElementValueDocumentCommand,
   TaskSaveElementCommand,
 } from '@kuflow/kuflow-rest'
-import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
 
 import { catchAllErrors } from './kuflow-activities-failure'
 import {
@@ -91,7 +91,7 @@ import {
 export interface KuFlowSyncActivities {
   /**
    * Retrieve a Principal.
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return principal
    */
   KuFlow_Engine_retrievePrincipal: (request: RetrievePrincipalRequest) => Promise<RetrievePrincipalResponse>
@@ -99,7 +99,7 @@ export interface KuFlowSyncActivities {
   /**
    * Find all accessible Processes
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return processes
    */
   KuFlow_Engine_findProcesses: (request: FindProcessesRequest) => Promise<FindProcessesResponse>
@@ -107,7 +107,7 @@ export interface KuFlowSyncActivities {
   /**
    * Retrieve a Process.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return process
    */
   KuFlow_Engine_retrieveProcess: (request: RetrieveProcessRequest) => Promise<RetrieveProcessResponse>
@@ -119,7 +119,7 @@ export interface KuFlowSyncActivities {
    *
    *  <p>If the process is already finished the invocations fails with an error.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return process completed
    */
   KuFlow_Engine_saveProcessElement: (request: SaveProcessElementRequest) => Promise<SaveProcessElementResponse>
@@ -128,7 +128,7 @@ export interface KuFlowSyncActivities {
    *  Allow to delete a process element by specifying the item definition code.
    *  Remove all the element values.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return process deleted
    */
   KuFlow_Engine_deleteProcessElement: (request: DeleteProcessElementRequest) => Promise<DeleteProcessElementResponse>
@@ -136,15 +136,16 @@ export interface KuFlowSyncActivities {
   /**
    * Complete a Process. The state of Process is set to "COMPLETED".
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return process completed
    */
   KuFlow_Engine_completeProcess: (request: CompleteProcessRequest) => Promise<CompleteProcessResponse>
+
   /**
    * Change the current initiator of a process. Allows you to choose a user (by email or principal
    * identifier) or an application (principal identifier).
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task assigned
    */
   KuFlow_Engine_changeProcessInitiator: (
@@ -154,7 +155,7 @@ export interface KuFlowSyncActivities {
   /**
    * List all the Processes that have been created and the credentials has access.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return Processes found paginated
    */
   KuFlow_Engine_findTasks: (request: FindTasksRequest) => Promise<FindTasksResponse>
@@ -162,7 +163,7 @@ export interface KuFlowSyncActivities {
   /**
    * Retrieve a Task.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return process completed
    */
   KuFlow_Engine_retrieveTask: (request: RetrieveTaskRequest) => Promise<RetrieveTaskResponse>
@@ -170,7 +171,7 @@ export interface KuFlowSyncActivities {
   /**
    * Create a Task and optionally fill its elements.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task created
    */
   KuFlow_Engine_createTask: (request: CreateTaskRequest) => Promise<CreateTaskResponse>
@@ -180,7 +181,7 @@ export interface KuFlowSyncActivities {
    *
    * <p>Allow to complete a claimed task by the principal.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task completed
    */
   KuFlow_Engine_completeTask: (request: CompleteTaskRequest) => Promise<CompleteTaskResponse>
@@ -188,7 +189,7 @@ export interface KuFlowSyncActivities {
   /**
    * Claim a task.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task claimed
    */
   KuFlow_Engine_claimTask: (request: ClaimTaskRequest) => Promise<ClaimTaskResponse>
@@ -196,7 +197,7 @@ export interface KuFlowSyncActivities {
   /**
    * Assign a task to a user or application using their email or principalId
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task assigned
    */
   KuFlow_Engine_assignTask: (request: AssignTaskRequest) => Promise<AssignTaskResponse>
@@ -214,7 +215,7 @@ export interface KuFlowSyncActivities {
    * creates them. The values of the previous elements that no longer exist will be deleted. To remove an element, use
    * the appropriate API method.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task updated
    */
   KuFlow_Engine_saveTaskElement: (request: SaveTaskElementRequest) => Promise<SaveTaskElementResponse>
@@ -224,7 +225,7 @@ export interface KuFlowSyncActivities {
    *
    * Remove all the element values.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task updated
    */
   KuFlow_Engine_deleteTaskElement: (request: DeleteTaskElementRequest) => Promise<DeleteTaskElementResponse>
@@ -234,7 +235,7 @@ export interface KuFlowSyncActivities {
    *
    * Note: If it is a multiple item, it will only delete the specified document. If it is a single element, in addition to the document, it will also delete the element.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return task updated
    */
   KuFlow_Engine_deleteTaskElementValueDocument: (
@@ -246,7 +247,7 @@ export interface KuFlowSyncActivities {
    *
    * <p>A log entry is added to the task. If the number of log entries is reached, the oldest log entry is removed.
    *
-   * @param request must not be {@literal null}.
+   * @param request must not be {@literal undefined}.
    * @return log appended
    */
   KuFlow_Engine_appendTaskLog: (request: AppendTaskLogRequest) => Promise<AppendTaskLogResponse>
@@ -255,9 +256,7 @@ export interface KuFlowSyncActivities {
 /**
  * KuFlow activities to be used in Temporal.
  */
-export const createKuFlowSyncActivities = (kuFlowTemporal: KuFlowTemporalConnection): KuFlowSyncActivities => {
-  const kuFlowRestClient = kuFlowTemporal.kuflowRestClient
-
+export const createKuFlowSyncActivities = (kuFlowRestClient: KuFlowRestClient): KuFlowSyncActivities => {
   return {
     KuFlow_Engine_retrievePrincipal: catchAllErrors(KuFlow_Engine_retrievePrincipal),
     KuFlow_Engine_findProcesses: catchAllErrors(KuFlow_Engine_findProcesses),

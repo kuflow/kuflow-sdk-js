@@ -73,7 +73,7 @@ export class KuFlowRestClient {
     const tokenCredential = kuflowTokenCredential(credentials)
     const clientGenerated = new KuFlowRestClientGenerated(tokenCredential, {
       ...options,
-      credentialScopes: 'https://api.kuflow.com/v2022-10-08/.default'
+      credentialScopes: 'https://api.kuflow.com/v2022-10-08/.default',
     })
 
     this.authenticationOperations = new AuthenticationOperations(clientGenerated)

@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
-import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
+import { KuFlowAuthorizationTokenProvider } from '@kuflow/kuflow-temporal-core'
 import { NativeConnection, Worker } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
 import fs from 'fs'
@@ -58,8 +59,8 @@ async function run({
       },
     },
   })
-  const kuFlowEngineConnection = KuFlowTemporalConnection.connect(
-    connection,
+
+  const kuFlowRestClient = new KuFlowRestClient(
     {
       clientId: kuflowRestClientApiUsername,
       clientSecret: kuflowRestClientApiPassword,
@@ -70,13 +71,18 @@ async function run({
     },
   )
 
+  const kuFlowAuthorizationTokenProvider = KuFlowAuthorizationTokenProvider.instance({
+    temporalConnection: connection,
+    kuFlowRestClient,
+  })
+
   const worker = await Worker.create({
     connection,
     namespace,
     workflowsPath: require.resolve('./workflows'),
     activities: {
-      ...createKuFlowSyncActivities(kuFlowEngineConnection),
-      ...createKuFlowAsyncActivities(kuFlowEngineConnection),
+      ...createKuFlowSyncActivities(kuFlowRestClient),
+      ...createKuFlowAsyncActivities(kuFlowRestClient),
     },
     taskQueue,
   })
@@ -84,7 +90,7 @@ async function run({
 
   await worker.run()
   await connection.close()
-  await kuFlowEngineConnection.close()
+  await kuFlowAuthorizationTokenProvider.close()
 }
 
 run(getEnv()).catch(err => {
