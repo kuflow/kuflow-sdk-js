@@ -42,7 +42,7 @@ describe('E2E Test', () => {
         clientSecret: 'APPLICATION_SECRET',
       },
       {
-        endpoint: 'http://localhost:8080/apis/external/v2022-10-08',
+        endpoint: 'http://localhost:8080/apis/external',
         allowInsecureConnection: true,
       },
     )
