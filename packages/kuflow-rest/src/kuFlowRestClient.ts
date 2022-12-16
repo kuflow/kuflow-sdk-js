@@ -40,8 +40,7 @@ export interface KuFlowRestClientOptionals extends CommonClientOptions {
 }
 
 export class KuFlowRestClient {
-
-  public static readonly API_VERSION = "v2022-10-08"
+  public static readonly API_VERSION = 'v2022-10-08'
 
   /**
    * Authentication API operations.
@@ -86,9 +85,9 @@ export class KuFlowRestClient {
     }
 
     if (options.endpoint != null) {
-      options.endpoint = options.endpoint.trim();
+      options.endpoint = options.endpoint.trim()
       if (!options.endpoint.endsWith(`/${KuFlowRestClient.API_VERSION}`)) {
-        options.endpoint = `${options.endpoint}/${KuFlowRestClient.API_VERSION}`;
+        options.endpoint = `${options.endpoint}/${KuFlowRestClient.API_VERSION}`
       }
     }
 
