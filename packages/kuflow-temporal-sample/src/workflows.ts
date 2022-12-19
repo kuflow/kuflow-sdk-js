@@ -22,6 +22,7 @@
  */
 // Only import the activity types
 import type { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
+import { WorkflowRequest, WorkflowResponse } from '@kuflow/kuflow-temporal-activity-kuflow'
 import { LoggerSinks, proxyActivities, proxySinks, uuid4 } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({
@@ -33,14 +34,6 @@ const kuFlowAsyncActivities = proxyActivities<ReturnType<typeof createKuFlowAsyn
   startToCloseTimeout: '1 day',
   scheduleToCloseTimeout: '356 days',
 })
-
-interface WorkflowRequest {
-  processId: string
-}
-
-interface WorkflowResponse {
-  message: string
-}
 
 const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
 

@@ -20,7 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './principal'
-export * from './process'
-export * from './task'
-export * from './workflow'
+export interface WorkflowRequest {
+  processId: string
+}
+
+export interface WorkflowResponse {
+  message: string
+}
