@@ -63,7 +63,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     }
 
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-var-requires
-    const packageDetails = `sdk-js-kuflow-rest-client/${require('../../package.json').version}`
+    const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`
     const userAgentPrefix =
       options.userAgentOptions?.userAgentPrefix != null
         ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
