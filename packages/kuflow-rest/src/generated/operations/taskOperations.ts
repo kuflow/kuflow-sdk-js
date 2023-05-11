@@ -21,46 +21,53 @@
  * THE SOFTWARE.
  */
 import * as coreClient from '@azure/core-client'
-import * as coreRestPipeline from '@azure/core-rest-pipeline'
+import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  Log,
-  Task,
-  TaskActionsTaskAppendLogOptionalParams,
-  TaskActionsTaskAppendLogResponse,
-  TaskActionsTaskAssignOptionalParams,
-  TaskActionsTaskAssignResponse,
-  TaskActionsTaskClaimOptionalParams,
-  TaskActionsTaskClaimResponse,
-  TaskActionsTaskCompleteOptionalParams,
-  TaskActionsTaskCompleteResponse,
-  TaskActionsTaskDeleteElementOptionalParams,
-  TaskActionsTaskDeleteElementResponse,
-  TaskActionsTaskDeleteElementValueDocumentOptionalParams,
-  TaskActionsTaskDeleteElementValueDocumentResponse,
-  TaskActionsTaskDownloadElementValueDocumentOptionalParams,
-  TaskActionsTaskDownloadElementValueDocumentResponse,
-  TaskActionsTaskDownloadElementValueRenderedOptionalParams,
-  TaskActionsTaskDownloadElementValueRenderedResponse,
-  TaskActionsTaskSaveElementOptionalParams,
-  TaskActionsTaskSaveElementResponse,
-  TaskActionsTaskSaveElementValueDocumentOptionalParams,
-  TaskActionsTaskSaveElementValueDocumentResponse,
-  TaskAssignCommand,
-  TaskCreateTaskOptionalParams,
-  TaskCreateTaskResponse,
-  TaskDeleteElementCommand,
-  TaskDeleteElementValueDocumentCommand,
-  TaskFindTasksOptionalParams,
-  TaskFindTasksResponse,
-  TaskRetrieveTaskOptionalParams,
-  TaskRetrieveTaskResponse,
-  TaskSaveElementCommand,
+  type Log,
+  type Task,
+  type TaskActionsTaskAppendLogOptionalParams,
+  type TaskActionsTaskAppendLogResponse,
+  type TaskActionsTaskAssignOptionalParams,
+  type TaskActionsTaskAssignResponse,
+  type TaskActionsTaskClaimOptionalParams,
+  type TaskActionsTaskClaimResponse,
+  type TaskActionsTaskCompleteOptionalParams,
+  type TaskActionsTaskCompleteResponse,
+  type TaskActionsTaskDeleteElementOptionalParams,
+  type TaskActionsTaskDeleteElementResponse,
+  type TaskActionsTaskDeleteElementValueDocumentOptionalParams,
+  type TaskActionsTaskDeleteElementValueDocumentResponse,
+  type TaskActionsTaskDownloadElementValueDocumentOptionalParams,
+  type TaskActionsTaskDownloadElementValueDocumentResponse,
+  type TaskActionsTaskDownloadElementValueRenderedOptionalParams,
+  type TaskActionsTaskDownloadElementValueRenderedResponse,
+  type TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams,
+  type TaskActionsTaskDownloadJsonFormsValueDocumentResponse,
+  type TaskActionsTaskSaveElementOptionalParams,
+  type TaskActionsTaskSaveElementResponse,
+  type TaskActionsTaskSaveElementValueDocumentOptionalParams,
+  type TaskActionsTaskSaveElementValueDocumentResponse,
+  type TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
+  type TaskActionsTaskSaveJsonFormsValueDataResponse,
+  type TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
+  type TaskActionsTaskSaveJsonFormsValueDocumentResponse,
+  type TaskAssignCommand,
+  type TaskCreateTaskOptionalParams,
+  type TaskCreateTaskResponse,
+  type TaskDeleteElementCommand,
+  type TaskDeleteElementValueDocumentCommand,
+  type TaskFindTasksOptionalParams,
+  type TaskFindTasksResponse,
+  type TaskRetrieveTaskOptionalParams,
+  type TaskRetrieveTaskResponse,
+  type TaskSaveElementCommand,
+  type TaskSaveJsonFormsValueDataCommand,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { TaskOperations } from '../operationsInterfaces'
+import { type TaskOperations } from '../operationsInterfaces'
 
 /** Class containing TaskOperations operations. */
 export class TaskOperationsImpl implements TaskOperations {
@@ -217,7 +224,7 @@ export class TaskOperationsImpl implements TaskOperations {
    * element, in addition to the document, it will also delete the element.
    *
    * @param id The resource ID.
-   * @param command Command to delete a document elemente value.
+   * @param command Command to delete a document element value.
    * @param options The options parameters.
    */
   async actionsTaskDeleteElementValueDocument(
@@ -266,6 +273,69 @@ export class TaskOperationsImpl implements TaskOperations {
     return await this.client.sendOperationRequest(
       { id, elementDefinitionCode, options },
       actionsTaskDownloadElementValueRenderedOperationSpec,
+    )
+  }
+
+  /**
+   * Allow to save a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param command Command to save the JSON value.
+   * @param options The options parameters.
+   */
+  async actionsTaskSaveJsonFormsValueData(
+    id: string,
+    command: TaskSaveJsonFormsValueDataCommand,
+    options?: TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
+  ): Promise<TaskActionsTaskSaveJsonFormsValueDataResponse> {
+    return await this.client.sendOperationRequest(
+      { id, command, options },
+      actionsTaskSaveJsonFormsValueDataOperationSpec,
+    )
+  }
+
+  /**
+   * Save a document in the task to later be linked into the JSON data.
+   *
+   * @param id The resource ID.
+   * @param fileContentType Document content type
+   * @param fileName Document name
+   * @param schemaPath JSON Schema path related to the document. The uploaded document must be validated
+   *                   by the passed schema path.
+   *
+   * @param file Document to save.
+   * @param options The options parameters.
+   */
+  async actionsTaskSaveJsonFormsValueDocument(
+    id: string,
+    fileContentType: string,
+    fileName: string,
+    schemaPath: string,
+    file: coreRestPipeline.RequestBodyType,
+    options?: TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
+  ): Promise<TaskActionsTaskSaveJsonFormsValueDocumentResponse> {
+    return await this.client.sendOperationRequest(
+      { id, fileContentType, fileName, schemaPath, file, options },
+      actionsTaskSaveJsonFormsValueDocumentOperationSpec,
+    )
+  }
+
+  /**
+   * Given a task, download a document from a json form data.
+   * @param id The resource ID.
+   * @param documentUri Document URI to download.
+   * @param options The options parameters.
+   */
+  async actionsTaskDownloadJsonFormsValueDocument(
+    id: string,
+    documentUri: string,
+    options?: TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams,
+  ): Promise<TaskActionsTaskDownloadJsonFormsValueDocumentResponse> {
+    return await this.client.sendOperationRequest(
+      { id, documentUri, options },
+      actionsTaskDownloadJsonFormsValueDocumentOperationSpec,
     )
   }
 
@@ -340,7 +410,7 @@ const createTaskOperationSpec: coreClient.OperationSpec = {
   requestBody: Parameters.task,
   queryParameters: [Parameters.activityToken],
   urlParameters: [Parameters.$host],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -387,7 +457,7 @@ const actionsTaskAssignOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.command3,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -404,7 +474,7 @@ const actionsTaskSaveElementOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.command4,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -445,7 +515,7 @@ const actionsTaskDeleteElementOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.command5,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -462,7 +532,7 @@ const actionsTaskDeleteElementValueDocumentOperationSpec: coreClient.OperationSp
   },
   requestBody: Parameters.command6,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -498,6 +568,57 @@ const actionsTaskDownloadElementValueRenderedOperationSpec: coreClient.Operation
   headerParameters: [Parameters.accept3],
   serializer,
 }
+const actionsTaskSaveJsonFormsValueDataOperationSpec: coreClient.OperationSpec = {
+  path: '/tasks/{id}/~actions/save-json-forms-value-data',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.Task,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.command7,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: 'json',
+  serializer,
+}
+const actionsTaskSaveJsonFormsValueDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/tasks/{id}/~actions/save-json-forms-value-document',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.TaskSaveJsonFormsValueDocumentResponseCommand,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.file,
+  queryParameters: [Parameters.fileContentType, Parameters.fileName, Parameters.schemaPath],
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType1, Parameters.accept1],
+  mediaType: 'binary',
+  serializer,
+}
+const actionsTaskDownloadJsonFormsValueDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/tasks/{id}/~actions/download-json-forms-value-document',
+  httpMethod: 'GET',
+  responses: {
+    200: {
+      bodyMapper: { type: { name: 'Stream' }, serializedName: 'parsedResponse' },
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  queryParameters: [Parameters.documentUri],
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.accept2],
+  serializer,
+}
 const actionsTaskCompleteOperationSpec: coreClient.OperationSpec = {
   path: '/tasks/{id}/~actions/complete',
   httpMethod: 'POST',
@@ -526,7 +647,7 @@ const actionsTaskAppendLogOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.log,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }

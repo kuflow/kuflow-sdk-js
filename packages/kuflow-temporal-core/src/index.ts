@@ -20,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Authentication, KuFlowRestClient } from '@kuflow/kuflow-rest'
-import { NativeConnection } from '@temporalio/worker'
+import { type Authentication, type KuFlowRestClient } from '@kuflow/kuflow-rest'
+import { type NativeConnection } from '@temporalio/worker'
 
 const NOOP = (): void => {}
 

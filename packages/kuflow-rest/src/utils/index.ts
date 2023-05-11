@@ -22,3 +22,4 @@
  */
 
 export * from './element-values'
+export * from './json-forms'

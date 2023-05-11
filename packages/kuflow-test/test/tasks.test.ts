@@ -22,13 +22,13 @@
  */
 import { describe, expect, test } from '@jest/globals'
 import {
-  Document,
+  type Document,
   KuFlowRestClient,
-  TaskAssignCommand,
-  TaskDeleteElementCommand,
-  TaskDeleteElementValueDocumentCommand,
-  TaskSaveElementCommand,
-  TaskSaveElementValueDocumentCommand,
+  type TaskAssignCommand,
+  type TaskDeleteElementCommand,
+  type TaskDeleteElementValueDocumentCommand,
+  type TaskSaveElementCommand,
+  type TaskSaveElementValueDocumentCommand,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'

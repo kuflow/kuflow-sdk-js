@@ -21,9 +21,9 @@
  * THE SOFTWARE.
  */
 import {
-  Authentication,
-  AuthenticationCreateAuthenticationOptionalParams,
-  AuthenticationCreateAuthenticationResponse,
+  type Authentication,
+  type AuthenticationCreateAuthenticationOptionalParams,
+  type AuthenticationCreateAuthenticationResponse,
 } from '../models'
 
 /** Interface representing a AuthenticationOperations. */

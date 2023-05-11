@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "@azure/core-auth": "1.4.0",
-    "@azure/core-client": "1.6.1",
-    "@azure/core-rest-pipeline": "1.10.0"
+    "@azure/core-client": "1.7.2",
+    "@azure/core-rest-pipeline": "1.10.3"
   },
   "engines": {
     "node": ">=16.0.0"

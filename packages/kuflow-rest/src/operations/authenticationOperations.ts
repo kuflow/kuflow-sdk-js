@@ -21,11 +21,11 @@
  * THE SOFTWARE.
  */
 import {
-  Authentication,
-  AuthenticationCreateAuthenticationOptionalParams,
-  AuthenticationCreateAuthenticationResponse,
-  AuthenticationOperations as AuthenticationOperationsGenerated,
-  KuFlowRestClientGenerated,
+  type Authentication,
+  type AuthenticationCreateAuthenticationOptionalParams,
+  type AuthenticationCreateAuthenticationResponse,
+  type AuthenticationOperations as AuthenticationOperationsGenerated,
+  type KuFlowRestClientGenerated,
 } from '../generated'
 
 /** Class containing AuthenticationOperations operations. */

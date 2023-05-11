@@ -20,23 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as coreAuth from '@azure/core-auth'
+import type * as coreAuth from '@azure/core-auth'
 import * as coreClient from '@azure/core-client'
 
-import { KuFlowRestClientGeneratedOptionalParams } from './models'
+import { type KuFlowRestClientGeneratedOptionalParams } from './models'
 import {
   AuthenticationOperationsImpl,
-  EchoImpl,
   PrincipalOperationsImpl,
   ProcessOperationsImpl,
   TaskOperationsImpl,
 } from './operations'
 import {
-  AuthenticationOperations,
-  Echo,
-  PrincipalOperations,
-  ProcessOperations,
-  TaskOperations,
+  type AuthenticationOperations,
+  type PrincipalOperations,
+  type ProcessOperations,
+  type TaskOperations,
 } from './operationsInterfaces'
 
 /** @internal */
@@ -85,14 +83,12 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
 
     // Assigning values to Constant parameters
     this.$host = options.$host ?? 'https://api.kuflow.com/v2022-10-08'
-    this.echo = new EchoImpl(this)
     this.authenticationOperations = new AuthenticationOperationsImpl(this)
     this.principalOperations = new PrincipalOperationsImpl(this)
     this.processOperations = new ProcessOperationsImpl(this)
     this.taskOperations = new TaskOperationsImpl(this)
   }
 
-  echo: Echo
   authenticationOperations: AuthenticationOperations
   principalOperations: PrincipalOperations
   processOperations: ProcessOperations

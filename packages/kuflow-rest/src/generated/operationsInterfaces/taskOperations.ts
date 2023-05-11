@@ -20,41 +20,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as coreRestPipeline from '@azure/core-rest-pipeline'
+import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import {
-  Log,
-  Task,
-  TaskActionsTaskAppendLogOptionalParams,
-  TaskActionsTaskAppendLogResponse,
-  TaskActionsTaskAssignOptionalParams,
-  TaskActionsTaskAssignResponse,
-  TaskActionsTaskClaimOptionalParams,
-  TaskActionsTaskClaimResponse,
-  TaskActionsTaskCompleteOptionalParams,
-  TaskActionsTaskCompleteResponse,
-  TaskActionsTaskDeleteElementOptionalParams,
-  TaskActionsTaskDeleteElementResponse,
-  TaskActionsTaskDeleteElementValueDocumentOptionalParams,
-  TaskActionsTaskDeleteElementValueDocumentResponse,
-  TaskActionsTaskDownloadElementValueDocumentOptionalParams,
-  TaskActionsTaskDownloadElementValueDocumentResponse,
-  TaskActionsTaskDownloadElementValueRenderedOptionalParams,
-  TaskActionsTaskDownloadElementValueRenderedResponse,
-  TaskActionsTaskSaveElementOptionalParams,
-  TaskActionsTaskSaveElementResponse,
-  TaskActionsTaskSaveElementValueDocumentOptionalParams,
-  TaskActionsTaskSaveElementValueDocumentResponse,
-  TaskAssignCommand,
-  TaskCreateTaskOptionalParams,
-  TaskCreateTaskResponse,
-  TaskDeleteElementCommand,
-  TaskDeleteElementValueDocumentCommand,
-  TaskFindTasksOptionalParams,
-  TaskFindTasksResponse,
-  TaskRetrieveTaskOptionalParams,
-  TaskRetrieveTaskResponse,
-  TaskSaveElementCommand,
+  type Log,
+  type Task,
+  type TaskActionsTaskAppendLogOptionalParams,
+  type TaskActionsTaskAppendLogResponse,
+  type TaskActionsTaskAssignOptionalParams,
+  type TaskActionsTaskAssignResponse,
+  type TaskActionsTaskClaimOptionalParams,
+  type TaskActionsTaskClaimResponse,
+  type TaskActionsTaskCompleteOptionalParams,
+  type TaskActionsTaskCompleteResponse,
+  type TaskActionsTaskDeleteElementOptionalParams,
+  type TaskActionsTaskDeleteElementResponse,
+  type TaskActionsTaskDeleteElementValueDocumentOptionalParams,
+  type TaskActionsTaskDeleteElementValueDocumentResponse,
+  type TaskActionsTaskDownloadElementValueDocumentOptionalParams,
+  type TaskActionsTaskDownloadElementValueDocumentResponse,
+  type TaskActionsTaskDownloadElementValueRenderedOptionalParams,
+  type TaskActionsTaskDownloadElementValueRenderedResponse,
+  type TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams,
+  type TaskActionsTaskDownloadJsonFormsValueDocumentResponse,
+  type TaskActionsTaskSaveElementOptionalParams,
+  type TaskActionsTaskSaveElementResponse,
+  type TaskActionsTaskSaveElementValueDocumentOptionalParams,
+  type TaskActionsTaskSaveElementValueDocumentResponse,
+  type TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
+  type TaskActionsTaskSaveJsonFormsValueDataResponse,
+  type TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
+  type TaskActionsTaskSaveJsonFormsValueDocumentResponse,
+  type TaskAssignCommand,
+  type TaskCreateTaskOptionalParams,
+  type TaskCreateTaskResponse,
+  type TaskDeleteElementCommand,
+  type TaskDeleteElementValueDocumentCommand,
+  type TaskFindTasksOptionalParams,
+  type TaskFindTasksResponse,
+  type TaskRetrieveTaskOptionalParams,
+  type TaskRetrieveTaskResponse,
+  type TaskSaveElementCommand,
+  type TaskSaveJsonFormsValueDataCommand,
 } from '../models'
 
 /** Interface representing a TaskOperations. */
@@ -172,7 +179,7 @@ export interface TaskOperations {
    * element, in addition to the document, it will also delete the element.
    *
    * @param id The resource ID.
-   * @param command Command to delete a document elemente value.
+   * @param command Command to delete a document element value.
    * @param options The options parameters.
    */
   actionsTaskDeleteElementValueDocument: (
@@ -206,6 +213,51 @@ export interface TaskOperations {
     elementDefinitionCode: string,
     options?: TaskActionsTaskDownloadElementValueRenderedOptionalParams,
   ) => Promise<TaskActionsTaskDownloadElementValueRenderedResponse>
+  /**
+   * Allow to save a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param command Command to save the JSON value.
+   * @param options The options parameters.
+   */
+  actionsTaskSaveJsonFormsValueData: (
+    id: string,
+    command: TaskSaveJsonFormsValueDataCommand,
+    options?: TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
+  ) => Promise<TaskActionsTaskSaveJsonFormsValueDataResponse>
+  /**
+   * Save a document in the task to later be linked into the JSON data.
+   *
+   * @param id The resource ID.
+   * @param fileContentType Document content type
+   * @param fileName Document name
+   * @param schemaPath JSON Schema path related to the document. The uploaded document must be validated
+   *                   by the passed schema path.
+   *
+   * @param file Document to save.
+   * @param options The options parameters.
+   */
+  actionsTaskSaveJsonFormsValueDocument: (
+    id: string,
+    fileContentType: string,
+    fileName: string,
+    schemaPath: string,
+    file: coreRestPipeline.RequestBodyType,
+    options?: TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
+  ) => Promise<TaskActionsTaskSaveJsonFormsValueDocumentResponse>
+  /**
+   * Given a task, download a document from a json form data.
+   * @param id The resource ID.
+   * @param documentUri Document URI to download.
+   * @param options The options parameters.
+   */
+  actionsTaskDownloadJsonFormsValueDocument: (
+    id: string,
+    documentUri: string,
+    options?: TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams,
+  ) => Promise<TaskActionsTaskDownloadJsonFormsValueDocumentResponse>
   /**
    * Allow to complete a claimed task by the principal.
    * @param id The resource ID.

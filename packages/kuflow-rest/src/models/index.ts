@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as coreClient from '@azure/core-client'
-import * as coreRestPipeline from '@azure/core-rest-pipeline'
+import type * as coreClient from '@azure/core-client'
+import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { PrincipalType, TaskState } from '../generated'
+import { type PrincipalType, type TaskState } from '../generated'
 
 export interface Document {
   fileName: string
@@ -39,8 +39,25 @@ export interface TaskSaveElementValueDocumentCommand {
   elementValueValid?: boolean
 }
 
+export interface TaskSaveJsonFormsValueDocumentCommand {
+  schemaPath: string
+}
+
 export interface ProcessSaveUserActionValueDocumentCommand {
   userActionValueId: string
+}
+
+export interface JsonFormsPrincipalUser {
+  id: string
+  type: string
+  name: string
+}
+
+export interface JsonFormsFile {
+  uri: string
+  type: string
+  name: string
+  size: number
 }
 
 /** Optional parameters. */

@@ -24,21 +24,21 @@ import { ApplicationFailure } from '@temporalio/activity'
 
 import { KuFlowFailureType } from './kuflow-failure-type'
 import {
-  AppendTaskLogRequest,
-  AssignTaskRequest,
-  ChangeProcessInitiatorRequest,
-  ClaimTaskRequest,
-  CompleteProcessRequest,
-  CompleteTaskRequest,
-  CreateTaskRequest,
-  DeleteProcessElementRequest,
-  DeleteTaskElementRequest,
-  DeleteTaskElementValueDocumentRequest,
-  RetrievePrincipalRequest,
-  RetrieveProcessRequest,
-  RetrieveTaskRequest,
-  SaveProcessElementRequest,
-  SaveTaskElementRequest,
+  type AppendTaskLogRequest,
+  type AssignTaskRequest,
+  type ChangeProcessInitiatorRequest,
+  type ClaimTaskRequest,
+  type CompleteProcessRequest,
+  type CompleteTaskRequest,
+  type CreateTaskRequest,
+  type DeleteProcessElementRequest,
+  type DeleteTaskElementRequest,
+  type DeleteTaskElementValueDocumentRequest,
+  type RetrievePrincipalRequest,
+  type RetrieveProcessRequest,
+  type RetrieveTaskRequest,
+  type SaveProcessElementRequest,
+  type SaveTaskElementRequest,
 } from './models'
 
 export function validateRetrievePrincipalRequest(request: RetrievePrincipalRequest): void {

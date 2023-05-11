@@ -21,41 +21,53 @@
  * THE SOFTWARE.
  */
 import {
-  KuFlowRestClientGenerated,
-  Log,
-  Task,
-  TaskActionsTaskAppendLogOptionalParams,
-  TaskActionsTaskAppendLogResponse,
-  TaskActionsTaskAssignOptionalParams,
-  TaskActionsTaskAssignResponse,
-  TaskActionsTaskClaimOptionalParams,
-  TaskActionsTaskClaimResponse,
-  TaskActionsTaskCompleteOptionalParams,
-  TaskActionsTaskCompleteResponse,
-  TaskActionsTaskDeleteElementOptionalParams,
-  TaskActionsTaskDeleteElementResponse,
-  TaskActionsTaskDeleteElementValueDocumentOptionalParams,
-  TaskActionsTaskDeleteElementValueDocumentResponse,
-  TaskActionsTaskDownloadElementValueDocumentOptionalParams,
-  TaskActionsTaskDownloadElementValueDocumentResponse,
-  TaskActionsTaskDownloadElementValueRenderedOptionalParams,
-  TaskActionsTaskDownloadElementValueRenderedResponse,
-  TaskActionsTaskSaveElementOptionalParams,
-  TaskActionsTaskSaveElementResponse,
-  TaskActionsTaskSaveElementValueDocumentOptionalParams,
-  TaskActionsTaskSaveElementValueDocumentResponse,
-  TaskAssignCommand,
-  TaskCreateTaskOptionalParams,
-  TaskCreateTaskResponse,
-  TaskDeleteElementCommand,
-  TaskDeleteElementValueDocumentCommand,
-  TaskFindTasksResponse,
-  TaskOperations as TaskOperationsGenerated,
-  TaskRetrieveTaskOptionalParams,
-  TaskRetrieveTaskResponse,
-  TaskSaveElementCommand,
+  type KuFlowRestClientGenerated,
+  type Log,
+  type Task,
+  type TaskActionsTaskAppendLogOptionalParams,
+  type TaskActionsTaskAppendLogResponse,
+  type TaskActionsTaskAssignOptionalParams,
+  type TaskActionsTaskAssignResponse,
+  type TaskActionsTaskClaimOptionalParams,
+  type TaskActionsTaskClaimResponse,
+  type TaskActionsTaskCompleteOptionalParams,
+  type TaskActionsTaskCompleteResponse,
+  type TaskActionsTaskDeleteElementOptionalParams,
+  type TaskActionsTaskDeleteElementResponse,
+  type TaskActionsTaskDeleteElementValueDocumentOptionalParams,
+  type TaskActionsTaskDeleteElementValueDocumentResponse,
+  type TaskActionsTaskDownloadElementValueDocumentOptionalParams,
+  type TaskActionsTaskDownloadElementValueDocumentResponse,
+  type TaskActionsTaskDownloadElementValueRenderedOptionalParams,
+  type TaskActionsTaskDownloadElementValueRenderedResponse,
+  type TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams,
+  type TaskActionsTaskDownloadJsonFormsValueDocumentResponse,
+  type TaskActionsTaskSaveElementOptionalParams,
+  type TaskActionsTaskSaveElementResponse,
+  type TaskActionsTaskSaveElementValueDocumentOptionalParams,
+  type TaskActionsTaskSaveElementValueDocumentResponse,
+  type TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
+  type TaskActionsTaskSaveJsonFormsValueDataResponse,
+  type TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
+  type TaskActionsTaskSaveJsonFormsValueDocumentResponse,
+  type TaskAssignCommand,
+  type TaskCreateTaskOptionalParams,
+  type TaskCreateTaskResponse,
+  type TaskDeleteElementCommand,
+  type TaskDeleteElementValueDocumentCommand,
+  type TaskFindTasksResponse,
+  type TaskOperations as TaskOperationsGenerated,
+  type TaskRetrieveTaskOptionalParams,
+  type TaskRetrieveTaskResponse,
+  type TaskSaveElementCommand,
+  type TaskSaveJsonFormsValueDataCommand,
 } from '../generated'
-import { Document, TaskFindTasksOptionalExtParams, TaskSaveElementValueDocumentCommand } from '../models'
+import {
+  type Document,
+  type TaskFindTasksOptionalExtParams,
+  type TaskSaveElementValueDocumentCommand,
+  type TaskSaveJsonFormsValueDocumentCommand,
+} from '../models'
 
 /** Class containing TaskOperations operations. */
 export class TaskOperations {
@@ -232,7 +244,7 @@ export class TaskOperations {
    * element, in addition to the document, it will also delete the element.
    *
    * @param id The resource ID.
-   * @param command Command to delete a document elemente value.
+   * @param command Command to delete a document element value.
    * @param options The options parameters.
    */
   public async actionsTaskDeleteElementValueDocument(
@@ -258,6 +270,66 @@ export class TaskOperations {
   }
 
   /**
+   * Allow to save a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param command Command to save the JSON value.
+   * @param options The options parameters.
+   */
+  public async actionsTaskSaveJsonFormsData(
+    id: string,
+    command: TaskSaveJsonFormsValueDataCommand,
+    options?: TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
+  ): Promise<TaskActionsTaskSaveJsonFormsValueDataResponse> {
+    return await this.taskOperations.actionsTaskSaveJsonFormsValueData(id, command, options)
+  }
+
+  /**
+   * Save a document in the task to later be linked into the JSON data.
+   *
+   * @param id The resource ID.
+   * @param command Command options
+   * @param document Document to upload
+   * @param options The options parameters.
+   */
+  public async actionsTaskSaveJsonFormsDocument(
+    id: string,
+    command: TaskSaveJsonFormsValueDocumentCommand,
+    document: Document,
+    options?: TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
+  ): Promise<TaskActionsTaskSaveJsonFormsValueDocumentResponse> {
+    const fileContentType = document.contentType
+    const fileName = document.fileName
+    const file = document.fileContent
+    const schemaPath = command.schemaPath
+
+    return await this.taskOperations.actionsTaskSaveJsonFormsValueDocument(
+      id,
+      fileContentType,
+      fileName,
+      schemaPath,
+      file,
+      options,
+    )
+  }
+
+  /**
+   * Given a task, download a document from a json form data.
+   * @param id The resource ID.
+   * @param documentUri Document URI to download.
+   * @param options The options parameters.
+   */
+  public async actionsTaskDownloadJsonFormsValueDocument(
+    id: string,
+    documentUri: string,
+    options?: TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams,
+  ): Promise<TaskActionsTaskDownloadJsonFormsValueDocumentResponse> {
+    return await this.taskOperations.actionsTaskDownloadJsonFormsValueDocument(id, documentUri, options)
+  }
+
+  /**
    * Given a task, generate a PDF from a Form type element with the data filled in, if any. If there are
    * multiple form values, they are packed into a ZIP.
    *
@@ -267,7 +339,7 @@ export class TaskOperations {
    * @param elementDefinitionCode Element definition code of a Form Element to download.
    * @param options The options parameters.
    */
-  async actionsTaskDownloadElementValueRendered(
+  public async actionsTaskDownloadElementValueRendered(
     id: string,
     elementDefinitionCode: string,
     options?: TaskActionsTaskDownloadElementValueRenderedOptionalParams,
@@ -280,7 +352,7 @@ export class TaskOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsTaskComplete(
+  public async actionsTaskComplete(
     id: string,
     options?: TaskActionsTaskCompleteOptionalParams,
   ): Promise<TaskActionsTaskCompleteResponse> {
@@ -295,7 +367,7 @@ export class TaskOperations {
    * @param log Log to be created.
    * @param options The options parameters.
    */
-  async actionsTaskAppendLog(
+  public async actionsTaskAppendLog(
     id: string,
     log: Log,
     options?: TaskActionsTaskAppendLogOptionalParams,

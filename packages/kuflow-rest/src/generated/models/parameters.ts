@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { OperationParameter, OperationQueryParameter, OperationURLParameter } from '@azure/core-client'
+import { type OperationParameter, type OperationQueryParameter, type OperationURLParameter } from '@azure/core-client'
 
 import {
   Authentication as AuthenticationMapper,
@@ -34,7 +34,25 @@ import {
   TaskDeleteElementCommand as TaskDeleteElementCommandMapper,
   TaskDeleteElementValueDocumentCommand as TaskDeleteElementValueDocumentCommandMapper,
   TaskSaveElementCommand as TaskSaveElementCommandMapper,
+  TaskSaveJsonFormsValueDataCommand as TaskSaveJsonFormsValueDataCommandMapper,
 } from '../models/mappers'
+
+export const contentType: OperationParameter = {
+  parameterPath: ['options', 'contentType'],
+  mapper: {
+    defaultValue: 'application/json',
+    isConstant: true,
+    serializedName: 'Content-Type',
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const authentication: OperationParameter = {
+  parameterPath: 'authentication',
+  mapper: AuthenticationMapper,
+}
 
 export const accept: OperationParameter = {
   parameterPath: 'accept',
@@ -58,23 +76,6 @@ export const $host: OperationURLParameter = {
     },
   },
   skipEncoding: true,
-}
-
-export const contentType: OperationParameter = {
-  parameterPath: ['options', 'contentType'],
-  mapper: {
-    defaultValue: 'application/json',
-    isConstant: true,
-    serializedName: 'Content-Type',
-    type: {
-      name: 'String',
-    },
-  },
-}
-
-export const authentication: OperationParameter = {
-  parameterPath: 'authentication',
-  mapper: AuthenticationMapper,
 }
 
 export const size: OperationQueryParameter = {
@@ -393,6 +394,33 @@ export const accept3: OperationParameter = {
     defaultValue: 'application/pdf, application/zip, application/json',
     isConstant: true,
     serializedName: 'Accept',
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const command7: OperationParameter = {
+  parameterPath: 'command',
+  mapper: TaskSaveJsonFormsValueDataCommandMapper,
+}
+
+export const schemaPath: OperationQueryParameter = {
+  parameterPath: 'schemaPath',
+  mapper: {
+    serializedName: 'schemaPath',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const documentUri: OperationQueryParameter = {
+  parameterPath: 'documentUri',
+  mapper: {
+    serializedName: 'documentUri',
+    required: true,
     type: {
       name: 'String',
     },

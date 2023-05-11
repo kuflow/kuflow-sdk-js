@@ -21,13 +21,13 @@
  * THE SOFTWARE.
  */
 import {
-  KuFlowRestClientGenerated,
-  PrincipalFindPrincipalsResponse,
-  PrincipalOperations as PrincipalOperationsGenerated,
-  PrincipalRetrievePrincipalOptionalParams,
-  PrincipalRetrievePrincipalResponse,
+  type KuFlowRestClientGenerated,
+  type PrincipalFindPrincipalsResponse,
+  type PrincipalOperations as PrincipalOperationsGenerated,
+  type PrincipalRetrievePrincipalOptionalParams,
+  type PrincipalRetrievePrincipalResponse,
 } from '../generated'
-import { PrincipalFindPrincipalsOptionalExtParams } from '../models'
+import { type PrincipalFindPrincipalsOptionalExtParams } from '../models'
 
 export class PrincipalOperations {
   private readonly principalOperations: PrincipalOperationsGenerated
