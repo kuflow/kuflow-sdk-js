@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@kuflow/kuflow-rest": "1.0.1-alpha.0",
-    "@temporalio/worker": "1.4.4"
+    "@temporalio/worker": "1.7.4"
   },
   "publishConfig": {
     "access": "public"

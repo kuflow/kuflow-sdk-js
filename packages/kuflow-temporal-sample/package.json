@@ -40,10 +40,10 @@
     "@kuflow/kuflow-rest": "1.0.1-alpha.0",
     "@kuflow/kuflow-temporal-activity-kuflow": "1.0.1-alpha.0",
     "@kuflow/kuflow-temporal-core": "1.0.1-alpha.0",
-    "@temporalio/activity": "1.4.4",
-    "@temporalio/client": "1.4.4",
-    "@temporalio/worker": "1.4.4",
-    "@temporalio/workflow": "1.4.4"
+    "@temporalio/activity": "1.7.4",
+    "@temporalio/client": "1.7.4",
+    "@temporalio/worker": "1.7.4",
+    "@temporalio/workflow": "1.7.4"
   },
   "publishConfig": {
     "access": "public"
