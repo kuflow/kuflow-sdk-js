@@ -110,16 +110,16 @@ describe('Element Values Utils', () => {
       setElementValueValid(process, 'EV_STRING', true)
 
       expect(process.elementValues?.EV_STRING).toStrictEqual([
-          { type: 'STRING', value: 'MY TEXT 1', valid: true },
-          { type: 'STRING', value: 'MY TEXT 2', valid: true },
-        ])
+        { type: 'STRING', value: 'MY TEXT 1', valid: true },
+        { type: 'STRING', value: 'MY TEXT 2', valid: true },
+      ])
 
       setElementValueValid(process, 'EV_STRING', false)
 
       expect(process.elementValues?.EV_STRING).toStrictEqual([
-          { type: 'STRING', value: 'MY TEXT 1', valid: false },
-          { type: 'STRING', value: 'MY TEXT 2', valid: false },
-        ])
+        { type: 'STRING', value: 'MY TEXT 1', valid: false },
+        { type: 'STRING', value: 'MY TEXT 2', valid: false },
+      ])
     })
 
     test('setElementValueValidAt', () => {
@@ -129,9 +129,9 @@ describe('Element Values Utils', () => {
       setElementValueValidAt(process, 'EV_STRING', true, 1)
 
       expect(process.elementValues?.EV_STRING).toStrictEqual([
-          { type: 'STRING', value: 'MY TEXT 1', valid: false },
-          { type: 'STRING', value: 'MY TEXT 2', valid: true },
-        ])
+        { type: 'STRING', value: 'MY TEXT 1', valid: false },
+        { type: 'STRING', value: 'MY TEXT 2', valid: true },
+      ])
     })
 
     test('getElementValueAsString', () => {
@@ -1608,7 +1608,6 @@ function prepareTaskSaveElementCommandPrincipal(): TaskSaveElementCommand {
     ],
   }
 }
-
 
 function prepareTask(): Task {
   return {
