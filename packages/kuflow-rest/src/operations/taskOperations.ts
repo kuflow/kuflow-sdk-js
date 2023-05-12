@@ -278,7 +278,7 @@ export class TaskOperations {
    * @param command Command to save the JSON value.
    * @param options The options parameters.
    */
-  public async actionsTaskSaveJsonFormsData(
+  public async actionsTaskSaveJsonFormsValueData(
     id: string,
     command: TaskSaveJsonFormsValueDataCommand,
     options?: TaskActionsTaskSaveJsonFormsValueDataOptionalParams,
@@ -294,7 +294,7 @@ export class TaskOperations {
    * @param document Document to upload
    * @param options The options parameters.
    */
-  public async actionsTaskSaveJsonFormsDocument(
+  public async actionsTaskSaveJsonFormsValueDocument(
     id: string,
     command: TaskSaveJsonFormsValueDocumentCommand,
     document: Document,

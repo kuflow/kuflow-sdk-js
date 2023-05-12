@@ -202,6 +202,33 @@ export function mockTask(): Task {
   }
 }
 
+export function mockTaskJsonForms(): Task {
+  return {
+    objectType: 'TASK',
+    id: randomUUID(),
+    state: 'READY',
+    taskDefinition: {
+      id: randomUUID(),
+      version: randomUUID(),
+      name: `Name ${randomInt(1, 1_000)}`,
+    },
+    processId: randomUUID(),
+    jsonFormsValue: {
+      valid: true,
+      data: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    },
+    owner: mockPrincipalUser(),
+
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
 export function mockTaskPageItem(): TaskPageItem {
   return {
     objectType: 'TASK_PAGE_ITEM',

@@ -2849,13 +2849,13 @@ function isNotNullOrUndefined<T>(value: T | null | undefined): value is T {
   return value !== null && value !== undefined
 }
 
-export function isElementValuesSingleCodeModels(
+function isElementValuesSingleCodeModels(
   value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
 ): value is ElementValuesSingleCodeModels {
   return (value as ElementValuesSingleCodeModels).elementDefinitionCode !== null
 }
 
-export function assertIsElementValuesSingleCodeModels(
+function assertIsElementValuesSingleCodeModels(
   value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
 ): asserts value is ElementValuesSingleCodeModels {
   if (!isElementValuesSingleCodeModels(value)) {
@@ -2863,12 +2863,12 @@ export function assertIsElementValuesSingleCodeModels(
   }
 }
 
-export function isElementValuesManyCodeModels(
+function isElementValuesManyCodeModels(
   value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
 ): value is ElementValuesManyCodeModels {
   return (value as ElementValuesSingleCodeModels).elementDefinitionCode == null
 }
-export function assertIsElementValuesManyCodeModels(
+function assertIsElementValuesManyCodeModels(
   value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
 ): asserts value is ElementValuesManyCodeModels {
   if (!isElementValuesManyCodeModels(value)) {
@@ -2876,73 +2876,73 @@ export function assertIsElementValuesManyCodeModels(
   }
 }
 
-export function assertIsString(value: unknown): asserts value is string {
+function assertIsString(value: unknown): asserts value is string {
   if (typeof value !== 'string') {
     throw new Error('value is not a string!')
   }
 }
 
-export function assertIsStringOrUndefined(value: unknown): asserts value is string | undefined {
+function assertIsStringOrUndefined(value: unknown): asserts value is string | undefined {
   if (value !== undefined && typeof value !== 'string') {
     throw new Error('value is not a string!')
   }
 }
 
-export function assertIsStringArrayOrUndefined(value: unknown): asserts value is string[] | undefined {
+function assertIsStringArrayOrUndefined(value: unknown): asserts value is string[] | undefined {
   if (value !== undefined && !Array.isArray(value)) {
     throw new Error('value is not a string[] or undefined!')
   }
 }
 
-export function assertIsNumber(value: unknown): asserts value is number {
+function assertIsNumber(value: unknown): asserts value is number {
   if (typeof value !== 'number') {
     throw new Error('value is not a number!')
   }
 }
 
-export function assertIsDateOrUndefined(value: unknown): asserts value is Date | undefined {
+function assertIsDateOrUndefined(value: unknown): asserts value is Date | undefined {
   if (value !== undefined && !(value instanceof Date)) {
     throw new Error('value is not a Date or undefined!')
   }
 }
 
-export function assertIsDateArrayOrUndefined(value: unknown): asserts value is Date[] | undefined {
+function assertIsDateArrayOrUndefined(value: unknown): asserts value is Date[] | undefined {
   if (value !== undefined && !Array.isArray(value)) {
     throw new Error('value is not a Date[] or undefined!')
   }
 }
 
-export function assertIsBooleanOrUndefined(value: unknown): asserts value is boolean | undefined {
+function assertIsBooleanOrUndefined(value: unknown): asserts value is boolean | undefined {
   if (value !== undefined && typeof value !== 'boolean') {
     throw new Error('value is not a boolean or undefined!')
   }
 }
 
-export function assertIsNumberOrUndefined(value: unknown): asserts value is number | undefined {
+function assertIsNumberOrUndefined(value: unknown): asserts value is number | undefined {
   if (value !== undefined && typeof value !== 'number') {
     throw new Error('value is not a number or undefined!')
   }
 }
 
-export function assertIsNumberArrayOrUndefined(value: unknown): asserts value is number[] | undefined {
+function assertIsNumberArrayOrUndefined(value: unknown): asserts value is number[] | undefined {
   if (value !== undefined && !Array.isArray(value)) {
     throw new Error('value is not a number or undefined!')
   }
 }
 
-export function assertIsKuFlowObjectOrUndefined(value: unknown): asserts value is KuFlowObject | undefined {
+function assertIsKuFlowObjectOrUndefined(value: unknown): asserts value is KuFlowObject | undefined {
   if (value !== undefined && typeof value !== 'object') {
     throw new Error('value is not a object or undefined!')
   }
 }
 
-export function assertIsKuFlowObjectArrayOrUndefined(value: unknown): asserts value is KuFlowObject[] | undefined {
+function assertIsKuFlowObjectArrayOrUndefined(value: unknown): asserts value is KuFlowObject[] | undefined {
   if (value !== undefined && !Array.isArray(value)) {
     throw new Error('value is not a object[] or undefined!')
   }
 }
 
-export function assertIsTaskElementValueDocumentItemOrUndefined(
+function assertIsTaskElementValueDocumentItemOrUndefined(
   value: unknown,
 ): asserts value is TaskElementValueDocumentItem | undefined {
   if (value !== undefined && typeof value !== 'object') {
@@ -2950,7 +2950,7 @@ export function assertIsTaskElementValueDocumentItemOrUndefined(
   }
 }
 
-export function assertIsTaskElementValueDocumentItemArrayOrUndefined(
+function assertIsTaskElementValueDocumentItemArrayOrUndefined(
   value: unknown,
 ): asserts value is TaskElementValueDocumentItem[] | undefined {
   if (value !== undefined && !Array.isArray(value)) {
@@ -2958,7 +2958,7 @@ export function assertIsTaskElementValueDocumentItemArrayOrUndefined(
   }
 }
 
-export function assertIsTaskElementValuePrincipalItemOrUndefined(
+function assertIsTaskElementValuePrincipalItemOrUndefined(
   value: unknown,
 ): asserts value is TaskElementValuePrincipalItem | undefined {
   if (value !== undefined && typeof value !== 'object') {
@@ -2966,7 +2966,7 @@ export function assertIsTaskElementValuePrincipalItemOrUndefined(
   }
 }
 
-export function assertIsTaskElementValuePrincipalItemArrayOrUndefined(
+function assertIsTaskElementValuePrincipalItemArrayOrUndefined(
   value: unknown,
 ): asserts value is TaskElementValuePrincipalItem[] | undefined {
   if (value !== undefined && !Array.isArray(value)) {

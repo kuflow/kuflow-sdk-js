@@ -1679,22 +1679,3 @@ function prepareTaskElementValuePrincipalItem(suffix: string): TaskElementValueP
     name: `name_${suffix}`,
   }
 }
-
-// describe('JsonForms Utils', () => {
-//   test('findJsonFormsPropertyAsJsonFormsFile', () => {
-//     const task: Task = {
-//       objectType: 'TASK',
-//       taskDefinition: {
-//         id: 'e68d8136-1166-455c-93d6-d106201c1856',
-//       },
-//       processId: '3b755d5e-b64f-4ec2-a830-173f006bdf8e',
-//       jsonFormsValue: {
-//         data: {
-//           file: 'fichero',
-//         },
-//       },
-//     }
-//
-//     // const value = findJsonFormsPropertyAsJsonFormsFile(task, 'file')
-//   })
-// })

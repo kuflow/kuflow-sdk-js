@@ -20,43 +20,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type JsonFormsValue } from '../generated'
+import { type Task, type TaskPageItem, type TaskSaveJsonFormsValueDataCommand } from '../generated'
 import { type JsonFormsFile, type JsonFormsPrincipalUser } from '../models'
 
-type JsonFormsValueTypeContainerArray = JsonFormsValueType[]
+type SimpleType = string | number | boolean | Date | JsonFormsPrincipalUser | JsonFormsFile
+
+type ContainerArrayType = ComplexType[]
 
 // eslint-disable-next-line  @typescript-eslint/consistent-indexed-object-style,@typescript-eslint/consistent-type-definitions
-type JsonFormsValueTypeContainerRecord = { [property: string]: JsonFormsValueType }
+type ContainerRecordType = { [property: string]: ComplexType }
 
-type JsonFormsValueTypeContainer = JsonFormsValueTypeContainerArray | JsonFormsValueTypeContainerRecord
+type ContainerType = ContainerArrayType | ContainerRecordType
 
-type JsonFormsValueType =
-  | string
-  | number
-  | boolean
-  | Date
-  | JsonFormsPrincipalUser
-  | JsonFormsFile
-  | JsonFormsValueTypeContainer
+type ComplexType = SimpleType | ContainerType
+
+type JsonFormsModels = Task | TaskPageItem | TaskSaveJsonFormsValueDataCommand
 
 export interface JsonFormsProperty {
-  container: JsonFormsValueTypeContainer
+  container: ContainerType
 
   path: string
 
-  value: JsonFormsValueType | undefined
+  value: ComplexType | undefined
 }
 
 /**
  * Get a json property as String following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsString(jsonFormsValue: JsonFormsValue, propertyPath: string): string {
-  const value = findJsonFormsPropertyAsString(jsonFormsValue, propertyPath)
+export function getJsonFormsPropertyAsString(model: JsonFormsModels, propertyPath: string): string {
+  const value = findJsonFormsPropertyAsString(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
   }
@@ -67,27 +64,24 @@ export function getJsonFormsPropertyAsString(jsonFormsValue: JsonFormsValue, pro
 /**
  * Try to find a json property as String following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsString(
-  jsonFormsValue: JsonFormsValue,
-  propertyPath: string,
-): string | undefined {
-  return findJsonFormsPropertyValue(jsonFormsValue, propertyPath)?.toString()
+export function findJsonFormsPropertyAsString(model: JsonFormsModels, propertyPath: string): string | undefined {
+  return findJsonFormsPropertyValue(model, propertyPath)?.toString()
 }
 
 /**
  * Get a json property as Number following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsNumber(jsonFormsValue: JsonFormsValue, propertyPath: string): number {
-  const value = findJsonFormsPropertyAsNumber(jsonFormsValue, propertyPath)
+export function getJsonFormsPropertyAsNumber(model: JsonFormsModels, propertyPath: string): number {
+  const value = findJsonFormsPropertyAsNumber(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
   }
@@ -98,15 +92,12 @@ export function getJsonFormsPropertyAsNumber(jsonFormsValue: JsonFormsValue, pro
 /**
  * Try to find a json property as Number following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsNumber(
-  jsonFormsValue: JsonFormsValue,
-  propertyPath: string,
-): number | undefined {
-  const value = findJsonFormsPropertyValue(jsonFormsValue, propertyPath)
+export function findJsonFormsPropertyAsNumber(model: JsonFormsModels, propertyPath: string): number | undefined {
+  const value = findJsonFormsPropertyValue(model, propertyPath)
   if (value == null) {
     return undefined
   }
@@ -128,13 +119,13 @@ export function findJsonFormsPropertyAsNumber(
 /**
  * Get a json property as Boolean following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsBoolean(jsonFormsValue: JsonFormsValue, propertyPath: string): boolean {
-  const value = findJsonFormsPropertyAsBoolean(jsonFormsValue, propertyPath)
+export function getJsonFormsPropertyAsBoolean(model: JsonFormsModels, propertyPath: string): boolean {
+  const value = findJsonFormsPropertyAsBoolean(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
   }
@@ -145,15 +136,12 @@ export function getJsonFormsPropertyAsBoolean(jsonFormsValue: JsonFormsValue, pr
 /**
  * Try to find a json property as Double following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsBoolean(
-  jsonFormsValue: JsonFormsValue,
-  propertyPath: string,
-): boolean | undefined {
-  const value = findJsonFormsPropertyValue(jsonFormsValue, propertyPath)
+export function findJsonFormsPropertyAsBoolean(model: JsonFormsModels, propertyPath: string): boolean | undefined {
+  const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
     return undefined
@@ -161,10 +149,10 @@ export function findJsonFormsPropertyAsBoolean(
 
   if (typeof value === 'boolean') {
     return value
-  }
-
-  if (typeof value === 'string') {
-    return value === 'true'
+  } else if (value === 'true') {
+    return true
+  } else if (value === 'false') {
+    return false
   }
 
   throw new Error(`Property ${propertyPath} is not a boolean`)
@@ -173,13 +161,13 @@ export function findJsonFormsPropertyAsBoolean(
 /**
  * Get a json property as Date following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsDate(jsonFormsValue: JsonFormsValue, propertyPath: string): Date {
-  const value = findJsonFormsPropertyAsDate(jsonFormsValue, propertyPath)
+export function getJsonFormsPropertyAsDate(model: JsonFormsModels, propertyPath: string): Date {
+  const value = findJsonFormsPropertyAsDate(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
   }
@@ -190,12 +178,12 @@ export function getJsonFormsPropertyAsDate(jsonFormsValue: JsonFormsValue, prope
 /**
  * Try to find a json property as Date following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsDate(jsonFormsValue: JsonFormsValue, propertyPath: string): Date | undefined {
-  const value = findJsonFormsPropertyValue(jsonFormsValue, propertyPath)
+export function findJsonFormsPropertyAsDate(model: JsonFormsModels, propertyPath: string): Date | undefined {
+  const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
     return undefined
@@ -203,208 +191,240 @@ export function findJsonFormsPropertyAsDate(jsonFormsValue: JsonFormsValue, prop
 
   if (typeof value === 'string') {
     try {
-      return new Date(value)
+      const valueDate = new Date(value)
+      if (valueDate.toString() !== 'Invalid Date') {
+        return valueDate
+      }
     } catch (ignored) {}
   }
 
   throw new Error(`Property ${propertyPath} is not a date following ISO 8601 format`)
 }
 
-// /**
-//  * Get a json property as JsonFormsFile following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  * @throws Error If property value doesn't exist
-//  */
-// public static JsonFormsFile getJsonFormsPropertyAsJsonFormsFile(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsPropertyAsJsonFormsFile(jsonFormsValue, propertyPath)
-//     .orElseThrow(() -> new Error("Property value doesn't exist"));
-// }
+/**
+ * Get a json property as JsonFormsFile following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getJsonFormsPropertyAsJsonFormsFile(model: JsonFormsModels, propertyPath: string): JsonFormsFile {
+  const value = findJsonFormsPropertyAsJsonFormsFile(model, propertyPath)
+  if (value == null) {
+    throw new Error("Property value doesn't exist")
+  }
+
+  return value
+}
 
 /**
  * Try to find a json property as JsonFormsFile following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsJsonFormsFile(
-  jsonFormsValue: JsonFormsValue,
+  model: JsonFormsModels,
   propertyPath: string,
 ): JsonFormsFile | undefined {
-  const value = findJsonFormsPropertyValue(jsonFormsValue, propertyPath)
+  const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
     return undefined
   }
 
-  if (typeof value === 'string' && isJsonFormsFile(value)) {
+  const jsonFormsFile = tryParseJsonFormsFile(value)
+  if (jsonFormsFile == null) {
+    throw new Error(`Property ${propertyPath} is not a file`)
+  }
+
+  return jsonFormsFile
+}
+
+/**
+ * Get a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getJsonFormsPropertyAsJsonFormsPrincipalUser(
+  model: JsonFormsModels,
+  propertyPath: string,
+): JsonFormsPrincipalUser {
+  const value = findJsonFormsPropertyAsJsonFormsPrincipalUser(model, propertyPath)
+  if (value == null) {
+    throw new Error("Property value doesn't exist")
+  }
+
+  return value
+}
+
+/**
+ * Try to find a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findJsonFormsPropertyAsJsonFormsPrincipalUser(
+  model: JsonFormsModels,
+  propertyPath: string,
+): JsonFormsPrincipalUser | undefined {
+  const value = findJsonFormsPropertyValue(model, propertyPath)
+
+  if (value == null) {
     return undefined
   }
 
-  throw new Error(`Property ${propertyPath} is not a date following ISO 8601 format`)
+  const jsonFormsPrincipalUser = tryParseJsonFormsPrincipalUser(value)
+  if (jsonFormsPrincipalUser == null) {
+    throw new Error(`Property ${propertyPath} is not a principal user`)
+  }
+
+  return jsonFormsPrincipalUser
 }
 
-// /**
-//  * Get a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  * @throws Error If property value doesn't exist
-//  */
-// public static JsonFormsPrincipalUser getJsonFormsPropertyAsJsonFormsPrincipalUser(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsPropertyAsJsonFormsPrincipalUser(jsonFormsValue, propertyPath)
-//     .orElseThrow(() -> new Error("Property value doesn't exist"));
-// }
-//
-// /**
-//  * Try to find a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  */
-// public static Optional<JsonFormsPrincipalUser> findJsonFormsPropertyAsJsonFormsPrincipalUser(
-//   JsonFormsValue jsonFormsValue,
-//   String propertyPath
-// ) {
-//   return findJsonFormsProperty(jsonFormsValue, propertyPath).flatMap(value -> JsonFormsPrincipalUser.from(value.toString()));
-// }
-//
-// /**
-//  * Get a json property as List following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  * @throws Error If property value doesn't exist or is not a List
-//  */
-// public static List<Object> getJsonFormsPropertyAsList(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsPropertyAsList(jsonFormsValue, propertyPath)
-//     .orElseThrow(() -> new Error("Property value doesn't exist"));
-// }
-//
-// /**
-//  * Try to find a json property as List following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  */
-// @SuppressWarnings("unchecked")
-// public static Optional<List<Object>> findJsonFormsPropertyAsList(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsProperty(jsonFormsValue, propertyPath)
-//     .map(value -> {
-//       if (value instanceof List) {
-//         return unmodifiableList((List<Object>) value);
-//       }
-//
-//       throw new Error("Property value is not a list");
-//     });
-// }
-//
-// /**
-//  * Get a json property as Map following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  * @throws Error If property value doesn't exist or is not a List
-//  */
-// public static Map<String, Object> getJsonFormsPropertyAsMap(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsPropertyAsMap(jsonFormsValue, propertyPath)
-//     .orElseThrow(() -> new Error("Property value doesn't exist"));
-// }
-//
-// /**
-//  * Try to find a json property as Map following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  */
-// @SuppressWarnings("unchecked")
-// public static Optional<Map<String, Object>> findJsonFormsPropertyAsMap(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsProperty(jsonFormsValue, propertyPath)
-//     .map(value -> {
-//       if (value instanceof Map) {
-//         return unmodifiableMap((Map<String, Object>) value);
-//       }
-//
-//       throw new Error("Property value is not a map");
-//     });
-// }
-//
-// /**
-//  * Get a json property following the 'propertyPath' passed.
-//  *
-//  * @param jsonFormsValue JsonFormsValue
-//  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
-//  * @return the property value if exists.
-//  * @throws Error If property value doesn't exist
-//  */
-// public static Object getJsonFormsProperty(jsonFormsValue: JsonFormsValue, propertyPath: string) {
-//   return findJsonFormsProperty(jsonFormsValue, propertyPath)
-//     .orElseThrow(() -> new Error("Property value doesn't exist"));
-// }
+/**
+ * Get a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getJsonFormsPropertyAsArray(model: JsonFormsModels, propertyPath: string): unknown[] {
+  const value = findJsonFormsPropertyAsArray(model, propertyPath)
+  if (value == null) {
+    throw new Error("Property value doesn't exist")
+  }
+
+  return value
+}
+
+/**
+ * Try to find a json property as Array following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findJsonFormsPropertyAsArray(model: JsonFormsModels, propertyPath: string): unknown[] | undefined {
+  const value = findJsonFormsPropertyValue(model, propertyPath)
+
+  if (value == null) {
+    return undefined
+  }
+
+  if (Array.isArray(value)) {
+    return value
+  }
+
+  throw new Error(`Property ${propertyPath} is not an array`)
+}
+
+/**
+ * Get a json property as Object following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getJsonFormsPropertyAsObject(model: JsonFormsModels, propertyPath: string): Record<string, unknown> {
+  const value = findJsonFormsPropertyAsObject(model, propertyPath)
+  if (value == null) {
+    throw new Error("Property value doesn't exist")
+  }
+
+  return value
+}
+
+/**
+ * Try to find a json property as Object following the 'propertyPath' passed.
+ *
+ * @param model Related model
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findJsonFormsPropertyAsObject(
+  model: JsonFormsModels,
+  propertyPath: string,
+): Record<string, unknown> | undefined {
+  const value = findJsonFormsPropertyValue(model, propertyPath)
+
+  if (value == null) {
+    return undefined
+  }
+
+  if (typeof value === 'object') {
+    return value as Record<string, unknown>
+  }
+
+  throw new Error(`Property ${propertyPath} is not an object`)
+}
 
 /**
  * Try to find a json property following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Task OR Process
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
+function findJsonFormsPropertyValue(model: JsonFormsModels, propertyPath: string): ComplexType | undefined {
+  return findJsonFormsProperty(model, propertyPath, false)?.value
+}
 
-function findJsonFormsPropertyValue(
-  jsonFormsValue: JsonFormsValue,
-  propertyPath: string,
-): JsonFormsValueType | undefined {
-  return findJsonFormsProperty(jsonFormsValue, propertyPath, false)?.value
+interface UpdateJsonFormsPropertyOptions {
+  format: 'date' | 'date-time'
 }
 
 /**
  * Update a json forms data property in the task passed following the 'propertyPath'.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @param value Value to update
- * @throws com.kuflow.rest.Error If property parent path doesn't exist
+ * @param options Additional options
+ * @throws Error If property parent path doesn't exist
  */
 export function updateJsonFormsProperty(
-  jsonFormsValue: JsonFormsValue,
+  model: JsonFormsModels,
   propertyPath: string,
-  value: JsonFormsValueType,
+  value: SimpleType | undefined,
+  options?: UpdateJsonFormsPropertyOptions,
 ): void {
-  if (jsonFormsValue.data == null) {
-    jsonFormsValue.data = {}
-  }
+  const property = findJsonFormsProperty(model, propertyPath, true)
 
-  const property = findJsonFormsProperty(jsonFormsValue, propertyPath, true)
+  value = transformJsonFormsPropertyValue(value, options)
+
   if (property == null) {
     throw new Error(`Property ${propertyPath} doesn't exist`)
-  }
-
-  if (isJsonFormsPrincipalUserObject(value)) {
-    value = generateValueForJsonFormsPrincipalUser(value)
-  } else if (isJsonFormsFileObject(value)) {
-    value = generateValueForJsonFormsFile(value)
   }
 
   const jsonFormsPropertyContainer = property.container
   const jsonFormsPropertyPath = property.path
   if (isJsonFormsTypeContainerArray(jsonFormsPropertyContainer)) {
-    if (!Number.isInteger(jsonFormsPropertyPath)) {
+    if (!isNumeric(jsonFormsPropertyPath)) {
       throw new Error(`Incorrect property path ${jsonFormsPropertyPath}, parent path is not a List`)
     }
 
-    const jsonFormsPropertyPathIndex = parseInt(jsonFormsPropertyPath)
-    jsonFormsPropertyContainer[jsonFormsPropertyPathIndex] = value
+    const jsonFormsPropertyPathIndex = parseFloat(jsonFormsPropertyPath)
+    if (value != null) {
+      jsonFormsPropertyContainer[jsonFormsPropertyPathIndex] = value
+    } else {
+      jsonFormsPropertyContainer.splice(jsonFormsPropertyPathIndex, 1)
+    }
   } else if (isJsonFormsTypeContainerRecord(jsonFormsPropertyContainer)) {
-    jsonFormsPropertyContainer[propertyPath] = value
+    if (value != null) {
+      jsonFormsPropertyContainer[jsonFormsPropertyPath] = value
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete jsonFormsPropertyContainer[jsonFormsPropertyPath]
+    }
   } else {
     throw new Error(`Incorrect property path ${jsonFormsPropertyPath}`)
   }
@@ -413,26 +433,26 @@ export function updateJsonFormsProperty(
 /**
  * Try to find a json property following the 'propertyPath' passed.
  *
- * @param jsonFormsValue JsonFormsValue
+ * @param model Task OR Process
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @param createMissingParents If true, missing parents paths will be created
  * @return the property if exists.
  */
 export function findJsonFormsProperty(
-  jsonFormsValue: JsonFormsValue,
+  model: JsonFormsModels,
   propertyPath: string,
   createMissingParents: boolean = true,
 ): JsonFormsProperty | undefined {
-  const dataCurrent = getJsonFormsValueData(jsonFormsValue, createMissingParents)
+  const dataCurrent = getJsonFormsValueData(model, createMissingParents)
   if (dataCurrent == null) {
     return undefined
   }
 
-  let jsonFormsPropertyContainer: JsonFormsValueTypeContainer = dataCurrent
+  let jsonFormsPropertyContainer: ContainerType = dataCurrent
   let jsonFormsPropertyPath = ''
-  let jsonFormsPropertyValue: JsonFormsValueType | undefined
+  let jsonFormsPropertyValue: ComplexType | undefined
 
-  const paths = propertyPath.split('\\.')
+  const paths = propertyPath.split('.')
   for (let i = 0; i < paths.length; i++) {
     jsonFormsPropertyPath = paths[i]
     if (jsonFormsPropertyPath === '') {
@@ -442,22 +462,22 @@ export function findJsonFormsProperty(
     let jsonFormsPropertyPathAsInteger = -1
 
     if (isJsonFormsTypeContainerArray(jsonFormsPropertyContainer)) {
-      if (!Number.isInteger(jsonFormsPropertyPath)) {
+      if (!isNumeric(jsonFormsPropertyPath)) {
         throw new Error(`Wrong list index ${jsonFormsPropertyPath}`)
       }
 
-      jsonFormsPropertyPathAsInteger = parseInt(jsonFormsPropertyPath)
-      if (jsonFormsPropertyPathAsInteger < 0) {
-        throw new Error(`Wrong list index ${jsonFormsPropertyPath}`)
-      }
-
-      if (jsonFormsPropertyPathAsInteger > jsonFormsPropertyContainer.length) {
+      jsonFormsPropertyPathAsInteger = parseFloat(jsonFormsPropertyPath)
+      if (jsonFormsPropertyPathAsInteger < 0 || jsonFormsPropertyPathAsInteger > jsonFormsPropertyContainer.length) {
+        return undefined
+      } else if (jsonFormsPropertyPathAsInteger === jsonFormsPropertyContainer.length) {
         if (!createMissingParents) {
           return undefined
         }
-      }
 
-      jsonFormsPropertyValue = jsonFormsPropertyContainer[jsonFormsPropertyPathAsInteger]
+        jsonFormsPropertyValue = undefined
+      } else {
+        jsonFormsPropertyValue = jsonFormsPropertyContainer[jsonFormsPropertyPathAsInteger]
+      }
     } else if (isJsonFormsTypeContainerRecord(jsonFormsPropertyContainer)) {
       if (jsonFormsPropertyContainer[jsonFormsPropertyPath] == null) {
         if (!createMissingParents) {
@@ -477,21 +497,25 @@ export function findJsonFormsProperty(
 
       if (i + 1 < paths.length) {
         const pathNext = paths[i + 1]
-        if (Number.isInteger(pathNext)) {
-          jsonFormsPropertyValue = {}
+        if (isNumeric(pathNext)) {
+          jsonFormsPropertyValue = []
         } else {
           jsonFormsPropertyValue = {}
         }
-      }
 
-      if (isJsonFormsTypeContainerArray(jsonFormsPropertyContainer)) {
-        jsonFormsPropertyContainer[jsonFormsPropertyPathAsInteger] = jsonFormsPropertyValue
-      } else if (isJsonFormsTypeContainerRecord(jsonFormsPropertyContainer)) {
-        jsonFormsPropertyContainer[jsonFormsPropertyPath] = jsonFormsPropertyValue
+        if (isJsonFormsTypeContainerArray(jsonFormsPropertyContainer)) {
+          if (jsonFormsPropertyPathAsInteger !== jsonFormsPropertyContainer.length) {
+            throw new Error(`Wrong list index ${jsonFormsPropertyPath}`)
+          }
+
+          jsonFormsPropertyContainer[jsonFormsPropertyPathAsInteger] = jsonFormsPropertyValue
+        } else if (isJsonFormsTypeContainerRecord(jsonFormsPropertyContainer)) {
+          jsonFormsPropertyContainer[jsonFormsPropertyPath] = jsonFormsPropertyValue
+        }
       }
     }
 
-    if (i + 1 < paths.length && isJsonFormsTypeContainer(jsonFormsPropertyValue)) {
+    if (i + 1 < paths.length && jsonFormsPropertyValue != null && isJsonFormsTypeContainer(jsonFormsPropertyValue)) {
       jsonFormsPropertyContainer = jsonFormsPropertyValue
       jsonFormsPropertyValue = undefined
     }
@@ -518,25 +542,160 @@ export function generateValueForJsonFormsFile(file: JsonFormsFile): string {
   return `kuflow-file:uri=${uri};type=${type};size=${size};name=${name};`
 }
 
-export function isJsonFormsFile(value: unknown): boolean {
+function transformJsonFormsPropertyValue(
+  value: SimpleType | undefined,
+  options?: UpdateJsonFormsPropertyOptions,
+): SimpleType | undefined {
   if (value == null) {
-    return false
+    return undefined
+  } else if (isJsonFormsPrincipalUserObject(value)) {
+    return generateValueForJsonFormsPrincipalUser(value)
+  } else if (isJsonFormsFileObject(value)) {
+    return generateValueForJsonFormsFile(value)
+  } else if (isDate(value)) {
+    value = value.toISOString()
+    if (options?.format !== 'date-time') {
+      value = value.replace(/T.*/, '')
+    }
+    return value
+  } else if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'string') {
+    return value
+  }
+
+  throw new Error(`Unsupported value ${value}`)
+}
+
+function isTask(value: unknown): value is Task {
+  return (value as Task).objectType === 'TASK'
+}
+
+function isTaskPageItem(value: unknown): value is TaskPageItem {
+  return (value as TaskPageItem).objectType === 'TASK_PAGE_ITEM'
+}
+
+function tryParseJsonFormsFile(value: unknown): JsonFormsFile | undefined {
+  if (value == null) {
+    return undefined
   }
 
   if (typeof value !== 'string') {
-    return false
+    return undefined
   }
 
   if (!value.startsWith('kuflow-file:')) {
-    return false
+    return undefined
   }
 
-  const matches = value.match(/(.*)=(.*);/g)
-  if (matches == null) {
-    return false
+  const valueTransformed = value.replace('kuflow-file:', '')
+
+  const matches = valueTransformed.match(/.*?=.*?;/g)
+  if (matches == null || matches.length !== 4) {
+    return undefined
   }
 
-  return false
+  let uri: string | undefined
+  let type: string | undefined
+  let name: string | undefined
+  let size: number | undefined
+
+  matches.forEach(match => {
+    match = match.slice(0, match.length - 1)
+    const [key, value] = match.split('=')
+    switch (key) {
+      case 'uri': {
+        uri = value
+        break
+      }
+      case 'type': {
+        type = value
+        break
+      }
+      case 'name': {
+        name = value
+        break
+      }
+      case 'size': {
+        size = parseFloat(value)
+        break
+      }
+    }
+  })
+
+  assertIsRequired(uri)
+  assertIsRequired(type)
+  assertIsRequired(name)
+  assertIsRequired(size)
+
+  return {
+    uri,
+    type,
+    name,
+    size,
+  }
+}
+
+function tryParseJsonFormsPrincipalUser(value: unknown): JsonFormsPrincipalUser | undefined {
+  if (value == null) {
+    return undefined
+  }
+
+  if (typeof value !== 'string') {
+    return undefined
+  }
+
+  if (!value.startsWith('kuflow-principal-user:')) {
+    return undefined
+  }
+
+  const valueTransformed = value.replace('kuflow-principal-user:', '')
+
+  const matches = valueTransformed.match(/.*?=.*?;/g)
+  if (matches == null || matches.length !== 3) {
+    return undefined
+  }
+
+  let id: string | undefined
+  let type: string | undefined
+  let name: string | undefined
+
+  matches.forEach(match => {
+    match = match.slice(0, match.length - 1)
+    const [key, value] = match.split('=')
+    switch (key) {
+      case 'id': {
+        id = value
+        break
+      }
+      case 'type': {
+        type = value
+        break
+      }
+      case 'name': {
+        name = value
+        break
+      }
+    }
+  })
+
+  assertIsRequired(id)
+  assertIsRequired(type)
+  assertIsRequired(name)
+
+  return {
+    id,
+    type,
+    name,
+  }
+}
+
+function assertIsRequired<T>(value: T | null | undefined): asserts value is T {
+  if (value === 'null' || value === 'undefined') {
+    throw new Error('value is null or undefined')
+  }
+}
+
+function isDate(value: unknown): value is Date {
+  return value instanceof Date
 }
 
 function isJsonFormsPrincipalUserObject(value: unknown): value is JsonFormsPrincipalUser {
@@ -564,29 +723,43 @@ function isJsonFormsFileObject(value: unknown): value is JsonFormsFile {
   )
 }
 
-function isJsonFormsTypeContainer(value: JsonFormsValueType): value is JsonFormsValueTypeContainer {
+function isJsonFormsTypeContainer(value: ComplexType | undefined): value is ContainerType {
   return isJsonFormsTypeContainerRecord(value) || isJsonFormsTypeContainerArray(value)
 }
 
-function isJsonFormsTypeContainerRecord(value: JsonFormsValueType): value is JsonFormsValueTypeContainerRecord {
+function isJsonFormsTypeContainerRecord(value: ComplexType | undefined): value is ContainerRecordType {
   return typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date)
 }
 
-function isJsonFormsTypeContainerArray(value: JsonFormsValueType): value is JsonFormsValueTypeContainerArray {
+function isJsonFormsTypeContainerArray(value: ComplexType | undefined): value is ContainerArrayType {
   return Array.isArray(value)
 }
 
-function getJsonFormsValueData(
-  jsonFormsValue: JsonFormsValue,
-  createMissingParents: boolean,
-): JsonFormsValueTypeContainer | undefined {
-  if (jsonFormsValue.data == null) {
-    if (!createMissingParents) {
-      return undefined
-    }
+function getJsonFormsValueData(model: JsonFormsModels, createMissingParents: boolean): ContainerType | undefined {
+  let data: ContainerType | undefined
 
-    jsonFormsValue.data = {}
+  if (isTask(model) || isTaskPageItem(model)) {
+    data = model.jsonFormsValue?.data
+  } else {
+    data = model.data
   }
 
-  return jsonFormsValue.data
+  if (data == null && createMissingParents) {
+    data = {}
+    if (isTask(model) || isTaskPageItem(model)) {
+      model.jsonFormsValue = model.jsonFormsValue ?? {}
+      model.jsonFormsValue.data = data
+    } else {
+      model.data = data
+    }
+  }
+
+  return data
+}
+
+function isNumeric(value: string): boolean {
+  return (
+    !isNaN(value as any as number) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(value)) // ...and ensure strings of whitespace fail
+  )
 }
