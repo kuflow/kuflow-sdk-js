@@ -66,7 +66,7 @@ import {
   type Document,
   type TaskFindTasksOptionalExtParams,
   type TaskSaveElementValueDocumentCommand,
-  type TaskSaveJsonFormsValueDocumentCommand,
+  type TaskSaveJsonFormsValueDocumentRequestCommand,
 } from '../models'
 
 /** Class containing TaskOperations operations. */
@@ -296,7 +296,7 @@ export class TaskOperations {
    */
   public async actionsTaskSaveJsonFormsValueDocument(
     id: string,
-    command: TaskSaveJsonFormsValueDocumentCommand,
+    command: TaskSaveJsonFormsValueDocumentRequestCommand,
     document: Document,
     options?: TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams,
   ): Promise<TaskActionsTaskSaveJsonFormsValueDocumentResponse> {

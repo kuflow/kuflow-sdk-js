@@ -39,7 +39,7 @@ export interface TaskSaveElementValueDocumentCommand {
   elementValueValid?: boolean
 }
 
-export interface TaskSaveJsonFormsValueDocumentCommand {
+export interface TaskSaveJsonFormsValueDocumentRequestCommand {
   schemaPath: string
 }
 

@@ -30,7 +30,7 @@ import {
   type TaskSaveElementCommand,
   type TaskSaveElementValueDocumentCommand,
   type TaskSaveJsonFormsValueDataCommand,
-  type TaskSaveJsonFormsValueDocumentCommand,
+  type TaskSaveJsonFormsValueDocumentRequestCommand,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
@@ -446,7 +446,7 @@ describe('API /tasks', () => {
   describe('POST /tasks/{id}/~actions/save-json-forms-value-document', () => {
     test('Check that security header is added', async () => {
       const expectedObject = mockTaskJsonForms()
-      const command: TaskSaveJsonFormsValueDocumentCommand = {
+      const command: TaskSaveJsonFormsValueDocumentRequestCommand = {
         schemaPath: '#/path0/path1',
       }
       const document: Document = {
@@ -476,7 +476,7 @@ describe('API /tasks', () => {
 
     test('Check happy path', async () => {
       const expectedObject = mockTaskJsonForms()
-      const command: TaskSaveJsonFormsValueDocumentCommand = {
+      const command: TaskSaveJsonFormsValueDocumentRequestCommand = {
         schemaPath: '#/path0/path1',
       }
       const document: Document = {

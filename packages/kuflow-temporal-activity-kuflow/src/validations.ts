@@ -39,6 +39,7 @@ import {
   type RetrieveTaskRequest,
   type SaveProcessElementRequest,
   type SaveTaskElementRequest,
+  type SaveTaskJsonFormsValueDataRequest,
 } from './models'
 
 export function validateRetrievePrincipalRequest(request: RetrievePrincipalRequest): void {
@@ -173,6 +174,15 @@ export function validateDeleteTaskElementValueDocumentRequest(request: DeleteTas
   }
   if (request.documentId == null) {
     throw ApplicationFailure.nonRetryable("'documentId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+}
+
+export function validateSaveTaskJsonFormsValueData(request: SaveTaskJsonFormsValueDataRequest): void {
+  if (request.taskId == null) {
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+  if (request.data == null) {
+    throw ApplicationFailure.nonRetryable("'data' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
