@@ -24,6 +24,7 @@
 import { describe, expect, test } from '@jest/globals'
 import {
   findJsonFormsPropertyAsBoolean,
+  findJsonFormsPropertyAsDate,
   findJsonFormsPropertyAsJsonFormsFile,
   findJsonFormsPropertyAsJsonFormsPrincipal,
   findJsonFormsPropertyAsNumber,
@@ -116,7 +117,7 @@ describe('JsonForms Value Utils', () => {
     expect(value3).toBeUndefined()
 
     expect(() => {
-      getJsonFormsPropertyAsNumber(task, 'key1')
+      findJsonFormsPropertyAsNumber(task, 'key1')
     }).toThrow('Property key1 is not a number')
   })
 
@@ -163,7 +164,7 @@ describe('JsonForms Value Utils', () => {
     expect(value5).toBeUndefined()
 
     expect(() => {
-      getJsonFormsPropertyAsBoolean(task, 'key1')
+      findJsonFormsPropertyAsBoolean(task, 'key1')
     }).toThrow('Property key1 is not a boolean')
   })
 
@@ -179,6 +180,20 @@ describe('JsonForms Value Utils', () => {
 
     expect(() => {
       getJsonFormsPropertyAsDate(task, 'key1')
+    }).toThrow('Property key1 is not a date following ISO 8601 format')
+  })
+
+  test('findJsonFormsPropertyAsDate', () => {
+    const task = prepareTask()
+
+    const value1 = findJsonFormsPropertyAsDate(task, 'key5.0')
+    expect(value1).toStrictEqual(new Date('2000-01-01'))
+
+    const value2 = findJsonFormsPropertyAsDate(task, 'key_xxxxxxx')
+    expect(value2).toBeUndefined()
+
+    expect(() => {
+      findJsonFormsPropertyAsDate(task, 'key1')
     }).toThrow('Property key1 is not a date following ISO 8601 format')
   })
 
@@ -237,7 +252,7 @@ describe('JsonForms Value Utils', () => {
 
     expect(() => {
       getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
-    }).toThrow('Property key1 is not a principal user')
+    }).toThrow('Property key1 is not a principal')
   })
 
   test('findJsonFormsPropertyAsJsonFormsPrincipal', () => {
@@ -255,7 +270,7 @@ describe('JsonForms Value Utils', () => {
 
     expect(() => {
       findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
-    }).toThrow('Property key1 is not a principal user')
+    }).toThrow('Property key1 is not a principal')
   })
 
   test('getJsonFormsPropertyAsArray', () => {

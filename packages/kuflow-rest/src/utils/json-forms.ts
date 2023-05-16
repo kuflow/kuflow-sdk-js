@@ -283,7 +283,7 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
 
   const jsonFormsPrincipal = tryParseJsonFormsPrincipal(value)
   if (jsonFormsPrincipal == null) {
-    throw new Error(`Property ${propertyPath} is not a principal user`)
+    throw new Error(`Property ${propertyPath} is not a principal`)
   }
 
   return jsonFormsPrincipal
@@ -529,18 +529,6 @@ export function findJsonFormsProperty(
   }
 }
 
-export function generateValueForJsonFormsPrincipal(jsonFormPrincipal: JsonFormsPrincipal): string {
-  const { id, type, name } = jsonFormPrincipal
-
-  return `kuflow-principal:id=${id};type=${type};name=${name};`
-}
-
-export function generateValueForJsonFormsFile(file: JsonFormsFile): string {
-  const { uri, type, name, size } = file
-
-  return `kuflow-file:uri=${uri};type=${type};size=${size};name=${name};`
-}
-
 function transformJsonFormsPropertyValue(
   value: SimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
@@ -562,6 +550,18 @@ function transformJsonFormsPropertyValue(
   }
 
   throw new Error(`Unsupported value ${value}`)
+}
+
+export function generateValueForJsonFormsPrincipal(jsonFormPrincipal: JsonFormsPrincipal): string {
+  const { id, type, name } = jsonFormPrincipal
+
+  return `kuflow-principal:id=${id};type=${type};name=${name};`
+}
+
+export function generateValueForJsonFormsFile(file: JsonFormsFile): string {
+  const { uri, type, name, size } = file
+
+  return `kuflow-file:uri=${uri};type=${type};size=${size};name=${name};`
 }
 
 function isTask(value: unknown): value is Task {
@@ -705,7 +705,7 @@ function isJsonFormsPrincipalObject(value: unknown): value is JsonFormsPrincipal
   return (
     Object.prototype.hasOwnProperty.call(value, 'id') &&
     Object.prototype.hasOwnProperty.call(value, 'type') &&
-    Object.prototype.hasOwnProperty.call(value, 'type')
+    Object.prototype.hasOwnProperty.call(value, 'name')
   )
 }
 
