@@ -20,11 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import { describe, expect, test } from '@jest/globals'
 import {
   findJsonFormsPropertyAsBoolean,
   findJsonFormsPropertyAsJsonFormsFile,
-  findJsonFormsPropertyAsJsonFormsPrincipalUser,
+  findJsonFormsPropertyAsJsonFormsPrincipal,
   findJsonFormsPropertyAsNumber,
   findJsonFormsPropertyAsObject,
   findJsonFormsPropertyAsString,
@@ -32,12 +33,12 @@ import {
   getJsonFormsPropertyAsBoolean,
   getJsonFormsPropertyAsDate,
   getJsonFormsPropertyAsJsonFormsFile,
-  getJsonFormsPropertyAsJsonFormsPrincipalUser,
+  getJsonFormsPropertyAsJsonFormsPrincipal,
   getJsonFormsPropertyAsNumber,
   getJsonFormsPropertyAsObject,
   getJsonFormsPropertyAsString,
   type JsonFormsFile,
-  type JsonFormsPrincipalUser,
+  type JsonFormsPrincipal,
   type Task,
   updateJsonFormsProperty,
 } from '@kuflow/kuflow-rest'
@@ -220,10 +221,10 @@ describe('JsonForms Value Utils', () => {
     }).toThrow('Property key1 is not a file')
   })
 
-  test('getJsonFormsPropertyAsJsonFormsPrincipalUser', () => {
+  test('getJsonFormsPropertyAsJsonFormsPrincipal', () => {
     const task = prepareTask()
 
-    const value = getJsonFormsPropertyAsJsonFormsPrincipalUser(task, 'key7')
+    const value = getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key7')
     expect(value).toStrictEqual({
       id: 'xxx-yyy-zzz',
       type: 'USER',
@@ -231,29 +232,29 @@ describe('JsonForms Value Utils', () => {
     })
 
     expect(() => {
-      getJsonFormsPropertyAsJsonFormsPrincipalUser(task, 'key_xxxxxxx')
+      getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      getJsonFormsPropertyAsJsonFormsPrincipalUser(task, 'key1')
+      getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
     }).toThrow('Property key1 is not a principal user')
   })
 
-  test('findJsonFormsPropertyAsJsonFormsPrincipalUser', () => {
+  test('findJsonFormsPropertyAsJsonFormsPrincipal', () => {
     const task = prepareTask()
 
-    const value1 = findJsonFormsPropertyAsJsonFormsPrincipalUser(task, 'key7')
+    const value1 = findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key7')
     expect(value1).toStrictEqual({
       id: 'xxx-yyy-zzz',
       type: 'USER',
       name: 'Homer Simpson',
     })
 
-    const value2 = findJsonFormsPropertyAsJsonFormsPrincipalUser(task, 'key_xxxxxxx')
+    const value2 = findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key_xxxxxxx')
     expect(value2).toBeUndefined()
 
     expect(() => {
-      findJsonFormsPropertyAsJsonFormsPrincipalUser(task, 'key1')
+      findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
     }).toThrow('Property key1 is not a principal user')
   })
 
@@ -318,7 +319,7 @@ describe('JsonForms Value Utils', () => {
       size: 500,
     }
 
-    const principalUser: JsonFormsPrincipalUser = {
+    const principal: JsonFormsPrincipal = {
       id: 'xxx-yyy-zzz',
       type: 'USER',
       name: 'Homer Simpson',
@@ -331,7 +332,7 @@ describe('JsonForms Value Utils', () => {
     updateJsonFormsProperty(task, 'key2.1.key2', new Date('3030-01-01'))
     updateJsonFormsProperty(task, 'key3', 100)
     updateJsonFormsProperty(task, 'key4', file)
-    updateJsonFormsProperty(task, 'key5', principalUser)
+    updateJsonFormsProperty(task, 'key5', principal)
 
     expect(task.jsonFormsValue.data).toStrictEqual({
       key1: 'text',
@@ -347,7 +348,7 @@ describe('JsonForms Value Utils', () => {
       ],
       key3: 100,
       key4: 'kuflow-file:uri=xxx-yyy-zzz;type=application/pdf;size=500;name=dummy.pdf;',
-      key5: 'kuflow-principal-user:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
+      key5: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
     })
 
     updateJsonFormsProperty(task, 'key1', undefined)
@@ -362,7 +363,7 @@ describe('JsonForms Value Utils', () => {
       ],
       key3: 100,
       key4: 'kuflow-file:uri=xxx-yyy-zzz;type=application/pdf;size=500;name=dummy.pdf;',
-      key5: 'kuflow-principal-user:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
+      key5: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
     })
 
     expect(() => {
@@ -393,7 +394,7 @@ function prepareTask(): Task {
         key4: [true, false, 'true', 'false'],
         key5: ['2000-01-01'],
         key6: 'kuflow-file:uri=xxx-yyy-zzz;type=application/pdf;size=500;name=dummy.pdf;',
-        key7: 'kuflow-principal-user:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
+        key7: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
       },
     },
   }

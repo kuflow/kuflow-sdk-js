@@ -20,10 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Task, type TaskPageItem, type TaskSaveJsonFormsValueDataCommand } from '../generated'
-import { type JsonFormsFile, type JsonFormsPrincipalUser } from '../models'
 
-type SimpleType = string | number | boolean | Date | JsonFormsPrincipalUser | JsonFormsFile
+import { type PrincipalType, type Task, type TaskPageItem, type TaskSaveJsonFormsValueDataCommand } from '../generated'
+import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
+
+type SimpleType = string | number | boolean | Date | JsonFormsPrincipal | JsonFormsFile
 
 type ContainerArrayType = ComplexType[]
 
@@ -244,18 +245,18 @@ export function findJsonFormsPropertyAsJsonFormsFile(
 }
 
 /**
- * Get a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
+ * Get a json property as JsonFormsPrincipal following the 'propertyPath' passed.
  *
  * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsJsonFormsPrincipalUser(
+export function getJsonFormsPropertyAsJsonFormsPrincipal(
   model: JsonFormsModels,
   propertyPath: string,
-): JsonFormsPrincipalUser {
-  const value = findJsonFormsPropertyAsJsonFormsPrincipalUser(model, propertyPath)
+): JsonFormsPrincipal {
+  const value = findJsonFormsPropertyAsJsonFormsPrincipal(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
   }
@@ -264,32 +265,32 @@ export function getJsonFormsPropertyAsJsonFormsPrincipalUser(
 }
 
 /**
- * Try to find a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
+ * Try to find a json property as JsonFormsPrincipal following the 'propertyPath' passed.
  *
  * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsJsonFormsPrincipalUser(
+export function findJsonFormsPropertyAsJsonFormsPrincipal(
   model: JsonFormsModels,
   propertyPath: string,
-): JsonFormsPrincipalUser | undefined {
+): JsonFormsPrincipal | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
     return undefined
   }
 
-  const jsonFormsPrincipalUser = tryParseJsonFormsPrincipalUser(value)
-  if (jsonFormsPrincipalUser == null) {
+  const jsonFormsPrincipal = tryParseJsonFormsPrincipal(value)
+  if (jsonFormsPrincipal == null) {
     throw new Error(`Property ${propertyPath} is not a principal user`)
   }
 
-  return jsonFormsPrincipalUser
+  return jsonFormsPrincipal
 }
 
 /**
- * Get a json property as JsonFormsPrincipalUser following the 'propertyPath' passed.
+ * Get a json property as Array following the 'propertyPath' passed.
  *
  * @param model Related model
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
@@ -528,12 +529,10 @@ export function findJsonFormsProperty(
   }
 }
 
-// export function parseJsonFormsFile(value: string): JsonFormsFile {}
+export function generateValueForJsonFormsPrincipal(jsonFormPrincipal: JsonFormsPrincipal): string {
+  const { id, type, name } = jsonFormPrincipal
 
-export function generateValueForJsonFormsPrincipalUser(principalUser: JsonFormsPrincipalUser): string {
-  const { id, type, name } = principalUser
-
-  return `kuflow-principal-user:id=${id};type=${type};name=${name};`
+  return `kuflow-principal:id=${id};type=${type};name=${name};`
 }
 
 export function generateValueForJsonFormsFile(file: JsonFormsFile): string {
@@ -548,8 +547,8 @@ function transformJsonFormsPropertyValue(
 ): SimpleType | undefined {
   if (value == null) {
     return undefined
-  } else if (isJsonFormsPrincipalUserObject(value)) {
-    return generateValueForJsonFormsPrincipalUser(value)
+  } else if (isJsonFormsPrincipalObject(value)) {
+    return generateValueForJsonFormsPrincipal(value)
   } else if (isJsonFormsFileObject(value)) {
     return generateValueForJsonFormsFile(value)
   } else if (isDate(value)) {
@@ -634,7 +633,7 @@ function tryParseJsonFormsFile(value: unknown): JsonFormsFile | undefined {
   }
 }
 
-function tryParseJsonFormsPrincipalUser(value: unknown): JsonFormsPrincipalUser | undefined {
+function tryParseJsonFormsPrincipal(value: unknown): JsonFormsPrincipal | undefined {
   if (value == null) {
     return undefined
   }
@@ -643,11 +642,11 @@ function tryParseJsonFormsPrincipalUser(value: unknown): JsonFormsPrincipalUser 
     return undefined
   }
 
-  if (!value.startsWith('kuflow-principal-user:')) {
+  if (!value.startsWith('kuflow-principal:')) {
     return undefined
   }
 
-  const valueTransformed = value.replace('kuflow-principal-user:', '')
+  const valueTransformed = value.replace('kuflow-principal:', '')
 
   const matches = valueTransformed.match(/.*?=.*?;/g)
   if (matches == null || matches.length !== 3) {
@@ -655,7 +654,7 @@ function tryParseJsonFormsPrincipalUser(value: unknown): JsonFormsPrincipalUser 
   }
 
   let id: string | undefined
-  let type: string | undefined
+  let type: PrincipalType | undefined
   let name: string | undefined
 
   matches.forEach(match => {
@@ -667,7 +666,7 @@ function tryParseJsonFormsPrincipalUser(value: unknown): JsonFormsPrincipalUser 
         break
       }
       case 'type': {
-        type = value
+        type = value as PrincipalType
         break
       }
       case 'name': {
@@ -698,7 +697,7 @@ function isDate(value: unknown): value is Date {
   return value instanceof Date
 }
 
-function isJsonFormsPrincipalUserObject(value: unknown): value is JsonFormsPrincipalUser {
+function isJsonFormsPrincipalObject(value: unknown): value is JsonFormsPrincipal {
   if (value == null) {
     return false
   }

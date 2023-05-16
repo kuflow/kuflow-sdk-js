@@ -47,9 +47,9 @@ export interface ProcessSaveUserActionValueDocumentCommand {
   userActionValueId: string
 }
 
-export interface JsonFormsPrincipalUser {
+export interface JsonFormsPrincipal {
   id: string
-  type: string
+  type: PrincipalType
   name: string
 }
 
