@@ -376,7 +376,7 @@ export function findJsonFormsPropertyAsObject(
  * @return the property value if exists.
  */
 function findJsonFormsPropertyValue(model: JsonFormsModels, propertyPath: string): ComplexType | undefined {
-  return findJsonFormsProperty(model, propertyPath, false)?.value
+  return findJsonFormsProperty(model, propertyPath)?.value
 }
 
 interface UpdateJsonFormsPropertyOptions {
@@ -442,7 +442,7 @@ export function updateJsonFormsProperty(
 export function findJsonFormsProperty(
   model: JsonFormsModels,
   propertyPath: string,
-  createMissingParents: boolean = true,
+  createMissingParents: boolean = false,
 ): JsonFormsProperty | undefined {
   const dataCurrent = getJsonFormsValueData(model, createMissingParents)
   if (dataCurrent == null) {
