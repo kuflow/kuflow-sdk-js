@@ -2825,7 +2825,11 @@ function _getElementValues<T extends ElementValuesManyCodeModels | ElementValues
     return model.elementValues ?? []
   }
 
-  const elementValuesByCode = model.elementValues[elementDefinitionCode ?? '']
+  if (elementDefinitionCode == null) {
+    return []
+  }
+
+  const elementValuesByCode = model.elementValues[elementDefinitionCode]
   if (elementValuesByCode == null || elementValuesByCode.length === 0) {
     return []
   }
