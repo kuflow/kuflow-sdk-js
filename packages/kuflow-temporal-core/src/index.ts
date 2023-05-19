@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 import { type Authentication, type KuFlowRestClient } from '@kuflow/kuflow-rest'
-import { type NativeConnection } from '@temporalio/worker'
+import { type NativeConnection, Runtime } from '@temporalio/worker'
 
 const NOOP = (): void => {}
 
@@ -113,7 +113,7 @@ export class KuFlowAuthorizationTokenProvider {
       const refreshInMs = expiredAtDate == null ? 0 : (expiredAtDate.getTime() - new Date().getTime()) / 2
 
       this.scheduleAuthorizationTokenRenovation(refreshInMs)
-    } catch {
+    } catch (error) {
       this.consecutiveFailures++
 
       const retryDurationMs = Math.round(
@@ -122,6 +122,12 @@ export class KuFlowAuthorizationTokenProvider {
       const refreshInMs = Math.min(retryDurationMs, this.backoff.maxSleep)
 
       this.scheduleAuthorizationTokenRenovation(refreshInMs)
+
+      Runtime.instance().logger.error('Error requesting authorization token', {
+        consecutiveFailures: this.consecutiveFailures,
+        refreshInMs,
+        error,
+      })
     }
   }
 
