@@ -19,12 +19,12 @@ npm run build
 From `main` branch do
 
 ```bash
-npx lerna version
+npx lerna version --force-publish
 ```
 
 Select the version that you want to release and follow the lerna instructions.
 
-## Publish a new version in xxx channel
+## Publish a new version in next tag
 
 ```bash
 npx lerna publish from-package --registry https://registry.npmjs.org --dist-tag next
