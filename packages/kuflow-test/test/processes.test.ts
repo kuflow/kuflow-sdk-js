@@ -22,12 +22,12 @@
  */
 import { describe, expect, test } from '@jest/globals'
 import {
-  Document,
+  type Document,
   KuFlowRestClient,
-  ProcessChangeInitiatorCommand,
-  ProcessDeleteElementCommand,
-  ProcessSaveElementCommand,
-  ProcessSaveUserActionValueDocumentCommand,
+  type ProcessChangeInitiatorCommand,
+  type ProcessDeleteElementCommand,
+  type ProcessSaveElementCommand,
+  type ProcessSaveUserActionValueDocumentCommand,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'

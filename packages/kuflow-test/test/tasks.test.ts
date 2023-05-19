@@ -22,18 +22,20 @@
  */
 import { describe, expect, test } from '@jest/globals'
 import {
-  Document,
+  type Document,
   KuFlowRestClient,
-  TaskAssignCommand,
-  TaskDeleteElementCommand,
-  TaskDeleteElementValueDocumentCommand,
-  TaskSaveElementCommand,
-  TaskSaveElementValueDocumentCommand,
+  type TaskAssignCommand,
+  type TaskDeleteElementCommand,
+  type TaskDeleteElementValueDocumentCommand,
+  type TaskSaveElementCommand,
+  type TaskSaveElementValueDocumentCommand,
+  type TaskSaveJsonFormsValueDataCommand,
+  type TaskSaveJsonFormsValueDocumentRequestCommand,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
 
-import { mockTask, mockTaskPage } from './utils/fixtures'
+import { mockTask, mockTaskJsonForms, mockTaskPage } from './utils/fixtures'
 import { streamToString } from './utils/stream'
 
 const clientId = 'USER1'
@@ -380,6 +382,160 @@ describe('API /tasks', () => {
       const download = await kuFlowRestClient.taskOperations.actionsTaskDownloadElementValueRendered(
         taskId,
         elementDefinitionCode,
+      )
+
+      scope.done()
+
+      expect(download.readableStreamBody).toBeTruthy()
+      if (download.readableStreamBody == null) {
+        return
+      }
+
+      const body = await streamToString(download.readableStreamBody)
+
+      expect(body).toStrictEqual('{}')
+    })
+  })
+
+  describe('POST /tasks/{id}/~actions/save-json-forms-value-data', () => {
+    test('Check that security header is added', async () => {
+      const expectedObject = mockTaskJsonForms()
+      const command: TaskSaveJsonFormsValueDataCommand = {
+        data: {
+          key1: 'value1',
+          key2: 'value2',
+        },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .post(`/tasks/${expectedObject.id}/~actions/save-json-forms-value-data`)
+        .matchHeader('authorization', 'Bearer ' + token)
+        .reply(200, {})
+
+      await kuFlowRestClient.taskOperations.actionsTaskSaveJsonFormsValueData(expectedObject.id ?? '', command)
+
+      scope.done()
+    })
+
+    test('Check happy path', async () => {
+      const expectedObject = mockTaskJsonForms()
+      const command: TaskSaveJsonFormsValueDataCommand = {
+        data: {
+          key1: 'value1',
+          key2: 'value2',
+        },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .post(`/tasks/${expectedObject.id}/~actions/save-json-forms-value-data`, body => {
+          return body.data.key1 === command.data?.key1 && body.data.key2 === command.data?.key2
+        })
+        .reply(200, JSON.stringify(expectedObject))
+
+      const task = await kuFlowRestClient.taskOperations.actionsTaskSaveJsonFormsValueData(
+        expectedObject.id ?? '',
+        command,
+      )
+
+      scope.done()
+
+      expect(task).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('POST /tasks/{id}/~actions/save-json-forms-value-document', () => {
+    test('Check that security header is added', async () => {
+      const expectedObject = mockTaskJsonForms()
+      const command: TaskSaveJsonFormsValueDocumentRequestCommand = {
+        schemaPath: '#/path0/path1',
+      }
+      const document: Document = {
+        contentType: 'application/json',
+        fileName: 'file.json',
+        fileContent: '{}',
+      }
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .post(`/tasks/${expectedObject.id}/~actions/save-json-forms-value-document`)
+        .matchHeader('authorization', 'Bearer ' + token)
+        .query({
+          schemaPath: command.schemaPath,
+          fileContentType: document.contentType,
+          fileName: document.fileName,
+        })
+        .reply(200, {})
+
+      await kuFlowRestClient.taskOperations.actionsTaskSaveJsonFormsValueDocument(
+        expectedObject.id ?? '',
+        command,
+        document,
+      )
+
+      scope.done()
+    })
+
+    test('Check happy path', async () => {
+      const expectedObject = mockTaskJsonForms()
+      const command: TaskSaveJsonFormsValueDocumentRequestCommand = {
+        schemaPath: '#/path0/path1',
+      }
+      const document: Document = {
+        contentType: 'application/json',
+        fileName: 'file.json',
+        fileContent: '{}',
+      }
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .post(`/tasks/${expectedObject.id}/~actions/save-json-forms-value-document`)
+        .query({
+          schemaPath: command.schemaPath,
+          fileContentType: document.contentType,
+          fileName: document.fileName,
+        })
+        .reply(200, {})
+
+      await kuFlowRestClient.taskOperations.actionsTaskSaveJsonFormsValueDocument(
+        expectedObject.id ?? '',
+        command,
+        document,
+      )
+
+      scope.done()
+    })
+  })
+
+  describe('POST /tasks/{id}/~actions/download-json-forms-value-document', () => {
+    test('Check that security header is added', async () => {
+      const taskId = randomUUID()
+      const documentUri = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .get(`/tasks/${taskId}/~actions/download-json-forms-value-document`)
+        .matchHeader('authorization', 'Bearer ' + token)
+        .query({
+          documentUri,
+        })
+        .reply(200, {})
+
+      await kuFlowRestClient.taskOperations.actionsTaskDownloadJsonFormsValueDocument(taskId, documentUri)
+
+      scope.done()
+    })
+
+    test('Check happy path', async () => {
+      const taskId = randomUUID()
+      const documentUri = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .get(`/tasks/${taskId}/~actions/download-json-forms-value-document`)
+        .query({
+          documentUri,
+        })
+        .reply(200, '{}')
+
+      const download = await kuFlowRestClient.taskOperations.actionsTaskDownloadJsonFormsValueDocument(
+        taskId,
+        documentUri,
       )
 
       scope.done()

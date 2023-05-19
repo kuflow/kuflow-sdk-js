@@ -20,7 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Process, ProcessElementValueNumber, ProcessElementValueString, ProcessPage } from '@kuflow/kuflow-rest'
+import {
+  type Process,
+  type ProcessElementValueNumber,
+  type ProcessElementValueString,
+  type ProcessPage,
+} from '@kuflow/kuflow-rest'
 
 export interface FindProcessesRequest {
   page?: number

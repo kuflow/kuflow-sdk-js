@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as coreClient from '@azure/core-client'
+import type * as coreClient from '@azure/core-client'
 
-export type AbstractAuditedUnion = Authentication | Process | Task
+export type AbstractAuditedUnion = Authentication | ProcessPageItem | Process | TaskPageItem | Task
 export type PageUnion = PrincipalPage | ProcessPage | TaskPage
 export type ProcessElementValueUnion = ProcessElementValueString | ProcessElementValueNumber
 export type TaskElementValueUnion =
@@ -35,27 +35,15 @@ export type WebhookEventUnion = WebhookEventProcessStateChanged | WebhookEventTa
 
 export interface AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'AUTHENTICATION' | 'PROCESS' | 'TASK'
-  /**
-   * Who create this model.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdBy?: string
-  /**
-   * When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdAt?: string
-  /**
-   * Who was last update this model.
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedBy?: string
-  /**
-   * When this model type was last updated. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly lastModifiedAt?: string
+  objectType: 'AUTHENTICATION' | 'PROCESS_PAGE_ITEM' | 'PROCESS' | 'TASK_PAGE_ITEM' | 'TASK'
+  /** Who create this model. */
+  createdBy?: string
+  /** When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  createdAt?: string
+  /** Who was last update this model. */
+  lastModifiedBy?: string
+  /** When this model type was last updated. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  lastModifiedAt?: string
 }
 
 /** Default error */
@@ -110,14 +98,20 @@ export interface PageMetadata {
 export interface ProcessDefinitionSummary {
   id: string
   version?: string
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly name?: string
+  name?: string
 }
 
 export interface ProcessElementValue {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: 'STRING' | 'NUMBER'
   valid?: boolean
+}
+
+export interface RelatedProcess {
+  /** Processes whose relationship target is the current process. */
+  incoming?: string[]
+  /** Processes to which the current process relates. */
+  outcoming?: string[]
 }
 
 /** Command to change the process initiator, only one option is required. */
@@ -142,8 +136,7 @@ export interface TaskDefinitionSummary {
   id?: string
   version?: string
   code?: string
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly name?: string
+  name?: string
 }
 
 export interface TaskElementValue {
@@ -152,13 +145,21 @@ export interface TaskElementValue {
   valid?: boolean
 }
 
+/**
+ * Json form values, used when the render type selected is JSON Forms.
+ *
+ */
+export interface JsonFormsValue {
+  /** true if the data complain the related json schema. */
+  valid?: boolean
+  /** json value filled that complain with the related json schema. */
+  data?: Record<string, any>
+}
+
 export interface Log {
   id?: string
-  /**
-   * When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
-   * NOTE: This property will not be serialized. It can only be populated by the server.
-   */
-  readonly createdAt?: string
+  /** When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  createdAt?: string
   message: string
   level: LogLevel
 }
@@ -182,6 +183,21 @@ export interface TaskDeleteElementCommand {
 export interface TaskDeleteElementValueDocumentCommand {
   /** Document ID to delete. */
   documentId: string
+}
+
+export interface TaskSaveJsonFormsValueDataCommand {
+  /** json value filled that complain with the related json schema. */
+  data?: Record<string, any>
+}
+
+export interface TaskSaveJsonFormsValueDocumentResponseCommand {
+  /**
+   * JSON value representing the uploaded file.
+   *
+   * Example: `kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;`
+   *
+   */
+  value: string
 }
 
 export interface WebhookEventProcessStateChangedData {
@@ -236,6 +252,21 @@ export interface Authentication extends AbstractAudited {
   readonly expiredAt?: string
 }
 
+export interface ProcessPageItem extends AbstractAudited {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  objectType: 'PROCESS_PAGE_ITEM'
+  /** Process ID. */
+  id?: string
+  /** Process subject. */
+  subject?: string
+  /** Process state */
+  state?: ProcessState
+  processDefinition: ProcessDefinitionSummary
+  /** Process element values, an ElementValueDocument is not allowed. */
+  elementValues?: Record<string, ProcessElementValueUnion[]>
+  initiator?: Principal
+}
+
 export interface Process extends AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'PROCESS'
@@ -247,8 +278,28 @@ export interface Process extends AbstractAudited {
   state?: ProcessState
   processDefinition: ProcessDefinitionSummary
   /** Process element values, an ElementValueDocument is not allowed. */
-  elementValues?: { [propertyName: string]: ProcessElementValueUnion[] }
+  elementValues?: Record<string, ProcessElementValueUnion[]>
   initiator?: Principal
+  relatedProcess?: RelatedProcess
+}
+
+export interface TaskPageItem extends AbstractAudited {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  objectType: 'TASK_PAGE_ITEM'
+  id?: string
+  /** Task state */
+  state?: TaskState
+  /** In creation task, one of 'id, version or code' is mandatory. */
+  taskDefinition: TaskDefinitionSummary
+  processId: string
+  /** Task element values, en ElementValueDocument is not allowed. */
+  elementValues?: Record<string, TaskElementValueUnion[]>
+  /**
+   * Json form values, used when the render type selected is JSON Forms.
+   *
+   */
+  jsonFormsValue?: JsonFormsValue
+  owner?: Principal
 }
 
 export interface Task extends AbstractAudited {
@@ -260,10 +311,18 @@ export interface Task extends AbstractAudited {
   /** In creation task, one of 'id, version or code' is mandatory. */
   taskDefinition: TaskDefinitionSummary
   processId: string
-  /** Task element values, en ElementValueDocument is not allowed. */
-  elementValues?: { [propertyName: string]: TaskElementValueUnion[] }
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly logs?: Log[]
+  /**
+   * Task element values, en ElementValueDocument is not allowed, used when the task render type selected is
+   * JSON Forms
+   *
+   */
+  elementValues?: Record<string, TaskElementValueUnion[]>
+  /**
+   * Json form values, used when the render type selected is JSON Forms.
+   *
+   */
+  jsonFormsValue?: JsonFormsValue
+  logs?: Log[]
   owner?: Principal
 }
 
@@ -276,13 +335,13 @@ export interface PrincipalPage extends Page {
 export interface ProcessPage extends Page {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'PROCESS_PAGE'
-  content: Process[]
+  content: ProcessPageItem[]
 }
 
 export interface TaskPage extends Page {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'TASK_PAGE'
-  content: Task[]
+  content: TaskPageItem[]
 }
 
 export interface ProcessElementValueString extends ProcessElementValue {
@@ -313,7 +372,7 @@ export interface TaskElementValueObject extends TaskElementValue {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: 'OBJECT'
   /** Dictionary of <any> */
-  value?: { [propertyName: string]: any }
+  value?: Record<string, any>
 }
 
 export interface TaskElementValueDocument extends TaskElementValue {
@@ -343,7 +402,7 @@ export interface WebhookEventTaskStateChanged extends WebhookEvent {
 }
 
 /** Defines values for AuditedObjectType. */
-export type AuditedObjectType = 'PROCESS' | 'TASK' | 'AUTHENTICATION'
+export type AuditedObjectType = 'PROCESS' | 'PROCESS_PAGE_ITEM' | 'TASK' | 'TASK_PAGE_ITEM' | 'AUTHENTICATION'
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
 /** Defines values for PagedObjectType. */
@@ -360,12 +419,6 @@ export type TaskElementValueType = 'STRING' | 'NUMBER' | 'OBJECT' | 'DOCUMENT' |
 export type LogLevel = 'INFO' | 'WARN' | 'ERROR'
 /** Defines values for WebhookType. */
 export type WebhookType = 'PROCESS.STATE_CHANGED' | 'TASK.STATE_CHANGED'
-
-/** Optional parameters. */
-export interface EchoRequestEchoOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the requestEcho operation. */
-export type EchoRequestEchoResponse = Authentication
 
 /** Optional parameters. */
 export interface AuthenticationCreateAuthenticationOptionalParams extends coreClient.OperationOptions {}
@@ -579,6 +632,39 @@ export interface TaskActionsTaskDownloadElementValueRenderedOptionalParams exten
 
 /** Contains response data for the actionsTaskDownloadElementValueRendered operation. */
 export interface TaskActionsTaskDownloadElementValueRenderedResponse {
+  /**
+   * BROWSER ONLY
+   *
+   * The response body as a browser Blob.
+   * Always `undefined` in node.js.
+   */
+  blobBody?: Promise<Blob>
+  /**
+   * NODEJS ONLY
+   *
+   * The response body as a node.js Readable stream.
+   * Always `undefined` in the browser.
+   */
+  readableStreamBody?: NodeJS.ReadableStream
+}
+
+/** Optional parameters. */
+export interface TaskActionsTaskSaveJsonFormsValueDataOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsTaskSaveJsonFormsValueData operation. */
+export type TaskActionsTaskSaveJsonFormsValueDataResponse = Task
+
+/** Optional parameters. */
+export interface TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsTaskSaveJsonFormsValueDocument operation. */
+export type TaskActionsTaskSaveJsonFormsValueDocumentResponse = TaskSaveJsonFormsValueDocumentResponseCommand
+
+/** Optional parameters. */
+export interface TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsTaskDownloadJsonFormsValueDocument operation. */
+export interface TaskActionsTaskDownloadJsonFormsValueDocumentResponse {
   /**
    * BROWSER ONLY
    *

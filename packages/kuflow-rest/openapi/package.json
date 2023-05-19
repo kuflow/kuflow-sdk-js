@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "autorest": "3.6.2"
+    "autorest": "3.6.3"
   },
   "scripts": {
     "autorest": "autorest",
     "generate": "npm run generate:autorest && npm run generate:workaround && npm run generate:format",
-    "generate:autorest": "autorest --version=3.9.3 readme.md",
-    "generate:workaround": "scripts/remove-unnecesary-union-options.js",
+    "generate:autorest": "AUTOREST_HOME=$(pwd) autorest --version=3.9.5 readme.md",
+    "generate:workaround": "scripts/fix-generated-code.js",
     "generate:format": "cd ../../../ && npm run format:write"
   }
 }

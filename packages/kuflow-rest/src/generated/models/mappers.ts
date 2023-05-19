@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as coreClient from '@azure/core-client'
+import type * as coreClient from '@azure/core-client'
 
 export const AbstractAudited: coreClient.CompositeMapper = {
   type: {
@@ -37,33 +37,29 @@ export const AbstractAudited: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['PROCESS', 'TASK', 'AUTHENTICATION'],
+          allowedValues: ['PROCESS', 'PROCESS_PAGE_ITEM', 'TASK', 'TASK_PAGE_ITEM', 'AUTHENTICATION'],
         },
       },
       createdBy: {
         serializedName: 'createdBy',
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
       },
       createdAt: {
         serializedName: 'createdAt',
-        readOnly: true,
         type: {
           name: 'String',
         },
       },
       lastModifiedBy: {
         serializedName: 'lastModifiedBy',
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
       },
       lastModifiedAt: {
         serializedName: 'lastModifiedAt',
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -323,7 +319,6 @@ export const ProcessDefinitionSummary: coreClient.CompositeMapper = {
           MinLength: 1,
         },
         serializedName: 'name',
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -355,6 +350,37 @@ export const ProcessElementValue: coreClient.CompositeMapper = {
         type: {
           name: 'Enum',
           allowedValues: ['STRING', 'NUMBER'],
+        },
+      },
+    },
+  },
+}
+
+export const RelatedProcess: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'RelatedProcess',
+    modelProperties: {
+      incoming: {
+        serializedName: 'incoming',
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Uuid',
+            },
+          },
+        },
+      },
+      outcoming: {
+        serializedName: 'outcoming',
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Uuid',
+            },
+          },
         },
       },
     },
@@ -455,7 +481,6 @@ export const TaskDefinitionSummary: coreClient.CompositeMapper = {
           MinLength: 1,
         },
         serializedName: 'name',
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -493,6 +518,28 @@ export const TaskElementValue: coreClient.CompositeMapper = {
   },
 }
 
+export const JsonFormsValue: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'JsonFormsValue',
+    modelProperties: {
+      valid: {
+        serializedName: 'valid',
+        type: {
+          name: 'Boolean',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
 export const Log: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -506,7 +553,6 @@ export const Log: coreClient.CompositeMapper = {
       },
       createdAt: {
         serializedName: 'createdAt',
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -605,6 +651,38 @@ export const TaskDeleteElementValueDocumentCommand: coreClient.CompositeMapper =
         required: true,
         type: {
           name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const TaskSaveJsonFormsValueDataCommand: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TaskSaveJsonFormsValueDataCommand',
+    modelProperties: {
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const TaskSaveJsonFormsValueDocumentResponseCommand: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TaskSaveJsonFormsValueDocumentResponseCommand',
+    modelProperties: {
+      value: {
+        serializedName: 'value',
+        required: true,
+        type: {
+          name: 'String',
         },
       },
     },
@@ -826,6 +904,70 @@ export const Authentication: coreClient.CompositeMapper = {
   },
 }
 
+export const ProcessPageItem: coreClient.CompositeMapper = {
+  serializedName: 'PROCESS_PAGE_ITEM',
+  type: {
+    name: 'Composite',
+    className: 'ProcessPageItem',
+    uberParent: 'AbstractAudited',
+    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      subject: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'subject',
+        type: {
+          name: 'String',
+        },
+      },
+      state: {
+        serializedName: 'state',
+        type: {
+          name: 'Enum',
+          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      processDefinition: {
+        serializedName: 'processDefinition',
+        type: {
+          name: 'Composite',
+          className: 'ProcessDefinitionSummary',
+        },
+      },
+      elementValues: {
+        serializedName: 'elementValues',
+        type: {
+          name: 'Dictionary',
+          value: {
+            type: {
+              name: 'Sequence',
+              element: {
+                type: { name: 'Composite', className: 'ProcessElementValue' },
+              },
+            },
+          },
+        },
+      },
+      initiator: {
+        serializedName: 'initiator',
+        type: {
+          name: 'Composite',
+          className: 'Principal',
+        },
+      },
+    },
+  },
+}
+
 export const Process: coreClient.CompositeMapper = {
   serializedName: 'PROCESS',
   type: {
@@ -886,12 +1028,87 @@ export const Process: coreClient.CompositeMapper = {
           className: 'Principal',
         },
       },
+      relatedProcess: {
+        serializedName: 'relatedProcess',
+        type: {
+          name: 'Composite',
+          className: 'RelatedProcess',
+        },
+      },
+    },
+  },
+}
+
+export const TaskPageItem: coreClient.CompositeMapper = {
+  serializedName: 'TASK_PAGE_ITEM',
+  type: {
+    name: 'Composite',
+    className: 'TaskPageItem',
+    uberParent: 'AbstractAudited',
+    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      state: {
+        serializedName: 'state',
+        type: {
+          name: 'Enum',
+          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      taskDefinition: {
+        serializedName: 'taskDefinition',
+        type: {
+          name: 'Composite',
+          className: 'TaskDefinitionSummary',
+        },
+      },
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      elementValues: {
+        serializedName: 'elementValues',
+        type: {
+          name: 'Dictionary',
+          value: {
+            type: {
+              name: 'Sequence',
+              element: {
+                type: { name: 'Composite', className: 'TaskElementValue' },
+              },
+            },
+          },
+        },
+      },
+      jsonFormsValue: {
+        serializedName: 'jsonFormsValue',
+        type: {
+          name: 'Composite',
+          className: 'JsonFormsValue',
+        },
+      },
+      owner: {
+        serializedName: 'owner',
+        type: {
+          name: 'Composite',
+          className: 'Principal',
+        },
+      },
     },
   },
 }
 
 export const Task: coreClient.CompositeMapper = {
-  serializedName: 'TASK',
+  serializedName: 'Task',
   type: {
     name: 'Composite',
     className: 'Task',
@@ -940,9 +1157,15 @@ export const Task: coreClient.CompositeMapper = {
           },
         },
       },
+      jsonFormsValue: {
+        serializedName: 'jsonFormsValue',
+        type: {
+          name: 'Composite',
+          className: 'JsonFormsValue',
+        },
+      },
       logs: {
         serializedName: 'logs',
-        readOnly: true,
         type: {
           name: 'Sequence',
           element: {
@@ -1007,7 +1230,7 @@ export const ProcessPage: coreClient.CompositeMapper = {
           element: {
             type: {
               name: 'Composite',
-              className: 'Process',
+              className: 'ProcessPageItem',
             },
           },
         },
@@ -1033,7 +1256,7 @@ export const TaskPage: coreClient.CompositeMapper = {
           element: {
             type: {
               name: 'Composite',
-              className: 'Task',
+              className: 'TaskPageItem',
             },
           },
         },
@@ -1225,7 +1448,9 @@ export const discriminators = {
   TaskElementValue,
   WebhookEvent,
   'AbstractAudited.AUTHENTICATION': Authentication,
+  'AbstractAudited.PROCESS_PAGE_ITEM': ProcessPageItem,
   'AbstractAudited.PROCESS': Process,
+  'AbstractAudited.TASK_PAGE_ITEM': TaskPageItem,
   'AbstractAudited.TASK': Task,
   'Page.PRINCIPAL_PAGE': PrincipalPage,
   'Page.PROCESS_PAGE': ProcessPage,

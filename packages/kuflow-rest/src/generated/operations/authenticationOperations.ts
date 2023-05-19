@@ -22,15 +22,15 @@
  */
 import * as coreClient from '@azure/core-client'
 
-import { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  Authentication,
-  AuthenticationCreateAuthenticationOptionalParams,
-  AuthenticationCreateAuthenticationResponse,
+  type Authentication,
+  type AuthenticationCreateAuthenticationOptionalParams,
+  type AuthenticationCreateAuthenticationResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { AuthenticationOperations } from '../operationsInterfaces'
+import { type AuthenticationOperations } from '../operationsInterfaces'
 
 /** Class containing AuthenticationOperations operations. */
 export class AuthenticationOperationsImpl implements AuthenticationOperations {
@@ -72,7 +72,7 @@ const createAuthenticationOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.authentication,
   urlParameters: [Parameters.$host],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }

@@ -20,60 +20,77 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import {
-  Process,
-  ProcessElementValueUnion,
-  Task,
-  TaskElementValueDocument,
-  TaskElementValueDocumentItem,
-  TaskElementValuePrincipal,
-  TaskElementValuePrincipalItem,
-  TaskElementValueUnion,
+  type Process,
+  type ProcessElementValueUnion,
+  type ProcessPageItem,
+  type ProcessSaveElementCommand,
+  type Task,
+  type TaskElementValueDocument,
+  type TaskElementValueDocumentItem,
+  type TaskElementValuePrincipal,
+  type TaskElementValuePrincipalItem,
+  type TaskElementValueUnion,
+  type TaskPageItem,
+  type TaskSaveElementCommand,
 } from '../generated'
 
-export interface KuFlowObject {
-  [propertyName: string]: any
+type ElementValuesManyCodeModels = Process | ProcessPageItem | Task | TaskPageItem
+type ElementValuesSingleCodeModels = ProcessSaveElementCommand | TaskSaveElementCommand
+
+export type KuFlowObject = Record<string, any>
+
+/**
+ * Check if all related valid values are TRUE
+ *
+ * @param model Model related
+ * @return TRUE if all related valid values are TRUE else FALSE.
+ */
+export function getElementValueValid(model: ElementValuesSingleCodeModels): boolean
+
+/**
+ * Check if all related valid values are TRUE
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return TRUE if all related valid values are TRUE else FALSE.
+ */
+export function getElementValueValid(model: ElementValuesManyCodeModels, elementDefinitionCode: string): boolean
+
+/**
+ * Check if all related valid values are TRUE
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return TRUE if all related valid values are TRUE else FALSE.
+ */
+export function getElementValueValid(
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  elementDefinitionCode?: string,
+): boolean {
+  return _getElementValues(model, elementDefinitionCode).every(elementValue => elementValue.valid)
 }
 
 /**
  * Check if all related valid values are TRUE
  *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return TRUE if all related valid values are TRUE else FALSE.
+ * @param model Model related
+ * @param index Element value index
+ * @return The requested valid value
  */
-export function getElementValueValid(process: Process, elementDefinitionCode: string): boolean
+export function getElementValueValidAt(model: ElementValuesSingleCodeModels, index: number): boolean | undefined
 
 /**
  * Check if all related valid values are TRUE
  *
- * @param task Process
- * @param elementDefinitionCode Element Definition Code
- * @return TRUE if all related valid values are TRUE else FALSE.
- */
-export function getElementValueValid(task: Task, elementDefinitionCode: string): boolean
-
-/**
- * Check if all related valid values are TRUE
- *
- * @param model Process or task related
- * @param elementDefinitionCode Element Definition Code
- * @return TRUE if all related valid values are TRUE else FALSE.
- */
-export function getElementValueValid(model: Process | Task, elementDefinitionCode: string): boolean {
-  return getElementValues(model, elementDefinitionCode).some(elementValue => elementValue.valid)
-}
-
-/**
- * Check if all related valid values are TRUE
- *
- * @param process Process
+ * @param model Model related
  * @param elementDefinitionCode Element Definition Code
  * @param index Element value index
  * @return The requested valid value
  */
 export function getElementValueValidAt(
-  process: Process,
+  model: ElementValuesManyCodeModels,
   elementDefinitionCode: string,
   index: number,
 ): boolean | undefined
@@ -81,160 +98,2134 @@ export function getElementValueValidAt(
 /**
  * Check if all related valid values are TRUE
  *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param index Element value index
- * @return The requested valid value
- */
-export function getElementValueValidAt(task: Task, elementDefinitionCode: string, index: number): boolean | undefined
-
-/**
- * Check if all related valid values are TRUE
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
+ * @param model Model related
+ * @param indexOrElementDefinitionCode Index o Element Definition Code
  * @param index Element value index
  * @return The requested valid value
  */
 export function getElementValueValidAt(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  index: number,
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  indexOrElementDefinitionCode: string | number,
+  index?: number,
 ): boolean | undefined {
-  const elementValues = getElementValues(model, elementDefinitionCode)
-  if (elementValues[index] == null) {
-    throw new Error(`Index ${index} not found`)
+  if (arguments.length === 2) {
+    assertIsNumber(indexOrElementDefinitionCode)
+
+    return _getElementValueValidAt(model, { index: indexOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(indexOrElementDefinitionCode)
+    assertIsNumber(index)
+
+    return _getElementValueValidAt(model, { elementDefinitionCode: indexOrElementDefinitionCode, index })
+  } else {
+    throw new Error('Wrong method signature')
   }
-  return elementValues[index].valid
 }
 
 /**
  * Set valid to all values
  *
- * @param process process
- * @param elementDefinitionCode Element Definition Code
+ * @param model Model related
  * @param valid Valid value
- * @return the passed Process object.
+ * @return the passed Model related object.
  */
-export function setElementValueValid(
-  process: Process,
-  elementDefinitionCode: string,
-  valid: boolean | undefined,
-): Process
+export function setElementValueValid<T extends ElementValuesSingleCodeModels>(model: T, valid: boolean | undefined): T
 
 /**
  * Set valid to all values
  *
- * @param task process
+ * @param model Model related
  * @param elementDefinitionCode Element Definition Code
  * @param valid Valid value
- * @return the passed Task object.
+ * @return the passed Model related object.
  */
-export function setElementValueValid(task: Task, elementDefinitionCode: string, valid: boolean | undefined): Task
+export function setElementValueValid<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  valid: boolean | undefined,
+): T
 
 /**
  * Set valid to all values
  *
- * @param model process or task
- * @param elementDefinitionCode Element Definition Code
+ * @param model Model related
+ * @param validOrElementDefinitionCode Element Definition Code or index
  * @param valid Valid value
- * @return the passed Process or Task object.
+ * @return the passed Model related object.
  */
-export function setElementValueValid(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  valid: boolean | undefined,
-): Process | Task {
-  const elementValues = getElementValues(model, elementDefinitionCode)
-  elementValues.forEach(elementValue => {
-    elementValue.valid = valid
-  })
+export function setElementValueValid<T extends ElementValuesManyCodeModels | ElementValuesSingleCodeModels>(
+  model: T,
+  validOrElementDefinitionCode: string | boolean | undefined,
+  valid?: boolean | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsBooleanOrUndefined(validOrElementDefinitionCode)
 
-  return model
+    return _setElementValueValid(model, { valid: validOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(validOrElementDefinitionCode)
+
+    return _setElementValueValid(model, { elementDefinitionCode: validOrElementDefinitionCode, valid })
+  } else {
+    throw new Error('Wrong method signature')
+  }
 }
 
 /**
  * Set valid to the selected value
  *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
+ * @param model Model related
  * @param valid Valid value
  * @param index Element value index
- * @return the passed Process object.
+ * @return the passed model object.
  */
-export function setElementValueValidAt(
-  process: Process,
-  elementDefinitionCode: string,
+export function setElementValueValidAt<T extends ElementValuesSingleCodeModels>(
+  model: T,
   valid: boolean | undefined,
   index: number,
-): Process
+): T
 
 /**
  * Set valid to the selected value
  *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param valid Valid value
- * @param index Element value index
- * @return the passed Task object.
- */
-export function setElementValueValidAt(
-  task: Task,
-  elementDefinitionCode: string,
-  valid: boolean | undefined,
-  index: number,
-): Task
-
-/**
- * Set valid to the selected value
- *
- * @param model Process or Task
+ * @param model Model related
  * @param elementDefinitionCode Element Definition Code
  * @param valid Valid value
  * @param index Element value index
  * @return the passed model object.
  */
-export function setElementValueValidAt(
-  model: Process | Task,
+export function setElementValueValidAt<T extends ElementValuesManyCodeModels>(
+  model: T,
   elementDefinitionCode: string,
   valid: boolean | undefined,
   index: number,
-): Process | Task {
-  const elementValues = getElementValues(model, elementDefinitionCode)
-  if (elementValues[index] != null) {
-    elementValues[index].valid = valid
-  }
+): T
 
-  return model
+/**
+ * Set valid to the selected value
+ *
+ * @param model Model related
+ * @param validOrElementDefinitionCode Valid OR Element Definition Code
+ * @param indexOrValid Index Or Valid value
+ * @param index Element value index
+ * @return the passed model object.
+ */
+export function setElementValueValidAt<T extends ElementValuesManyCodeModels | ElementValuesSingleCodeModels>(
+  model: T,
+  validOrElementDefinitionCode: boolean | undefined | string,
+  indexOrValid: boolean | number | undefined,
+  index?: number,
+): T {
+  if (arguments.length === 3) {
+    assertIsBooleanOrUndefined(validOrElementDefinitionCode)
+    assertIsNumber(indexOrValid)
+
+    return _setElementValueValidAt(model, { valid: validOrElementDefinitionCode, index: indexOrValid })
+  } else if (arguments.length === 4) {
+    assertIsString(validOrElementDefinitionCode)
+    assertIsBooleanOrUndefined(indexOrValid)
+    assertIsNumber(index)
+
+    return _setElementValueValidAt(model, {
+      elementDefinitionCode: validOrElementDefinitionCode,
+      valid: indexOrValid,
+      index,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
 }
 
 /**
  * Get an element as String
  *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
+ * @param model Model related
  * @return the element value.
  */
-export function getElementValueAsString(process: Process, elementDefinitionCode: string): string
+export function getElementValueAsString(model: ElementValuesSingleCodeModels): string
 
 /**
  * Get an element as String
  *
- * @param task Task
+ * @param model Model related
  * @param elementDefinitionCode Element Definition Code
  * @return the element value.
  */
-export function getElementValueAsString(task: Task, elementDefinitionCode: string): string
+export function getElementValueAsString(model: ElementValuesManyCodeModels, elementDefinitionCode: string): string
 
 /**
  * Get an element as String
  *
- * @param model Process or Task
+ * @param model Model related
  * @param elementDefinitionCode Element Definition Code
  * @return the element value.
  */
-export function getElementValueAsString(model: Process | Task, elementDefinitionCode: string): string {
-  const elementValue = findElementValueAsString(model, elementDefinitionCode)
+export function getElementValueAsString(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): string {
+  return _getElementValueAsString(model, elementDefinitionCode)
+}
+
+/**
+ * Try to get an element as String
+ *
+ * @param model Model related
+ * @return the element value if exists.
+ */
+export function findElementValueAsString(model: ElementValuesSingleCodeModels): string | undefined
+
+/**
+ * Try to get an element as String
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsString(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): string | undefined
+
+/**
+ * Try to get an element as String
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsString(
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  elementDefinitionCode?: string,
+): string | undefined {
+  return _findElementValueAsString(model, elementDefinitionCode)
+}
+
+/**
+ * Get all elements as String
+ *
+ * @param model Model related
+ * @return the elements values.
+ */
+export function getElementValueAsStringList(model: ElementValuesSingleCodeModels): string[]
+
+/**
+ * Get all elements as String
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsStringList(model: ElementValuesManyCodeModels, elementDefinitionCode: string): string[]
+
+/**
+ * Get all elements as String
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsStringList(
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  elementDefinitionCode?: string,
+): string[] {
+  return _getElementValueAsStringList(model, elementDefinitionCode)
+}
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the passed Model related.
+ */
+export function setElementValueAsString<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: string | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the passed Model related.
+ */
+export function setElementValueAsString<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: string | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValueOfElementDefinitionCode Element value Or Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the passed Model related.
+ */
+export function setElementValueAsString<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOfElementDefinitionCode: string | undefined,
+  elementValue?: string | undefined,
+): T {
+  if (arguments.length === 2) {
+    return _setElementValueAsString(model, { elementValue: elementValueOfElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    return _setElementValueAsString(model, { elementDefinitionCode: elementValueOfElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model passed.
+ */
+export function setElementValueAsStringList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: string[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model passed.
+ */
+export function setElementValueAsStringList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: string[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model passed.
+ */
+export function setElementValueAsStringList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: string | string[] | undefined,
+  elementValues?: string[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsStringArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsStringList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsStringList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsString<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: string | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsString<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: string | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsString<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: string | undefined,
+  elementValue?: string | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsStringOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsString(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsString(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsStringList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: string[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsStringList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: string[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsStringList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: string | string[] | undefined,
+  elementValues?: string[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsStringArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsStringList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsStringList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Get an element as Double
+ *
+ * @param model Model related
+ * @return the element value.
+ */
+export function getElementValueAsNumber(model: ElementValuesSingleCodeModels): number
+
+/**
+ * Get an element as Double
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsNumber(model: ElementValuesManyCodeModels, elementDefinitionCode: string): number
+
+/**
+ * Get an element as Double
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsNumber(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): number {
+  return _getElementValueAsNumber(model, elementDefinitionCode)
+}
+
+/**
+ * Try to get an element as Double
+ *
+ * @param model Model related
+ * @return the element value if exists.
+ */
+export function findElementValueAsNumber(model: ElementValuesSingleCodeModels): number | undefined
+
+/**
+ * Try to get an element as Double
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsNumber(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): number | undefined
+
+/**
+ * Try to get an element as Double
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsNumber(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): number | undefined {
+  return _findElementValueAsNumber(model, elementDefinitionCode)
+}
+
+/**
+ * Get all elements as Double
+ *
+ * @param model Model related
+ * @return the elements values.
+ */
+export function getElementValueAsNumberList(model: ElementValuesSingleCodeModels): number[]
+
+/**
+ * Get all elements as Double
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsNumberList(model: ElementValuesManyCodeModels, elementDefinitionCode: string): number[]
+
+/**
+ * Get all elements as Double
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsNumberList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): number[] {
+  return _getElementValueAsNumberList(model, elementDefinitionCode)
+}
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsNumber<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: number | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsNumber<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: number | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsNumber<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: string | number | undefined,
+  elementValue?: number | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsNumberOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsNumber(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsNumber(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsNumberList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: number[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsNumberList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: number[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsNumberList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: string | number[] | undefined,
+  elementValues?: number[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsNumberArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsNumberList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsNumberList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsNumber<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: number | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsNumber<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: number | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsNumber<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: string | number | undefined,
+  elementValue?: number | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsNumberOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsNumber(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsNumber(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsNumberList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: number[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsNumberList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: number[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsNumberList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: string | number[] | undefined,
+  elementValues?: number[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsNumberArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsNumberList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsNumberList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Get an element as Date
+ *
+ * @param model Model related
+ * @return the element value.
+ */
+export function getElementValueAsDate(model: ElementValuesSingleCodeModels): Date
+
+/**
+ * Get an element as Date
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsDate(model: ElementValuesManyCodeModels, elementDefinitionCode: string): Date
+
+/**
+ * Get an element as Date
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsDate(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): Date {
+  return _getElementValueAsDate(model, elementDefinitionCode)
+}
+
+/**
+ * Try to get an element as Date
+ *
+ * @param model Model related
+ * @return the element value if exists.
+ */
+export function findElementValueAsDate(model: ElementValuesSingleCodeModels): Date | undefined
+
+/**
+ * Try to get an element as Date
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsDate(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): Date | undefined
+
+/**
+ * Try to get an element as Date
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsDate(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): Date | undefined {
+  return _findElementValueAsDate(model, elementDefinitionCode)
+}
+
+/**
+ * Get all elements as Date
+ *
+ * @param model Model related
+ * @return the elements values.
+ */
+export function getElementValueAsDateList(model: ElementValuesSingleCodeModels): Date[]
+
+/**
+ * Get all elements as Date
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsDateList(model: ElementValuesManyCodeModels, elementDefinitionCode: string): Date[]
+
+/**
+ * Get all elements as Date
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsDateList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): Date[] {
+  return _getElementValueAsDateList(model, elementDefinitionCode)
+}
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsDate<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: Date | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsDate<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: Date | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsDate<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: string | Date | undefined,
+  elementValue?: Date | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsDateOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsDate(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsDate(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsDateList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: Date[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsDateList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: Date[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsDateList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: Date[] | undefined | string,
+  elementValues?: Date[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsDateArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsDateList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsDateList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsDate<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: Date | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsDate<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: Date | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element Value OR Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsDate<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: Date | undefined | string,
+  elementValue?: Date | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsDateOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsDate(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsDate(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsDateList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: Date[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsDateList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: Date[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element Values OR Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsDateList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: Date[] | undefined | string,
+  elementValues?: Date[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsDateArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsDateList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsDateList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Get an element as Object
+ *
+ * @param model Model related
+ * @return the element value.
+ */
+export function getElementValueAsObject(model: ElementValuesSingleCodeModels): KuFlowObject
+
+/**
+ * Get an element as Object
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsObject(model: ElementValuesManyCodeModels, elementDefinitionCode: string): KuFlowObject
+
+/**
+ * Get an element as Object
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsObject(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): KuFlowObject {
+  return _getElementValueAsObject(model, elementDefinitionCode)
+}
+
+/**
+ * Try to get an element as Object
+ *
+ * @param model Model related
+ * @return the element value if exists.
+ */
+export function findElementValueAsObject(model: ElementValuesSingleCodeModels): KuFlowObject | undefined
+
+/**
+ * Try to get an element as Object
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsObject(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): KuFlowObject | undefined
+
+/**
+ * Try to get an element as Object
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsObject(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): KuFlowObject | undefined {
+  return _findElementValueAsObject(model, elementDefinitionCode)
+}
+
+/**
+ * Get all elements as Object
+ *
+ * @param model Model related
+ * @return the elements values.
+ */
+export function getElementValueAsObjectList(model: ElementValuesSingleCodeModels): KuFlowObject[]
+
+/**
+ * Get all elements as Object
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsObjectList(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): KuFlowObject[]
+
+/**
+ * Get all elements as Object
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsObjectList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): KuFlowObject[] {
+  return _getElementValueAsObjectList(model, elementDefinitionCode)
+}
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsObject<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: KuFlowObject | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsObject<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: KuFlowObject | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsObject<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: KuFlowObject | undefined | string,
+  elementValue?: KuFlowObject | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsKuFlowObjectOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsObject(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsObject(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsObjectList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: KuFlowObject[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsObjectList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: KuFlowObject[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the Model related passed.
+ */
+export function setElementValueAsObjectList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: KuFlowObject[] | undefined | string,
+  elementValues?: KuFlowObject[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsKuFlowObjectArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsObjectList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsObjectList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsObject<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: KuFlowObject | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsObject<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: KuFlowObject | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the Model related passed.
+ */
+export function addElementValueAsObject<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: KuFlowObject | undefined | string,
+  elementValue?: KuFlowObject | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsKuFlowObjectOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsObject(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsObject(model, { elementDefinitionCode: elementValueOrElementDefinitionCode, elementValue })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsObjectList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: KuFlowObject[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsObjectList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: KuFlowObject[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values
+ * @return the Model related passed.
+ */
+export function addElementValueAsObjectList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: KuFlowObject[] | undefined | string,
+  elementValues?: KuFlowObject[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsKuFlowObjectArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsObjectList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsObjectList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Get an element as Document
+ *
+ * @param model Related model
+ * @return the element value.
+ */
+export function getElementValueAsDocument(model: ElementValuesSingleCodeModels): TaskElementValueDocumentItem
+
+/**
+ * Get an element as Document
+ *
+ * @param model Related model
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsDocument(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): TaskElementValueDocumentItem
+
+/**
+ * Get an element as Document
+ *
+ * @param model Related model
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ */
+export function getElementValueAsDocument(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): TaskElementValueDocumentItem {
+  return _getElementValueAsDocument(model, elementDefinitionCode)
+}
+
+/**
+ * Try to get an element as Document
+ *
+ * @param model Model related
+ * @return the element value if exists.
+ */
+export function findElementValueAsDocument(
+  model: ElementValuesSingleCodeModels,
+): TaskElementValueDocumentItem | undefined
+
+/**
+ * Try to get an element as Document
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsDocument(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): TaskElementValueDocumentItem | undefined
+
+/**
+ * Try to get an element as Document
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsDocument(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): TaskElementValueDocumentItem | undefined {
+  return _findElementValueAsDocument(model, elementDefinitionCode)
+}
+
+/**
+ * Get all elements as Document
+ *
+ * @param model Model related
+ * @return the elements values.
+ */
+export function getElementValueAsDocumentList(model: ElementValuesSingleCodeModels): TaskElementValueDocumentItem[]
+
+/**
+ * Get all elements as Document
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsDocumentList(
+  model: ElementValuesManyCodeModels,
+  elementDefinitionCode: string,
+): TaskElementValueDocumentItem[]
+
+/**
+ * Get all elements as Document
+ *
+ * @param model Related model
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsDocumentList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): TaskElementValueDocumentItem[] {
+  return _getElementValueAsDocumentList(model, elementDefinitionCode)
+}
+
+/**
+ * Set an element value
+ *
+ * @param model Related model
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsDocument<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: TaskElementValueDocumentItem | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Related model
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsDocument<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: TaskElementValueDocumentItem | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Related model
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsDocument<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: TaskElementValueDocumentItem | undefined | string,
+  elementValue?: TaskElementValueDocumentItem | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValueDocumentItemOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsDocument(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsDocument(model, {
+      elementDefinitionCode: elementValueOrElementDefinitionCode,
+      elementValue,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsDocumentList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: TaskElementValueDocumentItem[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsDocumentList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: TaskElementValueDocumentItem[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsDocumentList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: TaskElementValueDocumentItem[] | undefined | string,
+  elementValues?: TaskElementValueDocumentItem[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValueDocumentItemArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsDocumentList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsDocumentList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the model passed.
+ */
+export function addElementValueAsDocument<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValue: TaskElementValueDocumentItem | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the model passed.
+ */
+export function addElementValueAsDocument<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: TaskElementValueDocumentItem | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the model passed.
+ */
+export function addElementValueAsDocument<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValueOrElementDefinitionCode: TaskElementValueDocumentItem | undefined | string,
+  elementValue?: TaskElementValueDocumentItem | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValueDocumentItemOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsDocument(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsDocument(model, {
+      elementDefinitionCode: elementValueOrElementDefinitionCode,
+      elementValue,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValues Element values
+ * @return the model passed.
+ */
+export function addElementValueAsDocumentList<T extends ElementValuesSingleCodeModels>(
+  model: T,
+  elementValues: TaskElementValueDocumentItem[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the model passed.
+ */
+export function addElementValueAsDocumentList<T extends ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: TaskElementValueDocumentItem[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Task
+ * @param elementValuesOrElementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the model passed.
+ */
+export function addElementValueAsDocumentList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementValuesOrElementDefinitionCode: TaskElementValueDocumentItem[] | undefined | string,
+  elementValues?: TaskElementValueDocumentItem[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValueDocumentItemArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsDocumentList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsDocumentList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Get an element as Principal
+ *
+ * @param model Model related
+ * @return the element value.
+ * @throws Error If element value doesn't exists
+ */
+export function getElementValueAsPrincipal(model: TaskSaveElementCommand): TaskElementValuePrincipalItem
+
+/**
+ * Get an element as Principal
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ * @throws Error If element value doesn't exists
+ */
+export function getElementValueAsPrincipal(
+  model: Task | TaskPageItem,
+  elementDefinitionCode: string,
+): TaskElementValuePrincipalItem
+
+/**
+ * Get an element as Principal
+ *
+ * @param model Task
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value.
+ * @throws Error If element value doesn't exists
+ */
+export function getElementValueAsPrincipal(
+  model: TaskSaveElementCommand | Task | TaskPageItem,
+  elementDefinitionCode?: string,
+): TaskElementValuePrincipalItem {
+  return _getElementValueAsPrincipal(model, elementDefinitionCode)
+}
+
+/**
+ * Try to get an element as Principal
+ *
+ * @param model Model related
+ * @return the element value if exists.
+ */
+export function findElementValueAsPrincipal(model: TaskSaveElementCommand): TaskElementValuePrincipalItem | undefined
+
+/**
+ * Try to get an element as Principal
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsPrincipal(
+  model: Task | TaskPageItem,
+  elementDefinitionCode: string,
+): TaskElementValuePrincipalItem | undefined
+
+/**
+ * Try to get an element as Principal
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the element value if exists.
+ */
+export function findElementValueAsPrincipal(
+  model: TaskSaveElementCommand | Task | TaskPageItem,
+  elementDefinitionCode?: string,
+): TaskElementValuePrincipalItem | undefined {
+  return _findElementValueAsPrincipal(model, elementDefinitionCode)
+}
+
+/**
+ * Get all elements as Principal
+ *
+ * @param model Model related
+ * @return the elements values.
+ */
+export function getElementValueAsPrincipalList(model: TaskSaveElementCommand): TaskElementValuePrincipalItem[]
+
+/**
+ * Get all elements as Principal
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsPrincipalList(
+  model: Task | TaskPageItem,
+  elementDefinitionCode: string,
+): TaskElementValuePrincipalItem[]
+
+/**
+ * Get all elements as Principal
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @return the elements values.
+ */
+export function getElementValueAsPrincipalList(
+  model: TaskSaveElementCommand | Task | TaskPageItem,
+  elementDefinitionCode?: string,
+): TaskElementValuePrincipalItem[] {
+  return _getElementValueAsPrincipalList(model, elementDefinitionCode)
+}
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Task object itself.
+ */
+export function setElementValueAsPrincipal<T extends TaskSaveElementCommand>(
+  model: T,
+  elementValue: TaskElementValuePrincipalItem | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Task object itself.
+ */
+export function setElementValueAsPrincipal<T extends Task | TaskPageItem>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: TaskElementValuePrincipalItem | undefined,
+): T
+
+/**
+ * Set an element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValue Element value, if the value is undefined all current values are removed
+ * @return the Task object itself.
+ */
+export function setElementValueAsPrincipal<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  elementValueOrElementDefinitionCode: TaskElementValuePrincipalItem | undefined | string,
+  elementValue?: TaskElementValuePrincipalItem | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValuePrincipalItemOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsPrincipal(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _setElementValueAsPrincipal(model, {
+      elementDefinitionCode: elementValueOrElementDefinitionCode,
+      elementValue,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsPrincipalList<T extends TaskSaveElementCommand>(
+  model: T,
+  elementValues: TaskElementValuePrincipalItem[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsPrincipalList<T extends Task | TaskPageItem>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: TaskElementValuePrincipalItem[] | undefined,
+): T
+
+/**
+ * Set all element values passed, previews values will be removed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element values OR Element Definition Code
+ * @param elementValues Element values, if the values are null all current values are removed
+ * @return the model passed.
+ */
+export function setElementValueAsPrincipalList<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  elementValuesOrElementDefinitionCode: TaskElementValuePrincipalItem[] | undefined | string,
+  elementValues?: TaskElementValuePrincipalItem[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValuePrincipalItemArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsPrincipalList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _setElementValueAsPrincipalList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the model passed.
+ */
+export function addElementValueAsPrincipal<T extends TaskSaveElementCommand>(
+  model: T,
+  elementValue: TaskElementValuePrincipalItem | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the model passed.
+ */
+export function addElementValueAsPrincipal<T extends Task | TaskPageItem>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValue: TaskElementValuePrincipalItem | undefined,
+): T
+
+/**
+ * Add a new element value
+ *
+ * @param model Model related
+ * @param elementValueOrElementDefinitionCode Element Definition Code
+ * @param elementValue Element value, if the values is undefined the value is not added
+ * @return the model passed.
+ */
+export function addElementValueAsPrincipal<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  elementValueOrElementDefinitionCode: TaskElementValuePrincipalItem | undefined | string,
+  elementValue?: TaskElementValuePrincipalItem | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValuePrincipalItemOrUndefined(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsPrincipal(model, { elementValue: elementValueOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValueOrElementDefinitionCode)
+
+    return _addElementValueAsPrincipal(model, {
+      elementDefinitionCode: elementValueOrElementDefinitionCode,
+      elementValue,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValues Element values
+ * @return the model passed.
+ */
+export function addElementValueAsPrincipalList<T extends TaskSaveElementCommand>(
+  model: T,
+  elementValues: TaskElementValuePrincipalItem[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementDefinitionCode Element Definition Code
+ * @param elementValues Element values
+ * @return the model passed.
+ */
+export function addElementValueAsPrincipalList<T extends Task | TaskPageItem>(
+  model: T,
+  elementDefinitionCode: string,
+  elementValues: TaskElementValuePrincipalItem[] | undefined,
+): T
+
+/**
+ * Add all element values passed
+ *
+ * @param model Model related
+ * @param elementValuesOrElementDefinitionCode Element value OR Element Definition Code
+ * @param elementValues Element values
+ * @return the model passed.
+ */
+export function addElementValueAsPrincipalList<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  elementValuesOrElementDefinitionCode: TaskElementValuePrincipalItem[] | undefined | string,
+  elementValues?: TaskElementValuePrincipalItem[] | undefined,
+): T {
+  if (arguments.length === 2) {
+    assertIsTaskElementValuePrincipalItemArrayOrUndefined(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsPrincipalList(model, { elementValues: elementValuesOrElementDefinitionCode })
+  } else if (arguments.length === 3) {
+    assertIsString(elementValuesOrElementDefinitionCode)
+
+    return _addElementValueAsPrincipalList(model, {
+      elementDefinitionCode: elementValuesOrElementDefinitionCode,
+      elementValues,
+    })
+  } else {
+    throw new Error('Wrong method signature')
+  }
+}
+
+function _addElementValue<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string | undefined,
+  elementValues: ProcessElementValueUnion[] | TaskElementValueUnion[] | undefined,
+): T {
+  const elementValuesCurrent = _getElementValues(model, elementDefinitionCode)
+
+  return _setElementValue(model, elementDefinitionCode, [...elementValuesCurrent, ...(elementValues ?? [])])
+}
+
+function _setElementValue<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  elementDefinitionCode: string | undefined,
+  elementValues: ProcessElementValueUnion[] | TaskElementValueUnion[] | undefined,
+): T {
+  if (elementValues == null || elementValues.length === 0) {
+    if (model.elementValues != null) {
+      if (isNotNullOrUndefined(elementDefinitionCode) && !Array.isArray(model.elementValues)) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete model.elementValues[elementDefinitionCode]
+      } else if (isNullOrUndefined(elementDefinitionCode) && Array.isArray(model.elementValues)) {
+        model.elementValues = undefined
+      }
+    }
+  } else {
+    if (isNotNullOrUndefined(elementDefinitionCode)) {
+      model.elementValues = {
+        ...model.elementValues,
+        [elementDefinitionCode]: [...elementValues],
+      }
+    } else if (isNullOrUndefined(elementDefinitionCode)) {
+      model.elementValues = [...elementValues]
+    }
+  }
+
+  return model
+}
+
+interface GetElementValueValidAtOptions {
+  elementDefinitionCode?: string | undefined
+  index: number
+}
+
+function _getElementValueValidAt(
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  options: GetElementValueValidAtOptions,
+): boolean | undefined {
+  const elementValues = _getElementValues(model, options.elementDefinitionCode)
+  if (elementValues[options.index] == null) {
+    throw new Error(`Index ${options.index} not found`)
+  }
+  return elementValues[options.index].valid
+}
+
+interface SetElementValueValidOptions {
+  elementDefinitionCode?: string | undefined
+  valid: boolean | undefined
+}
+function _setElementValueValid<T extends ElementValuesManyCodeModels | ElementValuesSingleCodeModels>(
+  model: T,
+  options: SetElementValueValidOptions,
+): T {
+  const elementValues = _getElementValues(model, options.elementDefinitionCode)
+  elementValues.forEach(elementValue => {
+    elementValue.valid = options.valid
+  })
+
+  return model
+}
+
+interface SetElementValueValidAtOptions {
+  elementDefinitionCode?: string
+  valid: boolean | undefined
+  index: number
+}
+function _setElementValueValidAt<T extends ElementValuesManyCodeModels | ElementValuesSingleCodeModels>(
+  model: T,
+  options: SetElementValueValidAtOptions,
+): T {
+  const elementValues = _getElementValues(model, options.elementDefinitionCode)
+  if (elementValues[options.index] != null) {
+    elementValues[options.index].valid = options.valid
+  }
+
+  return model
+}
+
+function _getElementValueAsString(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): string {
+  let elementValue: string | undefined
+  if (elementDefinitionCode == null) {
+    assertIsElementValuesSingleCodeModels(model)
+
+    elementValue = _findElementValueAsString(model)
+  } else {
+    assertIsElementValuesManyCodeModels(model)
+
+    elementValue = _findElementValueAsString(model, elementDefinitionCode)
+  }
+
   if (elementValue == null) {
     throw new Error('value is required!')
   }
@@ -242,341 +2233,108 @@ export function getElementValueAsString(model: Process | Task, elementDefinition
   return elementValue
 }
 
-/**
- * Try to get an element as String
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsString(process: Process, elementDefinitionCode: string): string | undefined
-
-/**
- * Try to get an element as String
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsString(task: Task, elementDefinitionCode: string): string | undefined
-
-/**
- * Try to get an element as String
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsString(model: Process | Task, elementDefinitionCode: string): string | undefined
-
-/**
- * Try to get an element as String
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsString(model: Process | Task, elementDefinitionCode: string): string | undefined {
-  const [elementValue] = getElementValueAsStringList(model, elementDefinitionCode)
+function _findElementValueAsString(
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  elementDefinitionCode?: string,
+): string | undefined {
+  const [elementValue] = _getElementValueAsStringList(model, elementDefinitionCode)
 
   return elementValue
 }
 
-/**
- * Get all elements as String
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsStringList(process: Process, elementDefinitionCode: string): string[]
-
-/**
- * Get all elements as String
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsStringList(task: Task, elementDefinitionCode: string): string[]
-
-/**
- * Get all elements as String
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsStringList(model: Process | Task, elementDefinitionCode: string): string[]
-
-/**
- * Get all elements as String
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsStringList(model: Process | Task, elementDefinitionCode: string): string[] {
-  return getElementValues(model, elementDefinitionCode)
+function _getElementValueAsStringList(
+  model: ElementValuesManyCodeModels | ElementValuesSingleCodeModels,
+  elementDefinitionCode?: string,
+): string[] {
+  return _getElementValues(model, elementDefinitionCode)
     .filter(elementValue => elementValue.type === 'STRING' || elementValue.type === 'NUMBER')
     .filter(elementValue => elementValue.value != null)
     .map(elementValue => elementValue.value?.toString() ?? '')
 }
 
-/**
- * Set an element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process object itself.
- */
-export function setElementValueAsString(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: string | undefined,
-): Process
-
-/**
- * Set an element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Task object itself.
- */
-export function setElementValueAsString(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: string | undefined,
-): Task
-
-/**
- * Set an element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the passed process or task.
- */
-export function setElementValueAsString(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: string | undefined,
-): Process | Task {
-  return setElementValueAsStringList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsStringListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: string[] | undefined
 }
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsStringList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Process
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsStringList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Task
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Model passed.
- */
-export function setElementValueAsStringList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Process | Task
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Model passed.
- */
-export function setElementValueAsStringList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Process | Task {
-  return setElementValue(
+function _setElementValueAsStringList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsStringListOptions,
+): T {
+  return _setElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(value => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(value => ({
       type: 'STRING',
       value,
     })),
   )
 }
 
-/**
- * Add a new element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process passed.
- */
-export function addElementValueAsString(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: string | undefined,
-): Process
-
-/**
- * Add a new element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Task passed.
- */
-export function addElementValueAsString(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: string | undefined,
-): Task
-
-/**
- * Add a new element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process or Task passed.
- */
-export function addElementValueAsString(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: string | undefined,
-): Process | Task {
-  return addElementValueAsStringList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsStringOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: string | undefined
 }
 
-/**
- * Add all element values passed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process passed.
- */
-export function addElementValueAsStringList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Process
+function _setElementValueAsString<T extends ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsStringOptions,
+): T {
+  return _setElementValueAsStringList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Add all element values passed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Task passed.
- */
-export function addElementValueAsStringList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Task
+interface AddElementValueAsString {
+  elementDefinitionCode?: string | undefined
+  elementValue: string | undefined
+}
 
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsStringList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Process | Task
+function _addElementValueAsString<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsString,
+): T {
+  return _addElementValueAsStringList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsStringList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: string[] | undefined,
-): Process | Task {
-  return addElementValue(
+interface AddElementValueAsStringListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: string[] | undefined
+}
+
+function _addElementValueAsStringList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsStringListOptions,
+): T {
+  return _addElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValues => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValues => ({
       type: 'STRING',
       value: elementValues,
     })),
   )
 }
 
-/**
- * Get an element as Double
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsNumber(process: Process, elementDefinitionCode: string): number
+function _findElementValueAsNumber(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): number | undefined {
+  const [elementValue] = _getElementValueAsNumberList(model, elementDefinitionCode)
 
-/**
- * Get an element as Double
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsNumber(task: Task, elementDefinitionCode: string): number
+  return elementValue
+}
 
-/**
- * Get an element as Double
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsNumber(model: Process | Task, elementDefinitionCode: string): number
+function _getElementValueAsNumber(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): number {
+  const elementValue = _findElementValueAsNumber(model, elementDefinitionCode)
 
-/**
- * Get an element as Double
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsNumber(model: Process | Task, elementDefinitionCode: string): number {
-  const elementValue = findElementValueAsNumber(model, elementDefinitionCode)
   if (elementValue == null) {
     throw new Error('value is required!')
   }
@@ -584,341 +2342,90 @@ export function getElementValueAsNumber(model: Process | Task, elementDefinition
   return elementValue
 }
 
-/**
- * Try to get an element as Double
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsNumber(process: Process, elementDefinitionCode: string): number | undefined
-
-/**
- * Try to get an element as Double
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsNumber(task: Task, elementDefinitionCode: string): number | undefined
-
-/**
- * Try to get an element as Double
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsNumber(model: Process | Task, elementDefinitionCode: string): number | undefined
-
-/**
- * Try to get an element as Double
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsNumber(model: Process | Task, elementDefinitionCode: string): number | undefined {
-  const [elementValue] = getElementValueAsNumberList(model, elementDefinitionCode)
-
-  return elementValue
-}
-
-/**
- * Get all elements as Double
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsNumberList(process: Process, elementDefinitionCode: string): number[]
-
-/**
- * Get all elements as Double
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsNumberList(task: Task, elementDefinitionCode: string): number[]
-
-/**
- * Get all elements as Double
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsNumberList(model: Process | Task, elementDefinitionCode: string): number[]
-
-/**
- * Get all elements as Double
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsNumberList(model: Process | Task, elementDefinitionCode: string): number[] {
-  return getElementValues(model, elementDefinitionCode)
+function _getElementValueAsNumberList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): number[] {
+  return _getElementValues(model, elementDefinitionCode)
     .filter(elementValue => elementValue.type === 'STRING' || elementValue.type === 'NUMBER')
     .filter(elementValue => elementValue.value != null)
     .map(elementValue => parseFloat(elementValue.value?.toString() ?? '0'))
 }
 
-/**
- * Set an element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsNumber(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: number | undefined,
-): Process
-
-/**
- * Set an element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsNumber(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: number | undefined,
-): Task
-
-/**
- * Set an element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsNumber(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: number | undefined,
-): Process | Task {
-  return setElementValueAsNumberList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsNumberOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: number | undefined
 }
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsNumberList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Process
+function _setElementValueAsNumber<T extends ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsNumberOptions,
+): T {
+  return _setElementValueAsNumberList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsNumberList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Task
+interface SetElementValueAsNumberListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: number[] | undefined
+}
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsNumberList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Process | Task
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsNumberList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Process | Task {
-  return setElementValue(
+function _setElementValueAsNumberList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsNumberListOptions,
+): T {
+  return _setElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'NUMBER',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Add a new element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process passed.
- */
-export function addElementValueAsNumber(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: number | undefined,
-): Process
-
-/**
- * Add a new element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Task passed.
- */
-export function addElementValueAsNumber(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: number | undefined,
-): Task
-
-/**
- * Add a new element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process or Task passed.
- */
-export function addElementValueAsNumber(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: number | undefined,
-): Process | Task {
-  return addElementValueAsNumberList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface AddElementValueAsNumber {
+  elementDefinitionCode?: string | undefined
+  elementValue: number | undefined
 }
 
-/**
- * Add all element values passed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process passed.
- */
-export function addElementValueAsNumberList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Process
+function _addElementValueAsNumber<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsNumber,
+): T {
+  return _addElementValueAsNumberList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Add all element values passed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Task passed.
- */
-export function addElementValueAsNumberList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Task
+interface AddElementValueAsNumberList {
+  elementDefinitionCode?: string | undefined
+  elementValues: number[] | undefined
+}
 
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsNumberList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Process | Task
-
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsNumberList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: number[] | undefined,
-): Process | Task {
-  return addElementValue(
+function _addElementValueAsNumberList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsNumberList,
+): T {
+  return _addElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'NUMBER',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Get an element as Date
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsDate(process: Process, elementDefinitionCode: string): Date
+function _getElementValueAsDate(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): Date {
+  const elementValue = _findElementValueAsDate(model, elementDefinitionCode)
 
-/**
- * Get an element as Date
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsDate(task: Task, elementDefinitionCode: string): Date
-
-/**
- * Get an element as Date
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsDate(model: Process | Task, elementDefinitionCode: string): Date
-
-/**
- * Get an element as Date
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsDate(model: Process | Task, elementDefinitionCode: string): Date {
-  const elementValue = findElementValueAsDate(model, elementDefinitionCode)
   if (elementValue == null) {
     throw new Error('value is required!')
   }
@@ -926,333 +2433,97 @@ export function getElementValueAsDate(model: Process | Task, elementDefinitionCo
   return elementValue
 }
 
-/**
- * Try to get an element as Date
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsDate(process: Process, elementDefinitionCode: string): Date | undefined
-
-/**
- * Try to get an element as Date
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsDate(task: Task, elementDefinitionCode: string): Date | undefined
-
-/**
- * Try to get an element as Date
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsDate(model: Process | Task, elementDefinitionCode: string): Date | undefined
-
-/**
- * Try to get an element as Date
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsDate(model: Process | Task, elementDefinitionCode: string): Date | undefined {
-  const [elementValue] = getElementValueAsDateList(model, elementDefinitionCode)
+function _findElementValueAsDate(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): Date | undefined {
+  const [elementValue] = _getElementValueAsDateList(model, elementDefinitionCode)
 
   return elementValue
 }
 
-/**
- * Get all elements as Date
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsDateList(process: Process, elementDefinitionCode: string): Date[]
-
-/**
- * Get all elements as Date
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsDateList(task: Task, elementDefinitionCode: string): Date[]
-
-/**
- * Get all elements as Date
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsDateList(model: Process | Task, elementDefinitionCode: string): Date[]
-
-/**
- * Get all elements as Date
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsDateList(model: Process | Task, elementDefinitionCode: string): Date[] {
-  return getElementValues(model, elementDefinitionCode)
+function _getElementValueAsDateList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): Date[] {
+  return _getElementValues(model, elementDefinitionCode)
     .filter(elementValue => elementValue.type === 'STRING')
     .filter(elementValue => elementValue.value != null)
     .map(elementValue => new Date(elementValue.value?.toString() ?? ''))
 }
 
-/**
- * Set an element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsDate(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: Date | undefined,
-): Process
-
-/**
- * Set an element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsDate(task: Task, elementDefinitionCode: string, elementValue: Date | undefined): Task
-
-/**
- * Set an element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsDate(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: Date | undefined,
-): Process | Task {
-  return setElementValueAsDateList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsDateOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: Date | undefined
 }
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsDateList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Process
+function _setElementValueAsDate<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsDateOptions,
+): T {
+  return _setElementValueAsDateList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsDateList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Task
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsDateList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Process | Task
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsDateList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Process | Task {
-  return setElementValue(
+interface SetElementValueAsDateListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: Date[] | undefined
+}
+function _setElementValueAsDateList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsDateListOptions,
+): T {
+  return _setElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'STRING',
-      value: elementValue.toString(),
+      value: elementValue.toISOString().replace(/T.*/, ''),
     })),
   )
 }
 
-/**
- * Add a new element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process passed.
- */
-export function addElementValueAsDate(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: Date | undefined,
-): Process
-
-/**
- * Add a new element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Task passed.
- */
-export function addElementValueAsDate(task: Task, elementDefinitionCode: string, elementValue: Date | undefined): Task
-
-/**
- * Add a new element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process or Task passed.
- */
-export function addElementValueAsDate(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: Date | undefined,
-): Process | Task {
-  return addElementValueAsDateList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface AddElementValueAsDateOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: Date | undefined
 }
 
-/**
- * Add all element values passed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process passed.
- */
-export function addElementValueAsDateList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Process
+function _addElementValueAsDate<T extends ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsDateOptions,
+): T {
+  return _addElementValueAsDateList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Add all element values passed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Task passed.
- */
-export function addElementValueAsDateList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Task
+interface AddElementValueAsDateListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: Date[] | undefined
+}
 
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsDateList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Process | Task
-
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsDateList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: Date[] | undefined,
-): Process | Task {
-  return addElementValue(
+function _addElementValueAsDateList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsDateListOptions,
+): T {
+  return _addElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'STRING',
-      value: elementValue.toString(),
+      value: elementValue.toISOString().replace(/T.*/, ''),
     })),
   )
 }
 
-/**
- * Get an element as Object
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsObject(process: Process, elementDefinitionCode: string): KuFlowObject
-
-/**
- * Get an element as Object
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsObject(task: Task, elementDefinitionCode: string): KuFlowObject
-
-/**
- * Get an element as Object
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsObject(model: Process | Task, elementDefinitionCode: string): KuFlowObject
-
-/**
- * Get an element as Object
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsObject(model: Process | Task, elementDefinitionCode: string): KuFlowObject {
-  const elementValue = findElementValueAsObject(model, elementDefinitionCode)
+function _getElementValueAsObject(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): KuFlowObject {
+  const elementValue = _findElementValueAsObject(model, elementDefinitionCode)
   if (elementValue == null) {
     throw new Error('value is required!')
   }
@@ -1260,317 +2531,98 @@ export function getElementValueAsObject(model: Process | Task, elementDefinition
   return elementValue
 }
 
-/**
- * Try to get an element as Object
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsObject(process: Process, elementDefinitionCode: string): KuFlowObject | undefined
-
-/**
- * Try to get an element as Object
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsObject(task: Task, elementDefinitionCode: string): KuFlowObject | undefined
-
-/**
- * Try to get an element as Object
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsObject(model: Process | Task, elementDefinitionCode: string): KuFlowObject | undefined
-
-/**
- * Try to get an element as Object
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsObject(
-  model: Process | Task,
-  elementDefinitionCode: string,
+function _findElementValueAsObject(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
 ): KuFlowObject | undefined {
-  const [elementValue] = getElementValueAsObjectList(model, elementDefinitionCode)
+  const [elementValue] = _getElementValueAsObjectList(model, elementDefinitionCode)
 
   return elementValue
 }
 
-/**
- * Get all elements as Object
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsObjectList(process: Process, elementDefinitionCode: string): KuFlowObject[]
-
-/**
- * Get all elements as Object
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsObjectList(task: Task, elementDefinitionCode: string): KuFlowObject[]
-
-/**
- * Get all elements as Object
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsObjectList(model: Process | Task, elementDefinitionCode: string): KuFlowObject[]
-
-/**
- * Get all elements as Object
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsObjectList(model: Process | Task, elementDefinitionCode: string): KuFlowObject[] {
-  return getElementValues(model, elementDefinitionCode)
-    .filter(elementValue => elementValue.type === 'STRING')
-    .filter(elementValue => elementValue.value != null)
-    .map(elementValue => new Date(elementValue.value?.toString() ?? ''))
+function _getElementValueAsObjectList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): KuFlowObject[] {
+  return _getElementValues(model, elementDefinitionCode)
+    .filter(elementValue => elementValue.type === 'OBJECT')
+    .filter(elementValue => elementValue.value !== null)
+    .map(elementValue => elementValue.value as KuFlowObject)
 }
 
-/**
- * Set an element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsObject(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: KuFlowObject | undefined,
-): Process
-
-/**
- * Set an element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsObject(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: KuFlowObject | undefined,
-): Task
-
-/**
- * Set an element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsObject(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: KuFlowObject | undefined,
-): Process | Task {
-  return setElementValueAsObjectList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsObjectOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: KuFlowObject | undefined
 }
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process passed.
- */
-export function setElementValueAsObjectList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Process
+function _setElementValueAsObject<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsObjectOptions,
+): T {
+  return _setElementValueAsObjectList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsObjectList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Task
+interface SetElementValueAsObjectListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: KuFlowObject[] | undefined
+}
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsObjectList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Process | Task
-
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Process or Task passed.
- */
-export function setElementValueAsObjectList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Process | Task {
-  return setElementValue(
+function _setElementValueAsObjectList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsObjectListOptions,
+): T {
+  return _setElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'OBJECT',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Add a new element value
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process passed.
- */
-export function addElementValueAsObject(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValue: KuFlowObject | undefined,
-): Process
-
-/**
- * Add a new element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Task passed.
- */
-export function addElementValueAsObject(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: KuFlowObject | undefined,
-): Task
-
-/**
- * Add a new element value
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Process or Task passed.
- */
-export function addElementValueAsObject(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValue: KuFlowObject | undefined,
-): Process | Task {
-  return addElementValueAsObjectList(model, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface AddElementValueAsObjectOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: KuFlowObject | undefined
 }
 
-/**
- * Add all element values passed
- *
- * @param process Process
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process passed.
- */
-export function addElementValueAsObjectList(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Process
+function _addElementValueAsObject<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsObjectOptions,
+): T {
+  return _addElementValueAsObjectList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
 
-/**
- * Add all element values passed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Task passed.
- */
-export function addElementValueAsObjectList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Task
+interface AddElementValueAsObjectListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: KuFlowObject[] | undefined
+}
 
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsObjectList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Process | Task
-
-/**
- * Add all element values passed
- *
- * @param model Process or Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Process or Task passed.
- */
-export function addElementValueAsObjectList(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: KuFlowObject[] | undefined,
-): Process | Task {
-  return addElementValue(
+function _addElementValueAsObjectList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsObjectListOptions,
+): T {
+  return _addElementValue(
     model,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'OBJECT',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Get an element as Document
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- */
-export function getElementValueAsDocument(task: Task, elementDefinitionCode: string): TaskElementValueDocumentItem {
-  const elementValue = findElementValueAsDocument(task, elementDefinitionCode)
+function _getElementValueAsDocument(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
+): TaskElementValueDocumentItem {
+  const elementValue = _findElementValueAsDocument(model, elementDefinitionCode)
   if (elementValue == null) {
     throw new Error('value is required!')
   }
@@ -1578,126 +2630,97 @@ export function getElementValueAsDocument(task: Task, elementDefinitionCode: str
   return elementValue
 }
 
-/**
- * Try to get an element as Document
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsDocument(
-  task: Task,
-  elementDefinitionCode: string,
+function _findElementValueAsDocument(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
 ): TaskElementValueDocumentItem | undefined {
-  const [elementValue] = getElementValueAsDocumentList(task, elementDefinitionCode)
+  const [elementValue] = _getElementValueAsDocumentList(model, elementDefinitionCode)
 
   return elementValue
 }
 
-/**
- * Get all elements as Document
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsDocumentList(
-  task: Task,
-  elementDefinitionCode: string,
+function _getElementValueAsDocumentList(
+  model: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+  elementDefinitionCode?: string,
 ): TaskElementValueDocumentItem[] {
-  const elementValues = getElementValues(task, elementDefinitionCode).filter(isDocument)
+  const elementValues = _getElementValues(model, elementDefinitionCode).filter(isDocument)
 
-  return elementValues.map(elementValue => elementValue.value).filter(notEmpty)
+  return elementValues.map(elementValue => elementValue.value).filter(isNotNullOrUndefined)
 }
 
-/**
- * Set an element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsDocument(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: TaskElementValueDocumentItem | undefined,
-): Task {
-  return setElementValueAsDocumentList(task, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsDocumentOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: TaskElementValueDocumentItem | undefined
 }
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsDocumentList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValueDocumentItem[] | undefined,
-): Task {
-  return setElementValue(
-    task,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+function _setElementValueAsDocument<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsDocumentOptions,
+): T {
+  return _setElementValueAsDocumentList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
+
+interface SetElementValueAsDocumentListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: TaskElementValueDocumentItem[] | undefined
+}
+
+function _setElementValueAsDocumentList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: SetElementValueAsDocumentListOptions,
+): T {
+  return _setElementValue(
+    model,
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'DOCUMENT',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Add a new element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Task passed.
- */
-export function addElementValueAsDocument(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: TaskElementValueDocumentItem | undefined,
-): Task {
-  return addElementValueAsObjectList(task, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface AddElementValueAsDocumentOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: TaskElementValueDocumentItem | undefined
 }
 
-/**
- * Add all element values passed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Task passed.
- */
-export function addElementValueAsDocumentList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValueDocumentItem[] | undefined,
-): Task {
-  return addElementValue(
-    task,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
-      type: 'OBJECT',
+function _addElementValueAsDocument<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsDocumentOptions,
+): T {
+  return _addElementValueAsDocumentList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
+
+interface AddElementValueAsDocumentListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: TaskElementValueDocumentItem[] | undefined
+}
+
+function _addElementValueAsDocumentList<T extends ElementValuesSingleCodeModels | ElementValuesManyCodeModels>(
+  model: T,
+  options: AddElementValueAsDocumentListOptions,
+): T {
+  return _addElementValue(
+    model,
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
+      type: 'DOCUMENT',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Get an element as Principal
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value.
- * @throws com.kuflow.rest.KuFlowRestClientException If element value doesn't exists
- */
-export function getElementValueAsPrincipal(task: Task, elementDefinitionCode: string): TaskElementValuePrincipalItem {
-  const elementValue = findElementValueAsPrincipal(task, elementDefinitionCode)
+function _getElementValueAsPrincipal(
+  model: TaskSaveElementCommand | Task | TaskPageItem,
+  elementDefinitionCode?: string,
+): TaskElementValuePrincipalItem {
+  const elementValue = _findElementValueAsPrincipal(model, elementDefinitionCode)
   if (elementValue == null) {
     throw new Error('value is required!')
   }
@@ -1705,195 +2728,109 @@ export function getElementValueAsPrincipal(task: Task, elementDefinitionCode: st
   return elementValue
 }
 
-/**
- * Try to get an element as Principal
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the element value if exists.
- */
-export function findElementValueAsPrincipal(
-  task: Task,
-  elementDefinitionCode: string,
+function _findElementValueAsPrincipal(
+  model: TaskSaveElementCommand | Task | TaskPageItem,
+  elementDefinitionCode?: string,
 ): TaskElementValuePrincipalItem | undefined {
-  const [elementValue] = getElementValueAsPrincipalList(task, elementDefinitionCode)
+  const [elementValue] = _getElementValueAsPrincipalList(model, elementDefinitionCode)
 
   return elementValue
 }
 
-/**
- * Get all elements as Principal
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @return the elements values.
- */
-export function getElementValueAsPrincipalList(
-  task: Task,
-  elementDefinitionCode: string,
+function _getElementValueAsPrincipalList(
+  model: TaskSaveElementCommand | Task | TaskPageItem,
+  elementDefinitionCode?: string,
 ): TaskElementValuePrincipalItem[] {
-  const elementValues = getElementValues(task, elementDefinitionCode).filter(isPrincipal)
+  const elementValues = _getElementValues(model, elementDefinitionCode).filter(isPrincipal)
 
-  return elementValues.map(elementValue => elementValue.value).filter(notEmpty)
+  return elementValues.map(elementValue => elementValue.value).filter(isNotNullOrUndefined)
 }
 
-/**
- * Set an element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the value is undefined all current values are removed
- * @return the Task object itself.
- */
-export function setElementValueAsPrincipal(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: TaskElementValuePrincipalItem | undefined,
-): Task {
-  return setElementValueAsPrincipalList(task, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface SetElementValueAsPrincipalOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: TaskElementValuePrincipalItem | undefined
 }
 
-/**
- * Set all element values passed, previews values will be removed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values, if the values are null all current values are removed
- * @return the Task passed.
- */
-export function setElementValueAsPrincipalList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValuePrincipalItem[] | undefined,
-): Task {
-  return setElementValue(
-    task,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+function _setElementValueAsPrincipal<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  options: SetElementValueAsPrincipalOptions,
+): T {
+  return _setElementValueAsPrincipalList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
+
+interface SetElementValueAsPrincipalListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: TaskElementValuePrincipalItem[] | undefined
+}
+
+function _setElementValueAsPrincipalList<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  options: SetElementValueAsPrincipalListOptions,
+): T {
+  return _setElementValue(
+    model,
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'PRINCIPAL',
       value: elementValue,
     })),
   )
 }
 
-/**
- * Add a new element value
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValue Element value, if the values is undefined the value is not added
- * @return the Task passed.
- */
-export function addElementValueAsPrincipal(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValue: TaskElementValuePrincipalItem | undefined,
-): Task {
-  return addElementValueAsPrincipalList(task, elementDefinitionCode, elementValue != null ? [elementValue] : undefined)
+interface AddElementValueAsPrincipalOptions {
+  elementDefinitionCode?: string | undefined
+  elementValue: TaskElementValuePrincipalItem | undefined
 }
 
-/**
- * Add all element values passed
- *
- * @param task Task
- * @param elementDefinitionCode Element Definition Code
- * @param elementValues Element values
- * @return the Task passed.
- */
-export function addElementValueAsPrincipalList(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValuePrincipalItem[] | undefined,
-): Task {
-  return addElementValue(
-    task,
-    elementDefinitionCode,
-    elementValues?.map(elementValue => ({
+function _addElementValueAsPrincipal<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  options: AddElementValueAsPrincipalOptions,
+): T {
+  return _addElementValueAsPrincipalList(model, {
+    elementDefinitionCode: options.elementDefinitionCode,
+    elementValues: options.elementValue != null ? [options.elementValue] : undefined,
+  })
+}
+
+interface AddElementValueAsPrincipalListOptions {
+  elementDefinitionCode?: string | undefined
+  elementValues: TaskElementValuePrincipalItem[] | undefined
+}
+
+function _addElementValueAsPrincipalList<T extends TaskSaveElementCommand | Task | TaskPageItem>(
+  model: T,
+  options: AddElementValueAsPrincipalListOptions,
+): T {
+  return _addElementValue(
+    model,
+    options.elementDefinitionCode,
+    options.elementValues?.map(elementValue => ({
       type: 'PRINCIPAL',
       value: elementValue,
     })),
   )
 }
 
-function addElementValue(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValueUnion[] | undefined,
-): Process
-
-function addElementValue(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValueUnion[] | undefined,
-): Task
-
-function addElementValue(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: ProcessElementValueUnion[] | TaskElementValueUnion[] | undefined,
-): Process | Task
-
-function addElementValue(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValueUnion[] | undefined,
-): Process | Task {
-  const elementValuesCurrent = getElementValues(model, elementDefinitionCode)
-
-  return setElementValue(model, elementDefinitionCode, [...elementValuesCurrent, ...(elementValues ?? [])])
-}
-
-function setElementValue(
-  process: Process,
-  elementDefinitionCode: string,
-  elementValues: ProcessElementValueUnion[] | undefined,
-): Process
-
-function setElementValue(
-  task: Task,
-  elementDefinitionCode: string,
-  elementValues: TaskElementValueUnion[] | undefined,
-): Task
-
-function setElementValue(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: ProcessElementValueUnion[] | TaskElementValueUnion[] | undefined,
-): Process | Task
-
-function setElementValue(
-  model: Process | Task,
-  elementDefinitionCode: string,
-  elementValues: ProcessElementValueUnion[] | TaskElementValueUnion[] | undefined,
-): Process | Task {
-  if (elementValues == null) {
-    if (model.elementValues != null) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete model.elementValues[elementDefinitionCode]
-    }
-  } else {
-    model.elementValues = {
-      ...model.elementValues,
-      [elementDefinitionCode]: elementValues,
-    }
-  }
-
-  return model
-}
-
-function getElementValues(process: Process, elementDefinitionCode: string): ProcessElementValueUnion[]
-function getElementValues(task: Task, elementDefinitionCode: string): TaskElementValueUnion[]
-function getElementValues(model: Process | Task, elementDefinitionCode: string): TaskElementValueUnion[]
-function getElementValues(
-  model: Process | Task,
-  elementDefinitionCode: string,
-): TaskElementValueUnion[] | ProcessElementValueUnion[] {
+function _getElementValues<T extends ElementValuesManyCodeModels | ElementValuesSingleCodeModels>(
+  model: T,
+  elementDefinitionCode?: string,
+): Array<ProcessElementValueUnion | TaskElementValueUnion> {
   if (model.elementValues == null) {
     return []
   }
+  if (Array.isArray(model.elementValues)) {
+    return model.elementValues ?? []
+  }
+
+  if (elementDefinitionCode == null) {
+    return []
+  }
+
   const elementValuesByCode = model.elementValues[elementDefinitionCode]
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!elementValuesByCode || elementValuesByCode.length === 0) {
+  if (elementValuesByCode == null || elementValuesByCode.length === 0) {
     return []
   }
 
@@ -1908,6 +2845,135 @@ function isPrincipal(value: TaskElementValueUnion | undefined): value is TaskEle
   return value?.type === 'PRINCIPAL'
 }
 
-function notEmpty<T>(value: T | null | undefined): value is T {
+function isNullOrUndefined<T>(value: T | null | undefined): value is null | undefined {
+  return value === null || value === undefined
+}
+
+function isNotNullOrUndefined<T>(value: T | null | undefined): value is T {
   return value !== null && value !== undefined
+}
+
+function isElementValuesSingleCodeModels(
+  value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+): value is ElementValuesSingleCodeModels {
+  return (value as ElementValuesSingleCodeModels).elementDefinitionCode !== null
+}
+
+function assertIsElementValuesSingleCodeModels(
+  value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+): asserts value is ElementValuesSingleCodeModels {
+  if (!isElementValuesSingleCodeModels(value)) {
+    throw new Error('value is not a ElementValuesSingleCodeModels!')
+  }
+}
+
+function isElementValuesManyCodeModels(
+  value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+): value is ElementValuesManyCodeModels {
+  return (value as ElementValuesSingleCodeModels).elementDefinitionCode == null
+}
+function assertIsElementValuesManyCodeModels(
+  value: ElementValuesSingleCodeModels | ElementValuesManyCodeModels,
+): asserts value is ElementValuesManyCodeModels {
+  if (!isElementValuesManyCodeModels(value)) {
+    throw new Error('value is not a ElementValuesManyCodeModels!')
+  }
+}
+
+function assertIsString(value: unknown): asserts value is string {
+  if (typeof value !== 'string') {
+    throw new Error('value is not a string!')
+  }
+}
+
+function assertIsStringOrUndefined(value: unknown): asserts value is string | undefined {
+  if (value !== undefined && typeof value !== 'string') {
+    throw new Error('value is not a string!')
+  }
+}
+
+function assertIsStringArrayOrUndefined(value: unknown): asserts value is string[] | undefined {
+  if (value !== undefined && !Array.isArray(value)) {
+    throw new Error('value is not a string[] or undefined!')
+  }
+}
+
+function assertIsNumber(value: unknown): asserts value is number {
+  if (typeof value !== 'number') {
+    throw new Error('value is not a number!')
+  }
+}
+
+function assertIsDateOrUndefined(value: unknown): asserts value is Date | undefined {
+  if (value !== undefined && !(value instanceof Date)) {
+    throw new Error('value is not a Date or undefined!')
+  }
+}
+
+function assertIsDateArrayOrUndefined(value: unknown): asserts value is Date[] | undefined {
+  if (value !== undefined && !Array.isArray(value)) {
+    throw new Error('value is not a Date[] or undefined!')
+  }
+}
+
+function assertIsBooleanOrUndefined(value: unknown): asserts value is boolean | undefined {
+  if (value !== undefined && typeof value !== 'boolean') {
+    throw new Error('value is not a boolean or undefined!')
+  }
+}
+
+function assertIsNumberOrUndefined(value: unknown): asserts value is number | undefined {
+  if (value !== undefined && typeof value !== 'number') {
+    throw new Error('value is not a number or undefined!')
+  }
+}
+
+function assertIsNumberArrayOrUndefined(value: unknown): asserts value is number[] | undefined {
+  if (value !== undefined && !Array.isArray(value)) {
+    throw new Error('value is not a number or undefined!')
+  }
+}
+
+function assertIsKuFlowObjectOrUndefined(value: unknown): asserts value is KuFlowObject | undefined {
+  if (value !== undefined && typeof value !== 'object') {
+    throw new Error('value is not a object or undefined!')
+  }
+}
+
+function assertIsKuFlowObjectArrayOrUndefined(value: unknown): asserts value is KuFlowObject[] | undefined {
+  if (value !== undefined && !Array.isArray(value)) {
+    throw new Error('value is not a object[] or undefined!')
+  }
+}
+
+function assertIsTaskElementValueDocumentItemOrUndefined(
+  value: unknown,
+): asserts value is TaskElementValueDocumentItem | undefined {
+  if (value !== undefined && typeof value !== 'object') {
+    throw new Error('value is not a TaskElementValueDocumentItem or undefined!')
+  }
+}
+
+function assertIsTaskElementValueDocumentItemArrayOrUndefined(
+  value: unknown,
+): asserts value is TaskElementValueDocumentItem[] | undefined {
+  if (value !== undefined && !Array.isArray(value)) {
+    throw new Error('value is not a TaskElementValueDocumentItem[] or undefined!')
+  }
+}
+
+function assertIsTaskElementValuePrincipalItemOrUndefined(
+  value: unknown,
+): asserts value is TaskElementValuePrincipalItem | undefined {
+  if (value !== undefined && typeof value !== 'object') {
+    throw new Error('value is not a TaskElementValueDocumentItem or undefined!')
+  }
+}
+
+function assertIsTaskElementValuePrincipalItemArrayOrUndefined(
+  value: unknown,
+): asserts value is TaskElementValuePrincipalItem[] | undefined {
+  if (value !== undefined && !Array.isArray(value)) {
+    throw new Error('value is not a TaskElementValueDocumentItem[] or undefined!')
+  }
 }

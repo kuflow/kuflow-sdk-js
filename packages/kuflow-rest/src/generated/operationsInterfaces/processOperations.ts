@@ -20,31 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import * as coreRestPipeline from '@azure/core-rest-pipeline'
+import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import {
-  Process,
-  ProcessActionsProcessCancelOptionalParams,
-  ProcessActionsProcessCancelResponse,
-  ProcessActionsProcessChangeInitiatorOptionalParams,
-  ProcessActionsProcessChangeInitiatorResponse,
-  ProcessActionsProcessCompleteOptionalParams,
-  ProcessActionsProcessCompleteResponse,
-  ProcessActionsProcessDeleteElementOptionalParams,
-  ProcessActionsProcessDeleteElementResponse,
-  ProcessActionsProcessSaveElementOptionalParams,
-  ProcessActionsProcessSaveElementResponse,
-  ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  ProcessActionsProcessSaveUserActionValueDocumentResponse,
-  ProcessChangeInitiatorCommand,
-  ProcessCreateProcessOptionalParams,
-  ProcessCreateProcessResponse,
-  ProcessDeleteElementCommand,
-  ProcessFindProcessesOptionalParams,
-  ProcessFindProcessesResponse,
-  ProcessRetrieveProcessOptionalParams,
-  ProcessRetrieveProcessResponse,
-  ProcessSaveElementCommand,
+  type Process,
+  type ProcessActionsProcessCancelOptionalParams,
+  type ProcessActionsProcessCancelResponse,
+  type ProcessActionsProcessChangeInitiatorOptionalParams,
+  type ProcessActionsProcessChangeInitiatorResponse,
+  type ProcessActionsProcessCompleteOptionalParams,
+  type ProcessActionsProcessCompleteResponse,
+  type ProcessActionsProcessDeleteElementOptionalParams,
+  type ProcessActionsProcessDeleteElementResponse,
+  type ProcessActionsProcessSaveElementOptionalParams,
+  type ProcessActionsProcessSaveElementResponse,
+  type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
+  type ProcessActionsProcessSaveUserActionValueDocumentResponse,
+  type ProcessChangeInitiatorCommand,
+  type ProcessCreateProcessOptionalParams,
+  type ProcessCreateProcessResponse,
+  type ProcessDeleteElementCommand,
+  type ProcessFindProcessesOptionalParams,
+  type ProcessFindProcessesResponse,
+  type ProcessRetrieveProcessOptionalParams,
+  type ProcessRetrieveProcessResponse,
+  type ProcessSaveElementCommand,
 } from '../models'
 
 /** Interface representing a ProcessOperations. */

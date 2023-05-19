@@ -24,21 +24,22 @@ import { ApplicationFailure } from '@temporalio/activity'
 
 import { KuFlowFailureType } from './kuflow-failure-type'
 import {
-  AppendTaskLogRequest,
-  AssignTaskRequest,
-  ChangeProcessInitiatorRequest,
-  ClaimTaskRequest,
-  CompleteProcessRequest,
-  CompleteTaskRequest,
-  CreateTaskRequest,
-  DeleteProcessElementRequest,
-  DeleteTaskElementRequest,
-  DeleteTaskElementValueDocumentRequest,
-  RetrievePrincipalRequest,
-  RetrieveProcessRequest,
-  RetrieveTaskRequest,
-  SaveProcessElementRequest,
-  SaveTaskElementRequest,
+  type AppendTaskLogRequest,
+  type AssignTaskRequest,
+  type ChangeProcessInitiatorRequest,
+  type ClaimTaskRequest,
+  type CompleteProcessRequest,
+  type CompleteTaskRequest,
+  type CreateTaskRequest,
+  type DeleteProcessElementRequest,
+  type DeleteTaskElementRequest,
+  type DeleteTaskElementValueDocumentRequest,
+  type RetrievePrincipalRequest,
+  type RetrieveProcessRequest,
+  type RetrieveTaskRequest,
+  type SaveProcessElementRequest,
+  type SaveTaskElementRequest,
+  type SaveTaskJsonFormsValueDataRequest,
 } from './models'
 
 export function validateRetrievePrincipalRequest(request: RetrievePrincipalRequest): void {
@@ -173,6 +174,15 @@ export function validateDeleteTaskElementValueDocumentRequest(request: DeleteTas
   }
   if (request.documentId == null) {
     throw ApplicationFailure.nonRetryable("'documentId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+}
+
+export function validateSaveTaskJsonFormsValueData(request: SaveTaskJsonFormsValueDataRequest): void {
+  if (request.taskId == null) {
+    throw ApplicationFailure.nonRetryable("'taskId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+  if (request.data == null) {
+    throw ApplicationFailure.nonRetryable("'data' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 

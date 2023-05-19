@@ -22,11 +22,11 @@
  */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { KuFlowRestClient } from '@kuflow/kuflow-rest'
+import { type KuFlowRestClient } from '@kuflow/kuflow-rest'
 import { CompleteAsyncError, Context } from '@temporalio/activity'
 
 import { catchAllErrors } from './kuflow-activities-failure'
-import { CreateTaskRequest } from './models'
+import { type CreateTaskRequest } from './models'
 import { validateCreateTaskRequest } from './validations'
 
 export interface KuFlowAsyncActivities {

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Log, Task, TaskElementValueUnion, TaskPage, TaskState } from '@kuflow/kuflow-rest'
+import { type Log, type Task, type TaskElementValueUnion, type TaskPage, type TaskState } from '@kuflow/kuflow-rest'
 
 export interface FindTasksRequest {
   page?: number
@@ -92,6 +92,15 @@ export interface DeleteTaskElementValueDocumentRequest {
 }
 
 export interface DeleteTaskElementValueDocumentResponse {
+  task: Task
+}
+
+export interface SaveTaskJsonFormsValueDataRequest {
+  taskId: string
+  data: Record<string, unknown>
+}
+
+export interface SaveTaskJsonFormsValueDataResponse {
   task: Task
 }
 

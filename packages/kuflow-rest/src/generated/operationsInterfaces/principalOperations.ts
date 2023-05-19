@@ -21,10 +21,10 @@
  * THE SOFTWARE.
  */
 import {
-  PrincipalFindPrincipalsOptionalParams,
-  PrincipalFindPrincipalsResponse,
-  PrincipalRetrievePrincipalOptionalParams,
-  PrincipalRetrievePrincipalResponse,
+  type PrincipalFindPrincipalsOptionalParams,
+  type PrincipalFindPrincipalsResponse,
+  type PrincipalRetrievePrincipalOptionalParams,
+  type PrincipalRetrievePrincipalResponse,
 } from '../models'
 
 /** Interface representing a PrincipalOperations. */

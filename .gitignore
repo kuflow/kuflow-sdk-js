@@ -1,14 +1,11 @@
 # Ignore all dot files except
 .*
-!.changeset
-!.eslintignore
+!.editorconfig
 !.eslintrc.yaml
-!.nvmrc
+!.gitignore
 !.prettierignore
 !.prettierrc
-!.editorconfig
-!.gitattributes
-!.gitignore
+!.tool-versions
 
 ######################
 # Node

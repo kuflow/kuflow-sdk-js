@@ -21,7 +21,6 @@
  * THE SOFTWARE.
  */
 export * from './authenticationOperations'
-export * from './echo'
 export * from './principalOperations'
 export * from './processOperations'
 export * from './taskOperations'

@@ -23,3 +23,11 @@ npx lerna version
 ```
 
 Select the version that you want to release and follow the lerna instructions.
+
+## Publish a new version in xxx channel
+
+```bash
+npx lerna publish from-package --registry https://registry.npmjs.org --dist-tag next
+```
+
+After that we can use the new published version.

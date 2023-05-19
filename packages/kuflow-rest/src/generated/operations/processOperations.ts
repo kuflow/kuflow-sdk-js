@@ -21,36 +21,36 @@
  * THE SOFTWARE.
  */
 import * as coreClient from '@azure/core-client'
-import * as coreRestPipeline from '@azure/core-rest-pipeline'
+import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  Process,
-  ProcessActionsProcessCancelOptionalParams,
-  ProcessActionsProcessCancelResponse,
-  ProcessActionsProcessChangeInitiatorOptionalParams,
-  ProcessActionsProcessChangeInitiatorResponse,
-  ProcessActionsProcessCompleteOptionalParams,
-  ProcessActionsProcessCompleteResponse,
-  ProcessActionsProcessDeleteElementOptionalParams,
-  ProcessActionsProcessDeleteElementResponse,
-  ProcessActionsProcessSaveElementOptionalParams,
-  ProcessActionsProcessSaveElementResponse,
-  ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  ProcessActionsProcessSaveUserActionValueDocumentResponse,
-  ProcessChangeInitiatorCommand,
-  ProcessCreateProcessOptionalParams,
-  ProcessCreateProcessResponse,
-  ProcessDeleteElementCommand,
-  ProcessFindProcessesOptionalParams,
-  ProcessFindProcessesResponse,
-  ProcessRetrieveProcessOptionalParams,
-  ProcessRetrieveProcessResponse,
-  ProcessSaveElementCommand,
+  type Process,
+  type ProcessActionsProcessCancelOptionalParams,
+  type ProcessActionsProcessCancelResponse,
+  type ProcessActionsProcessChangeInitiatorOptionalParams,
+  type ProcessActionsProcessChangeInitiatorResponse,
+  type ProcessActionsProcessCompleteOptionalParams,
+  type ProcessActionsProcessCompleteResponse,
+  type ProcessActionsProcessDeleteElementOptionalParams,
+  type ProcessActionsProcessDeleteElementResponse,
+  type ProcessActionsProcessSaveElementOptionalParams,
+  type ProcessActionsProcessSaveElementResponse,
+  type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
+  type ProcessActionsProcessSaveUserActionValueDocumentResponse,
+  type ProcessChangeInitiatorCommand,
+  type ProcessCreateProcessOptionalParams,
+  type ProcessCreateProcessResponse,
+  type ProcessDeleteElementCommand,
+  type ProcessFindProcessesOptionalParams,
+  type ProcessFindProcessesResponse,
+  type ProcessRetrieveProcessOptionalParams,
+  type ProcessRetrieveProcessResponse,
+  type ProcessSaveElementCommand,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { ProcessOperations } from '../operationsInterfaces'
+import { type ProcessOperations } from '../operationsInterfaces'
 
 /** Class containing ProcessOperations operations. */
 export class ProcessOperationsImpl implements ProcessOperations {
@@ -258,7 +258,7 @@ const createProcessOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.process,
   urlParameters: [Parameters.$host],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -290,7 +290,7 @@ const actionsProcessChangeInitiatorOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.command,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -307,7 +307,7 @@ const actionsProcessSaveElementOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.command1,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
@@ -324,7 +324,7 @@ const actionsProcessDeleteElementOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.command2,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }

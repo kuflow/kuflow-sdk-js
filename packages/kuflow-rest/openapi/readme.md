@@ -27,7 +27,7 @@ typescript: true
 title: KuFlow
 override-client-name: KuFlowRestClientGenerated
 
-input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/63afd4373554be5197f198664ee2dac33657295c/specs/api.kuflow.com/v2022-10-08/openapi.yaml
+input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/1f09c227f2d5d7cfb2d9eacf376ed2b649fe2b8a/specs/api.kuflow.com/v2022-10-08/openapi.yaml
 output-folder: ../
 source-code-folder-path: ./src/generated
 
@@ -42,8 +42,7 @@ generate-sample: false
 hide-clients: true
 
 use-extension:
-  '@autorest/typescript': '6.0.0-rc.5'
-  '@autorest/modelerfour': '4.25.0'
+  '@autorest/typescript': '6.0.1'
 
 modelerfour:
   seal-single-value-enum-by-default: false

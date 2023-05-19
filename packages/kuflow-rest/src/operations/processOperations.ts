@@ -20,34 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { FullOperationResponse } from '@azure/core-client'
+import { type FullOperationResponse } from '@azure/core-client'
 
 import {
-  KuFlowRestClientGenerated,
-  Process,
-  ProcessActionsProcessCancelOptionalParams,
-  ProcessActionsProcessCancelResponse,
-  ProcessActionsProcessChangeInitiatorOptionalParams,
-  ProcessActionsProcessChangeInitiatorResponse,
-  ProcessActionsProcessCompleteOptionalParams,
-  ProcessActionsProcessCompleteResponse,
-  ProcessActionsProcessDeleteElementOptionalParams,
-  ProcessActionsProcessDeleteElementResponse,
-  ProcessActionsProcessSaveElementOptionalParams,
-  ProcessActionsProcessSaveElementResponse,
-  ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  ProcessActionsProcessSaveUserActionValueDocumentResponse,
-  ProcessChangeInitiatorCommand,
-  ProcessCreateProcessOptionalParams,
-  ProcessCreateProcessResponse,
-  ProcessDeleteElementCommand,
-  ProcessFindProcessesResponse,
-  ProcessOperations as ProcessOperationsGenerated,
-  ProcessRetrieveProcessOptionalParams,
-  ProcessRetrieveProcessResponse,
-  ProcessSaveElementCommand,
+  type KuFlowRestClientGenerated,
+  type Process,
+  type ProcessActionsProcessCancelOptionalParams,
+  type ProcessActionsProcessCancelResponse,
+  type ProcessActionsProcessChangeInitiatorOptionalParams,
+  type ProcessActionsProcessChangeInitiatorResponse,
+  type ProcessActionsProcessCompleteOptionalParams,
+  type ProcessActionsProcessCompleteResponse,
+  type ProcessActionsProcessDeleteElementOptionalParams,
+  type ProcessActionsProcessDeleteElementResponse,
+  type ProcessActionsProcessSaveElementOptionalParams,
+  type ProcessActionsProcessSaveElementResponse,
+  type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
+  type ProcessActionsProcessSaveUserActionValueDocumentResponse,
+  type ProcessChangeInitiatorCommand,
+  type ProcessCreateProcessOptionalParams,
+  type ProcessCreateProcessResponse,
+  type ProcessDeleteElementCommand,
+  type ProcessFindProcessesResponse,
+  type ProcessOperations as ProcessOperationsGenerated,
+  type ProcessRetrieveProcessOptionalParams,
+  type ProcessRetrieveProcessResponse,
+  type ProcessSaveElementCommand,
 } from '../generated'
-import { Document, ProcessFindProcessesOptionalExtParams, ProcessSaveUserActionValueDocumentCommand } from '../models'
+import {
+  type Document,
+  type ProcessFindProcessesOptionalExtParams,
+  type ProcessSaveUserActionValueDocumentCommand,
+} from '../models'
 
 /** Class containing ProcessOperations operations. */
 export class ProcessOperations {

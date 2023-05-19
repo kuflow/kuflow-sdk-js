@@ -22,53 +22,56 @@
  */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-  KuFlowRestClient,
-  Process,
-  ProcessChangeInitiatorCommand,
-  ProcessDeleteElementCommand,
-  ProcessSaveElementCommand,
-  TaskAssignCommand,
-  TaskDeleteElementCommand,
-  TaskDeleteElementValueDocumentCommand,
-  TaskSaveElementCommand,
+  type KuFlowRestClient,
+  type Process,
+  type ProcessChangeInitiatorCommand,
+  type ProcessDeleteElementCommand,
+  type ProcessSaveElementCommand,
+  type TaskAssignCommand,
+  type TaskDeleteElementCommand,
+  type TaskDeleteElementValueDocumentCommand,
+  type TaskSaveElementCommand,
+  type TaskSaveJsonFormsValueDataCommand,
 } from '@kuflow/kuflow-rest'
 
 import { catchAllErrors } from './kuflow-activities-failure'
 import {
-  AppendTaskLogRequest,
-  AppendTaskLogResponse,
-  AssignTaskRequest,
-  AssignTaskResponse,
-  ChangeProcessInitiatorRequest,
-  ChangeProcessInitiatorResponse,
-  ClaimTaskRequest,
-  ClaimTaskResponse,
-  CompleteProcessRequest,
-  CompleteProcessResponse,
-  CompleteTaskRequest,
-  CompleteTaskResponse,
-  CreateTaskRequest,
-  CreateTaskResponse,
-  DeleteProcessElementRequest,
-  DeleteProcessElementResponse,
-  DeleteTaskElementRequest,
-  DeleteTaskElementResponse,
-  DeleteTaskElementValueDocumentRequest,
-  DeleteTaskElementValueDocumentResponse,
-  FindProcessesRequest,
-  FindProcessesResponse,
-  FindTasksRequest,
-  FindTasksResponse,
-  RetrievePrincipalRequest,
-  RetrievePrincipalResponse,
-  RetrieveProcessRequest,
-  RetrieveProcessResponse,
-  RetrieveTaskRequest,
-  RetrieveTaskResponse,
-  SaveProcessElementRequest,
-  SaveProcessElementResponse,
-  SaveTaskElementRequest,
-  SaveTaskElementResponse,
+  type AppendTaskLogRequest,
+  type AppendTaskLogResponse,
+  type AssignTaskRequest,
+  type AssignTaskResponse,
+  type ChangeProcessInitiatorRequest,
+  type ChangeProcessInitiatorResponse,
+  type ClaimTaskRequest,
+  type ClaimTaskResponse,
+  type CompleteProcessRequest,
+  type CompleteProcessResponse,
+  type CompleteTaskRequest,
+  type CompleteTaskResponse,
+  type CreateTaskRequest,
+  type CreateTaskResponse,
+  type DeleteProcessElementRequest,
+  type DeleteProcessElementResponse,
+  type DeleteTaskElementRequest,
+  type DeleteTaskElementResponse,
+  type DeleteTaskElementValueDocumentRequest,
+  type DeleteTaskElementValueDocumentResponse,
+  type FindProcessesRequest,
+  type FindProcessesResponse,
+  type FindTasksRequest,
+  type FindTasksResponse,
+  type RetrievePrincipalRequest,
+  type RetrievePrincipalResponse,
+  type RetrieveProcessRequest,
+  type RetrieveProcessResponse,
+  type RetrieveTaskRequest,
+  type RetrieveTaskResponse,
+  type SaveProcessElementRequest,
+  type SaveProcessElementResponse,
+  type SaveTaskElementRequest,
+  type SaveTaskElementResponse,
+  type SaveTaskJsonFormsValueDataRequest,
+  type SaveTaskJsonFormsValueDataResponse,
 } from './models'
 import {
   validateAppendTaskLogRequest,
@@ -86,6 +89,7 @@ import {
   validateRetrieveTaskRequest,
   validateSaveProcessElementRequest,
   validateSaveTaskElementRequest,
+  validateSaveTaskJsonFormsValueData,
 } from './validations'
 
 export interface KuFlowSyncActivities {
@@ -243,6 +247,17 @@ export interface KuFlowSyncActivities {
   ) => Promise<DeleteTaskElementValueDocumentResponse>
 
   /**
+   * Allow to save a JSON data validating that the data follow the related schema. If the data is invalid, then the json
+   * form is marked as invalid.
+   *
+   * @param request must not be {@literal undefined}.
+   * @return task updated
+   */
+  KuFlow_Engine_saveTaskJsonFormsValueData: (
+    request: SaveTaskJsonFormsValueDataRequest,
+  ) => Promise<SaveTaskJsonFormsValueDataResponse>
+
+  /**
    * Append a log to the task.
    *
    * <p>A log entry is added to the task. If the number of log entries is reached, the oldest log entry is removed.
@@ -274,6 +289,7 @@ export const createKuFlowSyncActivities = (kuFlowRestClient: KuFlowRestClient): 
     KuFlow_Engine_saveTaskElement: catchAllErrors(KuFlow_Engine_saveTaskElement),
     KuFlow_Engine_deleteTaskElement: catchAllErrors(KuFlow_Engine_deleteTaskElement),
     KuFlow_Engine_deleteTaskElementValueDocument: catchAllErrors(KuFlow_Engine_deleteTaskElementValueDocument),
+    KuFlow_Engine_saveTaskJsonFormsValueData: catchAllErrors(KuFlow_Engine_saveTaskJsonFormsValueData),
     KuFlow_Engine_appendTaskLog: catchAllErrors(KuFlow_Engine_appendTaskLog),
   }
 
@@ -468,6 +484,21 @@ export const createKuFlowSyncActivities = (kuFlowRestClient: KuFlowRestClient): 
       documentId: request.documentId,
     }
     const task = await kuFlowRestClient.taskOperations.actionsTaskDeleteElementValueDocument(request.taskId, command)
+
+    return {
+      task,
+    }
+  }
+
+  async function KuFlow_Engine_saveTaskJsonFormsValueData(
+    request: SaveTaskJsonFormsValueDataRequest,
+  ): Promise<SaveTaskJsonFormsValueDataResponse> {
+    validateSaveTaskJsonFormsValueData(request)
+
+    const command: TaskSaveJsonFormsValueDataCommand = {
+      data: request.data,
+    }
+    const task = await kuFlowRestClient.taskOperations.actionsTaskSaveJsonFormsValueData(request.taskId, command)
 
     return {
       task,

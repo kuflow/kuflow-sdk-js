@@ -22,16 +22,16 @@
  */
 import * as coreClient from '@azure/core-client'
 
-import { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  PrincipalFindPrincipalsOptionalParams,
-  PrincipalFindPrincipalsResponse,
-  PrincipalRetrievePrincipalOptionalParams,
-  PrincipalRetrievePrincipalResponse,
+  type PrincipalFindPrincipalsOptionalParams,
+  type PrincipalFindPrincipalsResponse,
+  type PrincipalRetrievePrincipalOptionalParams,
+  type PrincipalRetrievePrincipalResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { PrincipalOperations } from '../operationsInterfaces'
+import { type PrincipalOperations } from '../operationsInterfaces'
 
 /** Class containing PrincipalOperations operations. */
 export class PrincipalOperationsImpl implements PrincipalOperations {

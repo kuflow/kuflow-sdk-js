@@ -20,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { AccessToken, TokenCredential } from '@azure/core-auth'
-import { CommonClientOptions } from '@azure/core-client'
+import { type AccessToken, type TokenCredential } from '@azure/core-auth'
+import { type CommonClientOptions } from '@azure/core-client'
 
 import { KuFlowRestClientGenerated } from './generated'
 import { AuthenticationOperations, PrincipalOperations, ProcessOperations, TaskOperations } from './operations'

@@ -20,7 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Principal, PrincipalPage, Process, ProcessPage, Task, TaskPage } from '@kuflow/kuflow-rest'
+import {
+  type Principal,
+  type PrincipalPage,
+  type Process,
+  type ProcessPage,
+  type ProcessPageItem,
+  type Task,
+  type TaskPage,
+  type TaskPageItem,
+} from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
 
 export function mockPrincipalPage(): PrincipalPage {
@@ -68,13 +77,49 @@ export function mockProcessPage(): ProcessPage {
       totalElements: 2,
       totalPages: 1,
     },
-    content: [mockProcess(), mockProcess()],
+    content: [mockProcessPageItem(), mockProcessPageItem()],
   }
 }
 
 export function mockProcess(): Process {
   return {
     objectType: 'PROCESS',
+    id: randomUUID(),
+    subject: `Subject ${randomInt(1, 1_000)}`,
+    state: 'RUNNING',
+    processDefinition: {
+      id: randomUUID(),
+      version: randomUUID(),
+      name: `Name ${randomInt(1, 1_000)}`,
+    },
+    elementValues: {
+      CODE_1: [
+        {
+          type: 'STRING',
+          value: `Value ${randomInt(1, 1_000)}`,
+          valid: true,
+        },
+      ],
+      CODE_2: [
+        {
+          type: 'NUMBER',
+          value: randomInt(1, 1_000),
+          valid: true,
+        },
+      ],
+    },
+    initiator: mockPrincipalUser(),
+
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockProcessPageItem(): ProcessPageItem {
+  return {
+    objectType: 'PROCESS_PAGE_ITEM',
     id: randomUUID(),
     subject: `Subject ${randomInt(1, 1_000)}`,
     state: 'RUNNING',
@@ -117,13 +162,76 @@ export function mockTaskPage(): TaskPage {
       totalElements: 2,
       totalPages: 1,
     },
-    content: [mockTask(), mockTask()],
+    content: [mockTaskPageItem(), mockTaskPageItem()],
   }
 }
 
 export function mockTask(): Task {
   return {
     objectType: 'TASK',
+    id: randomUUID(),
+    state: 'READY',
+    taskDefinition: {
+      id: randomUUID(),
+      version: randomUUID(),
+      name: `Name ${randomInt(1, 1_000)}`,
+    },
+    processId: randomUUID(),
+    elementValues: {
+      CODE_1: [
+        {
+          type: 'STRING',
+          value: `Value ${randomInt(1, 1_000)}`,
+          valid: true,
+        },
+      ],
+      CODE_2: [
+        {
+          type: 'NUMBER',
+          value: randomInt(1, 1_000),
+          valid: true,
+        },
+      ],
+    },
+    owner: mockPrincipalUser(),
+
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockTaskJsonForms(): Task {
+  return {
+    objectType: 'TASK',
+    id: randomUUID(),
+    state: 'READY',
+    taskDefinition: {
+      id: randomUUID(),
+      version: randomUUID(),
+      name: `Name ${randomInt(1, 1_000)}`,
+    },
+    processId: randomUUID(),
+    jsonFormsValue: {
+      valid: true,
+      data: {
+        key1: 'value1',
+        key2: 'value2',
+      },
+    },
+    owner: mockPrincipalUser(),
+
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockTaskPageItem(): TaskPageItem {
+  return {
+    objectType: 'TASK_PAGE_ITEM',
     id: randomUUID(),
     state: 'READY',
     taskDefinition: {
