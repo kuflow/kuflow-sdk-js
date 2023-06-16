@@ -97,7 +97,7 @@ export interface DeleteTaskElementValueDocumentResponse {
 
 export interface SaveTaskJsonFormsValueDataRequest {
   taskId: string
-  data: Record<string, unknown>
+  data?: Record<string, unknown>
 }
 
 export interface SaveTaskJsonFormsValueDataResponse {
