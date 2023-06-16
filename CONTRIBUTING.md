@@ -14,6 +14,24 @@ Run all the tests with:
 npm run build
 ```
 
+## Create a new version and let to the CI publish the new version
+
+Set the new version to release:
+
+```bash
+npx lerna version --no-push --no-git-tag-version
+```
+
+Commit and push the changes:
+
+```bash
+git add .
+git commit -m "Release X.Y.Z"
+git push
+```
+
+Let the CI/CD publish the new version to the registry.
+
 ## Release a new version
 
 From `main` branch do
