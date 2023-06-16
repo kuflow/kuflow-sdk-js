@@ -50,7 +50,7 @@ export type ProcessElementValues = ProcessElementValueString[] | ProcessElementV
 export interface SaveProcessElementRequest {
   processId: string
   elementDefinitionCode: string
-  elementValues: ProcessElementValues
+  elementValues?: ProcessElementValues
 }
 
 export interface SaveProcessElementResponse {

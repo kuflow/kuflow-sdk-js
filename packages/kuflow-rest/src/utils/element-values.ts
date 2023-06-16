@@ -25,7 +25,6 @@ import {
   type Process,
   type ProcessElementValueUnion,
   type ProcessPageItem,
-  type ProcessSaveElementCommand,
   type Task,
   type TaskElementValueDocument,
   type TaskElementValueDocumentItem,
@@ -36,8 +35,18 @@ import {
   type TaskSaveElementCommand,
 } from '../generated'
 
-type ElementValuesManyCodeModels = Process | ProcessPageItem | Task | TaskPageItem
-type ElementValuesSingleCodeModels = ProcessSaveElementCommand | TaskSaveElementCommand
+interface ElementValuesSingleCodeProcessLike {
+  elementDefinitionCode: string
+  elementValues?: ProcessElementValueUnion[]
+}
+
+interface ElementValuesSingleCodeTaskLike {
+  elementDefinitionCode: string
+  elementValues?: TaskElementValueUnion[]
+}
+
+export type ElementValuesManyCodeModels = Process | ProcessPageItem | Task | TaskPageItem
+export type ElementValuesSingleCodeModels = ElementValuesSingleCodeProcessLike | ElementValuesSingleCodeTaskLike
 
 export type KuFlowObject = Record<string, any>
 
