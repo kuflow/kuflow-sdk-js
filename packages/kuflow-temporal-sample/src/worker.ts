@@ -22,10 +22,10 @@
  */
 import { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
-import { KuFlowAuthorizationTokenProvider } from '@kuflow/kuflow-temporal-core'
-import { NativeConnection, Worker } from '@temporalio/worker'
+import { KuflowTemporalConnection } from '@kuflow/kuflow-temporal-core'
 import * as dotenv from 'dotenv'
 import fs from 'fs'
+
 dotenv.config()
 
 /**
@@ -47,19 +47,6 @@ async function run({
   const serverRootCACertificate =
     serverRootCACertificatePath != null ? fs.readFileSync(serverRootCACertificatePath) : undefined
 
-  const connection = await NativeConnection.connect({
-    address,
-    tls: {
-      serverNameOverride,
-      serverRootCACertificate,
-      // See docs for other TLS options
-      clientCertPair: {
-        crt: fs.readFileSync(clientCertPath),
-        key: fs.readFileSync(clientKeyPath),
-      },
-    },
-  })
-
   const kuFlowRestClient = new KuFlowRestClient(
     {
       clientId: kuflowRestClientApiUsername,
@@ -71,26 +58,40 @@ async function run({
     },
   )
 
-  const kuFlowAuthorizationTokenProvider = KuFlowAuthorizationTokenProvider.instance({
-    temporalConnection: connection,
-    kuFlowRestClient,
+  const kuflowTemporalConnection = await KuflowTemporalConnection.instance({
+    kuflow: {
+      restClient: kuFlowRestClient,
+    },
+    temporalio: {
+      connection: {
+        address,
+        tls: {
+          serverNameOverride,
+          serverRootCACertificate,
+          // See docs for other TLS options
+          clientCertPair: {
+            crt: fs.readFileSync(clientCertPath),
+            key: fs.readFileSync(clientKeyPath),
+          },
+        },
+      },
+      worker: {
+        namespace,
+        taskQueue,
+        workflowsPath: require.resolve('./workflows'),
+        activities: {
+          ...createKuFlowSyncActivities(kuFlowRestClient),
+          ...createKuFlowAsyncActivities(kuFlowRestClient),
+        },
+      },
+    },
   })
 
-  const worker = await Worker.create({
-    connection,
-    namespace,
-    workflowsPath: require.resolve('./workflows'),
-    activities: {
-      ...createKuFlowSyncActivities(kuFlowRestClient),
-      ...createKuFlowAsyncActivities(kuFlowRestClient),
-    },
-    taskQueue,
-  })
   console.log('Worker connection successfully established')
 
-  await worker.run()
-  await connection.close()
-  await kuFlowAuthorizationTokenProvider.close()
+  await kuflowTemporalConnection.runWorker()
+
+  await kuflowTemporalConnection.close()
 }
 
 run(getEnv()).catch(err => {
