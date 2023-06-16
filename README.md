@@ -13,7 +13,7 @@ KuFlow is an implementation language agnostic Cloud platform. This repository is
 
 ## Documentation
 
-Documentation on how to integrate with KuFlow using Javascript is available [here](https://docs.kuflow.com/developers/guides/javascript).
+Documentation on how to integrate with KuFlow using Javascript is available [here](http://localhost:3000/developers/client-integration-temporal?sdk-selected=typescript).
 
 ## Packages
 
