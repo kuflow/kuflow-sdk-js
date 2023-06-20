@@ -30,15 +30,16 @@ import {
 } from '@kuflow/kuflow-rest'
 
 describe('Task Save Json Forms Value Data Command Utils', () => {
-
-
   test('getJsonFormsPropertyAsString', () => {
     const command = prepareTaskSaveJsonFormsValueDataCommand()
 
     const value1 = TaskSaveJsonFormsValueDataCommandUtils.getJsonFormsPropertyAsString(command, 'key1')
     expect(value1).toStrictEqual('value_key1')
 
-    const value2 = TaskSaveJsonFormsValueDataCommandUtils.getJsonFormsPropertyAsString(command, 'key2.key2_key1.0.key2_key1_key2')
+    const value2 = TaskSaveJsonFormsValueDataCommandUtils.getJsonFormsPropertyAsString(
+      command,
+      'key2.key2_key1.0.key2_key1_key2',
+    )
     expect(value2).toStrictEqual('value_key2_key1_key2')
 
     expect(() => {
@@ -60,16 +61,25 @@ describe('Task Save Json Forms Value Data Command Utils', () => {
     const value1 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(command, 'key1')
     expect(value1).toStrictEqual('value_key1')
 
-    const value2 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(command, 'key2.key2_key1.0.key2_key1_key2')
+    const value2 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(
+      command,
+      'key2.key2_key1.0.key2_key1_key2',
+    )
     expect(value2).toStrictEqual('value_key2_key1_key2')
 
-    const value3 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(command, 'key2.key2_key1.0.unknown')
+    const value3 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(
+      command,
+      'key2.key2_key1.0.unknown',
+    )
     expect(value3).toBeUndefined()
 
     const value4 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(command, 'key2.key2_key1.10')
     expect(value4).toBeUndefined()
 
-    const value5 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(command, 'key2.key2_key1.100.key2_key1_key2')
+    const value5 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsString(
+      command,
+      'key2.key2_key1.100.key2_key1_key2',
+    )
     expect(value5).toBeUndefined()
   })
 
@@ -252,7 +262,10 @@ describe('Task Save Json Forms Value Data Command Utils', () => {
       name: 'Homer Simpson',
     })
 
-    const value2 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsJsonFormsPrincipal(command, 'key_xxxxxxx')
+    const value2 = TaskSaveJsonFormsValueDataCommandUtils.findJsonFormsPropertyAsJsonFormsPrincipal(
+      command,
+      'key_xxxxxxx',
+    )
     expect(value2).toBeUndefined()
 
     expect(() => {

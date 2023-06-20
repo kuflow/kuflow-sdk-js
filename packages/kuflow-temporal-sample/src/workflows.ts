@@ -29,7 +29,8 @@ import {
   type SaveTaskJsonFormsValueDataRequest,
   SaveTaskJsonFormsValueDataRequestUtils,
   type WorkflowRequest,
-  type WorkflowResponse} from '@kuflow/kuflow-temporal-activity-kuflow'
+  type WorkflowResponse,
+} from '@kuflow/kuflow-temporal-activity-kuflow'
 import { type LoggerSinks, proxyActivities, proxySinks, uuid4 } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({

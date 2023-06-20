@@ -21,14 +21,10 @@
  * THE SOFTWARE.
  */
 
-import {
-  type TaskElementValueDocumentItem,
-  type TaskElementValuePrincipalItem,
-  type TaskPageItem
-} from "../generated";
-import { type JsonFormsFile, type JsonFormsPrincipal } from "../models";
+import { type TaskElementValueDocumentItem, type TaskElementValuePrincipalItem, type TaskPageItem } from '../generated'
+import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
 import * as elementValueUtils from './element-values'
-import * as JsonFormUtils from "./json-forms";
+import * as JsonFormUtils from './json-forms'
 
 type KuFlowObject = elementValueUtils.KuFlowObject
 type JsonFormsSimpleType = JsonFormUtils.JsonFormsSimpleType
@@ -705,7 +701,6 @@ export function addElementValueAsPrincipalList(
   return elementValueUtils.addElementValueAsPrincipalList(taskPageItem, elementDefinitionCode, elementValues)
 }
 
-
 /**
  * Get a json property as String following the 'propertyPath' passed.
  *
@@ -817,7 +812,10 @@ export function getJsonFormsPropertyAsJsonFormsFile(taskPageItem: TaskPageItem, 
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsJsonFormsFile(taskPageItem: TaskPageItem, propertyPath: string): JsonFormsFile | undefined {
+export function findJsonFormsPropertyAsJsonFormsFile(
+  taskPageItem: TaskPageItem,
+  propertyPath: string,
+): JsonFormsFile | undefined {
   return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(taskPageItem, propertyPath)
 }
 
@@ -829,7 +827,10 @@ export function findJsonFormsPropertyAsJsonFormsFile(taskPageItem: TaskPageItem,
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsJsonFormsPrincipal(taskPageItem: TaskPageItem, propertyPath: string): JsonFormsPrincipal {
+export function getJsonFormsPropertyAsJsonFormsPrincipal(
+  taskPageItem: TaskPageItem,
+  propertyPath: string,
+): JsonFormsPrincipal {
   return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(taskPageItem, propertyPath)
 }
 
@@ -878,7 +879,10 @@ export function findJsonFormsPropertyAsArray(taskPageItem: TaskPageItem, propert
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsObject(taskPageItem: TaskPageItem, propertyPath: string): Record<string, unknown> {
+export function getJsonFormsPropertyAsObject(
+  taskPageItem: TaskPageItem,
+  propertyPath: string,
+): Record<string, unknown> {
   return JsonFormUtils.getJsonFormsPropertyAsObject(taskPageItem, propertyPath)
 }
 
@@ -889,7 +893,10 @@ export function getJsonFormsPropertyAsObject(taskPageItem: TaskPageItem, propert
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsObject(taskPageItem: TaskPageItem, propertyPath: string): Record<string, unknown> | undefined {
+export function findJsonFormsPropertyAsObject(
+  taskPageItem: TaskPageItem,
+  propertyPath: string,
+): Record<string, unknown> | undefined {
   return JsonFormUtils.findJsonFormsPropertyAsObject(taskPageItem, propertyPath)
 }
 
@@ -910,4 +917,3 @@ export function updateJsonFormsProperty(
 ): void {
   JsonFormUtils.updateJsonFormsProperty(taskPageItem, propertyPath, value, options)
 }
-

@@ -23,7 +23,8 @@
 
 import { describe, expect, test } from '@jest/globals'
 import {
-  type JsonFormsFile, type JsonFormsPrincipal,
+  type JsonFormsFile,
+  type JsonFormsPrincipal,
   type TaskElementValueDocument,
   type TaskElementValueDocumentItem,
   type TaskElementValueNumber,
@@ -32,8 +33,8 @@ import {
   type TaskElementValuePrincipalItem,
   type TaskElementValueString,
   type TaskPageItem,
-  TaskPageItemUtils
-} from "@kuflow/kuflow-rest";
+  TaskPageItemUtils,
+} from '@kuflow/kuflow-rest'
 
 describe('Task Page Items Utils', () => {
   test('getElementValueValid', () => {
@@ -742,7 +743,6 @@ describe('Task Page Items Utils', () => {
     TaskPageItemUtils.addElementValueAsPrincipalList(taskPageItem, 'EV_PRINCIPAL', [])
     expect(taskPageItem.elementValues?.EV_PRINCIPAL).toStrictEqual(expectedElementValues1)
   })
-
 
   test('getJsonFormsPropertyAsString', () => {
     const taskPageItem = prepareTaskPageItemJsonFormsValue()

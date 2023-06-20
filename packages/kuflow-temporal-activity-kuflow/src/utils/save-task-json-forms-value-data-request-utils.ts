@@ -21,11 +21,7 @@
  * THE SOFTWARE.
  */
 
-import {
-  type JsonFormsFile,
-  type JsonFormsPrincipal,
-  JsonFormsUtils,
-} from '@kuflow/kuflow-rest'
+import { type JsonFormsFile, type JsonFormsPrincipal, JsonFormsUtils } from '@kuflow/kuflow-rest'
 
 import { type SaveTaskJsonFormsValueDataRequest } from '../models'
 
