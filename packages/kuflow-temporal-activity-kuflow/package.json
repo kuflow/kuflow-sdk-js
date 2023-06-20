@@ -1,6 +1,6 @@
 {
   "name": "@kuflow/kuflow-temporal-activity-kuflow",
-  "version": "1.2.1-alpha.0",
+  "version": "1.3.0",
   "description": "KuFlow SDK :: Temporal activities for KuFlow.",
   "keywords": [
     "node",
@@ -32,7 +32,7 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-temporal-core": "1.2.1-alpha.0",
+    "@kuflow/kuflow-temporal-core": "1.3.0",
     "@temporalio/activity": "1.7.4"
   },
   "publishConfig": {
