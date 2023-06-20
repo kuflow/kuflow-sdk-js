@@ -21,5 +21,30 @@
  * THE SOFTWARE.
  */
 
-export * from './element-values'
-export * from './json-forms'
+import { type KuFlowObject } from './element-values'
+import * as ElementValueUtils from './element-values'
+import { type JsonFormsComplexType, type JsonFormsSimpleType, type UpdateJsonFormsPropertyOptions } from './json-forms'
+import * as JsonFormsUtils from './json-forms'
+import * as ProcessPageItemUtils from './process-page-item-utils'
+import * as ProcessSaveElementCommandUtils from './process-save-element-command-utils'
+import * as ProcessUtils from './process-utils'
+import * as TaskPageItemUtils from './task-page-item-utils'
+import * as TaskSaveElementCommandUtils from './task-save-element-command-utils'
+import * as TaskSaveJsonFormsValueDataCommandUtils from './task-save-json-forms-value-data-command-utils'
+import * as TaskUtils from './task-utils'
+
+export {
+  ElementValueUtils,
+  type JsonFormsComplexType,
+  type JsonFormsSimpleType,
+  JsonFormsUtils,
+  type KuFlowObject,
+  ProcessPageItemUtils,
+  ProcessSaveElementCommandUtils,
+  ProcessUtils,
+  TaskPageItemUtils,
+  TaskSaveElementCommandUtils,
+  TaskSaveJsonFormsValueDataCommandUtils,
+  TaskUtils,
+  type UpdateJsonFormsPropertyOptions,
+}

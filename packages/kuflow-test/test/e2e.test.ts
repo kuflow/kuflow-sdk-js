@@ -20,19 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as logger from '@azure/logger'
 import { describe, test } from '@jest/globals'
 import {
   type Document,
   KuFlowRestClient,
   type Process,
-  setElementValueAsNumber,
-  setElementValueAsNumberList,
-  setElementValueAsString,
-  setElementValueAsStringList,
   type Task,
   type TaskSaveElementCommand,
+  TaskSaveElementCommandUtils,
   type TaskSaveElementValueDocumentCommand,
+  TaskUtils,
 } from '@kuflow/kuflow-rest'
 import * as fs from 'fs'
 
@@ -73,7 +72,7 @@ describe('E2E Test', () => {
         code: 'TASK_0001',
       },
     }
-    setElementValueAsNumberList(task, 'ss', [2, 5])
+    TaskUtils.setElementValueAsNumberList(task, 'ss', [2, 5])
     const taskCreated = await kuFlowRestClient.taskOperations.createTask(task)
     if (taskCreated.id == null) {
       return
@@ -84,19 +83,19 @@ describe('E2E Test', () => {
     const command1: TaskSaveElementCommand = {
       elementDefinitionCode: 'TEXT_001',
     }
-    setElementValueAsString(command1, 'Value 1')
+    TaskSaveElementCommandUtils.setElementValueAsString(command1, 'Value 1')
     await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command1)
 
     const command2: TaskSaveElementCommand = {
       elementDefinitionCode: 'TEXT_002',
     }
-    setElementValueAsStringList(command2, ['Value 1', 'Value 2'])
+    TaskSaveElementCommandUtils.setElementValueAsStringList(command2, ['Value 1', 'Value 2'])
     await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command2)
 
     const command3: TaskSaveElementCommand = {
       elementDefinitionCode: 'NUMBER_001',
     }
-    setElementValueAsNumber(command3, 50)
+    TaskSaveElementCommandUtils.setElementValueAsNumber(command3, 50)
     await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command3)
 
     const command4: TaskSaveElementValueDocumentCommand = {

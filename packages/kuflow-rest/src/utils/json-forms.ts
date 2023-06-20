@@ -24,25 +24,25 @@
 import { type PrincipalType, type Task, type TaskPageItem, type TaskSaveJsonFormsValueDataCommand } from '../generated'
 import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
 
-type SimpleType = string | number | boolean | Date | JsonFormsPrincipal | JsonFormsFile
+export type JsonFormsModels = Task | TaskPageItem | TaskSaveJsonFormsValueDataCommand
 
-type ContainerArrayType = ComplexType[]
+export type JsonFormsSimpleType = string | number | boolean | Date | JsonFormsPrincipal | JsonFormsFile
+
+export type JsonFormsContainerArrayType = JsonFormsComplexType[]
 
 // eslint-disable-next-line  @typescript-eslint/consistent-indexed-object-style,@typescript-eslint/consistent-type-definitions
-type ContainerRecordType = { [property: string]: ComplexType }
+export type JsonFormsContainerRecordType = { [property: string]: JsonFormsComplexType }
 
-type ContainerType = ContainerArrayType | ContainerRecordType
+export type JsonFormsContainerType = JsonFormsContainerArrayType | JsonFormsContainerRecordType
 
-type ComplexType = SimpleType | ContainerType
-
-type JsonFormsModels = Task | TaskPageItem | TaskSaveJsonFormsValueDataCommand
+export type JsonFormsComplexType = JsonFormsSimpleType | JsonFormsContainerType
 
 export interface JsonFormsProperty {
-  container: ContainerType
+  container: JsonFormsContainerType
 
   path: string
 
-  value: ComplexType | undefined
+  value: JsonFormsComplexType | undefined
 }
 
 /**
@@ -375,11 +375,11 @@ export function findJsonFormsPropertyAsObject(
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-function findJsonFormsPropertyValue(model: JsonFormsModels, propertyPath: string): ComplexType | undefined {
+function findJsonFormsPropertyValue(model: JsonFormsModels, propertyPath: string): JsonFormsComplexType | undefined {
   return findJsonFormsProperty(model, propertyPath)?.value
 }
 
-interface UpdateJsonFormsPropertyOptions {
+export interface UpdateJsonFormsPropertyOptions {
   format: 'date' | 'date-time'
 }
 
@@ -395,7 +395,7 @@ interface UpdateJsonFormsPropertyOptions {
 export function updateJsonFormsProperty(
   model: JsonFormsModels,
   propertyPath: string,
-  value: SimpleType | undefined,
+  value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
 ): void {
   const property = findJsonFormsProperty(model, propertyPath, true)
@@ -449,9 +449,9 @@ export function findJsonFormsProperty(
     return undefined
   }
 
-  let jsonFormsPropertyContainer: ContainerType = dataCurrent
+  let jsonFormsPropertyContainer: JsonFormsContainerType = dataCurrent
   let jsonFormsPropertyPath = ''
-  let jsonFormsPropertyValue: ComplexType | undefined
+  let jsonFormsPropertyValue: JsonFormsComplexType | undefined
 
   const paths = propertyPath.split('.')
   for (let i = 0; i < paths.length; i++) {
@@ -530,9 +530,9 @@ export function findJsonFormsProperty(
 }
 
 function transformJsonFormsPropertyValue(
-  value: SimpleType | undefined,
+  value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
-): SimpleType | undefined {
+): JsonFormsSimpleType | undefined {
   if (value == null) {
     return undefined
   } else if (isJsonFormsPrincipalObject(value)) {
@@ -722,20 +722,25 @@ function isJsonFormsFileObject(value: unknown): value is JsonFormsFile {
   )
 }
 
-function isJsonFormsTypeContainer(value: ComplexType | undefined): value is ContainerType {
+function isJsonFormsTypeContainer(value: JsonFormsComplexType | undefined): value is JsonFormsContainerType {
   return isJsonFormsTypeContainerRecord(value) || isJsonFormsTypeContainerArray(value)
 }
 
-function isJsonFormsTypeContainerRecord(value: ComplexType | undefined): value is ContainerRecordType {
+function isJsonFormsTypeContainerRecord(
+  value: JsonFormsComplexType | undefined,
+): value is JsonFormsContainerRecordType {
   return typeof value === 'object' && value !== null && !Array.isArray(value) && !(value instanceof Date)
 }
 
-function isJsonFormsTypeContainerArray(value: ComplexType | undefined): value is ContainerArrayType {
+function isJsonFormsTypeContainerArray(value: JsonFormsComplexType | undefined): value is JsonFormsContainerArrayType {
   return Array.isArray(value)
 }
 
-function getJsonFormsValueData(model: JsonFormsModels, createMissingParents: boolean): ContainerType | undefined {
-  let data: ContainerType | undefined
+function getJsonFormsValueData(
+  model: JsonFormsModels,
+  createMissingParents: boolean,
+): JsonFormsContainerType | undefined {
+  let data: JsonFormsContainerType | undefined
 
   if (isTask(model) || isTaskPageItem(model)) {
     data = model.jsonFormsValue?.data
