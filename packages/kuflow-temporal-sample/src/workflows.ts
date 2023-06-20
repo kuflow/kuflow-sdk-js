@@ -21,15 +21,15 @@
  * THE SOFTWARE.
  */
 // Only import the activity types
-import { addElementValueAsString, updateJsonFormsProperty } from '@kuflow/kuflow-rest'
 import {
   type createKuFlowAsyncActivities,
   type createKuFlowSyncActivities,
   type SaveProcessElementRequest,
+  SaveProcessElementRequestUtils,
   type SaveTaskJsonFormsValueDataRequest,
+  SaveTaskJsonFormsValueDataRequestUtils,
   type WorkflowRequest,
-  type WorkflowResponse,
-} from '@kuflow/kuflow-temporal-activity-kuflow'
+  type WorkflowResponse} from '@kuflow/kuflow-temporal-activity-kuflow'
 import { type LoggerSinks, proxyActivities, proxySinks, uuid4 } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({
@@ -63,14 +63,14 @@ export async function MyWorkflow(request: WorkflowRequest): Promise<WorkflowResp
     processId: request.processId,
     elementDefinitionCode: 'CODE_001',
   }
-  addElementValueAsString(saveProcessElementRequest, 'value')
+  SaveProcessElementRequestUtils.addElementValueAsString(saveProcessElementRequest, 'value')
 
   await kuFlowSyncActivities.KuFlow_Engine_saveProcessElement(saveProcessElementRequest)
 
   const saveTaskJsonFormsValueDataRequest: SaveTaskJsonFormsValueDataRequest = {
     taskId: '',
   }
-  updateJsonFormsProperty(saveTaskJsonFormsValueDataRequest, '.name', 'value')
+  SaveTaskJsonFormsValueDataRequestUtils.updateJsonFormsProperty(saveTaskJsonFormsValueDataRequest, '.name', 'value')
   await kuFlowSyncActivities.KuFlow_Engine_saveTaskJsonFormsValueData(saveTaskJsonFormsValueDataRequest)
 
   await kuFlowSyncActivities.KuFlow_Engine_completeProcess({
