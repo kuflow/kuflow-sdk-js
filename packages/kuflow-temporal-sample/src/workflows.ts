@@ -25,12 +25,16 @@ import {
   type createKuFlowAsyncActivities,
   type createKuFlowSyncActivities,
   type SaveProcessElementRequest,
-  SaveProcessElementRequestUtils,
   type SaveTaskJsonFormsValueDataRequest,
-  SaveTaskJsonFormsValueDataRequestUtils,
   type WorkflowRequest,
   type WorkflowResponse,
 } from '@kuflow/kuflow-temporal-activity-kuflow'
+// Import from here to avoid the following error:
+//   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
+import {
+  SaveProcessElementRequestUtils,
+  SaveTaskJsonFormsValueDataRequestUtils,
+} from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
 import { type LoggerSinks, proxyActivities, proxySinks, uuid4 } from '@temporalio/workflow'
 
 const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({

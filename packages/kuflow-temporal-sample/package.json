@@ -19,6 +19,7 @@
   },
   "license": "MIT",
   "author": "KuFlow S.L. <kuflow@kuflow.com>",
+  "sideEffects": false,
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc --build",
