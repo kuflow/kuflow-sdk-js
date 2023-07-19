@@ -44,8 +44,6 @@ import {
   type ChangeProcessInitiatorResponse,
   type ClaimTaskRequest,
   type ClaimTaskResponse,
-  type CompleteProcessRequest,
-  type CompleteProcessResponse,
   type CompleteTaskRequest,
   type CompleteTaskResponse,
   type CreateTaskRequest,
@@ -78,7 +76,6 @@ import {
   validateAssignTaskRequest,
   validateChangeProcessInitiatorRequest,
   validateClaimTaskRequest,
-  validateCompleteProcessRequest,
   validateCompleteTaskRequest,
   validateCreateTaskRequest,
   validateDeleteProcessElementRequest,
@@ -89,7 +86,7 @@ import {
   validateRetrieveTaskRequest,
   validateSaveProcessElementRequest,
   validateSaveTaskElementRequest,
-  validateSaveTaskJsonFormsValueData,
+  validateSaveTaskJsonFormsValueData
 } from './validations'
 
 export interface KuFlowSyncActivities {
@@ -136,14 +133,6 @@ export interface KuFlowSyncActivities {
    * @return process deleted
    */
   KuFlow_Engine_deleteProcessElement: (request: DeleteProcessElementRequest) => Promise<DeleteProcessElementResponse>
-
-  /**
-   * Complete a Process. The state of Process is set to "COMPLETED".
-   *
-   * @param request must not be {@literal undefined}.
-   * @return process completed
-   */
-  KuFlow_Engine_completeProcess: (request: CompleteProcessRequest) => Promise<CompleteProcessResponse>
 
   /**
    * Change the current initiator of a process. Allows you to choose a user (by email or principal
@@ -278,7 +267,6 @@ export const createKuFlowSyncActivities = (kuFlowRestClient: KuFlowRestClient): 
     KuFlow_Engine_retrieveProcess: catchAllErrors(KuFlow_Engine_retrieveProcess),
     KuFlow_Engine_saveProcessElement: catchAllErrors(KuFlow_Engine_saveProcessElement),
     KuFlow_Engine_deleteProcessElement: catchAllErrors(KuFlow_Engine_deleteProcessElement),
-    KuFlow_Engine_completeProcess: catchAllErrors(KuFlow_Engine_completeProcess),
     KuFlow_Engine_changeProcessInitiator: catchAllErrors(KuFlow_Engine_changeProcessInitiator),
     KuFlow_Engine_findTasks: catchAllErrors(KuFlow_Engine_findTasks),
     KuFlow_Engine_retrieveTask: catchAllErrors(KuFlow_Engine_retrieveTask),
@@ -350,16 +338,6 @@ export const createKuFlowSyncActivities = (kuFlowRestClient: KuFlowRestClient): 
       elementDefinitionCode: request.elementDefinitionCode,
     }
     const process = await kuFlowRestClient.processOperations.actionsProcessDeleteElement(request.processId, command)
-
-    return {
-      process,
-    }
-  }
-
-  async function KuFlow_Engine_completeProcess(request: CompleteProcessRequest): Promise<CompleteProcessResponse> {
-    validateCompleteProcessRequest(request)
-
-    const process = await kuFlowRestClient.processOperations.actionsProcessComplete(request.processId)
 
     return {
       process,
