@@ -78,10 +78,6 @@ export async function MyWorkflow(request: WorkflowRequest): Promise<WorkflowResp
   SaveTaskJsonFormsValueDataRequestUtils.updateJsonFormsProperty(saveTaskJsonFormsValueDataRequest, '.name', 'value')
   await kuFlowSyncActivities.KuFlow_Engine_saveTaskJsonFormsValueData(saveTaskJsonFormsValueDataRequest)
 
-  await kuFlowSyncActivities.KuFlow_Engine_completeProcess({
-    processId: request.processId,
-  })
-
   logger.info('End', {})
   return {
     message: 'OK',

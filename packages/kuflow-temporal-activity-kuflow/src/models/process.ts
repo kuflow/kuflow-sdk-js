@@ -66,14 +66,6 @@ export interface DeleteProcessElementResponse {
   process: Process
 }
 
-export interface CompleteProcessRequest {
-  processId: string
-}
-
-export interface CompleteProcessResponse {
-  process: Process
-}
-
 export interface ChangeProcessInitiatorRequest {
   processId: string
   email?: string

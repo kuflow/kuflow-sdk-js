@@ -28,7 +28,6 @@ import {
   type AssignTaskRequest,
   type ChangeProcessInitiatorRequest,
   type ClaimTaskRequest,
-  type CompleteProcessRequest,
   type CompleteTaskRequest,
   type CreateTaskRequest,
   type DeleteProcessElementRequest,
@@ -75,12 +74,6 @@ export function validateDeleteProcessElementRequest(request: DeleteProcessElemen
       "'elementDefinitionCode' is required",
       KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
-  }
-}
-
-export function validateCompleteProcessRequest(request: CompleteProcessRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 

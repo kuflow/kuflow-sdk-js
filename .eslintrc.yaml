@@ -14,6 +14,7 @@ rules:
   'simple-import-sort/imports': 'error'
   'simple-import-sort/exports': 'error'
   'header/header': [2, 'etc/eslint/header.js']
+  'comma-dangle': ["error", "always-multiline"]
   # Disabled due to a false positive: https://github.com/typescript-eslint/typescript-eslint/issues/4689
   '@typescript-eslint/restrict-plus-operands': ['off']
   '@typescript-eslint/restrict-template-expressions': ['off']
