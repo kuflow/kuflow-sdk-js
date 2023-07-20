@@ -86,7 +86,7 @@ import {
   validateRetrieveTaskRequest,
   validateSaveProcessElementRequest,
   validateSaveTaskElementRequest,
-  validateSaveTaskJsonFormsValueData
+  validateSaveTaskJsonFormsValueData,
 } from './validations'
 
 export interface KuFlowSyncActivities {
