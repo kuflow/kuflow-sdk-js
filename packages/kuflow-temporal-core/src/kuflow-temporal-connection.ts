@@ -27,11 +27,16 @@ import {
   KuFlowAuthorizationTokenProvider,
   type KuFlowAuthorizationTokenProviderBackoff,
 } from './kuflow-authorization-token-provider'
+import {
+  KuFlowWorkerInformationNotifier,
+  type KuFlowWorkerInformationNotifierBackoff,
+} from './kuflow-worker-information-notifier'
 
 interface KuflowTemporalConnectionParams {
   kuflow: {
     restClient: KuFlowRestClient
     authorizationTokenProviderBackoff?: KuFlowAuthorizationTokenProviderBackoff
+    workerInformationNotifierBackoff?: KuFlowWorkerInformationNotifierBackoff
   }
   temporalio: {
     connection?: NativeConnectionOptions
@@ -80,6 +85,8 @@ export class KuflowTemporalConnection {
   private _worker?: Worker
 
   private _kuFlowAuthorizationTokenProvider?: KuFlowAuthorizationTokenProvider
+
+  private _kuflowWorkerInformationNotifier?: KuFlowWorkerInformationNotifier
 
   public static async instance(options: KuflowTemporalConnectionParams): Promise<KuflowTemporalConnection> {
     return new KuflowTemporalConnection({ ...options })
@@ -150,6 +157,19 @@ export class KuflowTemporalConnection {
       this._activityTypes = Object.keys(worker.options.activities ?? {})
     }
 
+    // Create a _kuflowWorkerInformationNotifier
+    this._kuflowWorkerInformationNotifier = KuFlowWorkerInformationNotifier.instance({
+      kuFlowRestClient: this.options.kuflow.restClient,
+      backoff: this.options.kuflow.workerInformationNotifierBackoff,
+      workerInformation: {
+        identity: worker.options.identity,
+        taskQueue: worker.options.taskQueue,
+        workflowTypes: this._workflowTypes,
+        activityTypes: this._activityTypes,
+      },
+    })
+    await this._kuflowWorkerInformationNotifier.start()
+
     await worker.run()
   }
 
@@ -167,6 +187,11 @@ export class KuflowTemporalConnection {
     if (this._nativeConnection != null) {
       await this._nativeConnection.close()
       this._nativeConnection = undefined
+    }
+
+    if (this._kuflowWorkerInformationNotifier != null) {
+      await this._kuflowWorkerInformationNotifier.close()
+      this._kuflowWorkerInformationNotifier = undefined
     }
 
     if (this._kuFlowAuthorizationTokenProvider != null) {

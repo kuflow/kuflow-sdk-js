@@ -24,7 +24,13 @@ import { type AccessToken, type TokenCredential } from '@azure/core-auth'
 import { type CommonClientOptions } from '@azure/core-client'
 
 import { KuFlowRestClientGenerated } from './generated'
-import { AuthenticationOperations, PrincipalOperations, ProcessOperations, TaskOperations } from './operations'
+import {
+  AuthenticationOperations,
+  PrincipalOperations,
+  ProcessOperations,
+  TaskOperations,
+  WorkerOperations,
+} from './operations'
 
 export interface KuFlowRestClientCredential {
   /** Client ID. */
@@ -63,6 +69,11 @@ export class KuFlowRestClient {
   public readonly taskOperations: TaskOperations
 
   /**
+   * Worker API operations.
+   */
+  public readonly workerOperations: WorkerOperations
+
+  /**
    * Initializes a new instance of the KuFlowClient class.
    * @param credentials Subscription credentials which uniquely identify client subscription.
    * @param options The parameter options
@@ -80,6 +91,8 @@ export class KuFlowRestClient {
     this.principalOperations = new PrincipalOperations(clientGenerated)
     this.processOperations = new ProcessOperations(clientGenerated)
     this.taskOperations = new TaskOperations(clientGenerated)
+    this.taskOperations = new TaskOperations(clientGenerated)
+    this.workerOperations = new WorkerOperations(clientGenerated)
   }
 
   private normalizeOptions(options: KuFlowRestClientOptionals | undefined): KuFlowRestClientOptionals | undefined {

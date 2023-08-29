@@ -37,7 +37,7 @@ export const AbstractAudited: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['PROCESS', 'PROCESS_PAGE_ITEM', 'TASK', 'TASK_PAGE_ITEM', 'AUTHENTICATION'],
+          allowedValues: ['AUTHENTICATION', 'PROCESS', 'PROCESS_PAGE_ITEM', 'TASK', 'TASK_PAGE_ITEM', 'WORKER'],
         },
       },
       createdBy: {
@@ -1187,6 +1187,99 @@ export const Task: coreClient.CompositeMapper = {
   },
 }
 
+export const Worker: coreClient.CompositeMapper = {
+  serializedName: 'WORKER',
+  type: {
+    name: 'Composite',
+    className: 'Worker',
+    uberParent: 'AbstractAudited',
+    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      identity: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'identity',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      taskQueue: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'taskQueue',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      workflowTypes: {
+        serializedName: 'workflowTypes',
+        type: {
+          name: 'Sequence',
+          element: {
+            constraints: {
+              MaxLength: 255,
+              MinLength: 1,
+            },
+            type: {
+              name: 'String',
+            },
+          },
+        },
+      },
+      activityTypes: {
+        serializedName: 'activityTypes',
+        type: {
+          name: 'Sequence',
+          element: {
+            constraints: {
+              MaxLength: 255,
+              MinLength: 1,
+            },
+            type: {
+              name: 'String',
+            },
+          },
+        },
+      },
+      hostname: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'hostname',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      ip: {
+        constraints: {
+          MaxLength: 40,
+          MinLength: 7,
+        },
+        serializedName: 'ip',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const PrincipalPage: coreClient.CompositeMapper = {
   serializedName: 'PRINCIPAL_PAGE',
   type: {
@@ -1452,6 +1545,7 @@ export const discriminators = {
   'AbstractAudited.PROCESS': Process,
   'AbstractAudited.TASK_PAGE_ITEM': TaskPageItem,
   'AbstractAudited.TASK': Task,
+  'AbstractAudited.WORKER': Worker,
   'Page.PRINCIPAL_PAGE': PrincipalPage,
   'Page.PROCESS_PAGE': ProcessPage,
   'Page.TASK_PAGE': TaskPage,

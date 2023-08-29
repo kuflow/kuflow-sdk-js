@@ -32,9 +32,9 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@azure/core-auth": "1.4.0",
+    "@azure/core-auth": "1.5.0",
     "@azure/core-client": "1.7.3",
-    "@azure/core-rest-pipeline": "1.11.0"
+    "@azure/core-rest-pipeline": "1.12.0"
   },
   "engines": {
     "node": ">=16.0.0"

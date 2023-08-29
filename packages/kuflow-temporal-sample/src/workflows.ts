@@ -50,7 +50,7 @@ const kuFlowAsyncActivities = proxyActivities<ReturnType<typeof createKuFlowAsyn
 const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
 
 /** A workflow that simply calls an activity */
-export async function MyWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
+export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
   logger.info('Start', {})
 
   await kuFlowAsyncActivities.KuFlow_Engine_createTaskAndWaitFinished({
