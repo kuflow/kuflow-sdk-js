@@ -25,8 +25,6 @@ import { type KuFlowRestClient, type Worker } from '@kuflow/kuflow-rest'
 import { Runtime } from '@temporalio/worker'
 import os from 'os'
 
-const NOOP = (): void => {}
-
 export interface KuFlowWorkerInformationNotifierBackoff {
   /**
    * Milliseconds between errors
@@ -72,6 +70,8 @@ export class KuFlowWorkerInformationNotifier {
 
   private consecutiveFailures = 0
 
+  private scheduleCreateOrUpdateWorkerDelayInMs?: number
+
   private scheduleCreateOrUpdateWorkerTimeout?: NodeJS.Timeout
 
   public static instance(options: KuFlowWorkerInformationNotifierOptions): KuFlowWorkerInformationNotifier {
@@ -100,9 +100,9 @@ export class KuFlowWorkerInformationNotifier {
     }
 
     await this.createOrUpdateWorker()
+    this.scheduleCreateOrUpdateWorker()
 
     this.started = true
-    this.scheduleCreateOrUpdateWorker()
   }
 
   public async close(): Promise<void> {
@@ -159,6 +159,29 @@ export class KuFlowWorkerInformationNotifier {
     }
   }
 
+  private scheduleCreateOrUpdateWorker(): void {
+    let delayInMs = this.delayWindowInMs
+    if (this.consecutiveFailures > 0) {
+      delayInMs = Math.round(
+        Math.min(delayInMs, this.backoff.sleep * Math.pow(this.backoff.exponentialRate, this.consecutiveFailures)),
+      )
+    }
+
+    if (this.scheduleCreateOrUpdateWorkerDelayInMs === delayInMs) {
+      return
+    }
+
+    this.scheduleCreateOrUpdateWorkerDelayInMs = delayInMs
+    this.scheduleCreateOrUpdateWorkerTimeout != null && clearTimeout(this.scheduleCreateOrUpdateWorkerTimeout)
+    this.scheduleCreateOrUpdateWorkerTimeout = setTimeout(() => {
+      this.createOrUpdateWorker().then(() => {
+        this.scheduleCreateOrUpdateWorker()
+      }, () => {
+        this.scheduleCreateOrUpdateWorker()
+      })
+    }, delayInMs)
+  }
+
   private getIPAddress(): string {
     const interfaces = os.networkInterfaces()
     for (const devName in interfaces) {
@@ -172,18 +195,5 @@ export class KuFlowWorkerInformationNotifier {
     }
 
     return '0.0.0.0'
-  }
-
-  private scheduleCreateOrUpdateWorker(): void {
-    let timeout = this.delayWindowInMs
-    if (this.consecutiveFailures > 0) {
-      timeout = Math.round(
-        Math.min(timeout, this.backoff.sleep * Math.pow(this.backoff.exponentialRate, this.consecutiveFailures)),
-      )
-    }
-
-    this.scheduleCreateOrUpdateWorkerTimeout = setTimeout(() => {
-      this.createOrUpdateWorker().then(NOOP).catch(NOOP)
-    }, timeout)
   }
 }
