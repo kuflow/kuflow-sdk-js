@@ -164,12 +164,15 @@ export class KuFlowWorkerInformationNotifier {
 
     this.scheduleCreateOrUpdateWorkerTimeout != null && clearTimeout(this.scheduleCreateOrUpdateWorkerTimeout)
     this.scheduleCreateOrUpdateWorkerTimeout = setTimeout(() => {
-      this.createOrUpdateWorker().then(() => {
-        this.scheduleCreateOrUpdateWorker()
-      }, () => {
-        this.scheduleCreateOrUpdateWorker()
-      })
-    }, delayInSeconds *  1_000)
+      this.createOrUpdateWorker().then(
+        () => {
+          this.scheduleCreateOrUpdateWorker()
+        },
+        () => {
+          this.scheduleCreateOrUpdateWorker()
+        },
+      )
+    }, delayInSeconds * 1_000)
   }
 
   private getIPAddress(): string {
