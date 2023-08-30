@@ -35,6 +35,7 @@ import {
   TaskDeleteElementValueDocumentCommand as TaskDeleteElementValueDocumentCommandMapper,
   TaskSaveElementCommand as TaskSaveElementCommandMapper,
   TaskSaveJsonFormsValueDataCommand as TaskSaveJsonFormsValueDataCommandMapper,
+  Worker as WorkerMapper,
 } from '../models/mappers'
 
 export const contentType: OperationParameter = {
@@ -430,4 +431,9 @@ export const documentUri: OperationQueryParameter = {
 export const log: OperationParameter = {
   parameterPath: 'log',
   mapper: LogMapper,
+}
+
+export const worker: OperationParameter = {
+  parameterPath: 'worker',
+  mapper: WorkerMapper,
 }

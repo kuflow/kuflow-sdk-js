@@ -29,12 +29,14 @@ import {
   PrincipalOperationsImpl,
   ProcessOperationsImpl,
   TaskOperationsImpl,
+  WorkerOperationsImpl,
 } from './operations'
 import {
   type AuthenticationOperations,
   type PrincipalOperations,
   type ProcessOperations,
   type TaskOperations,
+  type WorkerOperations,
 } from './operationsInterfaces'
 
 /** @internal */
@@ -87,10 +89,12 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     this.principalOperations = new PrincipalOperationsImpl(this)
     this.processOperations = new ProcessOperationsImpl(this)
     this.taskOperations = new TaskOperationsImpl(this)
+    this.workerOperations = new WorkerOperationsImpl(this)
   }
 
   authenticationOperations: AuthenticationOperations
   principalOperations: PrincipalOperations
   processOperations: ProcessOperations
   taskOperations: TaskOperations
+  workerOperations: WorkerOperations
 }

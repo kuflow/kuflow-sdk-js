@@ -22,7 +22,7 @@
  */
 import type * as coreClient from '@azure/core-client'
 
-export type AbstractAuditedUnion = Authentication | ProcessPageItem | Process | TaskPageItem | Task
+export type AbstractAuditedUnion = Authentication | ProcessPageItem | Process | TaskPageItem | Task | Worker
 export type PageUnion = PrincipalPage | ProcessPage | TaskPage
 export type ProcessElementValueUnion = ProcessElementValueString | ProcessElementValueNumber
 export type TaskElementValueUnion =
@@ -35,7 +35,7 @@ export type WebhookEventUnion = WebhookEventProcessStateChanged | WebhookEventTa
 
 export interface AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'AUTHENTICATION' | 'PROCESS_PAGE_ITEM' | 'PROCESS' | 'TASK_PAGE_ITEM' | 'TASK'
+  objectType: 'AUTHENTICATION' | 'PROCESS_PAGE_ITEM' | 'PROCESS' | 'TASK_PAGE_ITEM' | 'TASK' | 'WORKER'
   /** Who create this model. */
   createdBy?: string
   /** When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
@@ -326,6 +326,18 @@ export interface Task extends AbstractAudited {
   owner?: Principal
 }
 
+export interface Worker extends AbstractAudited {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  objectType: 'WORKER'
+  id?: string
+  identity: string
+  taskQueue: string
+  workflowTypes?: string[]
+  activityTypes?: string[]
+  hostname: string
+  ip: string
+}
+
 export interface PrincipalPage extends Page {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'PRINCIPAL_PAGE'
@@ -402,7 +414,13 @@ export interface WebhookEventTaskStateChanged extends WebhookEvent {
 }
 
 /** Defines values for AuditedObjectType. */
-export type AuditedObjectType = 'PROCESS' | 'PROCESS_PAGE_ITEM' | 'TASK' | 'TASK_PAGE_ITEM' | 'AUTHENTICATION'
+export type AuditedObjectType =
+  | 'AUTHENTICATION'
+  | 'PROCESS'
+  | 'PROCESS_PAGE_ITEM'
+  | 'TASK'
+  | 'TASK_PAGE_ITEM'
+  | 'WORKER'
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
 /** Defines values for PagedObjectType. */
@@ -692,6 +710,12 @@ export interface TaskActionsTaskAppendLogOptionalParams extends coreClient.Opera
 
 /** Contains response data for the actionsTaskAppendLog operation. */
 export type TaskActionsTaskAppendLogResponse = Task
+
+/** Optional parameters. */
+export interface WorkerCreateWorkerOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the createWorker operation. */
+export type WorkerCreateWorkerResponse = Worker
 
 /** Optional parameters. */
 export interface KuFlowRestClientGeneratedOptionalParams extends coreClient.ServiceClientOptions {

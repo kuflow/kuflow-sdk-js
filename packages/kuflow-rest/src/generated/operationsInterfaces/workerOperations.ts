@@ -20,8 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './authenticationOperations'
-export * from './principalOperations'
-export * from './processOperations'
-export * from './taskOperations'
-export * from './workerOperations'
+import { type Worker, type WorkerCreateWorkerOptionalParams, type WorkerCreateWorkerResponse } from '../models'
+
+/** Interface representing a WorkerOperations. */
+export interface WorkerOperations {
+  /**
+   * Register a worker in KuFlow, this allows the platform to have a catalogue of all registered workers.
+   *
+   * If already exist a worker for the same identity, the worker will be updated.
+   *
+   * @param worker Worker to create or update
+   * @param options The options parameters.
+   */
+  createWorker: (worker: Worker, options?: WorkerCreateWorkerOptionalParams) => Promise<WorkerCreateWorkerResponse>
+}

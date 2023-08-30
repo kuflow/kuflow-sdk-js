@@ -28,6 +28,7 @@ function fixWrongObjectTypeValuesInModels() {
   fileAsStr = fileAsStr.replaceAll(/"Authentication"/g, '"AUTHENTICATION"')
   fileAsStr = fileAsStr.replaceAll(/"Process"/g, '"PROCESS"')
   fileAsStr = fileAsStr.replaceAll(/"Task"/g, '"TASK"')
+  fileAsStr = fileAsStr.replaceAll(/"Worker"/g, '"WORKER"')
 
   fs.writeFileSync(file, fileAsStr, 'utf8')
 }
@@ -38,9 +39,11 @@ function fixWrongObjectTypeValuesInMappers() {
   fileAsStr = fileAsStr.replace(/"Authentication"/, '"AUTHENTICATION"')
   fileAsStr = fileAsStr.replace(/serializedName: "Authentication"/, 'serializedName: "AUTHENTICATION"')
   fileAsStr = fileAsStr.replace(/serializedName: "Process"/, 'serializedName: "PROCESS"')
+  fileAsStr = fileAsStr.replace(/serializedName: "Worker"/, 'serializedName: "WORKER"')
   fileAsStr = fileAsStr.replace(/"AbstractAudited.Authentication"/, '"AbstractAudited.AUTHENTICATION"')
   fileAsStr = fileAsStr.replace(/"AbstractAudited.Process"/, '"AbstractAudited.PROCESS"')
   fileAsStr = fileAsStr.replace(/"AbstractAudited.Task"/, '"AbstractAudited.TASK"')
+  fileAsStr = fileAsStr.replace(/"AbstractAudited.Worker"/, '"AbstractAudited.WORKER"')
 
   fs.writeFileSync(file, fileAsStr, 'utf8')
 }
