@@ -27,12 +27,12 @@ import os from 'os'
 
 export interface KuFlowWorkerInformationNotifierBackoff {
   /**
-   * Milliseconds between errors
+   * Seconds between errors, default 1 second
    */
   sleep?: number
 
   /**
-   * Exponential rate applied if the error persists
+   * Exponential rate applied if the error persists, default 2.5
    */
   exponentialRate?: number
 }
@@ -66,11 +66,9 @@ export class KuFlowWorkerInformationNotifier {
 
   private started = false
 
-  private delayWindowInMs = 1_000 * 60 * 5 // 5 min
+  private delayWindowInSeconds = 5 * 60 // 5 min
 
   private consecutiveFailures = 0
-
-  private scheduleCreateOrUpdateWorkerDelayInMs?: number
 
   private scheduleCreateOrUpdateWorkerTimeout?: NodeJS.Timeout
 
@@ -89,7 +87,7 @@ export class KuFlowWorkerInformationNotifier {
     this.workerInformation = workerInformation
 
     this.backoff = {
-      sleep: backoff?.sleep ?? 1_000,
+      sleep: backoff?.sleep ?? 1,
       exponentialRate: backoff?.exponentialRate ?? 2.5,
     }
   }
@@ -145,10 +143,7 @@ export class KuFlowWorkerInformationNotifier {
       const delayWindowHeader = rawResponse?.headers.get(HEADER_X_KF_DELAY_WINDOW)
 
       if (delayWindowHeader != null) {
-        const delayWindowInSeconds = parseInt(delayWindowHeader, 10)
-        if (delayWindowInSeconds != null) {
-          this.delayWindowInMs = delayWindowInSeconds * 1_000
-        }
+        this.delayWindowInSeconds = parseInt(delayWindowHeader, 10)
       }
     } catch (error) {
       Runtime.instance().logger.error(
@@ -160,18 +155,13 @@ export class KuFlowWorkerInformationNotifier {
   }
 
   private scheduleCreateOrUpdateWorker(): void {
-    let delayInMs = this.delayWindowInMs
+    let delayInSeconds = this.delayWindowInSeconds
     if (this.consecutiveFailures > 0) {
-      delayInMs = Math.round(
-        Math.min(delayInMs, this.backoff.sleep * Math.pow(this.backoff.exponentialRate, this.consecutiveFailures)),
+      delayInSeconds = Math.round(
+        Math.min(delayInSeconds, this.backoff.sleep * Math.pow(this.backoff.exponentialRate, this.consecutiveFailures)),
       )
     }
 
-    if (this.scheduleCreateOrUpdateWorkerDelayInMs === delayInMs) {
-      return
-    }
-
-    this.scheduleCreateOrUpdateWorkerDelayInMs = delayInMs
     this.scheduleCreateOrUpdateWorkerTimeout != null && clearTimeout(this.scheduleCreateOrUpdateWorkerTimeout)
     this.scheduleCreateOrUpdateWorkerTimeout = setTimeout(() => {
       this.createOrUpdateWorker().then(() => {
@@ -179,7 +169,7 @@ export class KuFlowWorkerInformationNotifier {
       }, () => {
         this.scheduleCreateOrUpdateWorker()
       })
-    }, delayInMs)
+    }, delayInSeconds *  1_000)
   }
 
   private getIPAddress(): string {
