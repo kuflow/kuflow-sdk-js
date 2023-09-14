@@ -22,6 +22,87 @@
  */
 import type * as coreClient from '@azure/core-client'
 
+export const AuthenticationEngineToken: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'AuthenticationEngineToken',
+    modelProperties: {
+      token: {
+        serializedName: 'token',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'String',
+        },
+      },
+      expiredAt: {
+        serializedName: 'expiredAt',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const AuthenticationEngineCertificate: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'AuthenticationEngineCertificate',
+    modelProperties: {
+      namespace: {
+        serializedName: 'namespace',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      tls: {
+        serializedName: 'tls',
+        type: {
+          name: 'Composite',
+          className: 'AuthenticationEngineCertificateTls',
+        },
+      },
+    },
+  },
+}
+
+export const AuthenticationEngineCertificateTls: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'AuthenticationEngineCertificateTls',
+    modelProperties: {
+      serverRootCaCertificate: {
+        serializedName: 'serverRootCaCertificate',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'String',
+        },
+      },
+      clientCertificate: {
+        serializedName: 'clientCertificate',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'String',
+        },
+      },
+      clientPrivateKey: {
+        serializedName: 'clientPrivateKey',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const AbstractAudited: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -879,11 +960,10 @@ export const Authentication: coreClient.CompositeMapper = {
         },
       },
       type: {
-        defaultValue: 'ENGINE',
-        isConstant: true,
         serializedName: 'type',
         type: {
-          name: 'String',
+          name: 'Enum',
+          allowedValues: ['ENGINE', 'ENGINE_TOKEN', 'ENGINE_CERTIFICATE'],
         },
       },
       token: {
@@ -898,6 +978,20 @@ export const Authentication: coreClient.CompositeMapper = {
         readOnly: true,
         type: {
           name: 'String',
+        },
+      },
+      engineToken: {
+        serializedName: 'engineToken',
+        type: {
+          name: 'Composite',
+          className: 'AuthenticationEngineToken',
+        },
+      },
+      engineCertificate: {
+        serializedName: 'engineCertificate',
+        type: {
+          name: 'Composite',
+          className: 'AuthenticationEngineCertificate',
         },
       },
     },

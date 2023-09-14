@@ -103,13 +103,15 @@ export class KuFlowAuthorizationTokenProvider {
       const authentication = await this.createAuthentication()
       this.consecutiveFailures = 0
 
-      if (authentication.token != null) {
+      const engineToken = authentication.engineToken
+
+      if (engineToken?.token != null) {
         await this.temporalConnection.setMetadata({
-          authorization: `Bearer ${authentication.token}`,
+          authorization: `Bearer ${engineToken?.token}`,
         })
       }
 
-      const expiredAtDate = authentication.expiredAt != null ? new Date(authentication.expiredAt) : undefined
+      const expiredAtDate = engineToken?.expiredAt != null ? new Date(engineToken.expiredAt) : undefined
       const refreshInMs = expiredAtDate == null ? 0 : (expiredAtDate.getTime() - new Date().getTime()) / 2
 
       this.scheduleAuthorizationTokenRenovation(refreshInMs)
@@ -134,7 +136,7 @@ export class KuFlowAuthorizationTokenProvider {
   private async createAuthentication(): Promise<Authentication> {
     const authenticationCreation: Authentication = {
       objectType: 'AUTHENTICATION',
-      type: 'ENGINE',
+      type: 'ENGINE_TOKEN',
     }
     return await this.kuFlowRestClient.authenticationOperations.createAuthentication(authenticationCreation)
   }

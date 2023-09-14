@@ -33,6 +33,33 @@ export type TaskElementValueUnion =
   | TaskElementValuePrincipal
 export type WebhookEventUnion = WebhookEventProcessStateChanged | WebhookEventTaskStateChanged
 
+export interface AuthenticationEngineToken {
+  /**
+   * Engine authentication token
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly token: string
+  /**
+   * date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly expiredAt: string
+}
+
+export interface AuthenticationEngineCertificate {
+  namespace: string
+  tls: AuthenticationEngineCertificateTls
+}
+
+export interface AuthenticationEngineCertificateTls {
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly serverRootCaCertificate: string
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly clientCertificate: string
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly clientPrivateKey: string
+}
+
 export interface AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'AUTHENTICATION' | 'PROCESS_PAGE_ITEM' | 'PROCESS' | 'TASK_PAGE_ITEM' | 'TASK' | 'WORKER'
@@ -242,14 +269,25 @@ export interface Authentication extends AbstractAudited {
   objectType: 'AUTHENTICATION'
   /** NOTE: This property will not be serialized. It can only be populated by the server. */
   readonly id?: string
-  type?: 'ENGINE'
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  type?: AuthenticationType
+  /**
+   * Engine authentication token.
+   * @deprecated use engineConfig.token
+   *
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
   readonly token?: string
   /**
-   * date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
+   * Engine authentication token expiration.
+   * @deprecated use engineConfig.expiredAt
+   *  - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
    * NOTE: This property will not be serialized. It can only be populated by the server.
    */
   readonly expiredAt?: string
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly engineToken?: AuthenticationEngineToken
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly engineCertificate?: AuthenticationEngineCertificate
 }
 
 export interface ProcessPageItem extends AbstractAudited {
@@ -413,6 +451,8 @@ export interface WebhookEventTaskStateChanged extends WebhookEvent {
   data: WebhookEventTaskStateChangedData
 }
 
+/** Defines values for AuthenticationType. */
+export type AuthenticationType = 'ENGINE' | 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE'
 /** Defines values for AuditedObjectType. */
 export type AuditedObjectType =
   | 'AUTHENTICATION'
