@@ -27,7 +27,7 @@ typescript: true
 title: KuFlow
 override-client-name: KuFlowRestClientGenerated
 
-input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/7454f62c5d7bfa4d458dfd935d3b4188c0068718/specs/api.kuflow.com/v2022-10-08/openapi.yaml
+input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/336b24183db579748802c9170286dece8d1a64fa/specs/api.kuflow.com/v2022-10-08/openapi.yaml
 output-folder: ../
 source-code-folder-path: ./src/generated
 

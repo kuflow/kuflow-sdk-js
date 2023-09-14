@@ -30,7 +30,6 @@ export const AuthenticationEngineToken: coreClient.CompositeMapper = {
       token: {
         serializedName: 'token',
         required: true,
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -38,7 +37,6 @@ export const AuthenticationEngineToken: coreClient.CompositeMapper = {
       expiredAt: {
         serializedName: 'expiredAt',
         required: true,
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -78,7 +76,6 @@ export const AuthenticationEngineCertificateTls: coreClient.CompositeMapper = {
       serverRootCaCertificate: {
         serializedName: 'serverRootCaCertificate',
         required: true,
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -86,7 +83,6 @@ export const AuthenticationEngineCertificateTls: coreClient.CompositeMapper = {
       clientCertificate: {
         serializedName: 'clientCertificate',
         required: true,
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -94,7 +90,6 @@ export const AuthenticationEngineCertificateTls: coreClient.CompositeMapper = {
       clientPrivateKey: {
         serializedName: 'clientPrivateKey',
         required: true,
-        readOnly: true,
         type: {
           name: 'String',
         },
@@ -954,7 +949,6 @@ export const Authentication: coreClient.CompositeMapper = {
       ...AbstractAudited.type.modelProperties,
       id: {
         serializedName: 'id',
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
@@ -968,14 +962,12 @@ export const Authentication: coreClient.CompositeMapper = {
       },
       token: {
         serializedName: 'token',
-        readOnly: true,
         type: {
           name: 'String',
         },
       },
       expiredAt: {
         serializedName: 'expiredAt',
-        readOnly: true,
         type: {
           name: 'String',
         },
