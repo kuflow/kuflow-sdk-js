@@ -598,7 +598,12 @@ export type TaskFindTasksResponse = TaskPage
 
 /** Optional parameters. */
 export interface TaskCreateTaskOptionalParams extends coreClient.OperationOptions {
-  /** When create a Kuflow Task backed with a Temporal.io servers, this value is required and must be set with the context task token of Temporal.io activity. */
+  /**
+   * [DEPRECATED] When create a KuFlow Task backed with a Temporal.io servers, this value is required and must be
+   * set with the context task token of Temporal.io activity. It is no longer necessary because it will be never
+   * used for the latest SDKs versions
+   *
+   */
   activityToken?: string
 }
 

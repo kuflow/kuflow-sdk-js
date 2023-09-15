@@ -89,7 +89,7 @@ import {
   validateSaveTaskJsonFormsValueData,
 } from './validations'
 
-export interface KuFlowSyncActivities {
+export interface KuFlowActivities {
   /**
    * Retrieve a Principal.
    * @param request must not be {@literal undefined}.
@@ -260,7 +260,7 @@ export interface KuFlowSyncActivities {
 /**
  * KuFlow activities to be used in Temporal.
  */
-export const createKuFlowSyncActivities = (kuFlowRestClient: KuFlowRestClient): KuFlowSyncActivities => {
+export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFlowActivities => {
   return {
     KuFlow_Engine_retrievePrincipal: catchAllErrors(KuFlow_Engine_retrievePrincipal),
     KuFlow_Engine_findProcesses: catchAllErrors(KuFlow_Engine_findProcesses),

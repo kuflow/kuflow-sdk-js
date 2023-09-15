@@ -21,9 +21,10 @@
  * THE SOFTWARE.
  */
 // Only import the activity types
+import { type Task } from '@kuflow/kuflow-rest'
 import {
-  type createKuFlowAsyncActivities,
-  type createKuFlowSyncActivities,
+  type createKuFlowActivities,
+  KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK,
   type SaveProcessElementRequest,
   type SaveTaskJsonFormsValueDataRequest,
   type WorkflowRequest,
@@ -35,32 +36,41 @@ import {
   SaveProcessElementRequestUtils,
   SaveTaskJsonFormsValueDataRequestUtils,
 } from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
-import { type LoggerSinks, proxyActivities, proxySinks, uuid4 } from '@temporalio/workflow'
+import {
+  condition,
+  defineSignal,
+  type LoggerSinks,
+  proxyActivities,
+  proxySinks,
+  setHandler,
+  uuid4,
+} from '@temporalio/workflow'
 
-const kuFlowSyncActivities = proxyActivities<ReturnType<typeof createKuFlowSyncActivities>>({
+const kuFlowActivities = proxyActivities<ReturnType<typeof createKuFlowActivities>>({
   startToCloseTimeout: '10 minutes',
-  scheduleToCloseTimeout: '356 days',
-})
-
-const kuFlowAsyncActivities = proxyActivities<ReturnType<typeof createKuFlowAsyncActivities>>({
-  startToCloseTimeout: '1 day',
   scheduleToCloseTimeout: '356 days',
 })
 
 const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
 
+export const kuFlowEngineCompletedTaskSignal = defineSignal<[string]>(KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK)
+
 /** A workflow that simply calls an activity */
 export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
+  const kuFlowCompletedTaskIds: string[] = []
+
+  setHandler(kuFlowEngineCompletedTaskSignal, (taskId: string) => {
+    kuFlowCompletedTaskIds.push(taskId)
+  })
+
   logger.info('Start', {})
 
-  await kuFlowAsyncActivities.KuFlow_Engine_createTaskAndWaitFinished({
-    task: {
-      objectType: 'TASK',
-      id: uuid4(),
-      processId: request.processId,
-      taskDefinition: {
-        code: 'TASK_0001',
-      },
+  await createTaskAndWaitCompleted({
+    objectType: 'TASK',
+    id: uuid4(),
+    processId: request.processId,
+    taskDefinition: {
+      code: 'TASK_0001',
     },
   })
 
@@ -70,16 +80,22 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
   }
   SaveProcessElementRequestUtils.addElementValueAsString(saveProcessElementRequest, 'value')
 
-  await kuFlowSyncActivities.KuFlow_Engine_saveProcessElement(saveProcessElementRequest)
+  await kuFlowActivities.KuFlow_Engine_saveProcessElement(saveProcessElementRequest)
 
   const saveTaskJsonFormsValueDataRequest: SaveTaskJsonFormsValueDataRequest = {
     taskId: '',
   }
   SaveTaskJsonFormsValueDataRequestUtils.updateJsonFormsProperty(saveTaskJsonFormsValueDataRequest, '.name', 'value')
-  await kuFlowSyncActivities.KuFlow_Engine_saveTaskJsonFormsValueData(saveTaskJsonFormsValueDataRequest)
+  await kuFlowActivities.KuFlow_Engine_saveTaskJsonFormsValueData(saveTaskJsonFormsValueDataRequest)
 
   logger.info('End', {})
+
   return {
     message: 'OK',
+  }
+
+  async function createTaskAndWaitCompleted(task: Task & { id: string }): Promise<void> {
+    await kuFlowActivities.KuFlow_Engine_createTask({ task })
+    await condition(() => kuFlowCompletedTaskIds.includes(task.id))
   }
 }
