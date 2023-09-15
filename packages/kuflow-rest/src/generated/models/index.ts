@@ -33,6 +33,24 @@ export type TaskElementValueUnion =
   | TaskElementValuePrincipal
 export type WebhookEventUnion = WebhookEventProcessStateChanged | WebhookEventTaskStateChanged
 
+export interface AuthenticationEngineToken {
+  /** Engine authentication token */
+  token: string
+  /** date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  expiredAt: string
+}
+
+export interface AuthenticationEngineCertificate {
+  namespace: string
+  tls: AuthenticationEngineCertificateTls
+}
+
+export interface AuthenticationEngineCertificateTls {
+  serverRootCaCertificate: string
+  clientCertificate: string
+  clientPrivateKey: string
+}
+
 export interface AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'AUTHENTICATION' | 'PROCESS_PAGE_ITEM' | 'PROCESS' | 'TASK_PAGE_ITEM' | 'TASK' | 'WORKER'
@@ -240,16 +258,24 @@ export interface TaskElementValuePrincipalItem {
 export interface Authentication extends AbstractAudited {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   objectType: 'AUTHENTICATION'
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly id?: string
-  type?: 'ENGINE'
-  /** NOTE: This property will not be serialized. It can only be populated by the server. */
-  readonly token?: string
+  id?: string
+  type?: AuthenticationType
   /**
-   * date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
-   * NOTE: This property will not be serialized. It can only be populated by the server.
+   * Engine authentication token.
+   *
+   * @deprecated use engineToken.token
+   *
    */
-  readonly expiredAt?: string
+  token?: string
+  /**
+   * Engine authentication token expiration.
+   *
+   * @deprecated use engineToken.expiredAt
+   *  - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
+   */
+  expiredAt?: string
+  engineToken?: AuthenticationEngineToken
+  engineCertificate?: AuthenticationEngineCertificate
 }
 
 export interface ProcessPageItem extends AbstractAudited {
@@ -413,6 +439,8 @@ export interface WebhookEventTaskStateChanged extends WebhookEvent {
   data: WebhookEventTaskStateChangedData
 }
 
+/** Defines values for AuthenticationType. */
+export type AuthenticationType = 'ENGINE' | 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE'
 /** Defines values for AuditedObjectType. */
 export type AuditedObjectType =
   | 'AUTHENTICATION'

@@ -20,8 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type KuFlowRestClient } from '@kuflow/kuflow-rest'
-import { NativeConnection, type NativeConnectionOptions, Worker, type WorkerOptions } from '@temporalio/worker'
+import { type Authentication, type KuFlowRestClient } from '@kuflow/kuflow-rest'
+import { NativeConnection, type NativeConnectionOptions, Runtime, Worker, type WorkerOptions } from '@temporalio/worker'
 
 import {
   KuFlowAuthorizationTokenProvider,
@@ -32,7 +32,7 @@ import {
   type KuFlowWorkerInformationNotifierBackoff,
 } from './kuflow-worker-information-notifier'
 
-interface KuflowTemporalConnectionParams {
+interface KuFlowTemporalConnectionParams {
   kuflow: {
     restClient: KuFlowRestClient
     authorizationTokenProviderBackoff?: KuFlowAuthorizationTokenProviderBackoff
@@ -47,7 +47,7 @@ interface KuflowTemporalConnectionParams {
 /**
  * Configure a temporal client and worker with KuFlow requirements.
  */
-export class KuflowTemporalConnection {
+export class KuFlowTemporalConnection {
   /**
    * Get the registered workflow types
    */
@@ -88,11 +88,11 @@ export class KuflowTemporalConnection {
 
   private _kuflowWorkerInformationNotifier?: KuFlowWorkerInformationNotifier
 
-  public static async instance(options: KuflowTemporalConnectionParams): Promise<KuflowTemporalConnection> {
-    return new KuflowTemporalConnection({ ...options })
+  public static async instance(options: KuFlowTemporalConnectionParams): Promise<KuFlowTemporalConnection> {
+    return new KuFlowTemporalConnection({ ...options })
   }
 
-  private constructor(private readonly options: KuflowTemporalConnectionParams) {}
+  private constructor(private readonly options: KuFlowTemporalConnectionParams) {}
 
   /**
    * Eagerly connect to the Temporal server and return a NativeConnection instance
@@ -101,6 +101,8 @@ export class KuflowTemporalConnection {
     if (this._nativeConnection != null) {
       return this._nativeConnection
     }
+
+    await this.applyDefaultConfiguration()
 
     const connectionOptions = this.options.temporalio.connection ?? {}
     if (connectionOptions.address == null) {
@@ -116,7 +118,39 @@ export class KuflowTemporalConnection {
       backoff: this.options.kuflow.authorizationTokenProviderBackoff,
     })
 
+    Runtime.instance().logger.info('Connection created')
+
     return this._nativeConnection
+  }
+
+  private async applyDefaultConfiguration(): Promise<void> {
+    const authenticationCreation: Authentication = {
+      objectType: 'AUTHENTICATION',
+      type: 'ENGINE_CERTIFICATE',
+    }
+    const kuFlowRestClient = this.options.kuflow.restClient
+    const authentication = await kuFlowRestClient.authenticationOperations.createAuthentication(authenticationCreation)
+    if (authentication.engineCertificate?.tls == null) {
+      return
+    }
+
+    if (this.options.temporalio.connection == null) {
+      this.options.temporalio.connection = {}
+    }
+
+    if (this.options.temporalio.connection.tls == null) {
+      this.options.temporalio.connection.tls = {
+        serverRootCACertificate: Buffer.from(authentication.engineCertificate.tls.serverRootCaCertificate),
+        clientCertPair: {
+          crt: Buffer.from(authentication.engineCertificate.tls.clientCertificate),
+          key: Buffer.from(authentication.engineCertificate.tls.clientPrivateKey),
+        },
+      }
+    }
+
+    if (this.options.temporalio.worker != null && this.options.temporalio.worker.namespace == null) {
+      this.options.temporalio.worker.namespace = authentication.engineCertificate.namespace
+    }
   }
 
   /**
@@ -138,6 +172,8 @@ export class KuflowTemporalConnection {
       ...this.options.temporalio.worker,
     })
 
+    Runtime.instance().logger.info('Worker initialized')
+
     return this._worker
   }
 
@@ -145,6 +181,8 @@ export class KuflowTemporalConnection {
    * Start the temporal worker configured.
    */
   public async runWorker(): Promise<void> {
+    Runtime.instance().logger.info('Run worker')
+
     const worker = await this.createWorker()
 
     if (worker.options.workflowsPath != null) {
@@ -169,6 +207,8 @@ export class KuflowTemporalConnection {
       },
     })
     await this._kuflowWorkerInformationNotifier.start()
+
+    Runtime.instance().logger.info('Running worker')
 
     await worker.run()
   }

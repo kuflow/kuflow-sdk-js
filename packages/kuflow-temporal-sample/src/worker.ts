@@ -22,9 +22,9 @@
  */
 import { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
-import { KuflowTemporalConnection } from '@kuflow/kuflow-temporal-core'
+import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
+import { Runtime } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
-import fs from 'fs'
 
 dotenv.config()
 
@@ -34,19 +34,11 @@ dotenv.config()
  */
 async function run({
   address,
-  namespace,
-  clientCertPath,
-  clientKeyPath,
-  serverNameOverride,
-  serverRootCACertificatePath,
   taskQueue,
   kuflowRestClientApiEndpoint,
   kuflowRestClientApiUsername,
   kuflowRestClientApiPassword,
 }: Env): Promise<void> {
-  const serverRootCACertificate =
-    serverRootCACertificatePath != null ? fs.readFileSync(serverRootCACertificatePath) : undefined
-
   const kuFlowRestClient = new KuFlowRestClient(
     {
       clientId: kuflowRestClientApiUsername,
@@ -58,25 +50,15 @@ async function run({
     },
   )
 
-  const kuflowTemporalConnection = await KuflowTemporalConnection.instance({
+  const kuFlowTemporalConnection = await KuFlowTemporalConnection.instance({
     kuflow: {
       restClient: kuFlowRestClient,
     },
     temporalio: {
       connection: {
         address,
-        tls: {
-          serverNameOverride,
-          serverRootCACertificate,
-          // See docs for other TLS options
-          clientCertPair: {
-            crt: fs.readFileSync(clientCertPath),
-            key: fs.readFileSync(clientKeyPath),
-          },
-        },
       },
       worker: {
-        namespace,
         taskQueue,
         workflowsPath: require.resolve('./workflows'),
         activities: {
@@ -87,11 +69,11 @@ async function run({
     },
   })
 
-  console.log('Worker connection successfully established')
+  Runtime.instance().logger.info('Worker connection successfully established')
 
-  await kuflowTemporalConnection.runWorker()
+  await kuFlowTemporalConnection.runWorker()
 
-  await kuflowTemporalConnection.close()
+  await kuFlowTemporalConnection.close()
 }
 
 run(getEnv()).catch(err => {
@@ -112,11 +94,6 @@ function requiredEnv(name: string): string {
 
 export interface Env {
   address: string
-  namespace: string
-  clientCertPath: string
-  clientKeyPath: string
-  serverNameOverride?: string
-  serverRootCACertificatePath?: string
   taskQueue: string
   kuflowRestClientApiEndpoint: string
   kuflowRestClientApiUsername: string
@@ -126,12 +103,7 @@ export interface Env {
 export function getEnv(): Env {
   return {
     address: requiredEnv('TEMPORAL_ADDRESS'),
-    namespace: requiredEnv('TEMPORAL_NAMESPACE'),
-    clientCertPath: requiredEnv('TEMPORAL_CLIENT_CERT_PATH'),
-    clientKeyPath: requiredEnv('TEMPORAL_CLIENT_KEY_PATH'),
-    serverNameOverride: process.env.TEMPORAL_SERVER_NAME_OVERRIDE,
-    serverRootCACertificatePath: process.env.TEMPORAL_SERVER_ROOT_CA_CERT_PATH,
-    taskQueue: process.env.TEMPORAL_TASK_QUEUE ?? 'hello-world-mtls',
+    taskQueue: requiredEnv('TEMPORAL_TASK_QUEUE'),
 
     kuflowRestClientApiEndpoint: requiredEnv('KUFLOW_REST_CLIENT_API_ENDPOINT'),
     kuflowRestClientApiUsername: requiredEnv('KUFLOW_REST_CLIENT_API_USERNAME'),
