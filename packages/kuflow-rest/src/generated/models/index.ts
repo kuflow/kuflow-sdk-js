@@ -262,13 +262,15 @@ export interface Authentication extends AbstractAudited {
   type?: AuthenticationType
   /**
    * Engine authentication token.
-   * @deprecated use engineConfig.token
+   *
+   * @deprecated use engineToken.token
    *
    */
   token?: string
   /**
    * Engine authentication token expiration.
-   * @deprecated use engineConfig.expiredAt
+   *
+   * @deprecated use engineToken.expiredAt
    *  - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
    */
   expiredAt?: string
