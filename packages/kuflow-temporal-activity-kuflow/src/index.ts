@@ -21,8 +21,9 @@
  * THE SOFTWARE.
  */
 
-export * from './kuflow-activities-async'
+export const KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK = 'KuFlow_Engine_Signal_Completed_Task'
+
+export * from './kuflow-activities'
 export * from './kuflow-activities-failure'
-export * from './kuflow-activities-sync'
 export * from './models'
 export * from './utils'

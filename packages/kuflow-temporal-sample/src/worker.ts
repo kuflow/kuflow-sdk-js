@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 import { KuFlowRestClient } from '@kuflow/kuflow-rest'
-import { createKuFlowAsyncActivities, createKuFlowSyncActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
+import { createKuFlowActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
 import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
 import { Runtime } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
@@ -62,8 +62,7 @@ async function run({
         taskQueue,
         workflowsPath: require.resolve('./workflows'),
         activities: {
-          ...createKuFlowSyncActivities(kuFlowRestClient),
-          ...createKuFlowAsyncActivities(kuFlowRestClient),
+          ...createKuFlowActivities(kuFlowRestClient),
         },
       },
     },
