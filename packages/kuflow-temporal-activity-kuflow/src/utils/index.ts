@@ -25,4 +25,5 @@ import * as SaveProcessElementRequestUtils from './save-process-element-request-
 import * as SaveTaskElementRequestUtils from './save-task-element-request-utils'
 import * as SaveTaskJsonFormsValueDataRequestUtils from './save-task-json-forms-value-data-request-utils'
 
+export const KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK = 'KuFlow_Engine_Signal_Completed_Task'
 export { SaveProcessElementRequestUtils, SaveTaskElementRequestUtils, SaveTaskJsonFormsValueDataRequestUtils }
