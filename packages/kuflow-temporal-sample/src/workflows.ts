@@ -24,7 +24,6 @@
 import { type Task } from '@kuflow/kuflow-rest'
 import {
   type createKuFlowActivities,
-  KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK,
   type SaveProcessElementRequest,
   type SaveTaskJsonFormsValueDataRequest,
   type WorkflowRequest,
@@ -33,6 +32,7 @@ import {
 // Import from here to avoid the following error:
 //   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
 import {
+  KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK,
   SaveProcessElementRequestUtils,
   SaveTaskJsonFormsValueDataRequestUtils,
 } from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
