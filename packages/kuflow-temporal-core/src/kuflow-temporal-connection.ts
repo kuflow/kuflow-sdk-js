@@ -187,7 +187,7 @@ export class KuFlowTemporalConnection {
 
     if (worker.options.workflowsPath != null) {
       const workflowsPath = worker.options.workflowsPath
-      const workflows = await import(workflowsPath)
+      const workflows = (await import(workflowsPath)) as Record<string, unknown>
       this._workflowTypes = Object.keys(workflows).filter(key => typeof workflows[key] === 'function')
     }
 

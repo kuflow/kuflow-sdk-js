@@ -3,8 +3,8 @@
   "version": "4.4.2",
   "compilerOptions": {
     "outDir": "./lib",
-    "rootDir": "./src"
+    "rootDir": "./src",
   },
   "references": [{ "path": "../kuflow-temporal-core" }],
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts"],
 }

@@ -25,7 +25,7 @@ export async function streamToString(stream: NodeJS.ReadableStream): Promise<str
   const chunks: Uint8Array[] = []
 
   return await new Promise((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(Buffer.from(chunk)))
+    stream.on('data', chunk => chunks.push(Buffer.from(chunk as ArrayBuffer)))
     stream.on('error', err => {
       reject(err)
     })

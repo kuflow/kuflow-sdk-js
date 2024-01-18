@@ -42,7 +42,7 @@ generate-sample: false
 hide-clients: true
 
 use-extension:
-  '@autorest/typescript': '6.0.9'
+  '@autorest/typescript': '6.0.14'
 
 modelerfour:
   seal-single-value-enum-by-default: false

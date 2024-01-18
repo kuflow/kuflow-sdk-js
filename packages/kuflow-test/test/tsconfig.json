@@ -2,9 +2,9 @@
   "extends": "../tsconfig.json",
   "references": [
     {
-      "path": "../tsconfig.json"
-    }
+      "path": "../tsconfig.json",
+    },
   ],
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

@@ -541,7 +541,10 @@ const actionsTaskDownloadElementValueDocumentOperationSpec: coreClient.Operation
   httpMethod: 'GET',
   responses: {
     200: {
-      bodyMapper: { type: { name: 'Stream' }, serializedName: 'parsedResponse' },
+      bodyMapper: {
+        type: { name: 'Stream' },
+        serializedName: 'parsedResponse',
+      },
     },
     default: {
       bodyMapper: Mappers.DefaultError,
@@ -557,7 +560,10 @@ const actionsTaskDownloadElementValueRenderedOperationSpec: coreClient.Operation
   httpMethod: 'GET',
   responses: {
     200: {
-      bodyMapper: { type: { name: 'Stream' }, serializedName: 'parsedResponse' },
+      bodyMapper: {
+        type: { name: 'Stream' },
+        serializedName: 'parsedResponse',
+      },
     },
     default: {
       bodyMapper: Mappers.DefaultError,
@@ -608,7 +614,10 @@ const actionsTaskDownloadJsonFormsValueDocumentOperationSpec: coreClient.Operati
   httpMethod: 'GET',
   responses: {
     200: {
-      bodyMapper: { type: { name: 'Stream' }, serializedName: 'parsedResponse' },
+      bodyMapper: {
+        type: { name: 'Stream' },
+        serializedName: 'parsedResponse',
+      },
     },
     default: {
       bodyMapper: Mappers.DefaultError,

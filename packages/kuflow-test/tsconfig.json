@@ -3,12 +3,12 @@
   "version": "4.4.2",
   "compilerOptions": {
     "outDir": "./lib",
-    "rootDir": "./test"
+    "rootDir": "./test",
   },
   "references": [
     { "path": "../kuflow-temporal-activity-kuflow" },
     { "path": "../kuflow-temporal-core" },
-    { "path": "../kuflow-rest" }
+    { "path": "../kuflow-rest" },
   ],
-  "include": ["./test/**/*.ts"]
+  "include": ["./test/**/*.ts"],
 }
