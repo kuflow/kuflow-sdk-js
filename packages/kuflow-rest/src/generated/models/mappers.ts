@@ -102,18 +102,20 @@ export const AbstractAudited: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
     className: 'AbstractAudited',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: {
-      serializedName: 'objectType',
-      clientName: 'objectType',
-    },
     modelProperties: {
       objectType: {
         serializedName: 'objectType',
-        required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['AUTHENTICATION', 'PROCESS', 'PROCESS_PAGE_ITEM', 'TASK', 'TASK_PAGE_ITEM', 'WORKER'],
+          allowedValues: [
+            'AUTHENTICATION',
+            'TENANT_USER',
+            'PROCESS',
+            'PROCESS_PAGE_ITEM',
+            'TASK',
+            'TASK_PAGE_ITEM',
+            'WORKER',
+          ],
         },
       },
       createdBy: {
@@ -303,18 +305,12 @@ export const Page: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
     className: 'Page',
-    uberParent: 'Page',
-    polymorphicDiscriminator: {
-      serializedName: 'objectType',
-      clientName: 'objectType',
-    },
     modelProperties: {
       objectType: {
         serializedName: 'objectType',
-        required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['PRINCIPAL_PAGE', 'PROCESS_PAGE', 'TASK_PAGE'],
+          allowedValues: ['PRINCIPAL_PAGE', 'TENANT_USER_PAGE', 'PROCESS_PAGE', 'TASK_PAGE'],
         },
       },
       metadata: {
@@ -365,6 +361,30 @@ export const PageMetadata: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Number',
+        },
+      },
+    },
+  },
+}
+
+export const TenantUserMetadata: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TenantUserMetadata',
+    modelProperties: {
+      valid: {
+        serializedName: 'valid',
+        required: true,
+        type: {
+          name: 'Boolean',
+        },
+      },
+      value: {
+        serializedName: 'value',
+        required: true,
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
         },
       },
     },
@@ -939,12 +959,9 @@ export const TaskElementValuePrincipalItem: coreClient.CompositeMapper = {
 }
 
 export const Authentication: coreClient.CompositeMapper = {
-  serializedName: 'AUTHENTICATION',
   type: {
     name: 'Composite',
     className: 'Authentication',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -990,13 +1007,41 @@ export const Authentication: coreClient.CompositeMapper = {
   },
 }
 
+export const TenantUser: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TenantUser',
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Composite',
+          className: 'TenantUserMetadata',
+        },
+      },
+      principal: {
+        serializedName: 'principal',
+        type: {
+          name: 'Composite',
+          className: 'Principal',
+        },
+      },
+    },
+  },
+}
+
 export const ProcessPageItem: coreClient.CompositeMapper = {
-  serializedName: 'PROCESS_PAGE_ITEM',
   type: {
     name: 'Composite',
     className: 'ProcessPageItem',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1055,12 +1100,9 @@ export const ProcessPageItem: coreClient.CompositeMapper = {
 }
 
 export const Process: coreClient.CompositeMapper = {
-  serializedName: 'PROCESS',
   type: {
     name: 'Composite',
     className: 'Process',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1126,12 +1168,9 @@ export const Process: coreClient.CompositeMapper = {
 }
 
 export const TaskPageItem: coreClient.CompositeMapper = {
-  serializedName: 'TASK_PAGE_ITEM',
   type: {
     name: 'Composite',
     className: 'TaskPageItem',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1194,12 +1233,9 @@ export const TaskPageItem: coreClient.CompositeMapper = {
 }
 
 export const Task: coreClient.CompositeMapper = {
-  serializedName: 'Task',
   type: {
     name: 'Composite',
     className: 'Task',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1274,12 +1310,9 @@ export const Task: coreClient.CompositeMapper = {
 }
 
 export const Worker: coreClient.CompositeMapper = {
-  serializedName: 'WORKER',
   type: {
     name: 'Composite',
     className: 'Worker',
-    uberParent: 'AbstractAudited',
-    polymorphicDiscriminator: AbstractAudited.type.polymorphicDiscriminator,
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1367,12 +1400,9 @@ export const Worker: coreClient.CompositeMapper = {
 }
 
 export const PrincipalPage: coreClient.CompositeMapper = {
-  serializedName: 'PRINCIPAL_PAGE',
   type: {
     name: 'Composite',
     className: 'PrincipalPage',
-    uberParent: 'Page',
-    polymorphicDiscriminator: Page.type.polymorphicDiscriminator,
     modelProperties: {
       ...Page.type.modelProperties,
       content: {
@@ -1392,13 +1422,33 @@ export const PrincipalPage: coreClient.CompositeMapper = {
   },
 }
 
+export const TenantUserPage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TenantUserPage',
+    modelProperties: {
+      ...Page.type.modelProperties,
+      content: {
+        serializedName: 'content',
+        required: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'TenantUser',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
 export const ProcessPage: coreClient.CompositeMapper = {
-  serializedName: 'PROCESS_PAGE',
   type: {
     name: 'Composite',
     className: 'ProcessPage',
-    uberParent: 'Page',
-    polymorphicDiscriminator: Page.type.polymorphicDiscriminator,
     modelProperties: {
       ...Page.type.modelProperties,
       content: {
@@ -1419,12 +1469,9 @@ export const ProcessPage: coreClient.CompositeMapper = {
 }
 
 export const TaskPage: coreClient.CompositeMapper = {
-  serializedName: 'TASK_PAGE',
   type: {
     name: 'Composite',
     className: 'TaskPage',
-    uberParent: 'Page',
-    polymorphicDiscriminator: Page.type.polymorphicDiscriminator,
     modelProperties: {
       ...Page.type.modelProperties,
       content: {
@@ -1621,20 +1668,9 @@ export const WebhookEventTaskStateChanged: coreClient.CompositeMapper = {
 }
 
 export const discriminators = {
-  AbstractAudited,
-  Page,
   ProcessElementValue,
   TaskElementValue,
   WebhookEvent,
-  'AbstractAudited.AUTHENTICATION': Authentication,
-  'AbstractAudited.PROCESS_PAGE_ITEM': ProcessPageItem,
-  'AbstractAudited.PROCESS': Process,
-  'AbstractAudited.TASK_PAGE_ITEM': TaskPageItem,
-  'AbstractAudited.TASK': Task,
-  'AbstractAudited.WORKER': Worker,
-  'Page.PRINCIPAL_PAGE': PrincipalPage,
-  'Page.PROCESS_PAGE': ProcessPage,
-  'Page.TASK_PAGE': TaskPage,
   'ProcessElementValue.STRING': ProcessElementValueString,
   'ProcessElementValue.NUMBER': ProcessElementValueNumber,
   'TaskElementValue.STRING': TaskElementValueString,

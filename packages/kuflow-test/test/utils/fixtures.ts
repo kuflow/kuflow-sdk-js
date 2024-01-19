@@ -29,12 +29,12 @@ import {
   type Task,
   type TaskPage,
   type TaskPageItem,
+  type TenantUser,
 } from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
 
 export function mockPrincipalPage(): PrincipalPage {
   return {
-    objectType: 'PRINCIPAL_PAGE',
     metadata: {
       size: 25,
       page: 0,
@@ -57,6 +57,17 @@ export function mockPrincipalUser(): Principal {
   }
 }
 
+export function mockTenantUser(): TenantUser {
+  return {
+    id: randomUUID(),
+    metadata: {
+      valid: true,
+      value: {},
+    },
+    principal: mockPrincipalUser(),
+  }
+}
+
 export function mockPrincipalApplication(): Principal {
   return {
     id: randomUUID(),
@@ -70,7 +81,6 @@ export function mockPrincipalApplication(): Principal {
 
 export function mockProcessPage(): ProcessPage {
   return {
-    objectType: 'PROCESS_PAGE',
     metadata: {
       size: 25,
       page: 0,
@@ -83,7 +93,6 @@ export function mockProcessPage(): ProcessPage {
 
 export function mockProcess(): Process {
   return {
-    objectType: 'PROCESS',
     id: randomUUID(),
     subject: `Subject ${randomInt(1, 1_000)}`,
     state: 'RUNNING',
@@ -119,7 +128,6 @@ export function mockProcess(): Process {
 
 export function mockProcessPageItem(): ProcessPageItem {
   return {
-    objectType: 'PROCESS_PAGE_ITEM',
     id: randomUUID(),
     subject: `Subject ${randomInt(1, 1_000)}`,
     state: 'RUNNING',
@@ -155,7 +163,6 @@ export function mockProcessPageItem(): ProcessPageItem {
 
 export function mockTaskPage(): TaskPage {
   return {
-    objectType: 'TASK_PAGE',
     metadata: {
       size: 25,
       page: 0,
@@ -168,7 +175,6 @@ export function mockTaskPage(): TaskPage {
 
 export function mockTask(): Task {
   return {
-    objectType: 'TASK',
     id: randomUUID(),
     state: 'READY',
     taskDefinition: {
@@ -204,7 +210,6 @@ export function mockTask(): Task {
 
 export function mockTaskJsonForms(): Task {
   return {
-    objectType: 'TASK',
     id: randomUUID(),
     state: 'READY',
     taskDefinition: {
@@ -231,7 +236,6 @@ export function mockTaskJsonForms(): Task {
 
 export function mockTaskPageItem(): TaskPageItem {
   return {
-    objectType: 'TASK_PAGE_ITEM',
     id: randomUUID(),
     state: 'READY',
     taskDefinition: {

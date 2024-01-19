@@ -1088,7 +1088,6 @@ describe('Task Page Items Utils', () => {
 
 function prepareTaskPageItemElementValues(): TaskPageItem {
   return {
-    objectType: 'TASK_PAGE_ITEM',
     taskDefinition: {
       id: 'e68d8136-1166-455c-93d6-d106201c1856',
     },
@@ -1159,7 +1158,6 @@ function prepareTaskElementValuePrincipalItem(suffix: string): TaskElementValueP
 
 function prepareTaskPageItemJsonFormsValue(): TaskPageItem {
   return {
-    objectType: 'TASK_PAGE_ITEM',
     taskDefinition: {
       id: 'e68d8136-1166-455c-93d6-d106201c1856',
     },

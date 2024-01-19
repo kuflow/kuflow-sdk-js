@@ -20,9 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './authenticationOperations'
-export * from './principalOperations'
-export * from './processOperations'
-export * from './taskOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import {
+  type TenantUserFindTenantUsersOptionalParams,
+  type TenantUserFindTenantUsersResponse,
+  type TenantUserRetrieveTenantUserOptionalParams,
+  type TenantUserRetrieveTenantUserResponse,
+} from '../models'
+
+/** Interface representing a TenantUserOperations. */
+export interface TenantUserOperations {
+  /**
+   * List all the Tenant Users that have been created and the used credentials has access.
+   *
+   * Available sort query values: id, createdAt, lastModifiedAt
+   *
+   * @param options The options parameters.
+   */
+  findTenantUsers: (options?: TenantUserFindTenantUsersOptionalParams) => Promise<TenantUserFindTenantUsersResponse>
+  /**
+   * Returns the requested TenantUser when has access to do it.
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  retrieveTenantUser: (
+    id: string,
+    options?: TenantUserRetrieveTenantUserOptionalParams,
+  ) => Promise<TenantUserRetrieveTenantUserResponse>
+}

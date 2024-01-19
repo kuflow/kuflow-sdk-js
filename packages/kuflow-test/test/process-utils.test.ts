@@ -366,7 +366,6 @@ describe('Process Utils', () => {
 
 function prepareProcess(): Process {
   return {
-    objectType: 'PROCESS',
     processDefinition: {
       id: 'e68d8136-1166-455c-93d6-d106201c1856',
     },

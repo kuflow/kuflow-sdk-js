@@ -135,7 +135,6 @@ export class KuFlowAuthorizationTokenProvider {
 
   private async createAuthentication(): Promise<Authentication> {
     const authenticationCreation: Authentication = {
-      objectType: 'AUTHENTICATION',
       type: 'ENGINE_TOKEN',
     }
     return await this.kuFlowRestClient.authenticationOperations.createAuthentication(authenticationCreation)

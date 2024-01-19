@@ -22,8 +22,6 @@
  */
 import type * as coreClient from '@azure/core-client'
 
-export type AbstractAuditedUnion = Authentication | ProcessPageItem | Process | TaskPageItem | Task | Worker
-export type PageUnion = PrincipalPage | ProcessPage | TaskPage
 export type ProcessElementValueUnion = ProcessElementValueString | ProcessElementValueNumber
 export type TaskElementValueUnion =
   | TaskElementValueString
@@ -52,8 +50,8 @@ export interface AuthenticationEngineCertificateTls {
 }
 
 export interface AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'AUTHENTICATION' | 'PROCESS_PAGE_ITEM' | 'PROCESS' | 'TASK_PAGE_ITEM' | 'TASK' | 'WORKER'
+  /** Audited object Types. */
+  objectType?: AuditedObjectType
   /** Who create this model. */
   createdBy?: string
   /** When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
@@ -101,8 +99,8 @@ export interface PrincipalApplication {
 }
 
 export interface Page {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'PRINCIPAL_PAGE' | 'PROCESS_PAGE' | 'TASK_PAGE'
+  /** Paged Model types. */
+  objectType?: PagedObjectType
   metadata: PageMetadata
 }
 
@@ -111,6 +109,12 @@ export interface PageMetadata {
   page: number
   totalElements: number
   totalPages: number
+}
+
+export interface TenantUserMetadata {
+  valid: boolean
+  /** Dictionary of <any> */
+  value: Record<string, any>
 }
 
 export interface ProcessDefinitionSummary {
@@ -256,8 +260,6 @@ export interface TaskElementValuePrincipalItem {
 }
 
 export interface Authentication extends AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'AUTHENTICATION'
   id?: string
   type?: AuthenticationType
   /**
@@ -278,9 +280,13 @@ export interface Authentication extends AbstractAudited {
   engineCertificate?: AuthenticationEngineCertificate
 }
 
+export interface TenantUser extends AbstractAudited {
+  id: string
+  metadata?: TenantUserMetadata
+  principal: Principal
+}
+
 export interface ProcessPageItem extends AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'PROCESS_PAGE_ITEM'
   /** Process ID. */
   id?: string
   /** Process subject. */
@@ -294,8 +300,6 @@ export interface ProcessPageItem extends AbstractAudited {
 }
 
 export interface Process extends AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'PROCESS'
   /** Process ID. */
   id?: string
   /** Process subject. */
@@ -310,8 +314,6 @@ export interface Process extends AbstractAudited {
 }
 
 export interface TaskPageItem extends AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'TASK_PAGE_ITEM'
   id?: string
   /** Task state */
   state?: TaskState
@@ -329,8 +331,6 @@ export interface TaskPageItem extends AbstractAudited {
 }
 
 export interface Task extends AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'TASK'
   id?: string
   /** Task state */
   state?: TaskState
@@ -353,8 +353,6 @@ export interface Task extends AbstractAudited {
 }
 
 export interface Worker extends AbstractAudited {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'WORKER'
   id?: string
   identity: string
   taskQueue: string
@@ -365,20 +363,18 @@ export interface Worker extends AbstractAudited {
 }
 
 export interface PrincipalPage extends Page {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'PRINCIPAL_PAGE'
   content: Principal[]
 }
 
+export interface TenantUserPage extends Page {
+  content: TenantUser[]
+}
+
 export interface ProcessPage extends Page {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'PROCESS_PAGE'
   content: ProcessPageItem[]
 }
 
 export interface TaskPage extends Page {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  objectType: 'TASK_PAGE'
   content: TaskPageItem[]
 }
 
@@ -444,6 +440,7 @@ export type AuthenticationType = 'ENGINE' | 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE
 /** Defines values for AuditedObjectType. */
 export type AuditedObjectType =
   | 'AUTHENTICATION'
+  | 'TENANT_USER'
   | 'PROCESS'
   | 'PROCESS_PAGE_ITEM'
   | 'TASK'
@@ -452,7 +449,7 @@ export type AuditedObjectType =
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
 /** Defines values for PagedObjectType. */
-export type PagedObjectType = 'PRINCIPAL_PAGE' | 'PROCESS_PAGE' | 'TASK_PAGE'
+export type PagedObjectType = 'PRINCIPAL_PAGE' | 'TENANT_USER_PAGE' | 'PROCESS_PAGE' | 'TASK_PAGE'
 /** Defines values for ProcessState. */
 export type ProcessState = 'RUNNING' | 'COMPLETED' | 'CANCELLED'
 /** Defines values for ProcessElementValueType. */
@@ -501,6 +498,36 @@ export interface PrincipalRetrievePrincipalOptionalParams extends coreClient.Ope
 
 /** Contains response data for the retrievePrincipal operation. */
 export type PrincipalRetrievePrincipalResponse = Principal
+
+/** Optional parameters. */
+export interface TenantUserFindTenantUsersOptionalParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string[]
+  /** Filter tenant users that exists in one of the group ids. */
+  groupId?: string[]
+  /** Filter tenant users that have one of the emails. */
+  email?: string[]
+}
+
+/** Contains response data for the findTenantUsers operation. */
+export type TenantUserFindTenantUsersResponse = TenantUserPage
+
+/** Optional parameters. */
+export interface TenantUserRetrieveTenantUserOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the retrieveTenantUser operation. */
+export type TenantUserRetrieveTenantUserResponse = TenantUser
 
 /** Optional parameters. */
 export interface ProcessFindProcessesOptionalParams extends coreClient.OperationOptions {
