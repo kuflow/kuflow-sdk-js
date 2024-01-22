@@ -36,6 +36,7 @@ import {
   type RetrievePrincipalRequest,
   type RetrieveProcessRequest,
   type RetrieveTaskRequest,
+  type RetrieveTenantUserRequest,
   type SaveProcessElementRequest,
   type SaveTaskElementRequest,
   type SaveTaskJsonFormsValueDataRequest,
@@ -44,6 +45,12 @@ import {
 export function validateRetrievePrincipalRequest(request: RetrievePrincipalRequest): void {
   if (request.principalId == null) {
     throw ApplicationFailure.nonRetryable("'principalId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+}
+
+export function validateRetrieveTenantUserRequest(request: RetrieveTenantUserRequest): void {
+  if (request.tenantUserId == null) {
+    throw ApplicationFailure.nonRetryable("'tenantUserId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 

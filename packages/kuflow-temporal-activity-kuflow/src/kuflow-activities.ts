@@ -64,6 +64,8 @@ import {
   type RetrieveProcessResponse,
   type RetrieveTaskRequest,
   type RetrieveTaskResponse,
+  type RetrieveTenantUserRequest,
+  type RetrieveTenantUserResponse,
   type SaveProcessElementRequest,
   type SaveProcessElementResponse,
   type SaveTaskElementRequest,
@@ -84,6 +86,7 @@ import {
   validateRetrievePrincipalRequest,
   validateRetrieveProcessRequest,
   validateRetrieveTaskRequest,
+  validateRetrieveTenantUserRequest,
   validateSaveProcessElementRequest,
   validateSaveTaskElementRequest,
   validateSaveTaskJsonFormsValueData,
@@ -96,6 +99,13 @@ export interface KuFlowActivities {
    * @return principal
    */
   KuFlow_Engine_retrievePrincipal: (request: RetrievePrincipalRequest) => Promise<RetrievePrincipalResponse>
+
+  /**
+   * Retrieve a Tenant User.
+   * @param request must not be {@literal undefined}.
+   * @return tenant user
+   */
+  KuFlow_Engine_retrieveTenantUser: (request: RetrieveTenantUserRequest) => Promise<RetrieveTenantUserResponse>
 
   /**
    * Find all accessible Processes
@@ -263,6 +273,7 @@ export interface KuFlowActivities {
 export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFlowActivities => {
   return {
     KuFlow_Engine_retrievePrincipal: catchAllErrors(KuFlow_Engine_retrievePrincipal),
+    KuFlow_Engine_retrieveTenantUser: catchAllErrors(KuFlow_Engine_retrieveTenantUser),
     KuFlow_Engine_findProcesses: catchAllErrors(KuFlow_Engine_findProcesses),
     KuFlow_Engine_retrieveProcess: catchAllErrors(KuFlow_Engine_retrieveProcess),
     KuFlow_Engine_saveProcessElement: catchAllErrors(KuFlow_Engine_saveProcessElement),
@@ -290,6 +301,18 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
 
     return {
       principal,
+    }
+  }
+
+  async function KuFlow_Engine_retrieveTenantUser(
+    request: RetrieveTenantUserRequest,
+  ): Promise<RetrieveTenantUserResponse> {
+    validateRetrieveTenantUserRequest(request)
+
+    const tenantUser = await kuFlowRestClient.tenantUserOperations.retrieveTenantUser(request.tenantUserId)
+
+    return {
+      tenantUser,
     }
   }
 

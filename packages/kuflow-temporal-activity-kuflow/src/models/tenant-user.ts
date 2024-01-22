@@ -20,8 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './principal'
-export * from './process'
-export * from './task'
-export * from './tenant-user'
-export * from './workflow'
+import { type TenantUser } from '@kuflow/kuflow-rest'
+
+export interface RetrieveTenantUserRequest {
+  tenantUserId: string
+}
+
+export interface RetrieveTenantUserResponse {
+  tenantUser: TenantUser
+}
