@@ -50,8 +50,13 @@ describe('E2E Test', () => {
       },
     )
 
+    const authentication = await kuFlowRestClient.authenticationOperations.createAuthentication({
+      type: 'ENGINE_CERTIFICATE',
+    })
+
+    console.log(authentication)
+
     const process: Process = {
-      objectType: 'PROCESS',
       id: '4a82baf2-2df1-4ecf-a3c4-a046c071ecb0',
       processDefinition: {
         id: 'be35212b-deb8-4719-a10d-b8550219d156',
@@ -65,7 +70,6 @@ describe('E2E Test', () => {
     console.log(processCreated)
 
     const task: Task = {
-      objectType: 'TASK',
       id: 'a883aed1-815f-4b55-9bdd-6ddae1cc31df',
       processId: processCreated.id,
       taskDefinition: {

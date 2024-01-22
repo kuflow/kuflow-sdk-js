@@ -29,6 +29,7 @@ import {
   PrincipalOperationsImpl,
   ProcessOperationsImpl,
   TaskOperationsImpl,
+  TenantUserOperationsImpl,
   WorkerOperationsImpl,
 } from './operations'
 import {
@@ -36,6 +37,7 @@ import {
   type PrincipalOperations,
   type ProcessOperations,
   type TaskOperations,
+  type TenantUserOperations,
   type WorkerOperations,
 } from './operationsInterfaces'
 
@@ -87,6 +89,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     this.$host = options.$host ?? 'https://api.kuflow.com/v2022-10-08'
     this.authenticationOperations = new AuthenticationOperationsImpl(this)
     this.principalOperations = new PrincipalOperationsImpl(this)
+    this.tenantUserOperations = new TenantUserOperationsImpl(this)
     this.processOperations = new ProcessOperationsImpl(this)
     this.taskOperations = new TaskOperationsImpl(this)
     this.workerOperations = new WorkerOperationsImpl(this)
@@ -94,6 +97,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
 
   authenticationOperations: AuthenticationOperations
   principalOperations: PrincipalOperations
+  tenantUserOperations: TenantUserOperations
   processOperations: ProcessOperations
   taskOperations: TaskOperations
   workerOperations: WorkerOperations

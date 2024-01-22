@@ -116,7 +116,6 @@ export class KuFlowWorkerInformationNotifier {
 
   private async createOrUpdateWorker(): Promise<void> {
     const workerRequest: Worker = {
-      objectType: 'WORKER',
       identity: this.workerInformation.identity,
       ip: this.getIPAddress(),
       hostname: os.hostname(),

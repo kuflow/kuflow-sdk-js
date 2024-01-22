@@ -36,7 +36,6 @@ function fixWrongObjectTypeValuesInModels() {
 function fixWrongObjectTypeValuesInMappers() {
   let { file, fileAsStr } = readFile('models/mappers.ts')
 
-  fileAsStr = fileAsStr.replace(/"Authentication"/, '"AUTHENTICATION"')
   fileAsStr = fileAsStr.replace(/serializedName: "Authentication"/, 'serializedName: "AUTHENTICATION"')
   fileAsStr = fileAsStr.replace(/serializedName: "Process"/, 'serializedName: "PROCESS"')
   fileAsStr = fileAsStr.replace(/serializedName: "Worker"/, 'serializedName: "WORKER"')

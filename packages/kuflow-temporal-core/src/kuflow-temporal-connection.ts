@@ -125,7 +125,6 @@ export class KuFlowTemporalConnection {
 
   private async applyDefaultConfiguration(): Promise<void> {
     const authenticationCreation: Authentication = {
-      objectType: 'AUTHENTICATION',
       type: 'ENGINE_CERTIFICATE',
     }
     const kuFlowRestClient = this.options.kuflow.restClient

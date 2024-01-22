@@ -1075,7 +1075,6 @@ describe('Task Utils', () => {
 
 function prepareTaskElementValues(): Task {
   return {
-    objectType: 'TASK',
     taskDefinition: {
       id: 'e68d8136-1166-455c-93d6-d106201c1856',
     },
@@ -1146,7 +1145,6 @@ function prepareTaskElementValuePrincipalItem(suffix: string): TaskElementValueP
 
 function prepareTaskJsonFormsValue(): Task {
   return {
-    objectType: 'TASK',
     taskDefinition: {
       id: 'e68d8136-1166-455c-93d6-d106201c1856',
     },

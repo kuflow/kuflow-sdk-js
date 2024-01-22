@@ -32,6 +32,7 @@ import * as TaskPageItemUtils from './task-page-item-utils'
 import * as TaskSaveElementCommandUtils from './task-save-element-command-utils'
 import * as TaskSaveJsonFormsValueDataCommandUtils from './task-save-json-forms-value-data-command-utils'
 import * as TaskUtils from './task-utils'
+import * as TenantUserUtils from './tenant-user-utils'
 
 export {
   ElementValueUtils,
@@ -46,5 +47,6 @@ export {
   TaskSaveElementCommandUtils,
   TaskSaveJsonFormsValueDataCommandUtils,
   TaskUtils,
+  TenantUserUtils,
   type UpdateJsonFormsPropertyOptions,
 }

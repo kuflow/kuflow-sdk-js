@@ -66,7 +66,6 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
   logger.info('Start', {})
 
   await createTaskAndWaitCompleted({
-    objectType: 'TASK',
     id: uuid4(),
     processId: request.processId,
     taskDefinition: {

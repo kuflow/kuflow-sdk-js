@@ -162,6 +162,21 @@ export const id: OperationURLParameter = {
   },
 }
 
+export const email: OperationQueryParameter = {
+  parameterPath: ['options', 'email'],
+  mapper: {
+    serializedName: 'email',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const process: OperationParameter = {
   parameterPath: 'process',
   mapper: ProcessMapper,

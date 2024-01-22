@@ -372,7 +372,6 @@ describe('Process Page Item Utils', () => {
 
 function prepareProcessPageItem(): ProcessPageItem {
   return {
-    objectType: 'PROCESS_PAGE_ITEM',
     processDefinition: {
       id: 'e68d8136-1166-455c-93d6-d106201c1856',
     },

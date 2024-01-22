@@ -21,10 +21,16 @@
  * THE SOFTWARE.
  */
 
-import { type PrincipalType, type Task, type TaskPageItem, type TaskSaveJsonFormsValueDataCommand } from '../generated'
+import {
+  type PrincipalType,
+  type Task,
+  type TaskPageItem,
+  type TaskSaveJsonFormsValueDataCommand,
+  type TenantUser,
+} from '../generated'
 import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
 
-export type JsonFormsModels = Task | TaskPageItem | TaskSaveJsonFormsValueDataCommand
+export type JsonFormsModels = Task | TaskPageItem | TaskSaveJsonFormsValueDataCommand | TenantUser
 
 export type JsonFormsSimpleType = string | number | boolean | Date | JsonFormsPrincipal | JsonFormsFile
 
@@ -564,14 +570,6 @@ export function generateValueForJsonFormsFile(file: JsonFormsFile): string {
   return `kuflow-file:uri=${uri};type=${type};size=${size};name=${name};`
 }
 
-function isTask(value: unknown): value is Task {
-  return (value as Task).objectType === 'TASK'
-}
-
-function isTaskPageItem(value: unknown): value is TaskPageItem {
-  return (value as TaskPageItem).objectType === 'TASK_PAGE_ITEM'
-}
-
 function tryParseJsonFormsFile(value: unknown): JsonFormsFile | undefined {
   if (value == null) {
     return undefined
@@ -742,18 +740,25 @@ function getJsonFormsValueData(
 ): JsonFormsContainerType | undefined {
   let data: JsonFormsContainerType | undefined
 
-  if (isTask(model) || isTaskPageItem(model)) {
+  if ('jsonFormsValue' in model) {
     data = model.jsonFormsValue?.data
-  } else {
+  } else if ('metadata' in model) {
+    data = model.metadata?.value
+  } else if ('data' in model) {
     data = model.data
   }
 
   if (data == null && createMissingParents) {
     data = {}
-    if (isTask(model) || isTaskPageItem(model)) {
+    if ('jsonFormsValue' in model) {
       model.jsonFormsValue = model.jsonFormsValue ?? {}
       model.jsonFormsValue.data = data
-    } else {
+    } else if ('metadata' in model) {
+      model.metadata = model.metadata ?? { valid: false, value: {} }
+      model.metadata.value = data
+
+      data = model.metadata?.value
+    } else if ('data' in model) {
       model.data = data
     }
   }
