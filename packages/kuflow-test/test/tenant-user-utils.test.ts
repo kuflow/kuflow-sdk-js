@@ -400,5 +400,6 @@ function prepareTenantUser(): TenantUser {
         email: 'test@test.com',
       },
     },
+    tenantId: 'e3474f22-773f-4054-8277-77415e2d339e',
   }
 }

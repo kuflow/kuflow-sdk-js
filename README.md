@@ -27,7 +27,7 @@ This monorepo contains the following packages:
 
 ## Contributing
 
-We are happy to receive your help and comments, together we will dance a wonderful KuFlow. 
+We are happy to receive your help and comments, together we will dance a wonderful KuFlow.
 Please review our [contribution guide](https://raw.githubusercontent.com/kuflow/kuflow-engine-client-js/main/CONTRIBUTING.md).
 
 ## License
