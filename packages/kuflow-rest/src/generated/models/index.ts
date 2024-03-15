@@ -516,6 +516,8 @@ export type TaskState = 'READY' | 'CLAIMED' | 'COMPLETED' | 'CANCELLED'
 export type TaskElementValueType = 'STRING' | 'NUMBER' | 'OBJECT' | 'DOCUMENT' | 'PRINCIPAL'
 /** Defines values for LogLevel. */
 export type LogLevel = 'INFO' | 'WARN' | 'ERROR'
+/** Defines values for RobotFilterContext. */
+export type RobotFilterContext = 'READY' | 'DEFAULT'
 /** Defines values for RobotSourceType. */
 export type RobotSourceType = 'PACKAGE' | 'ROBOT_FRAMEWORK_PYTHON_WHEEL'
 /** Defines values for RobotAssetType. */
@@ -866,6 +868,8 @@ export interface RobotFindRobotsOptionalParams extends coreClient.OperationOptio
   sort?: string[]
   /** Filter by tenantId. */
   tenantId?: string[]
+  /** Filter by the specified context. */
+  filterContext?: RobotFilterContext
 }
 
 /** Contains response data for the findRobots operation. */
