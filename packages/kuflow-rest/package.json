@@ -1,6 +1,6 @@
 {
   "name": "@kuflow/kuflow-rest",
-  "version": "1.8.1-alpha.0",
+  "version": "1.9.0",
   "description": "REST SDK for KuFlow.",
   "keywords": [
     "node",
