@@ -48,12 +48,14 @@ export class PrincipalOperations {
    * @param options The options parameters.
    */
   async findPrincipals(options?: PrincipalFindPrincipalsOptionalExtParams): Promise<PrincipalFindPrincipalsResponse> {
-    const { sort, groupId, ...optionsRest } = options ?? {}
+    const { sort, type, groupId, tenantId, ...optionsRest } = options ?? {}
 
     return await this.principalOperations.findPrincipals({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
+      type,
       groupId: typeof groupId === 'string' ? [groupId] : groupId,
+      tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
     })
   }
 

@@ -28,17 +28,21 @@ import {
   AuthenticationOperations,
   PrincipalOperations,
   ProcessOperations,
+  RobotOperations,
   TaskOperations,
   TenantUserOperations,
   WorkerOperations,
 } from './operations'
 
-export interface KuFlowRestClientCredential {
+export interface KuFlowRestClientAuthenticationOptions {
   /** Client ID. */
-  clientId: string
+  clientId?: string
 
-  /** password client. */
-  clientSecret: string
+  /** Client Secret. */
+  clientSecret?: string
+
+  /** Token Credential. */
+  credential?: TokenCredential
 }
 
 export interface KuFlowRestClientOptionals extends CommonClientOptions {
@@ -80,14 +84,19 @@ export class KuFlowRestClient {
   public readonly workerOperations: WorkerOperations
 
   /**
+   * Robot API operations.
+   */
+  public readonly robotOperations: RobotOperations
+
+  /**
    * Initializes a new instance of the KuFlowClient class.
-   * @param credentials Subscription credentials which uniquely identify client subscription.
+   * @param authentication Credentials which uniquely identify the client.
    * @param options The parameter options
    */
-  constructor(credentials: KuFlowRestClientCredential, options?: KuFlowRestClientOptionals) {
+  constructor(authentication: KuFlowRestClientAuthenticationOptions, options?: KuFlowRestClientOptionals) {
     options = this.normalizeOptions(options)
 
-    const tokenCredential = kuflowTokenCredential(credentials)
+    const tokenCredential = kuflowTokenCredential(authentication)
     const clientGenerated = new KuFlowRestClientGenerated(tokenCredential, {
       ...options,
       credentialScopes: 'https://api.kuflow.com/v2022-10-08/.default',
@@ -99,6 +108,7 @@ export class KuFlowRestClient {
     this.processOperations = new ProcessOperations(clientGenerated)
     this.taskOperations = new TaskOperations(clientGenerated)
     this.workerOperations = new WorkerOperations(clientGenerated)
+    this.robotOperations = new RobotOperations(clientGenerated)
   }
 
   private normalizeOptions(options: KuFlowRestClientOptionals | undefined): KuFlowRestClientOptionals | undefined {
@@ -117,15 +127,23 @@ export class KuFlowRestClient {
   }
 }
 
-function kuflowTokenCredential(credentials: KuFlowRestClientCredential): TokenCredential {
-  const accessToken: AccessToken = {
-    token: Buffer.from(`${credentials.clientId}:${credentials.clientSecret}`).toString('base64'),
-    expiresOnTimestamp: Number.MAX_VALUE,
+function kuflowTokenCredential(authentication: KuFlowRestClientAuthenticationOptions): TokenCredential {
+  if (authentication.credential != null) {
+    return authentication.credential
   }
 
-  return {
-    async getToken(): Promise<AccessToken | null> {
-      return accessToken
-    },
+  if (authentication.clientId != null && authentication.clientSecret != null) {
+    const accessToken: AccessToken = {
+      token: Buffer.from(`${authentication.clientId}:${authentication.clientSecret}`).toString('base64'),
+      expiresOnTimestamp: Number.MAX_VALUE,
+    }
+
+    return {
+      async getToken(): Promise<AccessToken | null> {
+        return accessToken
+      },
+    }
   }
+
+  throw new Error('credential or clientId/clientSecret is required')
 }

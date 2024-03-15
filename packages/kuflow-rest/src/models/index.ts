@@ -79,6 +79,8 @@ export interface PrincipalFindPrincipalsOptionalExtParams extends coreClient.Ope
   type?: PrincipalType
   /** Filter principals that exists in one of group ids. */
   groupId?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
 }
 
 /** Optional parameters. */
@@ -96,9 +98,11 @@ export interface TenantUserFindTenantUsersOptionalExtParams extends coreClient.O
    *
    */
   sort?: string | string[]
-  /** Filter tenant users that exists in one of group ids. */
+  /** Filter by group ids. */
   groupId?: string | string[]
-  /** Filter tenant users that have one of the emails. */
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
+  /** Filter by email. */
   email?: string | string[]
 }
 
@@ -117,6 +121,8 @@ export interface ProcessFindProcessesOptionalExtParams extends coreClient.Operat
    *
    */
   sort?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
 }
 
 /** Optional parameters. */
@@ -134,10 +140,31 @@ export interface TaskFindTasksOptionalExtParams extends coreClient.OperationOpti
    *
    */
   sort?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
   /** Filter by an array of process ids. */
   processId?: string | string[]
   /** Filter by an array of task states. */
   state?: TaskState | TaskState[]
   /** Filter by an array of task definition codes. */
   taskDefinitionCode?: string | string[]
+}
+
+/** Optional parameters. */
+export interface RobotFindRobotExtParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
 }

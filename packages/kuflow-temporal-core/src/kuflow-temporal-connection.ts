@@ -20,29 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Authentication, type KuFlowRestClient } from '@kuflow/kuflow-rest'
-import { NativeConnection, type NativeConnectionOptions, Runtime, Worker, type WorkerOptions } from '@temporalio/worker'
+import { type Authentication } from '@kuflow/kuflow-rest'
+import { NativeConnection, Runtime, Worker } from '@temporalio/worker'
 
-import {
-  KuFlowAuthorizationTokenProvider,
-  type KuFlowAuthorizationTokenProviderBackoff,
-} from './kuflow-authorization-token-provider'
-import {
-  KuFlowWorkerInformationNotifier,
-  type KuFlowWorkerInformationNotifierBackoff,
-} from './kuflow-worker-information-notifier'
-
-interface KuFlowTemporalConnectionParams {
-  kuflow: {
-    restClient: KuFlowRestClient
-    authorizationTokenProviderBackoff?: KuFlowAuthorizationTokenProviderBackoff
-    workerInformationNotifierBackoff?: KuFlowWorkerInformationNotifierBackoff
-  }
-  temporalio: {
-    connection?: NativeConnectionOptions
-    worker?: WorkerOptions
-  }
-}
+import { KuFlowAuthorizationTokenProvider } from './kuflow-authorization-token-provider'
+import { type KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
+import { KuFlowWorkerInformationNotifier } from './kuflow-worker-information-notifier'
 
 /**
  * Configure a temporal client and worker with KuFlow requirements.
@@ -88,11 +71,11 @@ export class KuFlowTemporalConnection {
 
   private _kuflowWorkerInformationNotifier?: KuFlowWorkerInformationNotifier
 
-  public static async instance(options: KuFlowTemporalConnectionParams): Promise<KuFlowTemporalConnection> {
+  public static async instance(options: KuFlowTemporalConnectionOptions): Promise<KuFlowTemporalConnection> {
     return new KuFlowTemporalConnection({ ...options })
   }
 
-  private constructor(private readonly options: KuFlowTemporalConnectionParams) {}
+  private constructor(private readonly options: KuFlowTemporalConnectionOptions) {}
 
   /**
    * Eagerly connect to the Temporal server and return a NativeConnection instance
@@ -114,8 +97,7 @@ export class KuFlowTemporalConnection {
     // Create a KuFlowAuthorizationTokenProvider
     this._kuFlowAuthorizationTokenProvider = KuFlowAuthorizationTokenProvider.instance({
       temporalConnection: this._nativeConnection,
-      kuFlowRestClient: this.options.kuflow.restClient,
-      backoff: this.options.kuflow.authorizationTokenProviderBackoff,
+      options: this.options,
     })
 
     Runtime.instance().logger.info('Connection created')
@@ -126,6 +108,7 @@ export class KuFlowTemporalConnection {
   private async applyDefaultConfiguration(): Promise<void> {
     const authenticationCreation: Authentication = {
       type: 'ENGINE_CERTIFICATE',
+      tenantId: this.options.kuflow.tenantId,
     }
     const kuFlowRestClient = this.options.kuflow.restClient
     const authentication = await kuFlowRestClient.authenticationOperations.createAuthentication(authenticationCreation)
@@ -194,16 +177,15 @@ export class KuFlowTemporalConnection {
       this._activityTypes = Object.keys(worker.options.activities ?? {})
     }
 
-    // Create a _kuflowWorkerInformationNotifier
+    // Create a KuflowWorkerInformationNotifier
     this._kuflowWorkerInformationNotifier = KuFlowWorkerInformationNotifier.instance({
-      kuFlowRestClient: this.options.kuflow.restClient,
-      backoff: this.options.kuflow.workerInformationNotifierBackoff,
       workerInformation: {
         identity: worker.options.identity,
         taskQueue: worker.options.taskQueue,
         workflowTypes: this._workflowTypes,
         activityTypes: this._activityTypes,
       },
+      options: this.options,
     })
     await this._kuflowWorkerInformationNotifier.start()
 

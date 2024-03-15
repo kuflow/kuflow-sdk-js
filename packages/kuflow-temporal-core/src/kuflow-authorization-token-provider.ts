@@ -20,8 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Authentication, type KuFlowRestClient } from '@kuflow/kuflow-rest'
+import { type Authentication } from '@kuflow/kuflow-rest'
 import { type NativeConnection, Runtime } from '@temporalio/worker'
+
+import { type KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
 
 const NOOP = (): void => {}
 
@@ -42,42 +44,31 @@ export interface KuFlowAuthorizationTokenProviderBackoff {
   exponentialRate?: number
 }
 
-export interface KuFlowAuthorizationTokenProviderOptions {
+export interface KuFlowAuthorizationTokenProviderParams {
   temporalConnection: NativeConnection
 
-  kuFlowRestClient: KuFlowRestClient
-
-  backoff?: KuFlowAuthorizationTokenProviderBackoff
+  options: KuFlowTemporalConnectionOptions
 }
 
 export class KuFlowAuthorizationTokenProvider {
-  private readonly kuFlowRestClient: KuFlowRestClient
-
-  private readonly temporalConnection: NativeConnection
-
   private readonly backoff: Required<KuFlowAuthorizationTokenProviderBackoff>
 
   private consecutiveFailures = 0
 
   private refreshTimeout?: NodeJS.Timeout
 
-  public static instance(options: KuFlowAuthorizationTokenProviderOptions): KuFlowAuthorizationTokenProvider {
-    const { temporalConnection, kuFlowRestClient, backoff } = options
-
-    const kuFlowTemporalConnection = new KuFlowAuthorizationTokenProvider(temporalConnection, kuFlowRestClient, backoff)
+  public static instance(params: KuFlowAuthorizationTokenProviderParams): KuFlowAuthorizationTokenProvider {
+    const kuFlowTemporalConnection = new KuFlowAuthorizationTokenProvider(params.temporalConnection, params.options)
     kuFlowTemporalConnection.scheduleAuthorizationTokenRenovation()
 
     return kuFlowTemporalConnection
   }
 
   private constructor(
-    temporalConnection: NativeConnection,
-    kuFlowRestClient: KuFlowRestClient,
-    backoff?: KuFlowAuthorizationTokenProviderBackoff,
+    private readonly temporalConnection: NativeConnection,
+    private readonly options: KuFlowTemporalConnectionOptions,
   ) {
-    this.temporalConnection = temporalConnection
-
-    this.kuFlowRestClient = kuFlowRestClient
+    const backoff = options.kuflow.authorizationTokenProviderBackoff
 
     this.backoff = {
       sleep: backoff?.sleep ?? 1_000,
@@ -136,7 +127,9 @@ export class KuFlowAuthorizationTokenProvider {
   private async createAuthentication(): Promise<Authentication> {
     const authenticationCreation: Authentication = {
       type: 'ENGINE_TOKEN',
+      tenantId: this.options.kuflow.tenantId,
     }
-    return await this.kuFlowRestClient.authenticationOperations.createAuthentication(authenticationCreation)
+
+    return await this.options.kuflow.restClient.authenticationOperations.createAuthentication(authenticationCreation)
   }
 }

@@ -73,11 +73,12 @@ export class ProcessOperations {
    * @param options The options parameters.
    */
   async findProcesses(options?: ProcessFindProcessesOptionalExtParams): Promise<ProcessFindProcessesResponse> {
-    const { sort, ...optionsRest } = options ?? {}
+    const { sort, tenantId, ...optionsRest } = options ?? {}
 
     return await this.processOperations.findProcesses({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
+      tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
     })
   }
 

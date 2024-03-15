@@ -20,6 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './kuflow-authorization-token-provider'
-export * from './kuflow-temporal-connection'
-export * from './kuflow-temporal-connection-options'
+import type { KuFlowRestClient } from '@kuflow/kuflow-rest'
+import type { NativeConnectionOptions, WorkerOptions } from '@temporalio/worker'
+
+import type { KuFlowAuthorizationTokenProviderBackoff } from './kuflow-authorization-token-provider'
+import type { KuFlowWorkerInformationNotifierBackoff } from './kuflow-worker-information-notifier'
+
+export interface KuFlowTemporalConnectionOptions {
+  kuflow: {
+    restClient: KuFlowRestClient
+
+    authorizationTokenProviderBackoff?: KuFlowAuthorizationTokenProviderBackoff
+
+    workerInformationNotifierBackoff?: KuFlowWorkerInformationNotifierBackoff
+
+    /** Installation Id. */
+    installationId?: string
+
+    /** Robot Ids that this worker implements. */
+    robotIds?: string[]
+
+    /** Tenant ID. */
+    tenantId?: string
+  }
+  temporalio: {
+    connection?: NativeConnectionOptions
+    worker?: WorkerOptions
+  }
+}

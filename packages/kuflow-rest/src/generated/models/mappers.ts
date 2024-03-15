@@ -115,6 +115,7 @@ export const AbstractAudited: coreClient.CompositeMapper = {
             'TASK',
             'TASK_PAGE_ITEM',
             'WORKER',
+            'ROBOT',
           ],
         },
       },
@@ -310,7 +311,7 @@ export const Page: coreClient.CompositeMapper = {
         serializedName: 'objectType',
         type: {
           name: 'Enum',
-          allowedValues: ['PRINCIPAL_PAGE', 'TENANT_USER_PAGE', 'PROCESS_PAGE', 'TASK_PAGE'],
+          allowedValues: ['PRINCIPAL_PAGE', 'TENANT_USER_PAGE', 'PROCESS_PAGE', 'TASK_PAGE', 'ROBOT_PAGE'],
         },
       },
       metadata: {
@@ -785,6 +786,50 @@ export const TaskSaveJsonFormsValueDocumentResponseCommand: coreClient.Composite
   },
 }
 
+export const RobotSourceFile: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'RobotSourceFile',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      name: {
+        serializedName: 'name',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      contentType: {
+        serializedName: 'contentType',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      contentLength: {
+        serializedName: 'contentLength',
+        required: true,
+        type: {
+          name: 'Number',
+        },
+      },
+      contentHash: {
+        serializedName: 'contentHash',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const WebhookEventProcessStateChangedData: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -977,6 +1022,12 @@ export const Authentication: coreClient.CompositeMapper = {
           allowedValues: ['ENGINE', 'ENGINE_TOKEN', 'ENGINE_CERTIFICATE'],
         },
       },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
       token: {
         serializedName: 'token',
         type: {
@@ -1032,6 +1083,14 @@ export const TenantUser: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'Principal',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -1093,6 +1152,12 @@ export const ProcessPageItem: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'Principal',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -1163,6 +1228,12 @@ export const Process: coreClient.CompositeMapper = {
           className: 'RelatedProcess',
         },
       },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
     },
   },
 }
@@ -1226,6 +1297,12 @@ export const TaskPageItem: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'Principal',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -1303,6 +1380,12 @@ export const Task: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'Principal',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -1395,6 +1478,109 @@ export const Worker: coreClient.CompositeMapper = {
           name: 'String',
         },
       },
+      installationId: {
+        serializedName: 'installationId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      robotIds: {
+        serializedName: 'robotIds',
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Uuid',
+            },
+          },
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const Robot: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'Robot',
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      code: {
+        constraints: {
+          MaxLength: 50,
+          MinLength: 1,
+        },
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      name: {
+        constraints: {
+          MaxLength: 50,
+          MinLength: 1,
+        },
+        serializedName: 'name',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      description: {
+        constraints: {
+          MaxLength: 4000,
+          MinLength: 1,
+        },
+        serializedName: 'description',
+        type: {
+          name: 'String',
+        },
+      },
+      sourceType: {
+        serializedName: 'sourceType',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['PACKAGE', 'ROBOT_FRAMEWORK_PYTHON_WHEEL'],
+        },
+      },
+      sourceFile: {
+        serializedName: 'sourceFile',
+        type: {
+          name: 'Composite',
+          className: 'RobotSourceFile',
+        },
+      },
+      environmentVariables: {
+        serializedName: 'environmentVariables',
+        type: {
+          name: 'Dictionary',
+          value: {
+            type: { name: 'String' },
+            constraints: { MaxLength: 4000, MinLength: 1 },
+          },
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
     },
   },
 }
@@ -1483,6 +1669,29 @@ export const TaskPage: coreClient.CompositeMapper = {
             type: {
               name: 'Composite',
               className: 'TaskPageItem',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const RobotPage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'RobotPage',
+    modelProperties: {
+      ...Page.type.modelProperties,
+      content: {
+        serializedName: 'content',
+        required: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'Robot',
             },
           },
         },

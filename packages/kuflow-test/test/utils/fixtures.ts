@@ -65,6 +65,7 @@ export function mockTenantUser(): TenantUser {
       value: {},
     },
     principal: mockPrincipalUser(),
+    tenantId: randomUUID(),
   }
 }
 

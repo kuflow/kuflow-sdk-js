@@ -28,6 +28,7 @@ import {
   AuthenticationOperationsImpl,
   PrincipalOperationsImpl,
   ProcessOperationsImpl,
+  RobotOperationsImpl,
   TaskOperationsImpl,
   TenantUserOperationsImpl,
   WorkerOperationsImpl,
@@ -36,6 +37,7 @@ import {
   type AuthenticationOperations,
   type PrincipalOperations,
   type ProcessOperations,
+  type RobotOperations,
   type TaskOperations,
   type TenantUserOperations,
   type WorkerOperations,
@@ -93,6 +95,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     this.processOperations = new ProcessOperationsImpl(this)
     this.taskOperations = new TaskOperationsImpl(this)
     this.workerOperations = new WorkerOperationsImpl(this)
+    this.robotOperations = new RobotOperationsImpl(this)
   }
 
   authenticationOperations: AuthenticationOperations
@@ -101,4 +104,5 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
   processOperations: ProcessOperations
   taskOperations: TaskOperations
   workerOperations: WorkerOperations
+  robotOperations: RobotOperations
 }

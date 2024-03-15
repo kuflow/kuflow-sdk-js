@@ -89,11 +89,12 @@ export class TaskOperations {
    * @param options The options parameters.
    */
   public async findTasks(options?: TaskFindTasksOptionalExtParams): Promise<TaskFindTasksResponse> {
-    const { sort, processId, state, taskDefinitionCode, ...optionsRest } = options ?? {}
+    const { sort, tenantId, processId, state, taskDefinitionCode, ...optionsRest } = options ?? {}
 
     return await this.taskOperations.findTasks({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
+      tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
       processId: typeof processId === 'string' ? [processId] : processId,
       state: typeof state === 'string' ? [state] : state,
       taskDefinitionCode: typeof taskDefinitionCode === 'string' ? [taskDefinitionCode] : taskDefinitionCode,

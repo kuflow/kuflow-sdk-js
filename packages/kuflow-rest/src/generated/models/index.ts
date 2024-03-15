@@ -222,6 +222,20 @@ export interface TaskSaveJsonFormsValueDocumentResponseCommand {
   value: string
 }
 
+/** Robot source type */
+export interface RobotSourceFile {
+  /** Robot ID. */
+  id: string
+  /** Source file name. */
+  name: string
+  /** Source file content type. */
+  contentType: string
+  /** Source file length. */
+  contentLength: number
+  /** Source file to check the integrity. */
+  contentHash: string
+}
+
 export interface WebhookEventProcessStateChangedData {
   processId: string
   /** Process state */
@@ -262,6 +276,8 @@ export interface TaskElementValuePrincipalItem {
 export interface Authentication extends AbstractAudited {
   id?: string
   type?: AuthenticationType
+  /** Tenant id. This attribute is required when an OAuth2 authentication is used. */
+  tenantId?: string
   /**
    * Engine authentication token.
    *
@@ -284,6 +300,8 @@ export interface TenantUser extends AbstractAudited {
   id: string
   metadata?: TenantUserMetadata
   principal: Principal
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly tenantId: string
 }
 
 export interface ProcessPageItem extends AbstractAudited {
@@ -297,6 +315,8 @@ export interface ProcessPageItem extends AbstractAudited {
   /** Process element values, an ElementValueDocument is not allowed. */
   elementValues?: Record<string, ProcessElementValueUnion[]>
   initiator?: Principal
+  /** Tenant ID. */
+  tenantId?: string
 }
 
 export interface Process extends AbstractAudited {
@@ -311,6 +331,8 @@ export interface Process extends AbstractAudited {
   elementValues?: Record<string, ProcessElementValueUnion[]>
   initiator?: Principal
   relatedProcess?: RelatedProcess
+  /** Tenant ID. */
+  tenantId?: string
 }
 
 export interface TaskPageItem extends AbstractAudited {
@@ -328,6 +350,8 @@ export interface TaskPageItem extends AbstractAudited {
    */
   jsonFormsValue?: JsonFormsValue
   owner?: Principal
+  /** Tenant ID. */
+  tenantId?: string
 }
 
 export interface Task extends AbstractAudited {
@@ -350,6 +374,8 @@ export interface Task extends AbstractAudited {
   jsonFormsValue?: JsonFormsValue
   logs?: Log[]
   owner?: Principal
+  /** Tenant ID. */
+  tenantId?: string
 }
 
 export interface Worker extends AbstractAudited {
@@ -360,6 +386,31 @@ export interface Worker extends AbstractAudited {
   activityTypes?: string[]
   hostname: string
   ip: string
+  /** Installation Id. */
+  installationId?: string
+  /** Robot Ids that this worker implements. */
+  robotIds?: string[]
+  /** Tenant ID. */
+  tenantId?: string
+}
+
+export interface Robot extends AbstractAudited {
+  /** Robot ID. */
+  id: string
+  /** Robot Code. */
+  code: string
+  /** Robot name. */
+  name: string
+  /** Robot description. */
+  description?: string
+  /** Robot source type */
+  sourceType: RobotSourceType
+  /** Robot source type */
+  sourceFile?: RobotSourceFile
+  /** Environment variables to load when the robot is executed. */
+  environmentVariables?: Record<string, string>
+  /** Tenant ID. */
+  tenantId?: string
 }
 
 export interface PrincipalPage extends Page {
@@ -376,6 +427,10 @@ export interface ProcessPage extends Page {
 
 export interface TaskPage extends Page {
   content: TaskPageItem[]
+}
+
+export interface RobotPage extends Page {
+  content: Robot[]
 }
 
 export interface ProcessElementValueString extends ProcessElementValue {
@@ -446,10 +501,11 @@ export type AuditedObjectType =
   | 'TASK'
   | 'TASK_PAGE_ITEM'
   | 'WORKER'
+  | 'ROBOT'
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
 /** Defines values for PagedObjectType. */
-export type PagedObjectType = 'PRINCIPAL_PAGE' | 'TENANT_USER_PAGE' | 'PROCESS_PAGE' | 'TASK_PAGE'
+export type PagedObjectType = 'PRINCIPAL_PAGE' | 'TENANT_USER_PAGE' | 'PROCESS_PAGE' | 'TASK_PAGE' | 'ROBOT_PAGE'
 /** Defines values for ProcessState. */
 export type ProcessState = 'RUNNING' | 'COMPLETED' | 'CANCELLED'
 /** Defines values for ProcessElementValueType. */
@@ -460,6 +516,14 @@ export type TaskState = 'READY' | 'CLAIMED' | 'COMPLETED' | 'CANCELLED'
 export type TaskElementValueType = 'STRING' | 'NUMBER' | 'OBJECT' | 'DOCUMENT' | 'PRINCIPAL'
 /** Defines values for LogLevel. */
 export type LogLevel = 'INFO' | 'WARN' | 'ERROR'
+/** Defines values for RobotSourceType. */
+export type RobotSourceType = 'PACKAGE' | 'ROBOT_FRAMEWORK_PYTHON_WHEEL'
+/** Defines values for RobotAssetType. */
+export type RobotAssetType = 'PYTHON' | 'PYTHON_PIP' | 'NODEJS'
+/** Defines values for RobotAssetPlatform. */
+export type RobotAssetPlatform = 'WINDOWS' | 'MAC_OS' | 'LINUX'
+/** Defines values for RobotAssetArchitecture. */
+export type RobotAssetArchitecture = 'X86_32' | 'X86_64'
 /** Defines values for WebhookType. */
 export type WebhookType = 'PROCESS.STATE_CHANGED' | 'TASK.STATE_CHANGED'
 
@@ -486,8 +550,10 @@ export interface PrincipalFindPrincipalsOptionalParams extends coreClient.Operat
   sort?: string[]
   /** Filter principals by type. */
   type?: PrincipalType
-  /** Filter principals that exists in one of group ids. */
+  /** Filter by group ids. */
   groupId?: string[]
+  /** Filter by tenantId. */
+  tenantId?: string[]
 }
 
 /** Contains response data for the findPrincipals operation. */
@@ -514,9 +580,11 @@ export interface TenantUserFindTenantUsersOptionalParams extends coreClient.Oper
    *
    */
   sort?: string[]
-  /** Filter tenant users that exists in one of the group ids. */
+  /** Filter by group ids. */
   groupId?: string[]
-  /** Filter tenant users that have one of the emails. */
+  /** Filter by tenantId. */
+  tenantId?: string[]
+  /** Filter by email. */
   email?: string[]
 }
 
@@ -544,6 +612,8 @@ export interface ProcessFindProcessesOptionalParams extends coreClient.Operation
    *
    */
   sort?: string[]
+  /** Filter by tenantId. */
+  tenantId?: string[]
 }
 
 /** Contains response data for the findProcesses operation. */
@@ -612,6 +682,8 @@ export interface TaskFindTasksOptionalParams extends coreClient.OperationOptions
    *
    */
   sort?: string[]
+  /** Filter by tenantId. */
+  tenantId?: string[]
   /** Filter by an array of process ids. */
   processId?: string[]
   /** Filter by an array of task states. */
@@ -776,6 +848,76 @@ export interface WorkerCreateWorkerOptionalParams extends coreClient.OperationOp
 
 /** Contains response data for the createWorker operation. */
 export type WorkerCreateWorkerResponse = Worker
+
+/** Optional parameters. */
+export interface RobotFindRobotsOptionalParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string[]
+  /** Filter by tenantId. */
+  tenantId?: string[]
+}
+
+/** Contains response data for the findRobots operation. */
+export type RobotFindRobotsResponse = RobotPage
+
+/** Optional parameters. */
+export interface RobotRetrieveRobotOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the retrieveRobot operation. */
+export type RobotRetrieveRobotResponse = Robot
+
+/** Optional parameters. */
+export interface RobotActionsRobotDownloadSourceCodeOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsRobotDownloadSourceCode operation. */
+export interface RobotActionsRobotDownloadSourceCodeResponse {
+  /**
+   * BROWSER ONLY
+   *
+   * The response body as a browser Blob.
+   * Always `undefined` in node.js.
+   */
+  blobBody?: Promise<Blob>
+  /**
+   * NODEJS ONLY
+   *
+   * The response body as a node.js Readable stream.
+   * Always `undefined` in the browser.
+   */
+  readableStreamBody?: NodeJS.ReadableStream
+}
+
+/** Optional parameters. */
+export interface RobotActionsRobotDownloadAssetOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsRobotDownloadAsset operation. */
+export interface RobotActionsRobotDownloadAssetResponse {
+  /**
+   * BROWSER ONLY
+   *
+   * The response body as a browser Blob.
+   * Always `undefined` in node.js.
+   */
+  blobBody?: Promise<Blob>
+  /**
+   * NODEJS ONLY
+   *
+   * The response body as a node.js Readable stream.
+   * Always `undefined` in the browser.
+   */
+  readableStreamBody?: NodeJS.ReadableStream
+}
 
 /** Optional parameters. */
 export interface KuFlowRestClientGeneratedOptionalParams extends coreClient.ServiceClientOptions {
