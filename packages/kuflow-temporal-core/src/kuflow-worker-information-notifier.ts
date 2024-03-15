@@ -21,9 +21,11 @@
  * THE SOFTWARE.
  */
 import { type FullOperationResponse } from '@azure/core-client'
-import { type KuFlowRestClient, type Worker } from '@kuflow/kuflow-rest'
+import { type Worker } from '@kuflow/kuflow-rest'
 import { Runtime } from '@temporalio/worker'
 import os from 'os'
+
+import type { KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
 
 export interface KuFlowWorkerInformationNotifierBackoff {
   /**
@@ -47,21 +49,15 @@ export interface KuFlowWorkerInformation {
   activityTypes: string[]
 }
 
-export interface KuFlowWorkerInformationNotifierOptions {
-  kuFlowRestClient: KuFlowRestClient
-
+export interface KuFlowWorkerInformationNotifierParams {
   workerInformation: KuFlowWorkerInformation
 
-  backoff?: KuFlowWorkerInformationNotifierBackoff
+  options: KuFlowTemporalConnectionOptions
 }
 
 const HEADER_X_KF_DELAY_WINDOW = 'x-kf-delay-window'
 
 export class KuFlowWorkerInformationNotifier {
-  private readonly kuFlowRestClient: KuFlowRestClient
-
-  private readonly workerInformation: KuFlowWorkerInformation
-
   private readonly backoff: Required<KuFlowWorkerInformationNotifierBackoff>
 
   private started = false
@@ -72,20 +68,15 @@ export class KuFlowWorkerInformationNotifier {
 
   private scheduleCreateOrUpdateWorkerTimeout?: NodeJS.Timeout
 
-  public static instance(options: KuFlowWorkerInformationNotifierOptions): KuFlowWorkerInformationNotifier {
-    const { kuFlowRestClient, workerInformation, backoff } = options
-
-    return new KuFlowWorkerInformationNotifier(kuFlowRestClient, workerInformation, backoff)
+  public static instance(params: KuFlowWorkerInformationNotifierParams): KuFlowWorkerInformationNotifier {
+    return new KuFlowWorkerInformationNotifier(params.workerInformation, params.options)
   }
 
   private constructor(
-    kuFlowRestClient: KuFlowRestClient,
-    workerInformation: KuFlowWorkerInformation,
-    backoff?: KuFlowWorkerInformationNotifierBackoff,
+    private readonly workerInformation: KuFlowWorkerInformation,
+    private readonly options: KuFlowTemporalConnectionOptions,
   ) {
-    this.kuFlowRestClient = kuFlowRestClient
-    this.workerInformation = workerInformation
-
+    const backoff = this.options.kuflow.workerInformationNotifierBackoff
     this.backoff = {
       sleep: backoff?.sleep ?? 1,
       exponentialRate: backoff?.exponentialRate ?? 2.5,
@@ -122,9 +113,12 @@ export class KuFlowWorkerInformationNotifier {
       taskQueue: this.workerInformation.taskQueue,
       workflowTypes: this.workerInformation.workflowTypes,
       activityTypes: this.workerInformation.activityTypes,
+      tenantId: this.options.kuflow.tenantId,
+      installationId: this.options.kuflow.installationId,
+      robotIds: this.options.kuflow.robotIds,
     }
 
-    const workerOperations = this.kuFlowRestClient.workerOperations
+    const workerOperations = this.options.kuflow.restClient.workerOperations
 
     try {
       let rawResponse: FullOperationResponse | undefined
