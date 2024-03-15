@@ -23,6 +23,7 @@
 export * from './authenticationOperations'
 export * from './principalOperations'
 export * from './processOperations'
+export * from './robotOperations'
 export * from './taskOperations'
 export * from './tenantUserOperations'
 export * from './workerOperations'

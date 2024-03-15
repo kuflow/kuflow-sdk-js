@@ -124,7 +124,7 @@ export const sort: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const type: OperationQueryParameter = {
+export const typeParam: OperationQueryParameter = {
   parameterPath: ['options', 'type'],
   mapper: {
     serializedName: 'type',
@@ -139,6 +139,22 @@ export const groupId: OperationQueryParameter = {
   parameterPath: ['options', 'groupId'],
   mapper: {
     serializedName: 'groupId',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const tenantId: OperationQueryParameter = {
+  parameterPath: ['options', 'tenantId'],
+  mapper: {
+    serializedName: 'tenantId',
     type: {
       name: 'Sequence',
       element: {
@@ -175,6 +191,7 @@ export const email: OperationQueryParameter = {
       },
     },
   },
+  collectionFormat: 'Multi',
 }
 
 export const process: OperationParameter = {
@@ -451,4 +468,64 @@ export const log: OperationParameter = {
 export const worker: OperationParameter = {
   parameterPath: 'worker',
   mapper: WorkerMapper,
+}
+
+export const filterContext: OperationQueryParameter = {
+  parameterPath: ['options', 'filterContext'],
+  mapper: {
+    defaultValue: 'READY',
+    isConstant: true,
+    serializedName: 'filterContext',
+    type: {
+      name: 'String',
+    },
+  },
+  collectionFormat: 'CSV',
+}
+
+export const typeParam1: OperationQueryParameter = {
+  parameterPath: 'typeParam',
+  mapper: {
+    serializedName: 'type',
+    required: true,
+    type: {
+      name: 'Enum',
+      allowedValues: ['PYTHON', 'PYTHON_PIP', 'NODEJS'],
+    },
+  },
+}
+
+export const version: OperationQueryParameter = {
+  parameterPath: 'version',
+  mapper: {
+    serializedName: 'version',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const platform: OperationQueryParameter = {
+  parameterPath: 'platform',
+  mapper: {
+    serializedName: 'platform',
+    required: true,
+    type: {
+      name: 'Enum',
+      allowedValues: ['WINDOWS', 'MAC_OS', 'LINUX'],
+    },
+  },
+}
+
+export const architecture: OperationQueryParameter = {
+  parameterPath: 'architecture',
+  mapper: {
+    serializedName: 'architecture',
+    required: true,
+    type: {
+      name: 'Enum',
+      allowedValues: ['X86_32', 'X86_64'],
+    },
+  },
 }

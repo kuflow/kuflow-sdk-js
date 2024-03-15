@@ -237,7 +237,7 @@ const findProcessesOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  queryParameters: [Parameters.size, Parameters.page, Parameters.sort],
+  queryParameters: [Parameters.size, Parameters.page, Parameters.sort, Parameters.tenantId],
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.accept],
   serializer,

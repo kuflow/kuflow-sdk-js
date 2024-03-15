@@ -385,6 +385,7 @@ const findTasksOperationSpec: coreClient.OperationSpec = {
     Parameters.size,
     Parameters.page,
     Parameters.sort,
+    Parameters.tenantId,
     Parameters.processId,
     Parameters.state,
     Parameters.taskDefinitionCode,
