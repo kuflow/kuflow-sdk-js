@@ -23,7 +23,7 @@
 import type * as coreClient from '@azure/core-client'
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { type PrincipalType, type TaskState } from '../generated'
+import { type PrincipalType, type RobotFilterContext, type TaskState } from '../generated'
 
 export interface Document {
   fileName: string
@@ -167,4 +167,6 @@ export interface RobotFindRobotExtParams extends coreClient.OperationOptions {
   sort?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
+  /** Filter by the specified context. */
+  filterContext?: RobotFilterContext
 }

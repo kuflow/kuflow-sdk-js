@@ -473,11 +473,10 @@ export const worker: OperationParameter = {
 export const filterContext: OperationQueryParameter = {
   parameterPath: ['options', 'filterContext'],
   mapper: {
-    defaultValue: 'READY',
-    isConstant: true,
     serializedName: 'filterContext',
     type: {
-      name: 'String',
+      name: 'Enum',
+      allowedValues: ['READY', 'DEFAULT'],
     },
   },
   collectionFormat: 'CSV',
