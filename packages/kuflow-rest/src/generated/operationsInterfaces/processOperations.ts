@@ -32,8 +32,14 @@ import {
   type ProcessActionsProcessCompleteResponse,
   type ProcessActionsProcessDeleteElementOptionalParams,
   type ProcessActionsProcessDeleteElementResponse,
+  type ProcessActionsProcessDownloadEntityDocumentOptionalParams,
+  type ProcessActionsProcessDownloadEntityDocumentResponse,
   type ProcessActionsProcessSaveElementOptionalParams,
   type ProcessActionsProcessSaveElementResponse,
+  type ProcessActionsProcessSaveEntityDataOptionalParams,
+  type ProcessActionsProcessSaveEntityDataResponse,
+  type ProcessActionsProcessSaveEntityDocumentOptionalParams,
+  type ProcessActionsProcessSaveEntityDocumentResponse,
   type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
   type ProcessActionsProcessSaveUserActionValueDocumentResponse,
   type ProcessChangeInitiatorCommand,
@@ -45,6 +51,7 @@ import {
   type ProcessRetrieveProcessOptionalParams,
   type ProcessRetrieveProcessResponse,
   type ProcessSaveElementCommand,
+  type ProcessSaveEntityDataCommand,
 } from '../models'
 
 /** Interface representing a ProcessOperations. */
@@ -178,4 +185,49 @@ export interface ProcessOperations {
     file: coreRestPipeline.RequestBodyType,
     options?: ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
   ) => Promise<ProcessActionsProcessSaveUserActionValueDocumentResponse>
+  /**
+   * Allow to save a JSON validating that the data follow the related schema. If the data is invalid,
+   * then
+   * the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param command Command to save the JSON value.
+   * @param options The options parameters.
+   */
+  actionsProcessSaveEntityData: (
+    id: string,
+    command: ProcessSaveEntityDataCommand,
+    options?: ProcessActionsProcessSaveEntityDataOptionalParams,
+  ) => Promise<ProcessActionsProcessSaveEntityDataResponse>
+  /**
+   * Save a document in the process to later be linked into the JSON data.
+   *
+   * @param id The resource ID.
+   * @param fileContentType Document content type
+   * @param fileName Document name
+   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
+   *                   by the passed schema path.
+   *
+   * @param file Document to save.
+   * @param options The options parameters.
+   */
+  actionsProcessSaveEntityDocument: (
+    id: string,
+    fileContentType: string,
+    fileName: string,
+    schemaPath: string,
+    file: coreRestPipeline.RequestBodyType,
+    options?: ProcessActionsProcessSaveEntityDocumentOptionalParams,
+  ) => Promise<ProcessActionsProcessSaveEntityDocumentResponse>
+  /**
+   * Given a process and a documentUri, download a document.
+   * @param id The resource ID.
+   * @param documentUri Document URI to download.
+   * @param options The options parameters.
+   */
+  actionsProcessDownloadEntityDocument: (
+    id: string,
+    documentUri: string,
+    options?: ProcessActionsProcessDownloadEntityDocumentOptionalParams,
+  ) => Promise<ProcessActionsProcessDownloadEntityDocumentResponse>
 }

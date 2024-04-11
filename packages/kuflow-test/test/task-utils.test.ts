@@ -25,7 +25,6 @@ import { describe, expect, test } from '@jest/globals'
 import {
   type JsonFormsFile,
   type JsonFormsPrincipal,
-  JsonFormsUtils,
   type Task,
   type TaskElementValueDocument,
   type TaskElementValueDocumentItem,
@@ -734,159 +733,159 @@ describe('Task Utils', () => {
   test('getJsonFormsPropertyAsString', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.getJsonFormsPropertyAsString(task, 'key1')
+    const value1 = TaskUtils.getJsonFormsPropertyAsString(task, 'key1')
     expect(value1).toStrictEqual('value_key1')
 
-    const value2 = JsonFormsUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.0.key2_key1_key2')
+    const value2 = TaskUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.0.key2_key1_key2')
     expect(value2).toStrictEqual('value_key2_key1_key2')
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.0.unknown')
+      TaskUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.0.unknown')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.10')
+      TaskUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.10')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.100.key2_key1_key2')
+      TaskUtils.getJsonFormsPropertyAsString(task, 'key2.key2_key1.100.key2_key1_key2')
     }).toThrow("Property value doesn't exist")
   })
 
   test('findJsonFormsPropertyAsString', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsString(task, 'key1')
+    const value1 = TaskUtils.findJsonFormsPropertyAsString(task, 'key1')
     expect(value1).toStrictEqual('value_key1')
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.0.key2_key1_key2')
+    const value2 = TaskUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.0.key2_key1_key2')
     expect(value2).toStrictEqual('value_key2_key1_key2')
 
-    const value3 = JsonFormsUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.0.unknown')
+    const value3 = TaskUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.0.unknown')
     expect(value3).toBeUndefined()
 
-    const value4 = JsonFormsUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.10')
+    const value4 = TaskUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.10')
     expect(value4).toBeUndefined()
 
-    const value5 = JsonFormsUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.100.key2_key1_key2')
+    const value5 = TaskUtils.findJsonFormsPropertyAsString(task, 'key2.key2_key1.100.key2_key1_key2')
     expect(value5).toBeUndefined()
   })
 
   test('getJsonFormsPropertyAsNumber', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.getJsonFormsPropertyAsNumber(task, 'key3.0')
+    const value1 = TaskUtils.getJsonFormsPropertyAsNumber(task, 'key3.0')
     expect(value1).toStrictEqual(500)
 
-    const value2 = JsonFormsUtils.getJsonFormsPropertyAsNumber(task, 'key3.1')
+    const value2 = TaskUtils.getJsonFormsPropertyAsNumber(task, 'key3.1')
     expect(value2).toStrictEqual(1000)
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsNumber(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsNumber(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsNumber(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsNumber(task, 'key1')
     }).toThrow('Property key1 is not a number')
   })
 
   test('findJsonFormsPropertyAsNumber', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsNumber(task, 'key3.0')
+    const value1 = TaskUtils.findJsonFormsPropertyAsNumber(task, 'key3.0')
     expect(value1).toStrictEqual(500)
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsNumber(task, 'key3.1')
+    const value2 = TaskUtils.findJsonFormsPropertyAsNumber(task, 'key3.1')
     expect(value2).toStrictEqual(1000)
 
-    const value3 = JsonFormsUtils.findJsonFormsPropertyAsNumber(task, 'key_xxxxxxx')
+    const value3 = TaskUtils.findJsonFormsPropertyAsNumber(task, 'key_xxxxxxx')
     expect(value3).toBeUndefined()
 
     expect(() => {
-      JsonFormsUtils.findJsonFormsPropertyAsNumber(task, 'key1')
+      TaskUtils.findJsonFormsPropertyAsNumber(task, 'key1')
     }).toThrow('Property key1 is not a number')
   })
 
   test('getJsonFormsPropertyAsBoolean', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.getJsonFormsPropertyAsBoolean(task, 'key4.0')
+    const value1 = TaskUtils.getJsonFormsPropertyAsBoolean(task, 'key4.0')
     expect(value1).toStrictEqual(true)
 
-    const value2 = JsonFormsUtils.getJsonFormsPropertyAsBoolean(task, 'key4.1')
+    const value2 = TaskUtils.getJsonFormsPropertyAsBoolean(task, 'key4.1')
     expect(value2).toStrictEqual(false)
 
-    const value3 = JsonFormsUtils.getJsonFormsPropertyAsBoolean(task, 'key4.2')
+    const value3 = TaskUtils.getJsonFormsPropertyAsBoolean(task, 'key4.2')
     expect(value3).toStrictEqual(true)
 
-    const value4 = JsonFormsUtils.getJsonFormsPropertyAsBoolean(task, 'key4.3')
+    const value4 = TaskUtils.getJsonFormsPropertyAsBoolean(task, 'key4.3')
     expect(value4).toStrictEqual(false)
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsBoolean(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsBoolean(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsBoolean(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsBoolean(task, 'key1')
     }).toThrow('Property key1 is not a boolean')
   })
 
   test('findJsonFormsPropertyAsBoolean', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsBoolean(task, 'key4.0')
+    const value1 = TaskUtils.findJsonFormsPropertyAsBoolean(task, 'key4.0')
     expect(value1).toStrictEqual(true)
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsBoolean(task, 'key4.1')
+    const value2 = TaskUtils.findJsonFormsPropertyAsBoolean(task, 'key4.1')
     expect(value2).toStrictEqual(false)
 
-    const value3 = JsonFormsUtils.findJsonFormsPropertyAsBoolean(task, 'key4.2')
+    const value3 = TaskUtils.findJsonFormsPropertyAsBoolean(task, 'key4.2')
     expect(value3).toStrictEqual(true)
 
-    const value4 = JsonFormsUtils.findJsonFormsPropertyAsBoolean(task, 'key4.3')
+    const value4 = TaskUtils.findJsonFormsPropertyAsBoolean(task, 'key4.3')
     expect(value4).toStrictEqual(false)
 
-    const value5 = JsonFormsUtils.findJsonFormsPropertyAsBoolean(task, 'key_xxxxxxx')
+    const value5 = TaskUtils.findJsonFormsPropertyAsBoolean(task, 'key_xxxxxxx')
     expect(value5).toBeUndefined()
 
     expect(() => {
-      JsonFormsUtils.findJsonFormsPropertyAsBoolean(task, 'key1')
+      TaskUtils.findJsonFormsPropertyAsBoolean(task, 'key1')
     }).toThrow('Property key1 is not a boolean')
   })
 
   test('getJsonFormsPropertyAsDate', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.getJsonFormsPropertyAsDate(task, 'key5.0')
+    const value1 = TaskUtils.getJsonFormsPropertyAsDate(task, 'key5.0')
     expect(value1).toStrictEqual(new Date('2000-01-01'))
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsDate(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsDate(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsDate(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsDate(task, 'key1')
     }).toThrow('Property key1 is not a date following ISO 8601 format')
   })
 
   test('findJsonFormsPropertyAsDate', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsDate(task, 'key5.0')
+    const value1 = TaskUtils.findJsonFormsPropertyAsDate(task, 'key5.0')
     expect(value1).toStrictEqual(new Date('2000-01-01'))
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsDate(task, 'key_xxxxxxx')
+    const value2 = TaskUtils.findJsonFormsPropertyAsDate(task, 'key_xxxxxxx')
     expect(value2).toBeUndefined()
 
     expect(() => {
-      JsonFormsUtils.findJsonFormsPropertyAsDate(task, 'key1')
+      TaskUtils.findJsonFormsPropertyAsDate(task, 'key1')
     }).toThrow('Property key1 is not a date following ISO 8601 format')
   })
 
   test('getJsonFormsPropertyAsJsonFormsFile', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value = JsonFormsUtils.getJsonFormsPropertyAsJsonFormsFile(task, 'key6')
+    const value = TaskUtils.getJsonFormsPropertyAsJsonFormsFile(task, 'key6')
     expect(value).toStrictEqual({
       uri: 'xxx-yyy-zzz',
       type: 'application/pdf',
@@ -895,18 +894,18 @@ describe('Task Utils', () => {
     })
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsJsonFormsFile(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsJsonFormsFile(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsJsonFormsFile(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsJsonFormsFile(task, 'key1')
     }).toThrow('Property key1 is not a file')
   })
 
   test('findJsonFormsPropertyAsJsonFormsFile', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsJsonFormsFile(task, 'key6')
+    const value1 = TaskUtils.findJsonFormsPropertyAsJsonFormsFile(task, 'key6')
     expect(value1).toStrictEqual({
       uri: 'xxx-yyy-zzz',
       type: 'application/pdf',
@@ -914,18 +913,18 @@ describe('Task Utils', () => {
       size: 500,
     })
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsJsonFormsFile(task, 'key_xxxx')
+    const value2 = TaskUtils.findJsonFormsPropertyAsJsonFormsFile(task, 'key_xxxx')
     expect(value2).toBeUndefined()
 
     expect(() => {
-      JsonFormsUtils.findJsonFormsPropertyAsJsonFormsFile(task, 'key1')
+      TaskUtils.findJsonFormsPropertyAsJsonFormsFile(task, 'key1')
     }).toThrow('Property key1 is not a file')
   })
 
   test('getJsonFormsPropertyAsJsonFormsPrincipal', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value = JsonFormsUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key7')
+    const value = TaskUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key7')
     expect(value).toStrictEqual({
       id: 'xxx-yyy-zzz',
       type: 'USER',
@@ -933,79 +932,79 @@ describe('Task Utils', () => {
     })
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
     }).toThrow('Property key1 is not a principal')
   })
 
   test('findJsonFormsPropertyAsJsonFormsPrincipal', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key7')
+    const value1 = TaskUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key7')
     expect(value1).toStrictEqual({
       id: 'xxx-yyy-zzz',
       type: 'USER',
       name: 'Homer Simpson',
     })
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key_xxxxxxx')
+    const value2 = TaskUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key_xxxxxxx')
     expect(value2).toBeUndefined()
 
     expect(() => {
-      JsonFormsUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
+      TaskUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, 'key1')
     }).toThrow('Property key1 is not a principal')
   })
 
   test('getJsonFormsPropertyAsArray', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.getJsonFormsPropertyAsArray(task, 'key3')
+    const value1 = TaskUtils.getJsonFormsPropertyAsArray(task, 'key3')
     expect(value1).toStrictEqual([500, '1000'])
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsArray(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsArray(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsArray(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsArray(task, 'key1')
     }).toThrow('Property key1 is not an array')
   })
 
   test('getJsonFormsPropertyAsObject', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.getJsonFormsPropertyAsObject(task, 'key2.key2_key1.0')
+    const value1 = TaskUtils.getJsonFormsPropertyAsObject(task, 'key2.key2_key1.0')
     expect(value1).toStrictEqual({
       key2_key1_key1: 0,
       key2_key1_key2: 'value_key2_key1_key2',
     })
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsObject(task, 'key_xxxxxxx')
+      TaskUtils.getJsonFormsPropertyAsObject(task, 'key_xxxxxxx')
     }).toThrow("Property value doesn't exist")
 
     expect(() => {
-      JsonFormsUtils.getJsonFormsPropertyAsObject(task, 'key1')
+      TaskUtils.getJsonFormsPropertyAsObject(task, 'key1')
     }).toThrow('Property key1 is not an object')
   })
 
   test('findJsonFormsPropertyAsObject', () => {
     const task = prepareTaskJsonFormsValue()
 
-    const value1 = JsonFormsUtils.findJsonFormsPropertyAsObject(task, 'key2.key2_key1.0')
+    const value1 = TaskUtils.findJsonFormsPropertyAsObject(task, 'key2.key2_key1.0')
     expect(value1).toStrictEqual({
       key2_key1_key1: 0,
       key2_key1_key2: 'value_key2_key1_key2',
     })
 
-    const value2 = JsonFormsUtils.findJsonFormsPropertyAsObject(task, 'key_xxxxxxx')
+    const value2 = TaskUtils.findJsonFormsPropertyAsObject(task, 'key_xxxxxxx')
     expect(value2).toBeUndefined()
 
     expect(() => {
-      JsonFormsUtils.findJsonFormsPropertyAsObject(task, 'key1')
+      TaskUtils.findJsonFormsPropertyAsObject(task, 'key1')
     }).toThrow('Property key1 is not an object')
   })
 
@@ -1026,14 +1025,14 @@ describe('Task Utils', () => {
       name: 'Homer Simpson',
     }
 
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key1', 'text')
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key2.0.key1', true)
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key2.0.key2', new Date('2020-01-01'))
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key2.1.key1', false)
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key2.1.key2', new Date('3030-01-01'))
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key3', 100)
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key4', file)
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key5', principal)
+    TaskUtils.updateJsonFormsProperty(task, 'key1', 'text')
+    TaskUtils.updateJsonFormsProperty(task, 'key2.0.key1', true)
+    TaskUtils.updateJsonFormsProperty(task, 'key2.0.key2', new Date('2020-01-01'))
+    TaskUtils.updateJsonFormsProperty(task, 'key2.1.key1', false)
+    TaskUtils.updateJsonFormsProperty(task, 'key2.1.key2', new Date('3030-01-01'))
+    TaskUtils.updateJsonFormsProperty(task, 'key3', 100)
+    TaskUtils.updateJsonFormsProperty(task, 'key4', file)
+    TaskUtils.updateJsonFormsProperty(task, 'key5', principal)
 
     expect(task.jsonFormsValue.data).toStrictEqual({
       key1: 'text',
@@ -1052,9 +1051,9 @@ describe('Task Utils', () => {
       key5: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
     })
 
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key1', undefined)
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key2.0', undefined)
-    JsonFormsUtils.updateJsonFormsProperty(task, 'key2.0.key1', undefined)
+    TaskUtils.updateJsonFormsProperty(task, 'key1', undefined)
+    TaskUtils.updateJsonFormsProperty(task, 'key2.0', undefined)
+    TaskUtils.updateJsonFormsProperty(task, 'key2.0.key1', undefined)
 
     expect(task.jsonFormsValue.data).toStrictEqual({
       key2: [
@@ -1068,7 +1067,7 @@ describe('Task Utils', () => {
     })
 
     expect(() => {
-      JsonFormsUtils.updateJsonFormsProperty(task, 'key2.100.key1', undefined)
+      TaskUtils.updateJsonFormsProperty(task, 'key2.100.key1', undefined)
     }).toThrow("Property key2.100.key1 doesn't exist")
   })
 })

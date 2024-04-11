@@ -23,6 +23,8 @@
 
 import { describe, expect, test } from '@jest/globals'
 import {
+  type JsonFormsFile,
+  type JsonFormsPrincipal,
   type Process,
   type ProcessElementValueNumber,
   type ProcessElementValueString,
@@ -362,6 +364,347 @@ describe('Process Utils', () => {
     ProcessUtils.addElementValueAsDateList(process, 'EV_DATE', [])
     expect(process.elementValues?.EV_DATE).toStrictEqual(expectedElementValues1)
   })
+
+  test('getEntityPropertyAsString', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.getEntityPropertyAsString(process, 'key1')
+    expect(value1).toStrictEqual('value_key1')
+
+    const value2 = ProcessUtils.getEntityPropertyAsString(process, 'key2.key2_key1.0.key2_key1_key2')
+    expect(value2).toStrictEqual('value_key2_key1_key2')
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsString(process, 'key2.key2_key1.0.unknown')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsString(process, 'key2.key2_key1.10')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsString(process, 'key2.key2_key1.100.key2_key1_key2')
+    }).toThrow("Property value doesn't exist")
+  })
+
+  test('findEntityPropertyAsString', () => {
+    const task = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsString(task, 'key1')
+    expect(value1).toStrictEqual('value_key1')
+
+    const value2 = ProcessUtils.findEntityPropertyAsString(task, 'key2.key2_key1.0.key2_key1_key2')
+    expect(value2).toStrictEqual('value_key2_key1_key2')
+
+    const value3 = ProcessUtils.findEntityPropertyAsString(task, 'key2.key2_key1.0.unknown')
+    expect(value3).toBeUndefined()
+
+    const value4 = ProcessUtils.findEntityPropertyAsString(task, 'key2.key2_key1.10')
+    expect(value4).toBeUndefined()
+
+    const value5 = ProcessUtils.findEntityPropertyAsString(task, 'key2.key2_key1.100.key2_key1_key2')
+    expect(value5).toBeUndefined()
+  })
+
+  test('getEntityPropertyAsNumber', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.getEntityPropertyAsNumber(process, 'key3.0')
+    expect(value1).toStrictEqual(500)
+
+    const value2 = ProcessUtils.getEntityPropertyAsNumber(process, 'key3.1')
+    expect(value2).toStrictEqual(1000)
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsNumber(process, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsNumber(process, 'key1')
+    }).toThrow('Property key1 is not a number')
+  })
+
+  test('findEntityPropertyAsNumber', () => {
+    const task = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsNumber(task, 'key3.0')
+    expect(value1).toStrictEqual(500)
+
+    const value2 = ProcessUtils.findEntityPropertyAsNumber(task, 'key3.1')
+    expect(value2).toStrictEqual(1000)
+
+    const value3 = ProcessUtils.findEntityPropertyAsNumber(task, 'key_xxxxxxx')
+    expect(value3).toBeUndefined()
+
+    expect(() => {
+      ProcessUtils.findEntityPropertyAsNumber(task, 'key1')
+    }).toThrow('Property key1 is not a number')
+  })
+
+  test('getEntityPropertyAsBoolean', () => {
+    const task = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.getEntityPropertyAsBoolean(task, 'key4.0')
+    expect(value1).toStrictEqual(true)
+
+    const value2 = ProcessUtils.getEntityPropertyAsBoolean(task, 'key4.1')
+    expect(value2).toStrictEqual(false)
+
+    const value3 = ProcessUtils.getEntityPropertyAsBoolean(task, 'key4.2')
+    expect(value3).toStrictEqual(true)
+
+    const value4 = ProcessUtils.getEntityPropertyAsBoolean(task, 'key4.3')
+    expect(value4).toStrictEqual(false)
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsBoolean(task, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsBoolean(task, 'key1')
+    }).toThrow('Property key1 is not a boolean')
+  })
+
+  test('findEntityPropertyAsBoolean', () => {
+    const task = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsBoolean(task, 'key4.0')
+    expect(value1).toStrictEqual(true)
+
+    const value2 = ProcessUtils.findEntityPropertyAsBoolean(task, 'key4.1')
+    expect(value2).toStrictEqual(false)
+
+    const value3 = ProcessUtils.findEntityPropertyAsBoolean(task, 'key4.2')
+    expect(value3).toStrictEqual(true)
+
+    const value4 = ProcessUtils.findEntityPropertyAsBoolean(task, 'key4.3')
+    expect(value4).toStrictEqual(false)
+
+    const value5 = ProcessUtils.findEntityPropertyAsBoolean(task, 'key_xxxxxxx')
+    expect(value5).toBeUndefined()
+
+    expect(() => {
+      ProcessUtils.findEntityPropertyAsBoolean(task, 'key1')
+    }).toThrow('Property key1 is not a boolean')
+  })
+
+  test('getEntityPropertyAsDate', () => {
+    const task = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.getEntityPropertyAsDate(task, 'key5.0')
+    expect(value1).toStrictEqual(new Date('2000-01-01'))
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsDate(task, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsDate(task, 'key1')
+    }).toThrow('Property key1 is not a date following ISO 8601 format')
+  })
+
+  test('findEntityPropertyAsDate', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsDate(process, 'key5.0')
+    expect(value1).toStrictEqual(new Date('2000-01-01'))
+
+    const value2 = ProcessUtils.findEntityPropertyAsDate(process, 'key_xxxxxxx')
+    expect(value2).toBeUndefined()
+
+    expect(() => {
+      ProcessUtils.findEntityPropertyAsDate(process, 'key1')
+    }).toThrow('Property key1 is not a date following ISO 8601 format')
+  })
+
+  test('getEntityPropertyAsJsonFormsFile', () => {
+    const process = prepareProcessWithEntity()
+
+    const value = ProcessUtils.getEntityPropertyAsJsonFormsFile(process, 'key6')
+    expect(value).toStrictEqual({
+      uri: 'xxx-yyy-zzz',
+      type: 'application/pdf',
+      name: 'dummy.pdf',
+      size: 500,
+    })
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsJsonFormsFile(process, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsJsonFormsFile(process, 'key1')
+    }).toThrow('Property key1 is not a file')
+  })
+
+  test('findEntityPropertyAsJsonFormsFile', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsJsonFormsFile(process, 'key6')
+    expect(value1).toStrictEqual({
+      uri: 'xxx-yyy-zzz',
+      type: 'application/pdf',
+      name: 'dummy.pdf',
+      size: 500,
+    })
+
+    const value2 = ProcessUtils.findEntityPropertyAsJsonFormsFile(process, 'key_xxxx')
+    expect(value2).toBeUndefined()
+
+    expect(() => {
+      ProcessUtils.findEntityPropertyAsJsonFormsFile(process, 'key1')
+    }).toThrow('Property key1 is not a file')
+  })
+
+  test('getEntityPropertyAsJsonFormsPrincipal', () => {
+    const process = prepareProcessWithEntity()
+
+    const value = ProcessUtils.getEntityPropertyAsJsonFormsPrincipal(process, 'key7')
+    expect(value).toStrictEqual({
+      id: 'xxx-yyy-zzz',
+      type: 'USER',
+      name: 'Homer Simpson',
+    })
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsJsonFormsPrincipal(process, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsJsonFormsPrincipal(process, 'key1')
+    }).toThrow('Property key1 is not a principal')
+  })
+
+  test('findEntityPropertyAsJsonFormsPrincipal', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsJsonFormsPrincipal(process, 'key7')
+    expect(value1).toStrictEqual({
+      id: 'xxx-yyy-zzz',
+      type: 'USER',
+      name: 'Homer Simpson',
+    })
+
+    const value2 = ProcessUtils.findEntityPropertyAsJsonFormsPrincipal(process, 'key_xxxxxxx')
+    expect(value2).toBeUndefined()
+
+    expect(() => {
+      ProcessUtils.findEntityPropertyAsJsonFormsPrincipal(process, 'key1')
+    }).toThrow('Property key1 is not a principal')
+  })
+
+  test('getEntityPropertyAsArray', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.getEntityPropertyAsArray(process, 'key3')
+    expect(value1).toStrictEqual([500, '1000'])
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsArray(process, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsArray(process, 'key1')
+    }).toThrow('Property key1 is not an array')
+  })
+
+  test('getEntityPropertyAsObject', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.getEntityPropertyAsObject(process, 'key2.key2_key1.0')
+    expect(value1).toStrictEqual({
+      key2_key1_key1: 0,
+      key2_key1_key2: 'value_key2_key1_key2',
+    })
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsObject(process, 'key_xxxxxxx')
+    }).toThrow("Property value doesn't exist")
+
+    expect(() => {
+      ProcessUtils.getEntityPropertyAsObject(process, 'key1')
+    }).toThrow('Property key1 is not an object')
+  })
+
+  test('findEntityPropertyAsObject', () => {
+    const process = prepareProcessWithEntity()
+
+    const value1 = ProcessUtils.findEntityPropertyAsObject(process, 'key2.key2_key1.0')
+    expect(value1).toStrictEqual({
+      key2_key1_key1: 0,
+      key2_key1_key2: 'value_key2_key1_key2',
+    })
+
+    const value2 = ProcessUtils.findEntityPropertyAsObject(process, 'key_xxxxxxx')
+    expect(value2).toBeUndefined()
+
+    expect(() => {
+      ProcessUtils.findEntityPropertyAsObject(process, 'key1')
+    }).toThrow('Property key1 is not an object')
+  })
+
+  test('updateEntityProperty', () => {
+    const process = prepareProcessWithEntity()
+    process.entity = {}
+
+    const file: JsonFormsFile = {
+      uri: 'xxx-yyy-zzz',
+      type: 'application/pdf',
+      name: 'dummy.pdf',
+      size: 500,
+    }
+
+    const principal: JsonFormsPrincipal = {
+      id: 'xxx-yyy-zzz',
+      type: 'USER',
+      name: 'Homer Simpson',
+    }
+
+    ProcessUtils.updateEntityProperty(process, 'key1', 'text')
+    ProcessUtils.updateEntityProperty(process, 'key2.0.key1', true)
+    ProcessUtils.updateEntityProperty(process, 'key2.0.key2', new Date('2020-01-01'))
+    ProcessUtils.updateEntityProperty(process, 'key2.1.key1', false)
+    ProcessUtils.updateEntityProperty(process, 'key2.1.key2', new Date('3030-01-01'))
+    ProcessUtils.updateEntityProperty(process, 'key3', 100)
+    ProcessUtils.updateEntityProperty(process, 'key4', file)
+    ProcessUtils.updateEntityProperty(process, 'key5', principal)
+
+    expect(process.entity.data).toStrictEqual({
+      key1: 'text',
+      key2: [
+        {
+          key1: true,
+          key2: '2020-01-01',
+        },
+        {
+          key1: false,
+          key2: '3030-01-01',
+        },
+      ],
+      key3: 100,
+      key4: 'kuflow-file:uri=xxx-yyy-zzz;type=application/pdf;size=500;name=dummy.pdf;',
+      key5: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
+    })
+
+    ProcessUtils.updateEntityProperty(process, 'key1', undefined)
+    ProcessUtils.updateEntityProperty(process, 'key2.0', undefined)
+    ProcessUtils.updateEntityProperty(process, 'key2.0.key1', undefined)
+
+    expect(process.entity.data).toStrictEqual({
+      key2: [
+        {
+          key2: '3030-01-01',
+        },
+      ],
+      key3: 100,
+      key4: 'kuflow-file:uri=xxx-yyy-zzz;type=application/pdf;size=500;name=dummy.pdf;',
+      key5: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
+    })
+
+    expect(() => {
+      ProcessUtils.updateEntityProperty(process, 'key2.100.key1', undefined)
+    }).toThrow("Property key2.100.key1 doesn't exist")
+  })
 })
 
 function prepareProcess(): Process {
@@ -382,6 +725,32 @@ function prepareProcess(): Process {
         { type: 'STRING', value: '2000-01-01', valid: true },
         { type: 'STRING', value: '1980-01-01', valid: false },
       ],
+    },
+  }
+}
+
+function prepareProcessWithEntity(): Process {
+  return {
+    processDefinition: {
+      id: 'e68d8136-1166-455c-93d6-d106201c1856',
+    },
+    entity: {
+      data: {
+        key1: 'value_key1',
+        key2: {
+          key2_key1: [
+            {
+              key2_key1_key1: 0,
+              key2_key1_key2: 'value_key2_key1_key2',
+            },
+          ],
+        },
+        key3: [500, '1000'],
+        key4: [true, false, 'true', 'false'],
+        key5: ['2000-01-01'],
+        key6: 'kuflow-file:uri=xxx-yyy-zzz;type=application/pdf;size=500;name=dummy.pdf;',
+        key7: 'kuflow-principal:id=xxx-yyy-zzz;type=USER;name=Homer Simpson;',
+      },
     },
   }
 }

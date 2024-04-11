@@ -22,7 +22,13 @@
  */
 
 import { type Process } from '../generated'
-import * as elementValueUtils from './element-values'
+import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
+import * as ElementValueUtils from './element-values'
+import * as JsonFormUtils from './json-forms'
+
+type JsonFormsSimpleType = JsonFormUtils.JsonFormsSimpleType
+type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptions
+type JsonFormsModel = JsonFormUtils.JsonFormsModel
 
 /**
  * Check if all related valid values are TRUE
@@ -32,7 +38,7 @@ import * as elementValueUtils from './element-values'
  * @return TRUE if all related valid values are TRUE else FALSE.
  */
 export function getElementValueValid(process: Process, elementDefinitionCode: string): boolean {
-  return elementValueUtils.getElementValueValid(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueValid(process, elementDefinitionCode)
 }
 
 /**
@@ -48,7 +54,7 @@ export function getElementValueValidAt(
   elementDefinitionCode: string,
   index: number,
 ): boolean | undefined {
-  return elementValueUtils.getElementValueValidAt(process, elementDefinitionCode, index)
+  return ElementValueUtils.getElementValueValidAt(process, elementDefinitionCode, index)
 }
 
 /**
@@ -64,7 +70,7 @@ export function setElementValueValid(
   elementDefinitionCode: string,
   valid: boolean | undefined,
 ): Process {
-  return elementValueUtils.setElementValueValid(process, elementDefinitionCode, valid)
+  return ElementValueUtils.setElementValueValid(process, elementDefinitionCode, valid)
 }
 
 /**
@@ -82,7 +88,7 @@ export function setElementValueValidAt(
   valid: boolean | undefined,
   index: number,
 ): Process {
-  return elementValueUtils.setElementValueValidAt(process, elementDefinitionCode, valid, index)
+  return ElementValueUtils.setElementValueValidAt(process, elementDefinitionCode, valid, index)
 }
 
 /**
@@ -93,7 +99,7 @@ export function setElementValueValidAt(
  * @return the element value.
  */
 export function getElementValueAsString(process: Process, elementDefinitionCode: string): string {
-  return elementValueUtils.getElementValueAsString(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueAsString(process, elementDefinitionCode)
 }
 
 /**
@@ -104,7 +110,7 @@ export function getElementValueAsString(process: Process, elementDefinitionCode:
  * @return the element value if exists.
  */
 export function findElementValueAsString(process: Process, elementDefinitionCode: string): string | undefined {
-  return elementValueUtils.findElementValueAsString(process, elementDefinitionCode)
+  return ElementValueUtils.findElementValueAsString(process, elementDefinitionCode)
 }
 
 /**
@@ -115,7 +121,7 @@ export function findElementValueAsString(process: Process, elementDefinitionCode
  * @return the elements values.
  */
 export function getElementValueAsStringList(process: Process, elementDefinitionCode: string): string[] {
-  return elementValueUtils.getElementValueAsStringList(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueAsStringList(process, elementDefinitionCode)
 }
 
 /**
@@ -131,7 +137,7 @@ export function setElementValueAsString(
   elementDefinitionCode: string,
   elementValue: string | undefined,
 ): Process {
-  return elementValueUtils.setElementValueAsString(process, elementDefinitionCode, elementValue)
+  return ElementValueUtils.setElementValueAsString(process, elementDefinitionCode, elementValue)
 }
 
 /**
@@ -147,7 +153,7 @@ export function setElementValueAsStringList(
   elementDefinitionCode: string,
   elementValues: string[] | undefined,
 ): Process {
-  return elementValueUtils.setElementValueAsStringList(process, elementDefinitionCode, elementValues)
+  return ElementValueUtils.setElementValueAsStringList(process, elementDefinitionCode, elementValues)
 }
 
 /**
@@ -163,7 +169,7 @@ export function addElementValueAsString(
   elementDefinitionCode: string,
   elementValue: string | undefined,
 ): Process {
-  return elementValueUtils.addElementValueAsString(process, elementDefinitionCode, elementValue)
+  return ElementValueUtils.addElementValueAsString(process, elementDefinitionCode, elementValue)
 }
 
 /**
@@ -179,7 +185,7 @@ export function addElementValueAsStringList(
   elementDefinitionCode: string,
   elementValues: string[] | undefined,
 ): Process {
-  return elementValueUtils.addElementValueAsStringList(process, elementDefinitionCode, elementValues)
+  return ElementValueUtils.addElementValueAsStringList(process, elementDefinitionCode, elementValues)
 }
 
 /**
@@ -190,7 +196,7 @@ export function addElementValueAsStringList(
  * @return the element value.
  */
 export function getElementValueAsNumber(process: Process, elementDefinitionCode: string): number {
-  return elementValueUtils.getElementValueAsNumber(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueAsNumber(process, elementDefinitionCode)
 }
 
 /**
@@ -201,7 +207,7 @@ export function getElementValueAsNumber(process: Process, elementDefinitionCode:
  * @return the element value if exists.
  */
 export function findElementValueAsNumber(process: Process, elementDefinitionCode: string): number | undefined {
-  return elementValueUtils.findElementValueAsNumber(process, elementDefinitionCode)
+  return ElementValueUtils.findElementValueAsNumber(process, elementDefinitionCode)
 }
 
 /**
@@ -212,7 +218,7 @@ export function findElementValueAsNumber(process: Process, elementDefinitionCode
  * @return the elements values.
  */
 export function getElementValueAsNumberList(process: Process, elementDefinitionCode: string): number[] {
-  return elementValueUtils.getElementValueAsNumberList(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueAsNumberList(process, elementDefinitionCode)
 }
 
 /**
@@ -228,7 +234,7 @@ export function setElementValueAsNumber(
   elementDefinitionCode: string,
   elementValue: number | undefined,
 ): Process {
-  return elementValueUtils.setElementValueAsNumber(process, elementDefinitionCode, elementValue)
+  return ElementValueUtils.setElementValueAsNumber(process, elementDefinitionCode, elementValue)
 }
 
 /**
@@ -244,7 +250,7 @@ export function setElementValueAsNumberList(
   elementDefinitionCode: string,
   elementValues: number[] | undefined,
 ): Process {
-  return elementValueUtils.setElementValueAsNumberList(process, elementDefinitionCode, elementValues)
+  return ElementValueUtils.setElementValueAsNumberList(process, elementDefinitionCode, elementValues)
 }
 
 /**
@@ -260,7 +266,7 @@ export function addElementValueAsNumber(
   elementDefinitionCode: string,
   elementValue: number | undefined,
 ): Process {
-  return elementValueUtils.addElementValueAsNumber(process, elementDefinitionCode, elementValue)
+  return ElementValueUtils.addElementValueAsNumber(process, elementDefinitionCode, elementValue)
 }
 
 /**
@@ -276,7 +282,7 @@ export function addElementValueAsNumberList(
   elementDefinitionCode: string,
   elementValues: number[] | undefined,
 ): Process {
-  return elementValueUtils.addElementValueAsNumberList(process, elementDefinitionCode, elementValues)
+  return ElementValueUtils.addElementValueAsNumberList(process, elementDefinitionCode, elementValues)
 }
 
 /**
@@ -287,7 +293,7 @@ export function addElementValueAsNumberList(
  * @return the element value.
  */
 export function getElementValueAsDate(process: Process, elementDefinitionCode: string): Date {
-  return elementValueUtils.getElementValueAsDate(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueAsDate(process, elementDefinitionCode)
 }
 
 /**
@@ -298,7 +304,7 @@ export function getElementValueAsDate(process: Process, elementDefinitionCode: s
  * @return the element value if exists.
  */
 export function findElementValueAsDate(process: Process, elementDefinitionCode: string): Date | undefined {
-  return elementValueUtils.findElementValueAsDate(process, elementDefinitionCode)
+  return ElementValueUtils.findElementValueAsDate(process, elementDefinitionCode)
 }
 
 /**
@@ -309,7 +315,7 @@ export function findElementValueAsDate(process: Process, elementDefinitionCode: 
  * @return the elements values.
  */
 export function getElementValueAsDateList(process: Process, elementDefinitionCode: string): Date[] {
-  return elementValueUtils.getElementValueAsDateList(process, elementDefinitionCode)
+  return ElementValueUtils.getElementValueAsDateList(process, elementDefinitionCode)
 }
 
 /**
@@ -325,7 +331,7 @@ export function setElementValueAsDate(
   elementDefinitionCode: string,
   elementValue: Date | undefined,
 ): Process {
-  return elementValueUtils.setElementValueAsDate(process, elementDefinitionCode, elementValue)
+  return ElementValueUtils.setElementValueAsDate(process, elementDefinitionCode, elementValue)
 }
 
 /**
@@ -341,7 +347,7 @@ export function setElementValueAsDateList(
   elementDefinitionCode: string,
   elementValues: Date[] | undefined,
 ): Process {
-  return elementValueUtils.setElementValueAsDateList(process, elementDefinitionCode, elementValues)
+  return ElementValueUtils.setElementValueAsDateList(process, elementDefinitionCode, elementValues)
 }
 
 /**
@@ -357,7 +363,7 @@ export function addElementValueAsDate(
   elementDefinitionCode: string,
   elementValue: Date | undefined,
 ): Process {
-  return elementValueUtils.addElementValueAsDate(process, elementDefinitionCode, elementValue)
+  return ElementValueUtils.addElementValueAsDate(process, elementDefinitionCode, elementValue)
 }
 
 /**
@@ -373,5 +379,233 @@ export function addElementValueAsDateList(
   elementDefinitionCode: string,
   elementValues: Date[] | undefined,
 ): Process {
-  return elementValueUtils.addElementValueAsDateList(process, elementDefinitionCode, elementValues)
+  return ElementValueUtils.addElementValueAsDateList(process, elementDefinitionCode, elementValues)
+}
+
+/**
+ * Get a json property as String following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsString(process: Process, propertyPath: string): string {
+  return JsonFormUtils.getJsonFormsPropertyAsString(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as String following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsString(process: Process, propertyPath: string): string | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsString(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as Number following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsNumber(process: Process, propertyPath: string): number {
+  return JsonFormUtils.getJsonFormsPropertyAsNumber(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as Number following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsNumber(process: Process, propertyPath: string): number | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsNumber(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as Boolean following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsBoolean(process: Process, propertyPath: string): boolean {
+  return JsonFormUtils.getJsonFormsPropertyAsBoolean(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as Double following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsBoolean(process: Process, propertyPath: string): boolean | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsBoolean(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as Date following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsDate(process: Process, propertyPath: string): Date {
+  return JsonFormUtils.getJsonFormsPropertyAsDate(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as Date following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsDate(process: Process, propertyPath: string): Date | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsDate(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as JsonFormsFile following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsJsonFormsFile(process: Process, propertyPath: string): JsonFormsFile {
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as JsonFormsFile following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsJsonFormsFile(process: Process, propertyPath: string): JsonFormsFile | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as JsonFormsPrincipal following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsJsonFormsPrincipal(process: Process, propertyPath: string): JsonFormsPrincipal {
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as JsonFormsPrincipal following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsJsonFormsPrincipal(
+  process: Process,
+  propertyPath: string,
+): JsonFormsPrincipal | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as Array following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsArray(process: Process, propertyPath: string): unknown[] {
+  return JsonFormUtils.getJsonFormsPropertyAsArray(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as Array following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsArray(process: Process, propertyPath: string): unknown[] | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsArray(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Get a json property as Object following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ * @throws Error If property value doesn't exist
+ */
+export function getEntityPropertyAsObject(process: Process, propertyPath: string): Record<string, unknown> {
+  return JsonFormUtils.getJsonFormsPropertyAsObject(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Try to find a json property as Object following the 'propertyPath' passed.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @return the property value if exists.
+ */
+export function findEntityPropertyAsObject(
+  process: Process,
+  propertyPath: string,
+): Record<string, unknown> | undefined {
+  return JsonFormUtils.findJsonFormsPropertyAsObject(ProcessEntityJsonValue.of(process), propertyPath)
+}
+
+/**
+ * Update a json forms data property in the task passed following the 'propertyPath'.
+ *
+ * @param process The process
+ * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
+ * @param value Value to update
+ * @param options Additional options
+ * @throws Error If property parent path doesn't exist
+ */
+export function updateEntityProperty(
+  process: Process,
+  propertyPath: string,
+  value: JsonFormsSimpleType | undefined,
+  options?: UpdateJsonFormsPropertyOptions,
+): void {
+  JsonFormUtils.updateJsonFormsProperty(ProcessEntityJsonValue.of(process), propertyPath, value, options)
+}
+
+class ProcessEntityJsonValue implements JsonFormsModel {
+  public static of(process: Process): JsonFormsModel {
+    return new ProcessEntityJsonValue(process)
+  }
+
+  private constructor(readonly process: Process) {}
+
+  get jsonValue(): Record<string, any> | undefined {
+    return this.process.entity?.data
+  }
+
+  set jsonValue(data: Record<string, any> | undefined) {
+    if (this.process.entity == null) {
+      this.process.entity = {}
+    }
+
+    this.process.entity.data = data
+  }
 }

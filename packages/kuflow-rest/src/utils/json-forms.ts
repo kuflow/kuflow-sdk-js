@@ -21,16 +21,12 @@
  * THE SOFTWARE.
  */
 
-import {
-  type PrincipalType,
-  type Task,
-  type TaskPageItem,
-  type TaskSaveJsonFormsValueDataCommand,
-  type TenantUser,
-} from '../generated'
+import { type PrincipalType } from '../generated'
 import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
 
-export type JsonFormsModels = Task | TaskPageItem | TaskSaveJsonFormsValueDataCommand | TenantUser
+export interface JsonFormsModel {
+  jsonValue: Record<string, any> | undefined
+}
 
 export type JsonFormsSimpleType = string | number | boolean | Date | JsonFormsPrincipal | JsonFormsFile
 
@@ -59,7 +55,7 @@ export interface JsonFormsProperty {
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsString(model: JsonFormsModels, propertyPath: string): string {
+export function getJsonFormsPropertyAsString(model: JsonFormsModel, propertyPath: string): string {
   const value = findJsonFormsPropertyAsString(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -75,7 +71,7 @@ export function getJsonFormsPropertyAsString(model: JsonFormsModels, propertyPat
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsString(model: JsonFormsModels, propertyPath: string): string | undefined {
+export function findJsonFormsPropertyAsString(model: JsonFormsModel, propertyPath: string): string | undefined {
   return findJsonFormsPropertyValue(model, propertyPath)?.toString()
 }
 
@@ -87,7 +83,7 @@ export function findJsonFormsPropertyAsString(model: JsonFormsModels, propertyPa
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsNumber(model: JsonFormsModels, propertyPath: string): number {
+export function getJsonFormsPropertyAsNumber(model: JsonFormsModel, propertyPath: string): number {
   const value = findJsonFormsPropertyAsNumber(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -103,7 +99,7 @@ export function getJsonFormsPropertyAsNumber(model: JsonFormsModels, propertyPat
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsNumber(model: JsonFormsModels, propertyPath: string): number | undefined {
+export function findJsonFormsPropertyAsNumber(model: JsonFormsModel, propertyPath: string): number | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
   if (value == null) {
     return undefined
@@ -131,7 +127,7 @@ export function findJsonFormsPropertyAsNumber(model: JsonFormsModels, propertyPa
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsBoolean(model: JsonFormsModels, propertyPath: string): boolean {
+export function getJsonFormsPropertyAsBoolean(model: JsonFormsModel, propertyPath: string): boolean {
   const value = findJsonFormsPropertyAsBoolean(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -147,7 +143,7 @@ export function getJsonFormsPropertyAsBoolean(model: JsonFormsModels, propertyPa
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsBoolean(model: JsonFormsModels, propertyPath: string): boolean | undefined {
+export function findJsonFormsPropertyAsBoolean(model: JsonFormsModel, propertyPath: string): boolean | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
@@ -173,7 +169,7 @@ export function findJsonFormsPropertyAsBoolean(model: JsonFormsModels, propertyP
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsDate(model: JsonFormsModels, propertyPath: string): Date {
+export function getJsonFormsPropertyAsDate(model: JsonFormsModel, propertyPath: string): Date {
   const value = findJsonFormsPropertyAsDate(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -189,7 +185,7 @@ export function getJsonFormsPropertyAsDate(model: JsonFormsModels, propertyPath:
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsDate(model: JsonFormsModels, propertyPath: string): Date | undefined {
+export function findJsonFormsPropertyAsDate(model: JsonFormsModel, propertyPath: string): Date | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
@@ -216,7 +212,7 @@ export function findJsonFormsPropertyAsDate(model: JsonFormsModels, propertyPath
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsJsonFormsFile(model: JsonFormsModels, propertyPath: string): JsonFormsFile {
+export function getJsonFormsPropertyAsJsonFormsFile(model: JsonFormsModel, propertyPath: string): JsonFormsFile {
   const value = findJsonFormsPropertyAsJsonFormsFile(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -233,7 +229,7 @@ export function getJsonFormsPropertyAsJsonFormsFile(model: JsonFormsModels, prop
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsJsonFormsFile(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   propertyPath: string,
 ): JsonFormsFile | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
@@ -259,7 +255,7 @@ export function findJsonFormsPropertyAsJsonFormsFile(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsJsonFormsPrincipal(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   propertyPath: string,
 ): JsonFormsPrincipal {
   const value = findJsonFormsPropertyAsJsonFormsPrincipal(model, propertyPath)
@@ -278,7 +274,7 @@ export function getJsonFormsPropertyAsJsonFormsPrincipal(
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsJsonFormsPrincipal(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   propertyPath: string,
 ): JsonFormsPrincipal | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
@@ -303,7 +299,7 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsArray(model: JsonFormsModels, propertyPath: string): unknown[] {
+export function getJsonFormsPropertyAsArray(model: JsonFormsModel, propertyPath: string): unknown[] {
   const value = findJsonFormsPropertyAsArray(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -319,7 +315,7 @@ export function getJsonFormsPropertyAsArray(model: JsonFormsModels, propertyPath
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsArray(model: JsonFormsModels, propertyPath: string): unknown[] | undefined {
+export function findJsonFormsPropertyAsArray(model: JsonFormsModel, propertyPath: string): unknown[] | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
 
   if (value == null) {
@@ -341,7 +337,7 @@ export function findJsonFormsPropertyAsArray(model: JsonFormsModels, propertyPat
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsObject(model: JsonFormsModels, propertyPath: string): Record<string, unknown> {
+export function getJsonFormsPropertyAsObject(model: JsonFormsModel, propertyPath: string): Record<string, unknown> {
   const value = findJsonFormsPropertyAsObject(model, propertyPath)
   if (value == null) {
     throw new Error("Property value doesn't exist")
@@ -358,7 +354,7 @@ export function getJsonFormsPropertyAsObject(model: JsonFormsModels, propertyPat
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsObject(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   propertyPath: string,
 ): Record<string, unknown> | undefined {
   const value = findJsonFormsPropertyValue(model, propertyPath)
@@ -381,7 +377,7 @@ export function findJsonFormsPropertyAsObject(
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-function findJsonFormsPropertyValue(model: JsonFormsModels, propertyPath: string): JsonFormsComplexType | undefined {
+function findJsonFormsPropertyValue(model: JsonFormsModel, propertyPath: string): JsonFormsComplexType | undefined {
   return findJsonFormsProperty(model, propertyPath)?.value
 }
 
@@ -399,7 +395,7 @@ export interface UpdateJsonFormsPropertyOptions {
  * @throws Error If property parent path doesn't exist
  */
 export function updateJsonFormsProperty(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   propertyPath: string,
   value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
@@ -446,7 +442,7 @@ export function updateJsonFormsProperty(
  * @return the property if exists.
  */
 export function findJsonFormsProperty(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   propertyPath: string,
   createMissingParents: boolean = false,
 ): JsonFormsProperty | undefined {
@@ -735,32 +731,14 @@ function isJsonFormsTypeContainerArray(value: JsonFormsComplexType | undefined):
 }
 
 function getJsonFormsValueData(
-  model: JsonFormsModels,
+  model: JsonFormsModel,
   createMissingParents: boolean,
 ): JsonFormsContainerType | undefined {
-  let data: JsonFormsContainerType | undefined
-
-  if ('jsonFormsValue' in model) {
-    data = model.jsonFormsValue?.data
-  } else if ('metadata' in model) {
-    data = model.metadata?.value
-  } else if ('data' in model) {
-    data = model.data
-  }
+  let data: JsonFormsContainerType | undefined = model.jsonValue
 
   if (data == null && createMissingParents) {
     data = {}
-    if ('jsonFormsValue' in model) {
-      model.jsonFormsValue = model.jsonFormsValue ?? {}
-      model.jsonFormsValue.data = data
-    } else if ('metadata' in model) {
-      model.metadata = model.metadata ?? { valid: false, value: {} }
-      model.metadata.value = data
-
-      data = model.metadata?.value
-    } else if ('data' in model) {
-      model.data = data
-    }
+    model.jsonValue = data
   }
 
   return data

@@ -29,6 +29,7 @@ import {
   ProcessChangeInitiatorCommand as ProcessChangeInitiatorCommandMapper,
   ProcessDeleteElementCommand as ProcessDeleteElementCommandMapper,
   ProcessSaveElementCommand as ProcessSaveElementCommandMapper,
+  ProcessSaveEntityDataCommand as ProcessSaveEntityDataCommandMapper,
   Task as TaskMapper,
   TaskAssignCommand as TaskAssignCommandMapper,
   TaskDeleteElementCommand as TaskDeleteElementCommandMapper,
@@ -282,6 +283,45 @@ export const userActionValueId: OperationQueryParameter = {
   },
 }
 
+export const command3: OperationParameter = {
+  parameterPath: 'command',
+  mapper: ProcessSaveEntityDataCommandMapper,
+}
+
+export const schemaPath: OperationQueryParameter = {
+  parameterPath: 'schemaPath',
+  mapper: {
+    serializedName: 'schemaPath',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const accept2: OperationParameter = {
+  parameterPath: 'accept',
+  mapper: {
+    defaultValue: 'application/octet-stream, application/json',
+    isConstant: true,
+    serializedName: 'Accept',
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const documentUri: OperationQueryParameter = {
+  parameterPath: 'documentUri',
+  mapper: {
+    serializedName: 'documentUri',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
+}
+
 export const processId: OperationQueryParameter = {
   parameterPath: ['options', 'processId'],
   mapper: {
@@ -346,12 +386,12 @@ export const activityToken: OperationQueryParameter = {
   },
 }
 
-export const command3: OperationParameter = {
+export const command4: OperationParameter = {
   parameterPath: 'command',
   mapper: TaskAssignCommandMapper,
 }
 
-export const command4: OperationParameter = {
+export const command5: OperationParameter = {
   parameterPath: 'command',
   mapper: TaskSaveElementCommandMapper,
 }
@@ -388,26 +428,14 @@ export const elementValueValid: OperationQueryParameter = {
   },
 }
 
-export const command5: OperationParameter = {
+export const command6: OperationParameter = {
   parameterPath: 'command',
   mapper: TaskDeleteElementCommandMapper,
 }
 
-export const command6: OperationParameter = {
+export const command7: OperationParameter = {
   parameterPath: 'command',
   mapper: TaskDeleteElementValueDocumentCommandMapper,
-}
-
-export const accept2: OperationParameter = {
-  parameterPath: 'accept',
-  mapper: {
-    defaultValue: 'application/octet-stream, application/json',
-    isConstant: true,
-    serializedName: 'Accept',
-    type: {
-      name: 'String',
-    },
-  },
 }
 
 export const documentId: OperationQueryParameter = {
@@ -433,31 +461,9 @@ export const accept3: OperationParameter = {
   },
 }
 
-export const command7: OperationParameter = {
+export const command8: OperationParameter = {
   parameterPath: 'command',
   mapper: TaskSaveJsonFormsValueDataCommandMapper,
-}
-
-export const schemaPath: OperationQueryParameter = {
-  parameterPath: 'schemaPath',
-  mapper: {
-    serializedName: 'schemaPath',
-    required: true,
-    type: {
-      name: 'String',
-    },
-  },
-}
-
-export const documentUri: OperationQueryParameter = {
-  parameterPath: 'documentUri',
-  mapper: {
-    serializedName: 'documentUri',
-    required: true,
-    type: {
-      name: 'String',
-    },
-  },
 }
 
 export const log: OperationParameter = {

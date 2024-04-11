@@ -233,7 +233,7 @@ export interface TaskOperations {
    * @param id The resource ID.
    * @param fileContentType Document content type
    * @param fileName Document name
-   * @param schemaPath JSON Schema path related to the document. The uploaded document must be validated
+   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
    *                   by the passed schema path.
    *
    * @param file Document to save.

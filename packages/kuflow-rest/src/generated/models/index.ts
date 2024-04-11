@@ -129,6 +129,17 @@ export interface ProcessElementValue {
   valid?: boolean
 }
 
+/**
+ * Json form values, used when the render type selected is JSON Forms.
+ *
+ */
+export interface JsonFormsValue {
+  /** true if the data complain the related json schema. */
+  valid?: boolean
+  /** json value filled that complain with the related json schema. */
+  data?: Record<string, any>
+}
+
 export interface RelatedProcess {
   /** Processes whose relationship target is the current process. */
   incoming?: string[]
@@ -153,6 +164,21 @@ export interface ProcessDeleteElementCommand {
   elementDefinitionCode: string
 }
 
+export interface ProcessSaveEntityDataCommand {
+  /** json value filled that complain with the related json schema. */
+  data: Record<string, any>
+}
+
+export interface ProcessSaveEntityDocumentResponseCommand {
+  /**
+   * JSON value representing the uploaded file.
+   *
+   * Example: `kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;`
+   *
+   */
+  value: string
+}
+
 /** In creation task, one of 'id, version or code' is mandatory. */
 export interface TaskDefinitionSummary {
   id?: string
@@ -165,17 +191,6 @@ export interface TaskElementValue {
   /** Polymorphic discriminator, which specifies the different types this object can be */
   type: 'STRING' | 'NUMBER' | 'OBJECT' | 'DOCUMENT' | 'PRINCIPAL'
   valid?: boolean
-}
-
-/**
- * Json form values, used when the render type selected is JSON Forms.
- *
- */
-export interface JsonFormsValue {
-  /** true if the data complain the related json schema. */
-  valid?: boolean
-  /** json value filled that complain with the related json schema. */
-  data?: Record<string, any>
 }
 
 export interface Log {
@@ -329,6 +344,11 @@ export interface Process extends AbstractAudited {
   processDefinition: ProcessDefinitionSummary
   /** Process element values, an ElementValueDocument is not allowed. */
   elementValues?: Record<string, ProcessElementValueUnion[]>
+  /**
+   * Json form values, used when the render type selected is JSON Forms.
+   *
+   */
+  entity?: JsonFormsValue
   initiator?: Principal
   relatedProcess?: RelatedProcess
   /** Tenant ID. */
@@ -668,6 +688,39 @@ export interface ProcessActionsProcessSaveUserActionValueDocumentOptionalParams 
 
 /** Contains response data for the actionsProcessSaveUserActionValueDocument operation. */
 export type ProcessActionsProcessSaveUserActionValueDocumentResponse = Process
+
+/** Optional parameters. */
+export interface ProcessActionsProcessSaveEntityDataOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsProcessSaveEntityData operation. */
+export type ProcessActionsProcessSaveEntityDataResponse = Process
+
+/** Optional parameters. */
+export interface ProcessActionsProcessSaveEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsProcessSaveEntityDocument operation. */
+export type ProcessActionsProcessSaveEntityDocumentResponse = ProcessSaveEntityDocumentResponseCommand
+
+/** Optional parameters. */
+export interface ProcessActionsProcessDownloadEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the actionsProcessDownloadEntityDocument operation. */
+export interface ProcessActionsProcessDownloadEntityDocumentResponse {
+  /**
+   * BROWSER ONLY
+   *
+   * The response body as a browser Blob.
+   * Always `undefined` in node.js.
+   */
+  blobBody?: Promise<Blob>
+  /**
+   * NODEJS ONLY
+   *
+   * The response body as a node.js Readable stream.
+   * Always `undefined` in the browser.
+   */
+  readableStreamBody?: NodeJS.ReadableStream
+}
 
 /** Optional parameters. */
 export interface TaskFindTasksOptionalParams extends coreClient.OperationOptions {
