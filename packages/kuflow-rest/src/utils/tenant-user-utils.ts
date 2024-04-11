@@ -27,6 +27,7 @@ import * as JsonFormUtils from './json-forms'
 
 type JsonFormsSimpleType = JsonFormUtils.JsonFormsSimpleType
 type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptions
+type JsonFormsModel = JsonFormUtils.JsonFormsModel
 
 /**
  * Get a json property as String following the 'propertyPath' passed.
@@ -37,7 +38,7 @@ type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptio
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsString(tenantUser: TenantUser, propertyPath: string): string {
-  return JsonFormUtils.getJsonFormsPropertyAsString(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsString(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -48,7 +49,7 @@ export function getMetadataPropertyAsString(tenantUser: TenantUser, propertyPath
  * @return the property value if exists.
  */
 export function findMetadataPropertyAsString(tenantUser: TenantUser, propertyPath: string): string | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsString(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsString(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -60,7 +61,7 @@ export function findMetadataPropertyAsString(tenantUser: TenantUser, propertyPat
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsNumber(tenantUser: TenantUser, propertyPath: string): number {
-  return JsonFormUtils.getJsonFormsPropertyAsNumber(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsNumber(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -71,7 +72,7 @@ export function getMetadataPropertyAsNumber(tenantUser: TenantUser, propertyPath
  * @return the property value if exists.
  */
 export function findMetadataPropertyAsNumber(tenantUser: TenantUser, propertyPath: string): number | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsNumber(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsNumber(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -83,7 +84,7 @@ export function findMetadataPropertyAsNumber(tenantUser: TenantUser, propertyPat
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsBoolean(tenantUser: TenantUser, propertyPath: string): boolean {
-  return JsonFormUtils.getJsonFormsPropertyAsBoolean(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsBoolean(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -94,7 +95,7 @@ export function getMetadataPropertyAsBoolean(tenantUser: TenantUser, propertyPat
  * @return the property value if exists.
  */
 export function findMetadataPropertyAsBoolean(tenantUser: TenantUser, propertyPath: string): boolean | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsBoolean(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsBoolean(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -106,7 +107,7 @@ export function findMetadataPropertyAsBoolean(tenantUser: TenantUser, propertyPa
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsDate(tenantUser: TenantUser, propertyPath: string): Date {
-  return JsonFormUtils.getJsonFormsPropertyAsDate(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsDate(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -117,7 +118,7 @@ export function getMetadataPropertyAsDate(tenantUser: TenantUser, propertyPath: 
  * @return the property value if exists.
  */
 export function findMetadataPropertyAsDate(tenantUser: TenantUser, propertyPath: string): Date | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsDate(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsDate(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -129,7 +130,7 @@ export function findMetadataPropertyAsDate(tenantUser: TenantUser, propertyPath:
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsJsonFormsFile(tenantUser: TenantUser, propertyPath: string): JsonFormsFile {
-  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -143,7 +144,7 @@ export function findMetadataPropertyAsJsonFormsFile(
   tenantUser: TenantUser,
   propertyPath: string,
 ): JsonFormsFile | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -158,7 +159,10 @@ export function getMetadataPropertyAsJsonFormsPrincipal(
   tenantUser: TenantUser,
   propertyPath: string,
 ): JsonFormsPrincipal {
-  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(
+    TenantUserMetadataJsonValue.of(tenantUser),
+    propertyPath,
+  )
 }
 
 /**
@@ -172,7 +176,10 @@ export function findMetadataPropertyAsJsonFormsPrincipal(
   tenantUser: TenantUser,
   propertyPath: string,
 ): JsonFormsPrincipal | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(
+    TenantUserMetadataJsonValue.of(tenantUser),
+    propertyPath,
+  )
 }
 
 /**
@@ -184,7 +191,7 @@ export function findMetadataPropertyAsJsonFormsPrincipal(
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsArray(tenantUser: TenantUser, propertyPath: string): unknown[] {
-  return JsonFormUtils.getJsonFormsPropertyAsArray(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsArray(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -195,7 +202,7 @@ export function getMetadataPropertyAsArray(tenantUser: TenantUser, propertyPath:
  * @return the property value if exists.
  */
 export function findMetadataPropertyAsArray(tenantUser: TenantUser, propertyPath: string): unknown[] | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsArray(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsArray(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -207,7 +214,7 @@ export function findMetadataPropertyAsArray(tenantUser: TenantUser, propertyPath
  * @throws Error If property value doesn't exist
  */
 export function getMetadataPropertyAsObject(tenantUser: TenantUser, propertyPath: string): Record<string, unknown> {
-  return JsonFormUtils.getJsonFormsPropertyAsObject(tenantUser, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsObject(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -221,7 +228,7 @@ export function findMetadataPropertyAsObject(
   tenantUser: TenantUser,
   propertyPath: string,
 ): Record<string, unknown> | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsObject(tenantUser, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsObject(TenantUserMetadataJsonValue.of(tenantUser), propertyPath)
 }
 
 /**
@@ -239,5 +246,28 @@ export function updateMetadataProperty(
   value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
 ): void {
-  JsonFormUtils.updateJsonFormsProperty(tenantUser, propertyPath, value, options)
+  JsonFormUtils.updateJsonFormsProperty(TenantUserMetadataJsonValue.of(tenantUser), propertyPath, value, options)
+}
+
+class TenantUserMetadataJsonValue implements JsonFormsModel {
+  public static of(tenantUser: TenantUser): JsonFormsModel {
+    return new TenantUserMetadataJsonValue(tenantUser)
+  }
+
+  private constructor(readonly tenantUser: TenantUser) {}
+
+  get jsonValue(): Record<string, any> | undefined {
+    return this.tenantUser.metadata?.value
+  }
+
+  set jsonValue(data: Record<string, any> | undefined) {
+    if (this.tenantUser.metadata == null) {
+      this.tenantUser.metadata = {
+        valid: false,
+        value: {},
+      }
+    }
+
+    this.tenantUser.metadata.value = data ?? {}
+  }
 }

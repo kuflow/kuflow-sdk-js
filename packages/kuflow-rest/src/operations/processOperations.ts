@@ -33,8 +33,14 @@ import {
   type ProcessActionsProcessCompleteResponse,
   type ProcessActionsProcessDeleteElementOptionalParams,
   type ProcessActionsProcessDeleteElementResponse,
+  type ProcessActionsProcessDownloadEntityDocumentOptionalParams,
+  type ProcessActionsProcessDownloadEntityDocumentResponse,
   type ProcessActionsProcessSaveElementOptionalParams,
   type ProcessActionsProcessSaveElementResponse,
+  type ProcessActionsProcessSaveEntityDataOptionalParams,
+  type ProcessActionsProcessSaveEntityDataResponse,
+  type ProcessActionsProcessSaveEntityDocumentOptionalParams,
+  type ProcessActionsProcessSaveEntityDocumentResponse,
   type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
   type ProcessActionsProcessSaveUserActionValueDocumentResponse,
   type ProcessChangeInitiatorCommand,
@@ -46,10 +52,12 @@ import {
   type ProcessRetrieveProcessOptionalParams,
   type ProcessRetrieveProcessResponse,
   type ProcessSaveElementCommand,
+  type ProcessSaveEntityDataCommand,
 } from '../generated'
 import {
   type Document,
   type ProcessFindProcessesOptionalExtParams,
+  type ProcessSaveEntityDocumentRequestCommand,
   type ProcessSaveUserActionValueDocumentCommand,
 } from '../models'
 
@@ -256,5 +264,65 @@ export class ProcessOperations {
     }
 
     return process
+  }
+
+  /**
+   * Allow to save a JSON validating that the data follow the related schema. If the data is invalid,
+   * then
+   * the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param command Command to save the JSON value.
+   * @param options The options parameters.
+   */
+  async actionsProcessSaveEntityData(
+    id: string,
+    command: ProcessSaveEntityDataCommand,
+    options?: ProcessActionsProcessSaveEntityDataOptionalParams,
+  ): Promise<ProcessActionsProcessSaveEntityDataResponse> {
+    return await this.processOperations.actionsProcessSaveEntityData(id, command, options)
+  }
+
+  /**
+   * Save a document in the process to later be linked into the JSON data.
+   *
+   * @param id The resource ID.
+   * @param command Command options
+   * @param document Document to upload
+   * @param options The options parameters.
+   */
+  async actionsProcessSaveEntityDocument(
+    id: string,
+    command: ProcessSaveEntityDocumentRequestCommand,
+    document: Document,
+    options?: ProcessActionsProcessSaveEntityDocumentOptionalParams,
+  ): Promise<ProcessActionsProcessSaveEntityDocumentResponse> {
+    const fileContentType = document.contentType
+    const fileName = document.fileName
+    const file = document.fileContent
+    const schemaPath = command.schemaPath
+
+    return await this.processOperations.actionsProcessSaveEntityDocument(
+      id,
+      fileContentType,
+      fileName,
+      schemaPath,
+      file,
+      options,
+    )
+  }
+
+  /**
+   * Given a process and a documentUri, download a document.
+   * @param id The resource ID.
+   * @param documentUri Document URI to download.
+   * @param options The options parameters.
+   */
+  async actionsProcessDownloadEntityDocument(
+    id: string,
+    documentUri: string,
+    options?: ProcessActionsProcessDownloadEntityDocumentOptionalParams,
+  ): Promise<ProcessActionsProcessDownloadEntityDocumentResponse> {
+    return await this.processOperations.actionsProcessDownloadEntityDocument(id, documentUri, options)
   }
 }

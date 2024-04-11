@@ -21,156 +21,131 @@
  * THE SOFTWARE.
  */
 
-import { type JsonFormsFile, type JsonFormsPrincipal, JsonFormsUtils } from '@kuflow/kuflow-rest'
+import { type ProcessSaveEntityDataCommand } from '../generated'
+import type { JsonFormsFile, JsonFormsPrincipal } from '../models'
+import * as JsonFormUtils from './json-forms'
 
-import { type SaveTaskJsonFormsValueDataRequest } from '../models'
-
-type SimpleType = JsonFormsUtils.JsonFormsSimpleType
-type UpdateJsonFormsPropertyOptions = JsonFormsUtils.UpdateJsonFormsPropertyOptions
-type JsonFormsModel = JsonFormsUtils.JsonFormsModel
-
+type JsonFormsSimpleType = JsonFormUtils.JsonFormsSimpleType
+type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptions
+type JsonFormsModel = JsonFormUtils.JsonFormsModel
 /**
  * Get a json property as String following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsString(request: SaveTaskJsonFormsValueDataRequest, propertyPath: string): string {
-  return JsonFormsUtils.getJsonFormsPropertyAsString(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+export function getEntityPropertyAsString(command: ProcessSaveEntityDataCommand, propertyPath: string): string {
+  return JsonFormUtils.getJsonFormsPropertyAsString(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Try to find a json property as String following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsString(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsString(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): string | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsString(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.findJsonFormsPropertyAsString(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Get a json property as Number following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsNumber(request: SaveTaskJsonFormsValueDataRequest, propertyPath: string): number {
-  return JsonFormsUtils.getJsonFormsPropertyAsNumber(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+export function getEntityPropertyAsNumber(command: ProcessSaveEntityDataCommand, propertyPath: string): number {
+  return JsonFormUtils.getJsonFormsPropertyAsNumber(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Try to find a json property as Number following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsNumber(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsNumber(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): number | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsNumber(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.findJsonFormsPropertyAsNumber(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Get a json property as Boolean following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsBoolean(
-  request: SaveTaskJsonFormsValueDataRequest,
-  propertyPath: string,
-): boolean {
-  return JsonFormsUtils.getJsonFormsPropertyAsBoolean(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+export function getEntityPropertyAsBoolean(command: ProcessSaveEntityDataCommand, propertyPath: string): boolean {
+  return JsonFormUtils.getJsonFormsPropertyAsBoolean(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Try to find a json property as Double following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsBoolean(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsBoolean(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): boolean | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsBoolean(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.findJsonFormsPropertyAsBoolean(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Get a json property as Date following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsDate(request: SaveTaskJsonFormsValueDataRequest, propertyPath: string): Date {
-  return JsonFormsUtils.getJsonFormsPropertyAsDate(SaveTaskJsonFormsValueDataRequestJsonValue.of(request), propertyPath)
+export function getEntityPropertyAsDate(command: ProcessSaveEntityDataCommand, propertyPath: string): Date {
+  return JsonFormUtils.getJsonFormsPropertyAsDate(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Try to find a json property as Date following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsDate(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsDate(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): Date | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsDate(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.findJsonFormsPropertyAsDate(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Get a json property as JsonFormsFile following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsJsonFormsFile(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function getEntityPropertyAsJsonFormsFile(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): JsonFormsFile {
-  return JsonFormsUtils.getJsonFormsPropertyAsJsonFormsFile(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(
+    ProcessSaveEntityDataCommandJsonValue.of(command),
     propertyPath,
   )
 }
@@ -178,16 +153,16 @@ export function getJsonFormsPropertyAsJsonFormsFile(
 /**
  * Try to find a json property as JsonFormsFile following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsJsonFormsFile(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsJsonFormsFile(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): JsonFormsFile | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsJsonFormsFile(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(
+    ProcessSaveEntityDataCommandJsonValue.of(command),
     propertyPath,
   )
 }
@@ -195,17 +170,17 @@ export function findJsonFormsPropertyAsJsonFormsFile(
 /**
  * Get a json property as JsonFormsPrincipal following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsJsonFormsPrincipal(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function getEntityPropertyAsJsonFormsPrincipal(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): JsonFormsPrincipal {
-  return JsonFormsUtils.getJsonFormsPropertyAsJsonFormsPrincipal(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(
+    ProcessSaveEntityDataCommandJsonValue.of(command),
     propertyPath,
   )
 }
@@ -213,16 +188,16 @@ export function getJsonFormsPropertyAsJsonFormsPrincipal(
 /**
  * Try to find a json property as JsonFormsPrincipal following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsJsonFormsPrincipal(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsJsonFormsPrincipal(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): JsonFormsPrincipal | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsJsonFormsPrincipal(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(
+    ProcessSaveEntityDataCommandJsonValue.of(command),
     propertyPath,
   )
 }
@@ -230,108 +205,88 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
 /**
  * Get a json property as Array following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsArray(
-  request: SaveTaskJsonFormsValueDataRequest,
-  propertyPath: string,
-): unknown[] {
-  return JsonFormsUtils.getJsonFormsPropertyAsArray(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+export function getEntityPropertyAsArray(command: ProcessSaveEntityDataCommand, propertyPath: string): unknown[] {
+  return JsonFormUtils.getJsonFormsPropertyAsArray(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Try to find a json property as Array following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsArray(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsArray(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): unknown[] | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsArray(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.findJsonFormsPropertyAsArray(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Get a json property as Object following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  * @throws Error If property value doesn't exist
  */
-export function getJsonFormsPropertyAsObject(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function getEntityPropertyAsObject(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): Record<string, unknown> {
-  return JsonFormsUtils.getJsonFormsPropertyAsObject(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.getJsonFormsPropertyAsObject(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Try to find a json property as Object following the 'propertyPath' passed.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @return the property value if exists.
  */
-export function findJsonFormsPropertyAsObject(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function findEntityPropertyAsObject(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
 ): Record<string, unknown> | undefined {
-  return JsonFormsUtils.findJsonFormsPropertyAsObject(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-  )
+  return JsonFormUtils.findJsonFormsPropertyAsObject(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath)
 }
 
 /**
  * Update a json forms data property in the task passed following the 'propertyPath'.
  *
- * @param request The save task json forms value data request
+ * @param command The command
  * @param propertyPath Property path to find. ie: "user.name" or "users.0.name"
  * @param value Value to update
  * @param options Additional options
  * @throws Error If property parent path doesn't exist
  */
-export function updateJsonFormsProperty(
-  request: SaveTaskJsonFormsValueDataRequest,
+export function updateEntityProperty(
+  command: ProcessSaveEntityDataCommand,
   propertyPath: string,
-  value: SimpleType | undefined,
+  value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
 ): void {
-  JsonFormsUtils.updateJsonFormsProperty(
-    SaveTaskJsonFormsValueDataRequestJsonValue.of(request),
-    propertyPath,
-    value,
-    options,
-  )
+  JsonFormUtils.updateJsonFormsProperty(ProcessSaveEntityDataCommandJsonValue.of(command), propertyPath, value, options)
 }
 
-class SaveTaskJsonFormsValueDataRequestJsonValue implements JsonFormsModel {
-  public static of(request: SaveTaskJsonFormsValueDataRequest): JsonFormsModel {
-    return new SaveTaskJsonFormsValueDataRequestJsonValue(request)
+class ProcessSaveEntityDataCommandJsonValue implements JsonFormsModel {
+  public static of(command: ProcessSaveEntityDataCommand): JsonFormsModel {
+    return new ProcessSaveEntityDataCommandJsonValue(command)
   }
 
-  private constructor(readonly request: SaveTaskJsonFormsValueDataRequest) {}
+  private constructor(readonly command: ProcessSaveEntityDataCommand) {}
 
   get jsonValue(): Record<string, any> | undefined {
-    return this.request.data
+    return this.command.data
   }
 
   set jsonValue(data: Record<string, any> | undefined) {
-    this.request.data = data ?? {}
+    this.command.data = data ?? {}
   }
 }

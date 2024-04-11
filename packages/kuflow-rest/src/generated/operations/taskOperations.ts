@@ -302,7 +302,7 @@ export class TaskOperationsImpl implements TaskOperations {
    * @param id The resource ID.
    * @param fileContentType Document content type
    * @param fileName Document name
-   * @param schemaPath JSON Schema path related to the document. The uploaded document must be validated
+   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
    *                   by the passed schema path.
    *
    * @param file Document to save.
@@ -456,7 +456,7 @@ const actionsTaskAssignOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.command3,
+  requestBody: Parameters.command4,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -473,7 +473,7 @@ const actionsTaskSaveElementOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.command4,
+  requestBody: Parameters.command5,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -514,7 +514,7 @@ const actionsTaskDeleteElementOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.command5,
+  requestBody: Parameters.command6,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -531,7 +531,7 @@ const actionsTaskDeleteElementValueDocumentOperationSpec: coreClient.OperationSp
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.command6,
+  requestBody: Parameters.command7,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -586,7 +586,7 @@ const actionsTaskSaveJsonFormsValueDataOperationSpec: coreClient.OperationSpec =
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.command7,
+  requestBody: Parameters.command8,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',

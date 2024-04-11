@@ -27,6 +27,7 @@ import { type JsonFormsComplexType, type JsonFormsSimpleType, type UpdateJsonFor
 import * as JsonFormsUtils from './json-forms'
 import * as ProcessPageItemUtils from './process-page-item-utils'
 import * as ProcessSaveElementCommandUtils from './process-save-element-command-utils'
+import * as ProcessSaveEntityDataCommandUtils from './process-save-entity-data-command-utils'
 import * as ProcessUtils from './process-utils'
 import * as TaskPageItemUtils from './task-page-item-utils'
 import * as TaskSaveElementCommandUtils from './task-save-element-command-utils'
@@ -42,6 +43,7 @@ export {
   type KuFlowObject,
   ProcessPageItemUtils,
   ProcessSaveElementCommandUtils,
+  ProcessSaveEntityDataCommandUtils,
   ProcessUtils,
   TaskPageItemUtils,
   TaskSaveElementCommandUtils,

@@ -29,6 +29,7 @@ import * as JsonFormUtils from './json-forms'
 type KuFlowObject = ElementValueUtils.KuFlowObject
 type JsonFormsSimpleType = JsonFormUtils.JsonFormsSimpleType
 type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptions
+type JsonFormsModel = JsonFormUtils.JsonFormsModel
 
 /**
  * Check if all related valid values are TRUE
@@ -679,7 +680,7 @@ export function addElementValueAsPrincipalList(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsString(task: Task, propertyPath: string): string {
-  return JsonFormUtils.getJsonFormsPropertyAsString(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsString(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -690,7 +691,7 @@ export function getJsonFormsPropertyAsString(task: Task, propertyPath: string): 
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsString(task: Task, propertyPath: string): string | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsString(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsString(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -702,7 +703,7 @@ export function findJsonFormsPropertyAsString(task: Task, propertyPath: string):
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsNumber(task: Task, propertyPath: string): number {
-  return JsonFormUtils.getJsonFormsPropertyAsNumber(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsNumber(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -713,7 +714,7 @@ export function getJsonFormsPropertyAsNumber(task: Task, propertyPath: string): 
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsNumber(task: Task, propertyPath: string): number | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsNumber(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsNumber(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -725,7 +726,7 @@ export function findJsonFormsPropertyAsNumber(task: Task, propertyPath: string):
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsBoolean(task: Task, propertyPath: string): boolean {
-  return JsonFormUtils.getJsonFormsPropertyAsBoolean(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsBoolean(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -736,7 +737,7 @@ export function getJsonFormsPropertyAsBoolean(task: Task, propertyPath: string):
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsBoolean(task: Task, propertyPath: string): boolean | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsBoolean(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsBoolean(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -748,7 +749,7 @@ export function findJsonFormsPropertyAsBoolean(task: Task, propertyPath: string)
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsDate(task: Task, propertyPath: string): Date {
-  return JsonFormUtils.getJsonFormsPropertyAsDate(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsDate(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -759,7 +760,7 @@ export function getJsonFormsPropertyAsDate(task: Task, propertyPath: string): Da
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsDate(task: Task, propertyPath: string): Date | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsDate(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsDate(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -771,7 +772,7 @@ export function findJsonFormsPropertyAsDate(task: Task, propertyPath: string): D
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsJsonFormsFile(task: Task, propertyPath: string): JsonFormsFile {
-  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -782,7 +783,7 @@ export function getJsonFormsPropertyAsJsonFormsFile(task: Task, propertyPath: st
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsJsonFormsFile(task: Task, propertyPath: string): JsonFormsFile | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -794,7 +795,7 @@ export function findJsonFormsPropertyAsJsonFormsFile(task: Task, propertyPath: s
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsJsonFormsPrincipal(task: Task, propertyPath: string): JsonFormsPrincipal {
-  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -808,7 +809,7 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
   task: Task,
   propertyPath: string,
 ): JsonFormsPrincipal | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -820,7 +821,7 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsArray(task: Task, propertyPath: string): unknown[] {
-  return JsonFormUtils.getJsonFormsPropertyAsArray(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsArray(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -831,7 +832,7 @@ export function getJsonFormsPropertyAsArray(task: Task, propertyPath: string): u
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsArray(task: Task, propertyPath: string): unknown[] | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsArray(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsArray(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -843,7 +844,7 @@ export function findJsonFormsPropertyAsArray(task: Task, propertyPath: string): 
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsObject(task: Task, propertyPath: string): Record<string, unknown> {
-  return JsonFormUtils.getJsonFormsPropertyAsObject(task, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsObject(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -854,7 +855,7 @@ export function getJsonFormsPropertyAsObject(task: Task, propertyPath: string): 
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsObject(task: Task, propertyPath: string): Record<string, unknown> | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsObject(task, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsObject(TaskJsonFormsValueJsonValue.of(task), propertyPath)
 }
 
 /**
@@ -872,5 +873,25 @@ export function updateJsonFormsProperty(
   value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
 ): void {
-  JsonFormUtils.updateJsonFormsProperty(task, propertyPath, value, options)
+  JsonFormUtils.updateJsonFormsProperty(TaskJsonFormsValueJsonValue.of(task), propertyPath, value, options)
+}
+
+class TaskJsonFormsValueJsonValue implements JsonFormsModel {
+  public static of(task: Task): JsonFormsModel {
+    return new TaskJsonFormsValueJsonValue(task)
+  }
+
+  private constructor(readonly task: Task) {}
+
+  get jsonValue(): Record<string, any> | undefined {
+    return this.task.jsonFormsValue?.data
+  }
+
+  set jsonValue(data: Record<string, any> | undefined) {
+    if (this.task.jsonFormsValue == null) {
+      this.task.jsonFormsValue = {}
+    }
+
+    this.task.jsonFormsValue.data = data
+  }
 }

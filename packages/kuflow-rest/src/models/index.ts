@@ -47,6 +47,10 @@ export interface ProcessSaveUserActionValueDocumentCommand {
   userActionValueId: string
 }
 
+export interface ProcessSaveEntityDocumentRequestCommand {
+  schemaPath: string
+}
+
 export interface JsonFormsPrincipal {
   id: string
   type: PrincipalType

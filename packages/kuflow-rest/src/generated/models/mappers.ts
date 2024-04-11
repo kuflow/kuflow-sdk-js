@@ -453,6 +453,28 @@ export const ProcessElementValue: coreClient.CompositeMapper = {
   },
 }
 
+export const JsonFormsValue: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'JsonFormsValue',
+    modelProperties: {
+      valid: {
+        serializedName: 'valid',
+        type: {
+          name: 'Boolean',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
 export const RelatedProcess: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -549,6 +571,39 @@ export const ProcessDeleteElementCommand: coreClient.CompositeMapper = {
   },
 }
 
+export const ProcessSaveEntityDataCommand: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessSaveEntityDataCommand',
+    modelProperties: {
+      data: {
+        serializedName: 'data',
+        required: true,
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const ProcessSaveEntityDocumentResponseCommand: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessSaveEntityDocumentResponseCommand',
+    modelProperties: {
+      value: {
+        serializedName: 'value',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const TaskDefinitionSummary: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -609,28 +664,6 @@ export const TaskElementValue: coreClient.CompositeMapper = {
         type: {
           name: 'Enum',
           allowedValues: ['STRING', 'NUMBER', 'OBJECT', 'DOCUMENT', 'PRINCIPAL'],
-        },
-      },
-    },
-  },
-}
-
-export const JsonFormsValue: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'JsonFormsValue',
-    modelProperties: {
-      valid: {
-        serializedName: 'valid',
-        type: {
-          name: 'Boolean',
-        },
-      },
-      data: {
-        serializedName: 'data',
-        type: {
-          name: 'Dictionary',
-          value: { type: { name: 'any' } },
         },
       },
     },
@@ -1212,6 +1245,13 @@ export const Process: coreClient.CompositeMapper = {
               },
             },
           },
+        },
+      },
+      entity: {
+        serializedName: 'entity',
+        type: {
+          name: 'Composite',
+          className: 'JsonFormsValue',
         },
       },
       initiator: {

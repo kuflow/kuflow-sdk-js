@@ -23,10 +23,11 @@
 
 import { type TaskSaveJsonFormsValueDataCommand } from '../generated'
 import { type JsonFormsFile, type JsonFormsPrincipal } from '../models'
-import * as jsonFormUtils from './json-forms'
+import * as JsonFormUtils from './json-forms'
 
-type SimpleType = jsonFormUtils.JsonFormsSimpleType
-type UpdateJsonFormsPropertyOptions = jsonFormUtils.UpdateJsonFormsPropertyOptions
+type SimpleType = JsonFormUtils.JsonFormsSimpleType
+type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptions
+type JsonFormsModel = JsonFormUtils.JsonFormsModel
 
 /**
  * Get a json property as String following the 'propertyPath' passed.
@@ -37,7 +38,10 @@ type UpdateJsonFormsPropertyOptions = jsonFormUtils.UpdateJsonFormsPropertyOptio
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsString(command: TaskSaveJsonFormsValueDataCommand, propertyPath: string): string {
-  return jsonFormUtils.getJsonFormsPropertyAsString(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsString(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -51,7 +55,10 @@ export function findJsonFormsPropertyAsString(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): string | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsString(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsString(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -63,7 +70,10 @@ export function findJsonFormsPropertyAsString(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsNumber(command: TaskSaveJsonFormsValueDataCommand, propertyPath: string): number {
-  return jsonFormUtils.getJsonFormsPropertyAsNumber(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsNumber(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -77,7 +87,10 @@ export function findJsonFormsPropertyAsNumber(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): number | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsNumber(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsNumber(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -92,7 +105,10 @@ export function getJsonFormsPropertyAsBoolean(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): boolean {
-  return jsonFormUtils.getJsonFormsPropertyAsBoolean(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsBoolean(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -106,7 +122,10 @@ export function findJsonFormsPropertyAsBoolean(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): boolean | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsBoolean(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsBoolean(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -118,7 +137,10 @@ export function findJsonFormsPropertyAsBoolean(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsDate(command: TaskSaveJsonFormsValueDataCommand, propertyPath: string): Date {
-  return jsonFormUtils.getJsonFormsPropertyAsDate(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsDate(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -132,7 +154,10 @@ export function findJsonFormsPropertyAsDate(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): Date | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsDate(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsDate(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -147,7 +172,10 @@ export function getJsonFormsPropertyAsJsonFormsFile(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): JsonFormsFile {
-  return jsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -161,7 +189,10 @@ export function findJsonFormsPropertyAsJsonFormsFile(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): JsonFormsFile | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -176,7 +207,10 @@ export function getJsonFormsPropertyAsJsonFormsPrincipal(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): JsonFormsPrincipal {
-  return jsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -190,7 +224,10 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): JsonFormsPrincipal | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -205,7 +242,10 @@ export function getJsonFormsPropertyAsArray(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): unknown[] {
-  return jsonFormUtils.getJsonFormsPropertyAsArray(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsArray(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -219,7 +259,10 @@ export function findJsonFormsPropertyAsArray(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): unknown[] | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsArray(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsArray(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -234,7 +277,10 @@ export function getJsonFormsPropertyAsObject(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): Record<string, unknown> {
-  return jsonFormUtils.getJsonFormsPropertyAsObject(command, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsObject(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -248,7 +294,10 @@ export function findJsonFormsPropertyAsObject(
   command: TaskSaveJsonFormsValueDataCommand,
   propertyPath: string,
 ): Record<string, unknown> | undefined {
-  return jsonFormUtils.findJsonFormsPropertyAsObject(command, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsObject(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+  )
 }
 
 /**
@@ -266,5 +315,26 @@ export function updateJsonFormsProperty(
   value: SimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
 ): void {
-  jsonFormUtils.updateJsonFormsProperty(command, propertyPath, value, options)
+  JsonFormUtils.updateJsonFormsProperty(
+    TaskSaveJsonFormsValueDataCommandJsonFormsModel.of(command),
+    propertyPath,
+    value,
+    options,
+  )
+}
+
+class TaskSaveJsonFormsValueDataCommandJsonFormsModel implements JsonFormsModel {
+  public static of(command: TaskSaveJsonFormsValueDataCommand): JsonFormsModel {
+    return new TaskSaveJsonFormsValueDataCommandJsonFormsModel(command)
+  }
+
+  private constructor(readonly command: TaskSaveJsonFormsValueDataCommand) {}
+
+  get jsonValue(): Record<string, any> | undefined {
+    return this.command.data
+  }
+
+  set jsonValue(data: Record<string, any> | undefined) {
+    this.command.data = data
+  }
 }

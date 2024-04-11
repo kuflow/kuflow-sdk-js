@@ -24,15 +24,19 @@ import { describe, expect, test } from '@jest/globals'
 import {
   type Document,
   KuFlowRestClient,
+  type ProcessActionsProcessSaveEntityDocumentResponse,
   type ProcessChangeInitiatorCommand,
   type ProcessDeleteElementCommand,
   type ProcessSaveElementCommand,
+  type ProcessSaveEntityDataCommand,
+  type ProcessSaveEntityDocumentRequestCommand,
   type ProcessSaveUserActionValueDocumentCommand,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
 
 import { mockProcess, mockProcessPage } from './utils/fixtures'
+import { streamToString } from './utils/stream'
 
 const clientId = 'USER1'
 const clientSecret = 'PASS1'
@@ -343,6 +347,96 @@ describe('API /processes', () => {
       scope.done()
 
       expect(processes).toBeUndefined()
+    })
+  })
+
+  describe('GET /processes/{id}/~actions/save-entity-data', () => {
+    test('Check happy path', async () => {
+      const expectedObject = mockProcess()
+      const command: ProcessSaveEntityDataCommand = {
+        data: {
+          key: 'value',
+        },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .post(`/processes/${expectedObject.id}/~actions/save-entity-data`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processes = await kuFlowRestClient.processOperations.actionsProcessSaveEntityData(
+        expectedObject.id ?? '',
+        command,
+      )
+
+      scope.done()
+
+      expect(processes).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('GET /processes/{id}/~actions/save-entity-document', () => {
+    test('Check happy path', async () => {
+      const processId = randomUUID()
+      const expectedObject: ProcessActionsProcessSaveEntityDocumentResponse = {
+        value: 'document-uri',
+      }
+      const command: ProcessSaveEntityDocumentRequestCommand = {
+        schemaPath: 'path',
+      }
+      const document: Document = {
+        contentType: 'application/json',
+        fileName: 'file.json',
+        fileContent: '{}',
+      }
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .post(`/processes/${processId}/~actions/save-entity-document`)
+        .query({
+          fileContentType: document.contentType,
+          fileName: document.fileName,
+          schemaPath: command.schemaPath,
+        })
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processes = await kuFlowRestClient.processOperations.actionsProcessSaveEntityDocument(
+        processId,
+        command,
+        document,
+      )
+
+      scope.done()
+
+      expect(processes).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('GET /processes/{id}/~actions/download-entity-document', () => {
+    test('Check happy path', async () => {
+      const processId = randomUUID()
+      const documentUri = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2022-10-08')
+        .get(`/processes/${processId}/~actions/download-entity-document`)
+        .query({
+          documentUri,
+        })
+        .reply(200, '{}')
+
+      const download = await kuFlowRestClient.processOperations.actionsProcessDownloadEntityDocument(
+        processId,
+        documentUri,
+      )
+
+      scope.done()
+
+      expect(download.readableStreamBody).toBeTruthy()
+      if (download.readableStreamBody == null) {
+        return
+      }
+
+      const body = await streamToString(download.readableStreamBody)
+
+      expect(body).toStrictEqual('{}')
     })
   })
 })

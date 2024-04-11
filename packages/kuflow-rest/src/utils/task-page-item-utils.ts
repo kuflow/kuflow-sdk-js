@@ -29,6 +29,7 @@ import * as JsonFormUtils from './json-forms'
 type KuFlowObject = elementValueUtils.KuFlowObject
 type JsonFormsSimpleType = JsonFormUtils.JsonFormsSimpleType
 type UpdateJsonFormsPropertyOptions = JsonFormUtils.UpdateJsonFormsPropertyOptions
+type JsonFormsModel = JsonFormUtils.JsonFormsModel
 
 /**
  * Check if all related valid values are TRUE
@@ -710,7 +711,10 @@ export function addElementValueAsPrincipalList(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsString(taskPageItem: TaskPageItem, propertyPath: string): string {
-  return JsonFormUtils.getJsonFormsPropertyAsString(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsString(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -721,7 +725,10 @@ export function getJsonFormsPropertyAsString(taskPageItem: TaskPageItem, propert
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsString(taskPageItem: TaskPageItem, propertyPath: string): string | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsString(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsString(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -733,7 +740,10 @@ export function findJsonFormsPropertyAsString(taskPageItem: TaskPageItem, proper
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsNumber(taskPageItem: TaskPageItem, propertyPath: string): number {
-  return JsonFormUtils.getJsonFormsPropertyAsNumber(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsNumber(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -744,7 +754,10 @@ export function getJsonFormsPropertyAsNumber(taskPageItem: TaskPageItem, propert
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsNumber(taskPageItem: TaskPageItem, propertyPath: string): number | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsNumber(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsNumber(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -756,7 +769,10 @@ export function findJsonFormsPropertyAsNumber(taskPageItem: TaskPageItem, proper
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsBoolean(taskPageItem: TaskPageItem, propertyPath: string): boolean {
-  return JsonFormUtils.getJsonFormsPropertyAsBoolean(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsBoolean(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -767,7 +783,10 @@ export function getJsonFormsPropertyAsBoolean(taskPageItem: TaskPageItem, proper
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsBoolean(taskPageItem: TaskPageItem, propertyPath: string): boolean | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsBoolean(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsBoolean(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -779,7 +798,10 @@ export function findJsonFormsPropertyAsBoolean(taskPageItem: TaskPageItem, prope
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsDate(taskPageItem: TaskPageItem, propertyPath: string): Date {
-  return JsonFormUtils.getJsonFormsPropertyAsDate(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsDate(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -790,7 +812,10 @@ export function getJsonFormsPropertyAsDate(taskPageItem: TaskPageItem, propertyP
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsDate(taskPageItem: TaskPageItem, propertyPath: string): Date | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsDate(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsDate(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -802,7 +827,10 @@ export function findJsonFormsPropertyAsDate(taskPageItem: TaskPageItem, property
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsJsonFormsFile(taskPageItem: TaskPageItem, propertyPath: string): JsonFormsFile {
-  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsFile(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -816,7 +844,10 @@ export function findJsonFormsPropertyAsJsonFormsFile(
   taskPageItem: TaskPageItem,
   propertyPath: string,
 ): JsonFormsFile | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsFile(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -831,7 +862,10 @@ export function getJsonFormsPropertyAsJsonFormsPrincipal(
   taskPageItem: TaskPageItem,
   propertyPath: string,
 ): JsonFormsPrincipal {
-  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsJsonFormsPrincipal(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -845,7 +879,10 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
   taskPageItem: TaskPageItem,
   propertyPath: string,
 ): JsonFormsPrincipal | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsJsonFormsPrincipal(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -857,7 +894,10 @@ export function findJsonFormsPropertyAsJsonFormsPrincipal(
  * @throws Error If property value doesn't exist
  */
 export function getJsonFormsPropertyAsArray(taskPageItem: TaskPageItem, propertyPath: string): unknown[] {
-  return JsonFormUtils.getJsonFormsPropertyAsArray(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsArray(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -868,7 +908,10 @@ export function getJsonFormsPropertyAsArray(taskPageItem: TaskPageItem, property
  * @return the property value if exists.
  */
 export function findJsonFormsPropertyAsArray(taskPageItem: TaskPageItem, propertyPath: string): unknown[] | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsArray(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsArray(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -883,7 +926,10 @@ export function getJsonFormsPropertyAsObject(
   taskPageItem: TaskPageItem,
   propertyPath: string,
 ): Record<string, unknown> {
-  return JsonFormUtils.getJsonFormsPropertyAsObject(taskPageItem, propertyPath)
+  return JsonFormUtils.getJsonFormsPropertyAsObject(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -897,7 +943,10 @@ export function findJsonFormsPropertyAsObject(
   taskPageItem: TaskPageItem,
   propertyPath: string,
 ): Record<string, unknown> | undefined {
-  return JsonFormUtils.findJsonFormsPropertyAsObject(taskPageItem, propertyPath)
+  return JsonFormUtils.findJsonFormsPropertyAsObject(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+  )
 }
 
 /**
@@ -915,5 +964,30 @@ export function updateJsonFormsProperty(
   value: JsonFormsSimpleType | undefined,
   options?: UpdateJsonFormsPropertyOptions,
 ): void {
-  JsonFormUtils.updateJsonFormsProperty(taskPageItem, propertyPath, value, options)
+  JsonFormUtils.updateJsonFormsProperty(
+    TaskPageItemJsonFormsValueJsonFormsModel.of(taskPageItem),
+    propertyPath,
+    value,
+    options,
+  )
+}
+
+class TaskPageItemJsonFormsValueJsonFormsModel implements JsonFormsModel {
+  public static of(taskPageItem: TaskPageItem): JsonFormsModel {
+    return new TaskPageItemJsonFormsValueJsonFormsModel(taskPageItem)
+  }
+
+  private constructor(readonly taskPageItem: TaskPageItem) {}
+
+  get jsonValue(): Record<string, any> | undefined {
+    return this.taskPageItem.jsonFormsValue?.data
+  }
+
+  set jsonValue(data: Record<string, any> | undefined) {
+    if (this.taskPageItem.jsonFormsValue == null) {
+      this.taskPageItem.jsonFormsValue = {}
+    }
+
+    this.taskPageItem.jsonFormsValue.data = data
+  }
 }
