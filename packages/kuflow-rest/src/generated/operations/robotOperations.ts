@@ -24,13 +24,13 @@ import * as coreClient from '@azure/core-client'
 
 import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  type RobotActionsRobotDownloadAssetOptionalParams,
-  type RobotActionsRobotDownloadAssetResponse,
-  type RobotActionsRobotDownloadSourceCodeOptionalParams,
-  type RobotActionsRobotDownloadSourceCodeResponse,
   type RobotAssetArchitecture,
   type RobotAssetPlatform,
   type RobotAssetType,
+  type RobotDownloadRobotAssetOptionalParams,
+  type RobotDownloadRobotAssetResponse,
+  type RobotDownloadRobotSourceCodeOptionalParams,
+  type RobotDownloadRobotSourceCodeResponse,
   type RobotFindRobotsOptionalParams,
   type RobotFindRobotsResponse,
   type RobotRetrieveRobotOptionalParams,
@@ -77,11 +77,11 @@ export class RobotOperationsImpl implements RobotOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsRobotDownloadSourceCode(
+  async downloadRobotSourceCode(
     id: string,
-    options?: RobotActionsRobotDownloadSourceCodeOptionalParams,
-  ): Promise<RobotActionsRobotDownloadSourceCodeResponse> {
-    return await this.client.sendOperationRequest({ id, options }, actionsRobotDownloadSourceCodeOperationSpec)
+    options?: RobotDownloadRobotSourceCodeOptionalParams,
+  ): Promise<RobotDownloadRobotSourceCodeResponse> {
+    return await this.client.sendOperationRequest({ id, options }, downloadRobotSourceCodeOperationSpec)
   }
 
   /**
@@ -93,17 +93,17 @@ export class RobotOperationsImpl implements RobotOperations {
    * @param architecture The asset platform architecture.
    * @param options The options parameters.
    */
-  async actionsRobotDownloadAsset(
+  async downloadRobotAsset(
     id: string,
     typeParam: RobotAssetType,
     version: string,
     platform: RobotAssetPlatform,
     architecture: RobotAssetArchitecture,
-    options?: RobotActionsRobotDownloadAssetOptionalParams,
-  ): Promise<RobotActionsRobotDownloadAssetResponse> {
+    options?: RobotDownloadRobotAssetOptionalParams,
+  ): Promise<RobotDownloadRobotAssetResponse> {
     return await this.client.sendOperationRequest(
       { id, typeParam, version, platform, architecture, options },
-      actionsRobotDownloadAssetOperationSpec,
+      downloadRobotAssetOperationSpec,
     )
   }
 }
@@ -141,7 +141,7 @@ const retrieveRobotOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 }
-const actionsRobotDownloadSourceCodeOperationSpec: coreClient.OperationSpec = {
+const downloadRobotSourceCodeOperationSpec: coreClient.OperationSpec = {
   path: '/robots/{id}/~actions/download-source-code',
   httpMethod: 'GET',
   responses: {
@@ -159,7 +159,7 @@ const actionsRobotDownloadSourceCodeOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept2],
   serializer,
 }
-const actionsRobotDownloadAssetOperationSpec: coreClient.OperationSpec = {
+const downloadRobotAssetOperationSpec: coreClient.OperationSpec = {
   path: '/robots/{id}/~actions/download-asset',
   httpMethod: 'GET',
   responses: {
@@ -173,7 +173,7 @@ const actionsRobotDownloadAssetOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  queryParameters: [Parameters.typeParam1, Parameters.version, Parameters.platform, Parameters.architecture],
+  queryParameters: [Parameters.typeParam2, Parameters.version, Parameters.platform, Parameters.architecture],
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept2],
   serializer,

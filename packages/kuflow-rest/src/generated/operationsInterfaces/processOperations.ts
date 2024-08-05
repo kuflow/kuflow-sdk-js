@@ -23,35 +23,37 @@
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import {
-  type Process,
-  type ProcessActionsProcessCancelOptionalParams,
-  type ProcessActionsProcessCancelResponse,
-  type ProcessActionsProcessChangeInitiatorOptionalParams,
-  type ProcessActionsProcessChangeInitiatorResponse,
-  type ProcessActionsProcessCompleteOptionalParams,
-  type ProcessActionsProcessCompleteResponse,
-  type ProcessActionsProcessDeleteElementOptionalParams,
-  type ProcessActionsProcessDeleteElementResponse,
-  type ProcessActionsProcessDownloadEntityDocumentOptionalParams,
-  type ProcessActionsProcessDownloadEntityDocumentResponse,
-  type ProcessActionsProcessSaveElementOptionalParams,
-  type ProcessActionsProcessSaveElementResponse,
-  type ProcessActionsProcessSaveEntityDataOptionalParams,
-  type ProcessActionsProcessSaveEntityDataResponse,
-  type ProcessActionsProcessSaveEntityDocumentOptionalParams,
-  type ProcessActionsProcessSaveEntityDocumentResponse,
-  type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  type ProcessActionsProcessSaveUserActionValueDocumentResponse,
-  type ProcessChangeInitiatorCommand,
+  type JsonPatchOperation,
+  type ProcessCancelProcessOptionalParams,
+  type ProcessCancelProcessResponse,
+  type ProcessChangeInitiatorParams,
+  type ProcessChangeProcessInitiatorOptionalParams,
+  type ProcessChangeProcessInitiatorResponse,
+  type ProcessCompleteProcessOptionalParams,
+  type ProcessCompleteProcessResponse,
+  type ProcessCreateParams,
   type ProcessCreateProcessOptionalParams,
   type ProcessCreateProcessResponse,
-  type ProcessDeleteElementCommand,
+  type ProcessDownloadProcessEntityDocumentOptionalParams,
+  type ProcessDownloadProcessEntityDocumentResponse,
+  type ProcessEntityUpdateParams,
   type ProcessFindProcessesOptionalParams,
   type ProcessFindProcessesResponse,
+  type ProcessMetadataUpdateParams,
+  type ProcessPatchProcessEntityOptionalParams,
+  type ProcessPatchProcessEntityResponse,
+  type ProcessPatchProcessMetadataOptionalParams,
+  type ProcessPatchProcessMetadataResponse,
   type ProcessRetrieveProcessOptionalParams,
   type ProcessRetrieveProcessResponse,
-  type ProcessSaveElementCommand,
-  type ProcessSaveEntityDataCommand,
+  type ProcessUpdateProcessEntityOptionalParams,
+  type ProcessUpdateProcessEntityResponse,
+  type ProcessUpdateProcessMetadataOptionalParams,
+  type ProcessUpdateProcessMetadataResponse,
+  type ProcessUploadProcessEntityDocumentOptionalParams,
+  type ProcessUploadProcessEntityDocumentResponse,
+  type ProcessUploadProcessUserActionDocumentOptionalParams,
+  type ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
 
 /** Interface representing a ProcessOperations. */
@@ -68,21 +70,13 @@ export interface ProcessOperations {
    * Creates a process. This option has direct correspondence to the action of starting a process in the
    * Kuflow GUI.
    *
-   * When a process is created, the current user is assigned as the process initiator, if you want to
-   * change it, you can pass a valid initiator using the following options:
-   *
-   * * If you know the `principal ID` you can assign it to `initiator.id`
-   * * If you know the `user ID` you can assign it to `initiator.user.id`
-   * * If you know the `user email` you can assign it to `initiator.user.email`
-   * * If you know the `application ID` you can assign it to `initiator.application.id`
-   *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param process Process to create
+   * @param params Process to create
    * @param options The options parameters.
    */
   createProcess: (
-    process: Process,
+    params: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ) => Promise<ProcessCreateProcessResponse>
   /**
@@ -95,53 +89,6 @@ export interface ProcessOperations {
     options?: ProcessRetrieveProcessOptionalParams,
   ) => Promise<ProcessRetrieveProcessResponse>
   /**
-   * Change the current initiator of a process.
-   *
-   * Allows you to choose a user (by email or principal identifier) or an application (principal
-   * identifier).
-   * Only one option will be necessary.
-   *
-   * @param id The resource ID.
-   * @param command Command to change the process initiator.
-   * @param options The options parameters.
-   */
-  actionsProcessChangeInitiator: (
-    id: string,
-    command: ProcessChangeInitiatorCommand,
-    options?: ProcessActionsProcessChangeInitiatorOptionalParams,
-  ) => Promise<ProcessActionsProcessChangeInitiatorResponse>
-  /**
-   * Allow to save an element.
-   *
-   * If values already exist for the provided element code, it replaces them with the new ones, otherwise
-   * it creates them. The values of the previous elements that no longer exist will be deleted.
-   *
-   * If the process is already finished the invocations fails with an error.
-   *
-   * @param id The resource ID.
-   * @param command Command to save an element.
-   * @param options The options parameters.
-   */
-  actionsProcessSaveElement: (
-    id: string,
-    command: ProcessSaveElementCommand,
-    options?: ProcessActionsProcessSaveElementOptionalParams,
-  ) => Promise<ProcessActionsProcessSaveElementResponse>
-  /**
-   * Allow to delete a process element by specifying the item definition code.
-   *
-   * Remove all the element values.
-   *
-   * @param id The resource ID.
-   * @param command Command to delete an element.
-   * @param options The options parameters.
-   */
-  actionsProcessDeleteElement: (
-    id: string,
-    command: ProcessDeleteElementCommand,
-    options?: ProcessActionsProcessDeleteElementOptionalParams,
-  ) => Promise<ProcessActionsProcessDeleteElementResponse>
-  /**
    * Complete a Process. The state of Process is set to 'completed'.
    *
    * If you are already in this state, no action is taken.
@@ -149,24 +96,37 @@ export interface ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  actionsProcessComplete: (
+  completeProcess: (
     id: string,
-    options?: ProcessActionsProcessCompleteOptionalParams,
-  ) => Promise<ProcessActionsProcessCompleteResponse>
+    options?: ProcessCompleteProcessOptionalParams,
+  ) => Promise<ProcessCompleteProcessResponse>
   /**
    * Cancel a Process. The Process state is set to 'cancelled'.
    *
-   * All the active tasks will be marked as cancelled too.
+   * All the active process items will be marked as cancelled too.
    *
    * If you are already in this state, no action is taken.
    *
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  actionsProcessCancel: (
+  cancelProcess: (id: string, options?: ProcessCancelProcessOptionalParams) => Promise<ProcessCancelProcessResponse>
+  /**
+   * Change the current initiator of a process.
+   *
+   * Allows you to choose a user (by email or principal identifier) or an application (principal
+   * identifier).
+   * Only one option will be necessary.
+   *
+   * @param id The resource ID.
+   * @param params Params to change the process initiator.
+   * @param options The options parameters.
+   */
+  changeProcessInitiator: (
     id: string,
-    options?: ProcessActionsProcessCancelOptionalParams,
-  ) => Promise<ProcessActionsProcessCancelResponse>
+    params: ProcessChangeInitiatorParams,
+    options?: ProcessChangeProcessInitiatorOptionalParams,
+  ) => Promise<ProcessChangeProcessInitiatorResponse>
   /**
    * Allow saving a user action document uploading the content.
    *
@@ -177,28 +137,67 @@ export interface ProcessOperations {
    * @param file Document to save.
    * @param options The options parameters.
    */
-  actionsProcessSaveUserActionValueDocument: (
+  uploadProcessUserActionDocument: (
     id: string,
     fileContentType: string,
     fileName: string,
     userActionValueId: string,
     file: coreRestPipeline.RequestBodyType,
-    options?: ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  ) => Promise<ProcessActionsProcessSaveUserActionValueDocumentResponse>
+    options?: ProcessUploadProcessUserActionDocumentOptionalParams,
+  ) => Promise<ProcessUploadProcessUserActionDocumentResponse>
+  /**
+   * Save process metadata
+   * @param id The resource ID.
+   * @param params Params to save de entity data.
+   * @param options The options parameters.
+   */
+  updateProcessMetadata: (
+    id: string,
+    params: ProcessMetadataUpdateParams,
+    options?: ProcessUpdateProcessMetadataOptionalParams,
+  ) => Promise<ProcessUpdateProcessMetadataResponse>
+  /**
+   * Allow to patch a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param jsonPatch Params to save the JSON value.
+   * @param options The options parameters.
+   */
+  patchProcessMetadata: (
+    id: string,
+    jsonPatch: JsonPatchOperation[],
+    options?: ProcessPatchProcessMetadataOptionalParams,
+  ) => Promise<ProcessPatchProcessMetadataResponse>
   /**
    * Allow to save a JSON validating that the data follow the related schema. If the data is invalid,
    * then
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param command Command to save the JSON value.
+   * @param params Params to save the JSON value.
    * @param options The options parameters.
    */
-  actionsProcessSaveEntityData: (
+  updateProcessEntity: (
     id: string,
-    command: ProcessSaveEntityDataCommand,
-    options?: ProcessActionsProcessSaveEntityDataOptionalParams,
-  ) => Promise<ProcessActionsProcessSaveEntityDataResponse>
+    params: ProcessEntityUpdateParams,
+    options?: ProcessUpdateProcessEntityOptionalParams,
+  ) => Promise<ProcessUpdateProcessEntityResponse>
+  /**
+   * Allow to patch a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param params Params to save the JSON value.
+   * @param options The options parameters.
+   */
+  patchProcessEntity: (
+    id: string,
+    params: JsonPatchOperation[],
+    options?: ProcessPatchProcessEntityOptionalParams,
+  ) => Promise<ProcessPatchProcessEntityResponse>
   /**
    * Save a document in the process to later be linked into the JSON data.
    *
@@ -208,26 +207,28 @@ export interface ProcessOperations {
    * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
    *                   by the passed schema path.
    *
+   * ie: "#/properties/file", "#/definitions/UserType/name"
+   *
    * @param file Document to save.
    * @param options The options parameters.
    */
-  actionsProcessSaveEntityDocument: (
+  uploadProcessEntityDocument: (
     id: string,
     fileContentType: string,
     fileName: string,
     schemaPath: string,
     file: coreRestPipeline.RequestBodyType,
-    options?: ProcessActionsProcessSaveEntityDocumentOptionalParams,
-  ) => Promise<ProcessActionsProcessSaveEntityDocumentResponse>
+    options?: ProcessUploadProcessEntityDocumentOptionalParams,
+  ) => Promise<ProcessUploadProcessEntityDocumentResponse>
   /**
    * Given a process and a documentUri, download a document.
    * @param id The resource ID.
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  actionsProcessDownloadEntityDocument: (
+  downloadProcessEntityDocument: (
     id: string,
     documentUri: string,
-    options?: ProcessActionsProcessDownloadEntityDocumentOptionalParams,
-  ) => Promise<ProcessActionsProcessDownloadEntityDocumentResponse>
+    options?: ProcessDownloadProcessEntityDocumentOptionalParams,
+  ) => Promise<ProcessDownloadProcessEntityDocumentResponse>
 }

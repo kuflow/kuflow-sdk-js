@@ -21,75 +21,64 @@
  * THE SOFTWARE.
  */
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  type KuFlowRestClient,
-  type Process,
-  type ProcessChangeInitiatorCommand,
-  type ProcessDeleteElementCommand,
-  type ProcessSaveElementCommand,
-  type TaskAssignCommand,
-  type TaskDeleteElementCommand,
-  type TaskDeleteElementValueDocumentCommand,
-  type TaskSaveElementCommand,
-  type TaskSaveJsonFormsValueDataCommand,
-} from '@kuflow/kuflow-rest'
+import { type KuFlowRestClient, type Process, type ProcessItemTaskAssignParams } from '@kuflow/kuflow-rest'
 
 import { catchAllErrors } from './kuflow-activities-failure'
 import {
-  type AppendTaskLogRequest,
-  type AppendTaskLogResponse,
-  type AssignTaskRequest,
-  type AssignTaskResponse,
-  type ChangeProcessInitiatorRequest,
-  type ChangeProcessInitiatorResponse,
-  type ClaimTaskRequest,
-  type ClaimTaskResponse,
-  type CompleteTaskRequest,
-  type CompleteTaskResponse,
-  type CreateTaskRequest,
-  type CreateTaskResponse,
-  type DeleteProcessElementRequest,
-  type DeleteProcessElementResponse,
-  type DeleteTaskElementRequest,
-  type DeleteTaskElementResponse,
-  type DeleteTaskElementValueDocumentRequest,
-  type DeleteTaskElementValueDocumentResponse,
-  type FindProcessesRequest,
-  type FindProcessesResponse,
-  type FindTasksRequest,
-  type FindTasksResponse,
-  type RetrievePrincipalRequest,
-  type RetrievePrincipalResponse,
-  type RetrieveProcessRequest,
-  type RetrieveProcessResponse,
-  type RetrieveTaskRequest,
-  type RetrieveTaskResponse,
-  type RetrieveTenantUserRequest,
-  type RetrieveTenantUserResponse,
-  type SaveProcessElementRequest,
-  type SaveProcessElementResponse,
-  type SaveTaskElementRequest,
-  type SaveTaskElementResponse,
-  type SaveTaskJsonFormsValueDataRequest,
-  type SaveTaskJsonFormsValueDataResponse,
+  type PrincipalRetrieveRequest,
+  type PrincipalRetrieveResponse,
+  type ProcessEntityPatchRequest,
+  type ProcessEntityPatchResponse,
+  type ProcessEntityUpdateRequest,
+  type ProcessEntityUpdateResponse,
+  type ProcessFindRequest,
+  type ProcessFindResponse,
+  type ProcessInitiatorChangeRequest,
+  type ProcessInitiatorChangeResponse,
+  type ProcessItemFindRequest,
+  type ProcessItemFindResponse,
+  type ProcessItemRetrieveRequest,
+  type ProcessItemRetrieveResponse,
+  type ProcessItemTaskAssignRequest,
+  type ProcessItemTaskAssignResponse,
+  type ProcessItemTaskClaimRequest,
+  type ProcessItemTaskClaimResponse,
+  type ProcessItemTaskCompleteRequest,
+  type ProcessItemTaskCompleteResponse,
+  type ProcessItemTaskCreateRequest,
+  type ProcessItemTaskCreateResponse,
+  type ProcessItemTaskDataPatchRequest,
+  type ProcessItemTaskDataPatchResponse,
+  type ProcessItemTaskDataUpdateRequest,
+  type ProcessItemTaskDataUpdateResponse,
+  type ProcessItemTaskLogAppendRequest,
+  type ProcessItemTaskLogAppendResponse,
+  type ProcessMetadataPatchRequest,
+  type ProcessMetadataPatchResponse,
+  type ProcessMetadataUpdateRequest,
+  type ProcessMetadataUpdateResponse,
+  type ProcessRetrieveRequest,
+  type ProcessRetrieveResponse,
+  type TenantUserRetrieveRequest,
+  type TenantUserRetrieveResponse,
 } from './models'
 import {
-  validateAppendTaskLogRequest,
-  validateAssignTaskRequest,
-  validateChangeProcessInitiatorRequest,
-  validateClaimTaskRequest,
-  validateCompleteTaskRequest,
-  validateCreateTaskRequest,
-  validateDeleteProcessElementRequest,
-  validateDeleteTaskElementRequest,
-  validateDeleteTaskElementValueDocumentRequest,
+  validateProcessEntityPatchRequest,
+  validateProcessEntityUpdateRequest,
+  validateProcessInitiatorChangeRequest,
+  validateProcessItemRetrieveRequest,
+  validateProcessItemTaskAssignRequest,
+  validateProcessItemTaskClaimRequest,
+  validateProcessItemTaskCompleteRequest,
+  validateProcessItemTaskCreateRequest,
+  validateProcessItemTaskDataPatchRequest,
+  validateProcessItemTaskDataUpdateRequest,
+  validateProcessItemTaskLogAppendRequest,
+  validateProcessMetadataPatchRequest,
+  validateProcessMetadataUpdateRequest,
   validateRetrievePrincipalRequest,
   validateRetrieveProcessRequest,
-  validateRetrieveTaskRequest,
   validateRetrieveTenantUserRequest,
-  validateSaveProcessElementRequest,
-  validateSaveTaskElementRequest,
-  validateSaveTaskJsonFormsValueData,
 } from './validations'
 
 export interface KuFlowActivities {
@@ -98,14 +87,14 @@ export interface KuFlowActivities {
    * @param request must not be {@literal undefined}.
    * @return principal
    */
-  KuFlow_Engine_retrievePrincipal: (request: RetrievePrincipalRequest) => Promise<RetrievePrincipalResponse>
+  KuFlow_Engine_retrievePrincipal: (request: PrincipalRetrieveRequest) => Promise<PrincipalRetrieveResponse>
 
   /**
    * Retrieve a Tenant User.
    * @param request must not be {@literal undefined}.
    * @return tenant user
    */
-  KuFlow_Engine_retrieveTenantUser: (request: RetrieveTenantUserRequest) => Promise<RetrieveTenantUserResponse>
+  KuFlow_Engine_retrieveTenantUser: (request: TenantUserRetrieveRequest) => Promise<TenantUserRetrieveResponse>
 
   /**
    * Find all accessible Processes
@@ -113,7 +102,7 @@ export interface KuFlowActivities {
    * @param request must not be {@literal undefined}.
    * @return processes
    */
-  KuFlow_Engine_findProcesses: (request: FindProcessesRequest) => Promise<FindProcessesResponse>
+  KuFlow_Engine_findProcesses: (request: ProcessFindRequest) => Promise<ProcessFindResponse>
 
   /**
    * Retrieve a Process.
@@ -121,28 +110,39 @@ export interface KuFlowActivities {
    * @param request must not be {@literal undefined}.
    * @return process
    */
-  KuFlow_Engine_retrieveProcess: (request: RetrieveProcessRequest) => Promise<RetrieveProcessResponse>
+  KuFlow_Engine_retrieveProcess: (request: ProcessRetrieveRequest) => Promise<ProcessRetrieveResponse>
 
   /**
-   *  Allow to save an element.
-   *  If values already exist for the provided element code, it replaces them with the new ones, otherwise it creates them.
-   *  The values of the previous elements that no longer exist will be deleted.
-   *
-   *  <p>If the process is already finished the invocations fails with an error.
+   * Update a Process Entity.
    *
    * @param request must not be {@literal undefined}.
    * @return process completed
    */
-  KuFlow_Engine_saveProcessElement: (request: SaveProcessElementRequest) => Promise<SaveProcessElementResponse>
+  KuFlow_Engine_updateProcessEntity: (request: ProcessEntityUpdateRequest) => Promise<ProcessEntityUpdateResponse>
 
   /**
-   *  Allow to delete a process element by specifying the item definition code.
-   *  Remove all the element values.
+   * Patch a Process Entity.
    *
    * @param request must not be {@literal undefined}.
-   * @return process deleted
+   * @return process completed
    */
-  KuFlow_Engine_deleteProcessElement: (request: DeleteProcessElementRequest) => Promise<DeleteProcessElementResponse>
+  KuFlow_Engine_patchProcessEntity: (request: ProcessEntityPatchRequest) => Promise<ProcessEntityPatchResponse>
+
+  /**
+   * Update a Process Metadata.
+   *
+   * @param request must not be {@literal undefined}.
+   * @return process completed
+   */
+  KuFlow_Engine_updateProcessMetadata: (request: ProcessMetadataUpdateRequest) => Promise<ProcessMetadataUpdateResponse>
+
+  /**
+   * Patch a Process Metadata.
+   *
+   * @param request must not be {@literal undefined}.
+   * @return process completed
+   */
+  KuFlow_Engine_patchProcessMetadata: (request: ProcessMetadataPatchRequest) => Promise<ProcessMetadataPatchResponse>
 
   /**
    * Change the current initiator of a process. Allows you to choose a user (by email or principal
@@ -152,119 +152,98 @@ export interface KuFlowActivities {
    * @return task assigned
    */
   KuFlow_Engine_changeProcessInitiator: (
-    request: ChangeProcessInitiatorRequest,
-  ) => Promise<ChangeProcessInitiatorResponse>
+    request: ProcessInitiatorChangeRequest,
+  ) => Promise<ProcessInitiatorChangeResponse>
 
   /**
-   * List all the Processes that have been created and the credentials has access.
+   * List all the Process Items that have been created and the credentials has access.
    *
    * @param request must not be {@literal undefined}.
    * @return Processes found paginated
    */
-  KuFlow_Engine_findTasks: (request: FindTasksRequest) => Promise<FindTasksResponse>
+  KuFlow_Engine_findProcessItems: (request: ProcessItemFindRequest) => Promise<ProcessItemFindResponse>
 
   /**
-   * Retrieve a Task.
+   * Retrieve a Process Item Task.
    *
    * @param request must not be {@literal undefined}.
    * @return process completed
    */
-  KuFlow_Engine_retrieveTask: (request: RetrieveTaskRequest) => Promise<RetrieveTaskResponse>
+  KuFlow_Engine_retrieveProcessItem: (request: ProcessItemRetrieveRequest) => Promise<ProcessItemRetrieveResponse>
 
   /**
-   * Create a Task and optionally fill its elements.
+   * Create a Process Item.
    *
    * @param request must not be {@literal undefined}.
-   * @return task created
+   * @return process item created
    */
-  KuFlow_Engine_createTask: (request: CreateTaskRequest) => Promise<CreateTaskResponse>
+  KuFlow_Engine_createProcessItem: (request: ProcessItemTaskCreateRequest) => Promise<ProcessItemTaskCreateResponse>
 
   /**
-   * Complete a task.
+   * Complete a Process Item Task.
    *
    * <p>Allow to complete a claimed task by the principal.
    *
    * @param request must not be {@literal undefined}.
-   * @return task completed
+   * @return process item with task completed
    */
-  KuFlow_Engine_completeTask: (request: CompleteTaskRequest) => Promise<CompleteTaskResponse>
+  KuFlow_Engine_completeProcessItemTask: (
+    request: ProcessItemTaskCompleteRequest,
+  ) => Promise<ProcessItemTaskCompleteResponse>
 
   /**
-   * Claim a task.
+   * Claim a Process Item Task.
    *
    * @param request must not be {@literal undefined}.
-   * @return task claimed
+   * @return process item with task claimed
    */
-  KuFlow_Engine_claimTask: (request: ClaimTaskRequest) => Promise<ClaimTaskResponse>
+  KuFlow_Engine_claimProcessItemTask: (request: ProcessItemTaskClaimRequest) => Promise<ProcessItemTaskClaimResponse>
 
   /**
-   * Assign a task to a user or application using their email or principalId
+   * Assign a Process Item Task to a user or application using their email or principalId
    *
    * @param request must not be {@literal undefined}.
-   * @return task assigned
+   * @return process item with task assigned
    */
-  KuFlow_Engine_assignTask: (request: AssignTaskRequest) => Promise<AssignTaskResponse>
+  KuFlow_Engine_assignProcessItemTask: (request: ProcessItemTaskAssignRequest) => Promise<ProcessItemTaskAssignResponse>
 
   /**
-   * Allow to save an element i.e., a field, a decision, a form, a principal or document.
+   * Save JSON data
    *
-   * In the case of document type elements, this method only allows references to be made to other existing document
-   * type elements for the purpose of copying that file into the element. To do this you need to pass a reference to the
-   * document using the 'uri' attribute. In case you want to add a new document, you should create a Temporal activity
-   * specific to your needs and use our rest client to upload the document. This is because it is not recommended to save
-   * binaries in the history of Temporal.
-   *
-   * If values already exist for the provided element code, it replaces them with the new ones, otherwise it
-   * creates them. The values of the previous elements that no longer exist will be deleted. To remove an element, use
-   * the appropriate API method.
+   * Allow to save a JSON data validating that the data follow the related schema. If the data is invalid, then the
+   * json form is marked as invalid.
    *
    * @param request must not be {@literal undefined}.
    * @return task updated
    */
-  KuFlow_Engine_saveTaskElement: (request: SaveTaskElementRequest) => Promise<SaveTaskElementResponse>
+  KuFlow_Engine_updateProcessItemTaskData: (
+    request: ProcessItemTaskDataUpdateRequest,
+  ) => Promise<ProcessItemTaskDataUpdateResponse>
 
   /**
-   * Allow to delete task element by specifying the item definition code.
+   * Patch JSON data
    *
-   * Remove all the element values.
+   * Allow to save a JSON data validating that the data follow the related schema. If the data is invalid, then the
+   * json form is marked as invalid.
    *
    * @param request must not be {@literal undefined}.
    * @return task updated
    */
-  KuFlow_Engine_deleteTaskElement: (request: DeleteTaskElementRequest) => Promise<DeleteTaskElementResponse>
+  KuFlow_Engine_patchProcessItemTaskData: (
+    request: ProcessItemTaskDataPatchRequest,
+  ) => Promise<ProcessItemTaskDataPatchResponse>
 
   /**
-   * Allow to delete a specific document from an element of document type using its id.
-   *
-   * Note: If it is a multiple item, it will only delete the specified document. If it is a single element, in addition to the document, it will also delete the element.
-   *
-   * @param request must not be {@literal undefined}.
-   * @return task updated
-   */
-  KuFlow_Engine_deleteTaskElementValueDocument: (
-    request: DeleteTaskElementValueDocumentRequest,
-  ) => Promise<DeleteTaskElementValueDocumentResponse>
-
-  /**
-   * Allow to save a JSON data validating that the data follow the related schema. If the data is invalid, then the json
-   * form is marked as invalid.
-   *
-   * @param request must not be {@literal undefined}.
-   * @return task updated
-   */
-  KuFlow_Engine_saveTaskJsonFormsValueData: (
-    request: SaveTaskJsonFormsValueDataRequest,
-  ) => Promise<SaveTaskJsonFormsValueDataResponse>
-
-  /**
-   * Append a log to the task.
+   * Append a log to the Process Item Task.
    *
    * <p>A log entry is added to the task. If the number of log entries is reached, the oldest log entry is removed.
    *
    * @param request must not be {@literal undefined}.
    * @return log appended
    */
-  KuFlow_Engine_appendTaskLog: (request: AppendTaskLogRequest) => Promise<AppendTaskLogResponse>
+  KuFlow_Engine_appendProcessItemTaskLog: (
+    request: ProcessItemTaskLogAppendRequest,
+  ) => Promise<ProcessItemTaskLogAppendResponse>
 }
 
 /**
@@ -276,25 +255,25 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
     KuFlow_Engine_retrieveTenantUser: catchAllErrors(KuFlow_Engine_retrieveTenantUser),
     KuFlow_Engine_findProcesses: catchAllErrors(KuFlow_Engine_findProcesses),
     KuFlow_Engine_retrieveProcess: catchAllErrors(KuFlow_Engine_retrieveProcess),
-    KuFlow_Engine_saveProcessElement: catchAllErrors(KuFlow_Engine_saveProcessElement),
-    KuFlow_Engine_deleteProcessElement: catchAllErrors(KuFlow_Engine_deleteProcessElement),
+    KuFlow_Engine_updateProcessEntity: catchAllErrors(KuFlow_Engine_updateProcessEntity),
+    KuFlow_Engine_patchProcessEntity: catchAllErrors(KuFlow_Engine_patchProcessEntity),
+    KuFlow_Engine_updateProcessMetadata: catchAllErrors(KuFlow_Engine_updateProcessMetadata),
+    KuFlow_Engine_patchProcessMetadata: catchAllErrors(KuFlow_Engine_patchProcessMetadata),
     KuFlow_Engine_changeProcessInitiator: catchAllErrors(KuFlow_Engine_changeProcessInitiator),
-    KuFlow_Engine_findTasks: catchAllErrors(KuFlow_Engine_findTasks),
-    KuFlow_Engine_retrieveTask: catchAllErrors(KuFlow_Engine_retrieveTask),
-    KuFlow_Engine_createTask: catchAllErrors(KuFlow_Engine_createTask),
-    KuFlow_Engine_completeTask: catchAllErrors(KuFlow_Engine_completeTask),
-    KuFlow_Engine_claimTask: catchAllErrors(KuFlow_Engine_claimTask),
-    KuFlow_Engine_assignTask: catchAllErrors(KuFlow_Engine_assignTask),
-    KuFlow_Engine_saveTaskElement: catchAllErrors(KuFlow_Engine_saveTaskElement),
-    KuFlow_Engine_deleteTaskElement: catchAllErrors(KuFlow_Engine_deleteTaskElement),
-    KuFlow_Engine_deleteTaskElementValueDocument: catchAllErrors(KuFlow_Engine_deleteTaskElementValueDocument),
-    KuFlow_Engine_saveTaskJsonFormsValueData: catchAllErrors(KuFlow_Engine_saveTaskJsonFormsValueData),
-    KuFlow_Engine_appendTaskLog: catchAllErrors(KuFlow_Engine_appendTaskLog),
+    KuFlow_Engine_findProcessItems: catchAllErrors(KuFlow_Engine_findProcessItems),
+    KuFlow_Engine_retrieveProcessItem: catchAllErrors(KuFlow_Engine_retrieveProcessItem),
+    KuFlow_Engine_createProcessItem: catchAllErrors(KuFlow_Engine_createProcessItem),
+    KuFlow_Engine_completeProcessItemTask: catchAllErrors(KuFlow_Engine_completeProcessItemTask),
+    KuFlow_Engine_claimProcessItemTask: catchAllErrors(KuFlow_Engine_claimProcessItemTask),
+    KuFlow_Engine_assignProcessItemTask: catchAllErrors(KuFlow_Engine_assignProcessItemTask),
+    KuFlow_Engine_updateProcessItemTaskData: catchAllErrors(KuFlow_Engine_updateProcessItemTaskData),
+    KuFlow_Engine_patchProcessItemTaskData: catchAllErrors(KuFlow_Engine_patchProcessItemTaskData),
+    KuFlow_Engine_appendProcessItemTaskLog: catchAllErrors(KuFlow_Engine_appendProcessItemTaskLog),
   }
 
   async function KuFlow_Engine_retrievePrincipal(
-    request: RetrievePrincipalRequest,
-  ): Promise<RetrievePrincipalResponse> {
+    request: PrincipalRetrieveRequest,
+  ): Promise<PrincipalRetrieveResponse> {
     validateRetrievePrincipalRequest(request)
 
     const principal = await kuFlowRestClient.principalOperations.retrievePrincipal(request.principalId)
@@ -305,8 +284,8 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   }
 
   async function KuFlow_Engine_retrieveTenantUser(
-    request: RetrieveTenantUserRequest,
-  ): Promise<RetrieveTenantUserResponse> {
+    request: TenantUserRetrieveRequest,
+  ): Promise<TenantUserRetrieveResponse> {
     validateRetrieveTenantUserRequest(request)
 
     const tenantUser = await kuFlowRestClient.tenantUserOperations.retrieveTenantUser(request.tenantUserId)
@@ -316,7 +295,7 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
     }
   }
 
-  async function KuFlow_Engine_findProcesses(request: FindProcessesRequest): Promise<FindProcessesResponse> {
+  async function KuFlow_Engine_findProcesses(request: ProcessFindRequest): Promise<ProcessFindResponse> {
     const processes = await kuFlowRestClient.processOperations.findProcesses({
       ...request,
     })
@@ -326,7 +305,7 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
     }
   }
 
-  async function KuFlow_Engine_retrieveProcess(request: RetrieveProcessRequest): Promise<RetrieveProcessResponse> {
+  async function KuFlow_Engine_retrieveProcess(request: ProcessRetrieveRequest): Promise<ProcessRetrieveResponse> {
     validateRetrieveProcessRequest(request)
 
     const process: Process = await kuFlowRestClient.processOperations.retrieveProcess(request.processId)
@@ -336,31 +315,60 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
     }
   }
 
-  async function KuFlow_Engine_saveProcessElement(
-    request: SaveProcessElementRequest,
-  ): Promise<SaveProcessElementResponse> {
-    validateSaveProcessElementRequest(request)
+  async function KuFlow_Engine_updateProcessEntity(
+    request: ProcessEntityUpdateRequest,
+  ): Promise<ProcessEntityUpdateResponse> {
+    validateProcessEntityUpdateRequest(request)
 
-    const command: ProcessSaveElementCommand = {
-      elementDefinitionCode: request.elementDefinitionCode,
-      elementValues: request.elementValues,
-    }
-    const process = await kuFlowRestClient.processOperations.actionsProcessSaveElement(request.processId, command)
+    const process: Process = await kuFlowRestClient.processOperations.updateProcessEntity(
+      request.processId,
+      request.params,
+    )
 
     return {
       process,
     }
   }
 
-  async function KuFlow_Engine_deleteProcessElement(
-    request: DeleteProcessElementRequest,
-  ): Promise<DeleteProcessElementResponse> {
-    validateDeleteProcessElementRequest(request)
+  async function KuFlow_Engine_patchProcessEntity(
+    request: ProcessEntityPatchRequest,
+  ): Promise<ProcessEntityPatchResponse> {
+    validateProcessEntityPatchRequest(request)
 
-    const command: ProcessDeleteElementCommand = {
-      elementDefinitionCode: request.elementDefinitionCode,
+    const process: Process = await kuFlowRestClient.processOperations.patchProcessEntity(
+      request.processId,
+      request.params,
+    )
+
+    return {
+      process,
     }
-    const process = await kuFlowRestClient.processOperations.actionsProcessDeleteElement(request.processId, command)
+  }
+
+  async function KuFlow_Engine_updateProcessMetadata(
+    request: ProcessMetadataUpdateRequest,
+  ): Promise<ProcessMetadataUpdateResponse> {
+    validateProcessMetadataUpdateRequest(request)
+
+    const process: Process = await kuFlowRestClient.processOperations.updateProcessMetadata(
+      request.processId,
+      request.params,
+    )
+
+    return {
+      process,
+    }
+  }
+
+  async function KuFlow_Engine_patchProcessMetadata(
+    request: ProcessMetadataPatchRequest,
+  ): Promise<ProcessMetadataPatchResponse> {
+    validateProcessMetadataPatchRequest(request)
+
+    const process: Process = await kuFlowRestClient.processOperations.patchProcessMetadata(
+      request.processId,
+      request.params,
+    )
 
     return {
       process,
@@ -368,151 +376,136 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   }
 
   async function KuFlow_Engine_changeProcessInitiator(
-    request: ChangeProcessInitiatorRequest,
-  ): Promise<ChangeProcessInitiatorResponse> {
-    validateChangeProcessInitiatorRequest(request)
+    request: ProcessInitiatorChangeRequest,
+  ): Promise<ProcessInitiatorChangeResponse> {
+    validateProcessInitiatorChangeRequest(request)
 
-    const command: ProcessChangeInitiatorCommand = {
-      email: request.email,
-      principalId: request.principalId,
-    }
-    const process = await kuFlowRestClient.processOperations.actionsProcessChangeInitiator(request.processId, command)
+    const process = await kuFlowRestClient.processOperations.changeProcessInitiator(request.processId, request.params)
 
     return {
       process,
     }
   }
 
-  async function KuFlow_Engine_findTasks(request: FindTasksRequest): Promise<FindTasksResponse> {
-    const tasks = await kuFlowRestClient.taskOperations.findTasks({
+  async function KuFlow_Engine_findProcessItems(request: ProcessItemFindRequest): Promise<ProcessItemFindResponse> {
+    const processItems = await kuFlowRestClient.processItemOperations.findProcessItems({
       ...request,
     })
 
     return {
-      tasks,
+      processItems,
     }
   }
 
-  async function KuFlow_Engine_retrieveTask(request: RetrieveTaskRequest): Promise<RetrieveTaskResponse> {
-    validateRetrieveTaskRequest(request)
+  async function KuFlow_Engine_retrieveProcessItem(
+    request: ProcessItemRetrieveRequest,
+  ): Promise<ProcessItemRetrieveResponse> {
+    validateProcessItemRetrieveRequest(request)
 
-    const task = await kuFlowRestClient.taskOperations.retrieveTask(request.taskId)
+    const processItem = await kuFlowRestClient.processItemOperations.retrieveProcessItem(request.processItemId)
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_createTask(request: CreateTaskRequest): Promise<CreateTaskResponse> {
-    validateCreateTaskRequest(request)
+  async function KuFlow_Engine_createProcessItem(
+    request: ProcessItemTaskCreateRequest,
+  ): Promise<ProcessItemTaskCreateResponse> {
+    validateProcessItemTaskCreateRequest(request)
 
-    const task = await kuFlowRestClient.taskOperations.createTask(request.task)
+    const processItem = await kuFlowRestClient.processItemOperations.createProcessItem(request.params)
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_completeTask(request: CompleteTaskRequest): Promise<CompleteTaskResponse> {
-    validateCompleteTaskRequest(request)
+  async function KuFlow_Engine_completeProcessItemTask(
+    request: ProcessItemTaskCompleteRequest,
+  ): Promise<ProcessItemTaskCompleteResponse> {
+    validateProcessItemTaskCompleteRequest(request)
 
-    const task = await kuFlowRestClient.taskOperations.actionsTaskComplete(request.taskId)
+    const processItem = await kuFlowRestClient.processItemOperations.completeProcessItemTask(request.processItemId)
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_claimTask(request: ClaimTaskRequest): Promise<ClaimTaskResponse> {
-    validateClaimTaskRequest(request)
+  async function KuFlow_Engine_claimProcessItemTask(
+    request: ProcessItemTaskClaimRequest,
+  ): Promise<ProcessItemTaskClaimResponse> {
+    validateProcessItemTaskClaimRequest(request)
 
-    const task = await kuFlowRestClient.taskOperations.actionsTaskClaim(request.taskId)
+    const processItem = await kuFlowRestClient.processItemOperations.claimProcessItemTask(request.processItemId)
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_assignTask(request: AssignTaskRequest): Promise<AssignTaskResponse> {
-    validateAssignTaskRequest(request)
+  async function KuFlow_Engine_assignProcessItemTask(
+    request: ProcessItemTaskAssignRequest,
+  ): Promise<ProcessItemTaskAssignResponse> {
+    validateProcessItemTaskAssignRequest(request)
 
-    const command: TaskAssignCommand = {
-      email: request.email,
-      principalId: request.principalId,
+    const params: ProcessItemTaskAssignParams = {
+      ownerEmail: request.ownerEmail,
+      ownerId: request.ownerId,
     }
-    const task = await kuFlowRestClient.taskOperations.actionsTaskAssign(request.taskId, command)
+    const processItem = await kuFlowRestClient.processItemOperations.assignProcessItemTask(
+      request.processItemId,
+      params,
+    )
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_saveTaskElement(request: SaveTaskElementRequest): Promise<SaveTaskElementResponse> {
-    validateSaveTaskElementRequest(request)
+  async function KuFlow_Engine_updateProcessItemTaskData(
+    request: ProcessItemTaskDataUpdateRequest,
+  ): Promise<ProcessItemTaskDataUpdateResponse> {
+    validateProcessItemTaskDataUpdateRequest(request)
 
-    const command: TaskSaveElementCommand = {
-      elementDefinitionCode: request.elementDefinitionCode,
-      elementValues: request.elementValues,
-    }
-    const task = await kuFlowRestClient.taskOperations.actionsTaskSaveElement(request.taskId, command)
+    const processItem = await kuFlowRestClient.processItemOperations.updateProcessItemTaskData(
+      request.processItemId,
+      request.params,
+    )
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_deleteTaskElement(
-    request: DeleteTaskElementRequest,
-  ): Promise<DeleteTaskElementResponse> {
-    validateDeleteTaskElementRequest(request)
+  async function KuFlow_Engine_patchProcessItemTaskData(
+    request: ProcessItemTaskDataPatchRequest,
+  ): Promise<ProcessItemTaskDataPatchResponse> {
+    validateProcessItemTaskDataPatchRequest(request)
 
-    const command: TaskDeleteElementCommand = {
-      elementDefinitionCode: request.elementDefinitionCode,
-    }
-    const task = await kuFlowRestClient.taskOperations.actionsTaskDeleteElement(request.taskId, command)
+    const processItem = await kuFlowRestClient.processItemOperations.patchProcessItemTaskData(
+      request.processItemId,
+      request.params,
+    )
 
     return {
-      task,
+      processItem,
     }
   }
 
-  async function KuFlow_Engine_deleteTaskElementValueDocument(
-    request: DeleteTaskElementValueDocumentRequest,
-  ): Promise<DeleteTaskElementValueDocumentResponse> {
-    validateDeleteTaskElementValueDocumentRequest(request)
+  async function KuFlow_Engine_appendProcessItemTaskLog(
+    request: ProcessItemTaskLogAppendRequest,
+  ): Promise<ProcessItemTaskLogAppendResponse> {
+    validateProcessItemTaskLogAppendRequest(request)
 
-    const command: TaskDeleteElementValueDocumentCommand = {
-      documentId: request.documentId,
-    }
-    const task = await kuFlowRestClient.taskOperations.actionsTaskDeleteElementValueDocument(request.taskId, command)
-
-    return {
-      task,
-    }
-  }
-
-  async function KuFlow_Engine_saveTaskJsonFormsValueData(
-    request: SaveTaskJsonFormsValueDataRequest,
-  ): Promise<SaveTaskJsonFormsValueDataResponse> {
-    validateSaveTaskJsonFormsValueData(request)
-
-    const command: TaskSaveJsonFormsValueDataCommand = {
-      data: request.data,
-    }
-    const task = await kuFlowRestClient.taskOperations.actionsTaskSaveJsonFormsValueData(request.taskId, command)
+    const processItem = await kuFlowRestClient.processItemOperations.appendProcessItemTaskLog(
+      request.processItemId,
+      request.params,
+    )
 
     return {
-      task,
-    }
-  }
-
-  async function KuFlow_Engine_appendTaskLog(request: AppendTaskLogRequest): Promise<AppendTaskLogResponse> {
-    validateAppendTaskLogRequest(request)
-
-    const task = await kuFlowRestClient.taskOperations.actionsTaskAppendLog(request.taskId, request.log)
-
-    return {
-      task,
+      processItem,
     }
   }
 }

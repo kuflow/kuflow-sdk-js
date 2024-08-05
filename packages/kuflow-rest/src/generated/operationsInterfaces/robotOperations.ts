@@ -21,13 +21,13 @@
  * THE SOFTWARE.
  */
 import {
-  type RobotActionsRobotDownloadAssetOptionalParams,
-  type RobotActionsRobotDownloadAssetResponse,
-  type RobotActionsRobotDownloadSourceCodeOptionalParams,
-  type RobotActionsRobotDownloadSourceCodeResponse,
   type RobotAssetArchitecture,
   type RobotAssetPlatform,
   type RobotAssetType,
+  type RobotDownloadRobotAssetOptionalParams,
+  type RobotDownloadRobotAssetResponse,
+  type RobotDownloadRobotSourceCodeOptionalParams,
+  type RobotDownloadRobotSourceCodeResponse,
   type RobotFindRobotsOptionalParams,
   type RobotFindRobotsResponse,
   type RobotRetrieveRobotOptionalParams,
@@ -55,10 +55,10 @@ export interface RobotOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  actionsRobotDownloadSourceCode: (
+  downloadRobotSourceCode: (
     id: string,
-    options?: RobotActionsRobotDownloadSourceCodeOptionalParams,
-  ) => Promise<RobotActionsRobotDownloadSourceCodeResponse>
+    options?: RobotDownloadRobotSourceCodeOptionalParams,
+  ) => Promise<RobotDownloadRobotSourceCodeResponse>
   /**
    * Given a robot, download the requested asset.
    * @param id The resource ID.
@@ -68,12 +68,12 @@ export interface RobotOperations {
    * @param architecture The asset platform architecture.
    * @param options The options parameters.
    */
-  actionsRobotDownloadAsset: (
+  downloadRobotAsset: (
     id: string,
     typeParam: RobotAssetType,
     version: string,
     platform: RobotAssetPlatform,
     architecture: RobotAssetArchitecture,
-    options?: RobotActionsRobotDownloadAssetOptionalParams,
-  ) => Promise<RobotActionsRobotDownloadAssetResponse>
+    options?: RobotDownloadRobotAssetOptionalParams,
+  ) => Promise<RobotDownloadRobotAssetResponse>
 }

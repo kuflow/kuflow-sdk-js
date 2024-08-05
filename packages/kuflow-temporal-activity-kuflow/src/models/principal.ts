@@ -22,10 +22,10 @@
  */
 import { type Principal } from '@kuflow/kuflow-rest'
 
-export interface RetrievePrincipalRequest {
+export interface PrincipalRetrieveRequest {
   principalId: string
 }
 
-export interface RetrievePrincipalResponse {
+export interface PrincipalRetrieveResponse {
   principal: Principal
 }

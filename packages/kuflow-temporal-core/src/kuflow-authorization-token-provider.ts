@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Authentication } from '@kuflow/kuflow-rest'
+import { type Authentication, type AuthenticationCreateParams } from '@kuflow/kuflow-rest'
 import { type NativeConnection, Runtime } from '@temporalio/worker'
 
 import { type KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
@@ -125,11 +125,11 @@ export class KuFlowAuthorizationTokenProvider {
   }
 
   private async createAuthentication(): Promise<Authentication> {
-    const authenticationCreation: Authentication = {
+    const authenticationParams: AuthenticationCreateParams = {
       type: 'ENGINE_TOKEN',
       tenantId: this.options.kuflow.tenantId,
     }
 
-    return await this.options.kuflow.restClient.authenticationOperations.createAuthentication(authenticationCreation)
+    return await this.options.kuflow.restClient.authenticationOperations.createAuthentication(authenticationParams)
   }
 }

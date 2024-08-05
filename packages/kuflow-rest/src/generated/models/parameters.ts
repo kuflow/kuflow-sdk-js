@@ -23,20 +23,16 @@
 import { type OperationParameter, type OperationQueryParameter, type OperationURLParameter } from '@azure/core-client'
 
 import {
-  Authentication as AuthenticationMapper,
-  Log as LogMapper,
-  Process as ProcessMapper,
-  ProcessChangeInitiatorCommand as ProcessChangeInitiatorCommandMapper,
-  ProcessDeleteElementCommand as ProcessDeleteElementCommandMapper,
-  ProcessSaveElementCommand as ProcessSaveElementCommandMapper,
-  ProcessSaveEntityDataCommand as ProcessSaveEntityDataCommandMapper,
-  Task as TaskMapper,
-  TaskAssignCommand as TaskAssignCommandMapper,
-  TaskDeleteElementCommand as TaskDeleteElementCommandMapper,
-  TaskDeleteElementValueDocumentCommand as TaskDeleteElementValueDocumentCommandMapper,
-  TaskSaveElementCommand as TaskSaveElementCommandMapper,
-  TaskSaveJsonFormsValueDataCommand as TaskSaveJsonFormsValueDataCommandMapper,
-  Worker as WorkerMapper,
+  AuthenticationCreateParams as AuthenticationCreateParamsMapper,
+  ProcessChangeInitiatorParams as ProcessChangeInitiatorParamsMapper,
+  ProcessCreateParams as ProcessCreateParamsMapper,
+  ProcessEntityUpdateParams as ProcessEntityUpdateParamsMapper,
+  ProcessItemCreateParams as ProcessItemCreateParamsMapper,
+  ProcessItemTaskAppendLogParams as ProcessItemTaskAppendLogParamsMapper,
+  ProcessItemTaskAssignParams as ProcessItemTaskAssignParamsMapper,
+  ProcessItemTaskDataUpdateParams as ProcessItemTaskDataUpdateParamsMapper,
+  ProcessMetadataUpdateParams as ProcessMetadataUpdateParamsMapper,
+  WorkerCreateParams as WorkerCreateParamsMapper,
 } from '../models/mappers'
 
 export const contentType: OperationParameter = {
@@ -51,9 +47,9 @@ export const contentType: OperationParameter = {
   },
 }
 
-export const authentication: OperationParameter = {
-  parameterPath: 'authentication',
-  mapper: AuthenticationMapper,
+export const params: OperationParameter = {
+  parameterPath: 'params',
+  mapper: AuthenticationCreateParamsMapper,
 }
 
 export const accept: OperationParameter = {
@@ -195,24 +191,14 @@ export const email: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const process: OperationParameter = {
-  parameterPath: 'process',
-  mapper: ProcessMapper,
+export const params1: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessCreateParamsMapper,
 }
 
-export const command: OperationParameter = {
-  parameterPath: 'command',
-  mapper: ProcessChangeInitiatorCommandMapper,
-}
-
-export const command1: OperationParameter = {
-  parameterPath: 'command',
-  mapper: ProcessSaveElementCommandMapper,
-}
-
-export const command2: OperationParameter = {
-  parameterPath: 'command',
-  mapper: ProcessDeleteElementCommandMapper,
+export const params2: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessChangeInitiatorParamsMapper,
 }
 
 export const contentType1: OperationParameter = {
@@ -283,9 +269,66 @@ export const userActionValueId: OperationQueryParameter = {
   },
 }
 
-export const command3: OperationParameter = {
-  parameterPath: 'command',
-  mapper: ProcessSaveEntityDataCommandMapper,
+export const params3: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessMetadataUpdateParamsMapper,
+}
+
+export const contentType2: OperationParameter = {
+  parameterPath: ['options', 'contentType'],
+  mapper: {
+    defaultValue: 'application/json-patch+json',
+    isConstant: true,
+    serializedName: 'Content-Type',
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const jsonPatch: OperationParameter = {
+  parameterPath: 'jsonPatch',
+  mapper: {
+    constraints: {
+      MinItems: 1,
+    },
+    serializedName: 'jsonPatch',
+    required: true,
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Composite',
+          className: 'JsonPatchOperation',
+        },
+      },
+    },
+  },
+}
+
+export const params4: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessEntityUpdateParamsMapper,
+}
+
+export const params5: OperationParameter = {
+  parameterPath: 'params',
+  mapper: {
+    constraints: {
+      MinItems: 1,
+    },
+    serializedName: 'params',
+    required: true,
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Composite',
+          className: 'JsonPatchOperation',
+        },
+      },
+    },
+  },
 }
 
 export const schemaPath: OperationQueryParameter = {
@@ -338,10 +381,27 @@ export const processId: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const state: OperationQueryParameter = {
-  parameterPath: ['options', 'state'],
+export const typeParam1: OperationQueryParameter = {
+  parameterPath: ['options', 'type'],
   mapper: {
-    serializedName: 'state',
+    serializedName: 'type',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Enum',
+          allowedValues: ['TASK', 'MESSAGE'],
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const taskState: OperationQueryParameter = {
+  parameterPath: ['options', 'taskState'],
+  mapper: {
+    serializedName: 'taskState',
     type: {
       name: 'Sequence',
       element: {
@@ -371,82 +431,24 @@ export const taskDefinitionCode: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const task: OperationParameter = {
-  parameterPath: 'task',
-  mapper: TaskMapper,
+export const params6: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessItemCreateParamsMapper,
 }
 
-export const activityToken: OperationQueryParameter = {
-  parameterPath: ['options', 'activityToken'],
-  mapper: {
-    serializedName: 'activityToken',
-    type: {
-      name: 'String',
-    },
-  },
+export const params7: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessItemTaskAssignParamsMapper,
 }
 
-export const command4: OperationParameter = {
-  parameterPath: 'command',
-  mapper: TaskAssignCommandMapper,
+export const params8: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessItemTaskAppendLogParamsMapper,
 }
 
-export const command5: OperationParameter = {
-  parameterPath: 'command',
-  mapper: TaskSaveElementCommandMapper,
-}
-
-export const elementDefinitionCode: OperationQueryParameter = {
-  parameterPath: 'elementDefinitionCode',
-  mapper: {
-    serializedName: 'elementDefinitionCode',
-    required: true,
-    type: {
-      name: 'String',
-    },
-  },
-}
-
-export const elementValueId: OperationQueryParameter = {
-  parameterPath: ['options', 'elementValueId'],
-  mapper: {
-    serializedName: 'elementValueId',
-    type: {
-      name: 'Uuid',
-    },
-  },
-}
-
-export const elementValueValid: OperationQueryParameter = {
-  parameterPath: ['options', 'elementValueValid'],
-  mapper: {
-    defaultValue: true,
-    serializedName: 'elementValueValid',
-    type: {
-      name: 'Boolean',
-    },
-  },
-}
-
-export const command6: OperationParameter = {
-  parameterPath: 'command',
-  mapper: TaskDeleteElementCommandMapper,
-}
-
-export const command7: OperationParameter = {
-  parameterPath: 'command',
-  mapper: TaskDeleteElementValueDocumentCommandMapper,
-}
-
-export const documentId: OperationQueryParameter = {
-  parameterPath: 'documentId',
-  mapper: {
-    serializedName: 'documentId',
-    required: true,
-    type: {
-      name: 'Uuid',
-    },
-  },
+export const params9: OperationParameter = {
+  parameterPath: 'params',
+  mapper: ProcessItemTaskDataUpdateParamsMapper,
 }
 
 export const accept3: OperationParameter = {
@@ -461,19 +463,20 @@ export const accept3: OperationParameter = {
   },
 }
 
-export const command8: OperationParameter = {
-  parameterPath: 'command',
-  mapper: TaskSaveJsonFormsValueDataCommandMapper,
+export const propertyPath: OperationQueryParameter = {
+  parameterPath: 'propertyPath',
+  mapper: {
+    serializedName: 'propertyPath',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
 }
 
-export const log: OperationParameter = {
-  parameterPath: 'log',
-  mapper: LogMapper,
-}
-
-export const worker: OperationParameter = {
-  parameterPath: 'worker',
-  mapper: WorkerMapper,
+export const params10: OperationParameter = {
+  parameterPath: 'params',
+  mapper: WorkerCreateParamsMapper,
 }
 
 export const filterContext: OperationQueryParameter = {
@@ -488,7 +491,7 @@ export const filterContext: OperationQueryParameter = {
   collectionFormat: 'CSV',
 }
 
-export const typeParam1: OperationQueryParameter = {
+export const typeParam2: OperationQueryParameter = {
   parameterPath: 'typeParam',
   mapper: {
     serializedName: 'type',

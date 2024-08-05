@@ -35,7 +35,7 @@ const kuFlowRestClient = new KuFlowRestClient({ clientId, clientSecret })
 describe('API /principals', () => {
   describe('GET /principals', () => {
     test('Check that security header is added', async () => {
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals')
         .matchHeader('authorization', 'Bearer ' + token)
         .query({ size: 25, page: 0 })
@@ -49,7 +49,7 @@ describe('API /principals', () => {
     test('Check happy path', async () => {
       const expectedObject = mockPrincipalPage()
 
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals')
         .query({ size: 25, page: 0 })
         .reply(200, JSON.stringify(expectedObject))
@@ -67,7 +67,7 @@ describe('API /principals', () => {
       expectedObjectAny.dummy = 'value'
       expectedObjectAny.metadata.dummy = 'value2'
 
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals')
         .query({ size: 25, page: 0 })
         .reply(200, JSON.stringify(expectedObject))
@@ -80,7 +80,7 @@ describe('API /principals', () => {
     })
 
     test('Check that query params are correctly serialized', async () => {
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals')
         .query({
           size: 30,
@@ -103,7 +103,7 @@ describe('API /principals', () => {
     })
 
     test('Check that query params are correctly serialized - Arrays with single values', async () => {
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals')
         .query({
           size: 30,
@@ -126,7 +126,7 @@ describe('API /principals', () => {
     })
 
     test('Check that query params are correctly serialized - Arrays with multiple values', async () => {
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals')
         .query({
           size: 30,
@@ -151,7 +151,7 @@ describe('API /principals', () => {
 
   describe('GET /principals/{id}', () => {
     test('Check that security header is added', async () => {
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get('/principals/754d10c6-e9ef-4a9e-9df7-ab146fa28004')
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, {})
@@ -163,7 +163,7 @@ describe('API /principals', () => {
 
     test('Check happy path', async () => {
       const expectedObject = mockPrincipalUser()
-      const scope = nock('https://api.kuflow.com/v2022-10-08')
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
         .get(`/principals/${expectedObject.id}`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, expectedObject)

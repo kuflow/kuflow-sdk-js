@@ -23,42 +23,44 @@
 import { type FullOperationResponse } from '@azure/core-client'
 
 import {
+  type JsonPatchOperation,
   type KuFlowRestClientGenerated,
-  type Process,
-  type ProcessActionsProcessCancelOptionalParams,
-  type ProcessActionsProcessCancelResponse,
-  type ProcessActionsProcessChangeInitiatorOptionalParams,
-  type ProcessActionsProcessChangeInitiatorResponse,
-  type ProcessActionsProcessCompleteOptionalParams,
-  type ProcessActionsProcessCompleteResponse,
-  type ProcessActionsProcessDeleteElementOptionalParams,
-  type ProcessActionsProcessDeleteElementResponse,
-  type ProcessActionsProcessDownloadEntityDocumentOptionalParams,
-  type ProcessActionsProcessDownloadEntityDocumentResponse,
-  type ProcessActionsProcessSaveElementOptionalParams,
-  type ProcessActionsProcessSaveElementResponse,
-  type ProcessActionsProcessSaveEntityDataOptionalParams,
-  type ProcessActionsProcessSaveEntityDataResponse,
-  type ProcessActionsProcessSaveEntityDocumentOptionalParams,
-  type ProcessActionsProcessSaveEntityDocumentResponse,
-  type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  type ProcessActionsProcessSaveUserActionValueDocumentResponse,
-  type ProcessChangeInitiatorCommand,
+  type ProcessCancelProcessOptionalParams,
+  type ProcessCancelProcessResponse,
+  type ProcessChangeInitiatorParams,
+  type ProcessChangeProcessInitiatorOptionalParams,
+  type ProcessChangeProcessInitiatorResponse,
+  type ProcessCompleteProcessOptionalParams,
+  type ProcessCompleteProcessResponse,
+  type ProcessCreateParams,
   type ProcessCreateProcessOptionalParams,
   type ProcessCreateProcessResponse,
-  type ProcessDeleteElementCommand,
+  type ProcessDownloadProcessEntityDocumentOptionalParams,
+  type ProcessDownloadProcessEntityDocumentResponse,
+  type ProcessEntityUpdateParams,
   type ProcessFindProcessesResponse,
+  type ProcessMetadataUpdateParams,
   type ProcessOperations as ProcessOperationsGenerated,
+  type ProcessPatchProcessEntityOptionalParams,
+  type ProcessPatchProcessEntityResponse,
+  type ProcessPatchProcessMetadataOptionalParams,
+  type ProcessPatchProcessMetadataResponse,
   type ProcessRetrieveProcessOptionalParams,
   type ProcessRetrieveProcessResponse,
-  type ProcessSaveElementCommand,
-  type ProcessSaveEntityDataCommand,
+  type ProcessUpdateProcessEntityOptionalParams,
+  type ProcessUpdateProcessEntityResponse,
+  type ProcessUpdateProcessMetadataOptionalParams,
+  type ProcessUpdateProcessMetadataResponse,
+  type ProcessUploadProcessEntityDocumentOptionalParams,
+  type ProcessUploadProcessEntityDocumentResponse,
+  type ProcessUploadProcessUserActionDocumentOptionalParams,
+  type ProcessUploadProcessUserActionDocumentResponse,
 } from '../generated'
 import {
   type Document,
   type ProcessFindProcessesOptionalExtParams,
-  type ProcessSaveEntityDocumentRequestCommand,
-  type ProcessSaveUserActionValueDocumentCommand,
+  type ProcessUploadProcessEntityDocumentParams,
+  type ProcessUploadProcessUserActionDocumentParams,
 } from '../models'
 
 /** Class containing ProcessOperations operations. */
@@ -104,14 +106,14 @@ export class ProcessOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param process Process to create
+   * @param params Process to create
    * @param options The options parameters.
    */
   async createProcess(
-    process: Process,
+    params: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ): Promise<ProcessCreateProcessResponse> {
-    return await this.processOperations.createProcess(process, options)
+    return await this.processOperations.createProcess(params, options)
   }
 
   /**
@@ -127,61 +129,6 @@ export class ProcessOperations {
   }
 
   /**
-   * Change the current initiator of a process.
-   *
-   * Allows you to choose a user (by email or principal identifier) or an application (principal identifier).
-   * Only one option will be necessary.
-   *
-   * @param id The resource ID.
-   * @param command Command to change the process initiator.
-   * @param options The options parameters.
-   */
-  async actionsProcessChangeInitiator(
-    id: string,
-    command: ProcessChangeInitiatorCommand,
-    options?: ProcessActionsProcessChangeInitiatorOptionalParams,
-  ): Promise<ProcessActionsProcessChangeInitiatorResponse> {
-    return await this.processOperations.actionsProcessChangeInitiator(id, command, options)
-  }
-
-  /**
-   * Allow to save an element.
-   *
-   * If values already exist for the provided element code, it replaces them with the new ones, otherwise
-   * it creates them. The values of the previous elements that no longer exist will be deleted.
-   *
-   * If the process is already finished the invocations fails with an error.
-   *
-   * @param id The resource ID.
-   * @param command Command to save an element.
-   * @param options The options parameters.
-   */
-  async actionsProcessSaveElement(
-    id: string,
-    command: ProcessSaveElementCommand,
-    options?: ProcessActionsProcessSaveElementOptionalParams,
-  ): Promise<ProcessActionsProcessSaveElementResponse> {
-    return await this.processOperations.actionsProcessSaveElement(id, command, options)
-  }
-
-  /**
-   * Allow to delete a process element by specifying the item definition code.
-   *
-   * Remove all the element values.
-   *
-   * @param id The resource ID.
-   * @param command Command to delete an element.
-   * @param options The options parameters.
-   */
-  async actionsProcessDeleteElement(
-    id: string,
-    command: ProcessDeleteElementCommand,
-    options?: ProcessActionsProcessDeleteElementOptionalParams,
-  ): Promise<ProcessActionsProcessDeleteElementResponse> {
-    return await this.processOperations.actionsProcessDeleteElement(id, command, options)
-  }
-
-  /**
    * Complete a Process. The state of Process is set to 'completed'.
    *
    * If you are already in this state, no action is taken.
@@ -189,11 +136,11 @@ export class ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsProcessComplete(
+  async completeProcess(
     id: string,
-    options?: ProcessActionsProcessCompleteOptionalParams,
-  ): Promise<ProcessActionsProcessCompleteResponse> {
-    return await this.processOperations.actionsProcessComplete(id, options)
+    options?: ProcessCompleteProcessOptionalParams,
+  ): Promise<ProcessCompleteProcessResponse> {
+    return await this.processOperations.completeProcess(id, options)
   }
 
   /**
@@ -206,43 +153,58 @@ export class ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsProcessCancel(
+  async cancelProcess(id: string, options?: ProcessCancelProcessOptionalParams): Promise<ProcessCancelProcessResponse> {
+    return await this.processOperations.cancelProcess(id, options)
+  }
+
+  /**
+   * Change the current initiator of a process.
+   *
+   * Allows you to choose a user (by email or principal identifier) or an application (principal identifier).
+   * Only one option will be necessary.
+   *
+   * @param id The resource ID.
+   * @param params Params to change the process initiator.
+   * @param options The options parameters.
+   */
+  async changeProcessInitiator(
     id: string,
-    options?: ProcessActionsProcessCancelOptionalParams,
-  ): Promise<ProcessActionsProcessCancelResponse> {
-    return await this.processOperations.actionsProcessCancel(id, options)
+    params: ProcessChangeInitiatorParams,
+    options?: ProcessChangeProcessInitiatorOptionalParams,
+  ): Promise<ProcessChangeProcessInitiatorResponse> {
+    return await this.processOperations.changeProcessInitiator(id, params, options)
   }
 
   /**
    * Allow saving a user action document uploading the content.
    *
    * @param id The resource ID.
-   * @param command Command info
+   * @param params Params info
    * @param document Document to upload.
    * @param options The options parameters.
    *
    * @return the process if the document could be saved or undefined if not
    */
-  async actionsProcessSaveUserActionValueDocument(
+  async uploadProcessUserActionDocument(
     id: string,
-    command: ProcessSaveUserActionValueDocumentCommand,
+    params: ProcessUploadProcessUserActionDocumentParams,
     document: Document,
-    options?: ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  ): Promise<ProcessActionsProcessSaveUserActionValueDocumentResponse | undefined> {
+    options?: ProcessUploadProcessUserActionDocumentOptionalParams,
+  ): Promise<ProcessUploadProcessUserActionDocumentResponse | undefined> {
     const fileContentType = document.contentType
     const fileName = document.fileName
     const file = document.fileContent
-    const userActionValueId = command.userActionValueId
+    const userActionValueId = params.userActionValueId
 
     let rawResponse: FullOperationResponse | undefined
-    const optionsExt: ProcessActionsProcessSaveUserActionValueDocumentOptionalParams = {
+    const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
       ...options,
       onResponse: rawResponseInner => {
         rawResponse = rawResponseInner
       },
     }
 
-    const process = await this.processOperations.actionsProcessSaveUserActionValueDocument(
+    const process = await this.processOperations.uploadProcessUserActionDocument(
       id,
       fileContentType,
       fileName,
@@ -267,49 +229,118 @@ export class ProcessOperations {
   }
 
   /**
+   * Save process metadata validating the data following the related schema.
+   *
+   * @param id The resource ID.
+   * @param params Params to save de entity data.
+   * @param options The options parameters.
+   */
+  async updateProcessMetadata(
+    id: string,
+    params: ProcessMetadataUpdateParams,
+    options?: ProcessUpdateProcessMetadataOptionalParams,
+  ): Promise<ProcessUpdateProcessMetadataResponse> {
+    return await this.processOperations.updateProcessMetadata(id, params, options)
+  }
+
+  /**
+   * Allow to patch a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then the json is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param params Params to save de entity data.
+   * @param options The options parameters.
+   */
+  async patchProcessMetadata(
+    id: string,
+    params: JsonPatchOperation[],
+    options?: ProcessPatchProcessMetadataOptionalParams,
+  ): Promise<ProcessPatchProcessMetadataResponse> {
+    return await this.processOperations.patchProcessMetadata(id, params, options)
+  }
+
+  /**
    * Allow to save a JSON validating that the data follow the related schema. If the data is invalid,
    * then
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param command Command to save the JSON value.
+   * @param params Params to save the JSON value.
    * @param options The options parameters.
    */
-  async actionsProcessSaveEntityData(
+  async updateProcessEntity(
     id: string,
-    command: ProcessSaveEntityDataCommand,
-    options?: ProcessActionsProcessSaveEntityDataOptionalParams,
-  ): Promise<ProcessActionsProcessSaveEntityDataResponse> {
-    return await this.processOperations.actionsProcessSaveEntityData(id, command, options)
+    params: ProcessEntityUpdateParams,
+    options?: ProcessUpdateProcessEntityOptionalParams,
+  ): Promise<ProcessUpdateProcessEntityResponse> {
+    return await this.processOperations.updateProcessEntity(id, params, options)
+  }
+
+  /**
+   * Allow to patch a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then the json is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param params Params to save the JSON value.
+   * @param options The options parameters.
+   */
+  async patchProcessEntity(
+    id: string,
+    params: JsonPatchOperation[],
+    options?: ProcessPatchProcessEntityOptionalParams,
+  ): Promise<ProcessPatchProcessEntityResponse> {
+    return await this.processOperations.patchProcessEntity(id, params, options)
   }
 
   /**
    * Save a document in the process to later be linked into the JSON data.
    *
    * @param id The resource ID.
-   * @param command Command options
-   * @param document Document to upload
+   * @param params Params info
+   * @param document Document to upload.
    * @param options The options parameters.
    */
-  async actionsProcessSaveEntityDocument(
+  async uploadProcessEntityDocument(
     id: string,
-    command: ProcessSaveEntityDocumentRequestCommand,
+    params: ProcessUploadProcessEntityDocumentParams,
     document: Document,
-    options?: ProcessActionsProcessSaveEntityDocumentOptionalParams,
-  ): Promise<ProcessActionsProcessSaveEntityDocumentResponse> {
+    options?: ProcessUploadProcessEntityDocumentOptionalParams,
+  ): Promise<ProcessUploadProcessEntityDocumentResponse | undefined> {
     const fileContentType = document.contentType
     const fileName = document.fileName
     const file = document.fileContent
-    const schemaPath = command.schemaPath
+    const schemaPath = params.schemaPath
 
-    return await this.processOperations.actionsProcessSaveEntityDocument(
+    let rawResponse: FullOperationResponse | undefined
+    const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
+      ...options,
+      onResponse: rawResponseInner => {
+        rawResponse = rawResponseInner
+      },
+    }
+
+    const process = await this.processOperations.uploadProcessEntityDocument(
       id,
       fileContentType,
       fileName,
       schemaPath,
       file,
-      options,
+      optionsExt,
     )
+
+    if (rawResponse == null) {
+      return
+    }
+
+    if (options?.onResponse != null) {
+      options.onResponse(rawResponse, process)
+    }
+
+    if (rawResponse.status === 304) {
+      return
+    }
+
+    return process
   }
 
   /**
@@ -318,11 +349,11 @@ export class ProcessOperations {
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  async actionsProcessDownloadEntityDocument(
+  async downloadProcessEntityDocument(
     id: string,
     documentUri: string,
-    options?: ProcessActionsProcessDownloadEntityDocumentOptionalParams,
-  ): Promise<ProcessActionsProcessDownloadEntityDocumentResponse> {
-    return await this.processOperations.actionsProcessDownloadEntityDocument(id, documentUri, options)
+    options?: ProcessDownloadProcessEntityDocumentOptionalParams,
+  ): Promise<ProcessDownloadProcessEntityDocumentResponse> {
+    return await this.processOperations.downloadProcessEntityDocument(id, documentUri, options)
   }
 }

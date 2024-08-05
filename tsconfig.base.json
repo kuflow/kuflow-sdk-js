@@ -1,6 +1,5 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
-  "version": "4.4.2",
+  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "incremental": true,

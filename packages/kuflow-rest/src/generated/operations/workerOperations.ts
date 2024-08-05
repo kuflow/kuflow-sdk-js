@@ -23,7 +23,11 @@
 import * as coreClient from '@azure/core-client'
 
 import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import { type Worker, type WorkerCreateWorkerOptionalParams, type WorkerCreateWorkerResponse } from '../models'
+import {
+  type WorkerCreateParams,
+  type WorkerCreateWorkerOptionalParams,
+  type WorkerCreateWorkerResponse,
+} from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
 import { type WorkerOperations } from '../operationsInterfaces'
@@ -45,11 +49,14 @@ export class WorkerOperationsImpl implements WorkerOperations {
    *
    * If already exist a worker for the same identity, the worker will be updated.
    *
-   * @param worker Worker to create or update
+   * @param params Worker to create or update
    * @param options The options parameters.
    */
-  async createWorker(worker: Worker, options?: WorkerCreateWorkerOptionalParams): Promise<WorkerCreateWorkerResponse> {
-    return await this.client.sendOperationRequest({ worker, options }, createWorkerOperationSpec)
+  async createWorker(
+    params: WorkerCreateParams,
+    options?: WorkerCreateWorkerOptionalParams,
+  ): Promise<WorkerCreateWorkerResponse> {
+    return await this.client.sendOperationRequest({ params, options }, createWorkerOperationSpec)
   }
 }
 // Operation Specifications
@@ -69,7 +76,7 @@ const createWorkerOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.worker,
+  requestBody: Parameters.params10,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',

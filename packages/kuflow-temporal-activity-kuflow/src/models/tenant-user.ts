@@ -22,10 +22,10 @@
  */
 import { type TenantUser } from '@kuflow/kuflow-rest'
 
-export interface RetrieveTenantUserRequest {
+export interface TenantUserRetrieveRequest {
   tenantUserId: string
 }
 
-export interface RetrieveTenantUserResponse {
+export interface TenantUserRetrieveResponse {
   tenantUser: TenantUser
 }

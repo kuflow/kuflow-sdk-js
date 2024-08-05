@@ -27,9 +27,9 @@ import { KuFlowRestClientGenerated } from './generated'
 import {
   AuthenticationOperations,
   PrincipalOperations,
+  ProcessItemOperations,
   ProcessOperations,
   RobotOperations,
-  TaskOperations,
   TenantUserOperations,
   WorkerOperations,
 } from './operations'
@@ -51,7 +51,7 @@ export interface KuFlowRestClientOptionals extends CommonClientOptions {
 }
 
 export class KuFlowRestClient {
-  public static readonly API_VERSION = 'v2022-10-08'
+  public static readonly API_VERSION = 'v2024-06-14'
 
   /**
    * Authentication API operations.
@@ -74,9 +74,9 @@ export class KuFlowRestClient {
   public readonly processOperations: ProcessOperations
 
   /**
-   * Task API operations.
+   * Process Item API operations.
    */
-  public readonly taskOperations: TaskOperations
+  public readonly processItemOperations: ProcessItemOperations
 
   /**
    * Worker API operations.
@@ -99,14 +99,14 @@ export class KuFlowRestClient {
     const tokenCredential = kuflowTokenCredential(authentication)
     const clientGenerated = new KuFlowRestClientGenerated(tokenCredential, {
       ...options,
-      credentialScopes: 'https://api.kuflow.com/v2022-10-08/.default',
+      credentialScopes: 'https://api.kuflow.com/v2024-06-14/.default',
     })
 
     this.authenticationOperations = new AuthenticationOperations(clientGenerated)
     this.principalOperations = new PrincipalOperations(clientGenerated)
     this.tenantUserOperations = new TenantUserOperations(clientGenerated)
     this.processOperations = new ProcessOperations(clientGenerated)
-    this.taskOperations = new TaskOperations(clientGenerated)
+    this.processItemOperations = new ProcessItemOperations(clientGenerated)
     this.workerOperations = new WorkerOperations(clientGenerated)
     this.robotOperations = new RobotOperations(clientGenerated)
   }
