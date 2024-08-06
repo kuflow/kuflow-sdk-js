@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Authentication } from '@kuflow/kuflow-rest'
+import { type AuthenticationCreateParams } from '@kuflow/kuflow-rest'
 import { NativeConnection, Runtime, Worker } from '@temporalio/worker'
 
 import { KuFlowAuthorizationTokenProvider } from './kuflow-authorization-token-provider'
@@ -106,12 +106,12 @@ export class KuFlowTemporalConnection {
   }
 
   private async applyDefaultConfiguration(): Promise<void> {
-    const authenticationCreation: Authentication = {
+    const authenticationParams: AuthenticationCreateParams = {
       type: 'ENGINE_CERTIFICATE',
       tenantId: this.options.kuflow.tenantId,
     }
     const kuFlowRestClient = this.options.kuflow.restClient
-    const authentication = await kuFlowRestClient.authenticationOperations.createAuthentication(authenticationCreation)
+    const authentication = await kuFlowRestClient.authenticationOperations.createAuthentication(authenticationParams)
     if (authentication.engineCertificate?.tls == null) {
       return
     }

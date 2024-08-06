@@ -22,14 +22,17 @@
  */
 import type * as coreClient from '@azure/core-client'
 
-export type ProcessElementValueUnion = ProcessElementValueString | ProcessElementValueNumber
-export type TaskElementValueUnion =
-  | TaskElementValueString
-  | TaskElementValueNumber
-  | TaskElementValueObject
-  | TaskElementValueDocument
-  | TaskElementValuePrincipal
-export type WebhookEventUnion = WebhookEventProcessStateChanged | WebhookEventTaskStateChanged
+export type WebhookEventUnion =
+  | WebhookEventProcessCreated
+  | WebhookEventProcessStateChanged
+  | WebhookEventProcessItemCreated
+  | WebhookEventProcessItemTaskStateChanged
+
+export interface AuthenticationCreateParams {
+  type: AuthenticationType
+  /** Tenant id. This attribute is required when an OAuth2 authentication is used. */
+  tenantId?: string
+}
 
 export interface AuthenticationEngineToken {
   /** Engine authentication token */
@@ -50,8 +53,6 @@ export interface AuthenticationEngineCertificateTls {
 }
 
 export interface AbstractAudited {
-  /** Audited object Types. */
-  objectType?: AuditedObjectType
   /** Who create this model. */
   createdBy?: string
   /** When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
@@ -81,6 +82,23 @@ export interface DefaultErrorInfo {
   locationType?: string
 }
 
+export interface PrincipalPageItem {
+  id?: string
+  type?: PrincipalType
+  name?: string
+}
+
+export interface Page {
+  metadata: PageMetadata
+}
+
+export interface PageMetadata {
+  size: number
+  page: number
+  totalElements: number
+  totalPages: number
+}
+
 export interface Principal {
   id?: string
   type?: PrincipalType
@@ -98,143 +116,174 @@ export interface PrincipalApplication {
   id?: string
 }
 
-export interface Page {
-  /** Paged Model types. */
-  objectType?: PagedObjectType
-  metadata: PageMetadata
-}
-
-export interface PageMetadata {
-  size: number
-  page: number
-  totalElements: number
-  totalPages: number
-}
-
-export interface TenantUserMetadata {
-  valid: boolean
-  /** Dictionary of <any> */
+/** Json value. */
+export interface JsonValue {
+  /**
+   * true if the data complain the related json schema.
+   * NOTE: This property will not be serialized. It can only be populated by the server.
+   */
+  readonly valid?: boolean
+  /** json value filled that complain with the related json schema. */
   value: Record<string, any>
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly errors?: JsonValueError[]
+}
+
+/** Json value. */
+export interface JsonValueError {
+  /**
+   * JSON pointer to the property with the error. See: https://datatracker.ietf.org/doc/html/rfc6901
+   *
+   * ie: /user/name or /users/1/name
+   *
+   */
+  propertyPath?: string
+  /** Error type. */
+  type?: string
 }
 
 export interface ProcessDefinitionSummary {
   id: string
-  version?: string
-  name?: string
+  version: string
+  name: string
 }
 
-export interface ProcessElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'STRING' | 'NUMBER'
-  valid?: boolean
+export interface ProcessCreateParams {
+  id?: string
+  processDefinitionId: string
+  /** Json value. */
+  metadata?: JsonValue
+  initiatorId?: string
+  initiatorEmail?: string
 }
 
-/**
- * Json form values, used when the render type selected is JSON Forms.
- *
- */
-export interface JsonFormsValue {
-  /** true if the data complain the related json schema. */
-  valid?: boolean
-  /** json value filled that complain with the related json schema. */
-  data?: Record<string, any>
-}
-
-export interface RelatedProcess {
+export interface ProcessRelated {
   /** Processes whose relationship target is the current process. */
   incoming?: string[]
   /** Processes to which the current process relates. */
   outcoming?: string[]
 }
 
-/** Command to change the process initiator, only one option is required. */
-export interface ProcessChangeInitiatorCommand {
-  principalId?: string
-  email?: string
+/** Params to change the process initiator, only one option is required. */
+export interface ProcessChangeInitiatorParams {
+  initiatorId?: string
+  initiatorEmail?: string
 }
 
-/** Command to save process element. */
-export interface ProcessSaveElementCommand {
-  elementDefinitionCode: string
-  elementValues?: ProcessElementValueUnion[]
+/** Params to save metadata data. */
+export interface ProcessMetadataUpdateParams {
+  /** Json value. */
+  metadata: JsonValue
 }
 
-export interface ProcessDeleteElementCommand {
-  /** Code of task element to delete. */
-  elementDefinitionCode: string
+export interface JsonPatchOperation {
+  /** The operation to perform. */
+  op: JsonPatchOperationType
+  /** A JSON Pointer path used when op is "copy" or "move". */
+  from?: string
+  /** A JSON Pointer path. */
+  path: string
+  /** The value to "add", "replace" or "test". */
+  value?: any | null
 }
 
-export interface ProcessSaveEntityDataCommand {
-  /** json value filled that complain with the related json schema. */
-  data: Record<string, any>
+export interface ProcessEntityUpdateParams {
+  /** Json value. */
+  entity: JsonValue
 }
 
-export interface ProcessSaveEntityDocumentResponseCommand {
+export interface DocumentReference {
+  /**
+   * JSON Schema path related to the document. The uploaded document will be validated by the passed schema path.
+   *
+   * ie: "#/properties/file", "#/definitions/UserType/name"
+   *
+   */
+  schemaPath: string
   /**
    * JSON value representing the uploaded file.
    *
    * Example: `kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;`
    *
    */
-  value: string
+  documentUri: string
 }
 
-/** In creation task, one of 'id, version or code' is mandatory. */
+export interface ProcessItemTaskPageItem {
+  /** Process Item Task state */
+  state: ProcessItemTaskState
+  taskDefinition: TaskDefinitionSummary
+}
+
 export interface TaskDefinitionSummary {
-  id?: string
-  version?: string
-  code?: string
-  name?: string
+  id: string
+  version: string
+  code: string
+  name: string
 }
 
-export interface TaskElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'STRING' | 'NUMBER' | 'OBJECT' | 'DOCUMENT' | 'PRINCIPAL'
-  valid?: boolean
+export interface ProcessItemCreateParams {
+  id?: string
+  /** Process Item Type */
+  type: ProcessItemType
+  processId: string
+  ownerId?: string
+  ownerEmail?: string
+  task?: ProcessItemTaskCreateParams
 }
 
-export interface Log {
-  id?: string
+export interface ProcessItemTaskCreateParams {
+  taskDefinitionCode: string
+  /** Json value. */
+  data?: JsonValue
+}
+
+export interface ProcessItemTask {
+  /** Process Item Task state */
+  state: ProcessItemTaskState
+  taskDefinition: TaskDefinitionSummary
+  /** Json value. */
+  data?: JsonValue
+  logs?: ProcessItemTaskLog[]
+}
+
+export interface ProcessItemTaskLog {
+  id: string
   /** When this model was created. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
-  createdAt?: string
+  timestamp: string
   message: string
-  level: LogLevel
+  level: ProcessItemTaskLogLevel
 }
 
-/** Command to assign task, only one option is required. */
-export interface TaskAssignCommand {
-  principalId?: string
-  email?: string
+/** Params to assign a process item task, only one option is required. */
+export interface ProcessItemTaskAssignParams {
+  ownerId?: string
+  ownerEmail?: string
 }
 
-export interface TaskSaveElementCommand {
-  elementDefinitionCode: string
-  elementValues?: TaskElementValueUnion[]
+export interface ProcessItemTaskAppendLogParams {
+  message: string
+  level: ProcessItemTaskLogLevel
 }
 
-export interface TaskDeleteElementCommand {
-  /** Code of task element to delete. */
-  elementDefinitionCode: string
+export interface ProcessItemTaskDataUpdateParams {
+  /** Json value. */
+  data: JsonValue
 }
 
-export interface TaskDeleteElementValueDocumentCommand {
-  /** Document ID to delete. */
-  documentId: string
-}
-
-export interface TaskSaveJsonFormsValueDataCommand {
-  /** json value filled that complain with the related json schema. */
-  data?: Record<string, any>
-}
-
-export interface TaskSaveJsonFormsValueDocumentResponseCommand {
-  /**
-   * JSON value representing the uploaded file.
-   *
-   * Example: `kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;`
-   *
-   */
-  value: string
+export interface WorkerCreateParams {
+  identity: string
+  taskQueue: string
+  workflowTypes?: string[]
+  activityTypes?: string[]
+  hostname: string
+  ip: string
+  /** Installation Id. */
+  installationId?: string
+  /** Robot Ids that this worker implements. */
+  robotIds?: string[]
+  /** Tenant ID. */
+  tenantId?: string
 }
 
 /** Robot source type */
@@ -251,41 +300,45 @@ export interface RobotSourceFile {
   contentHash: string
 }
 
+export interface WebhookEvent {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: 'PROCESS.CREATED' | 'PROCESS.STATE_CHANGED' | 'PROCESS_ITEM.CREATED' | 'PROCESS_ITEM.TASK_STATE_CHANGED'
+  id: string
+  version: string
+  /** date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  timestamp: string
+}
+
+export interface WebhookEventProcessCreatedData {
+  processId: string
+  /** Process state */
+  processState: ProcessState
+}
+
 export interface WebhookEventProcessStateChangedData {
   processId: string
   /** Process state */
   processState: ProcessState
 }
 
-export interface WebhookEventTaskStateChangedData {
+export interface WebhookEventProcessItemCreatedData {
   processId: string
-  taskId: string
-  taskCode: string
-  /** Task state */
-  taskState: TaskState
+  processItemId: string
+  /** Process Item Type */
+  processItemType: ProcessItemType
+  processItemTaskCode?: string
+  /** Process Item Task state */
+  processItemState?: ProcessItemTaskState
 }
 
-export interface WebhookEvent {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'PROCESS.STATE_CHANGED' | 'TASK.STATE_CHANGED'
-  id: string
-  /** date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
-  timestamp: string
-}
-
-export interface TaskElementValueDocumentItem {
-  id?: string
-  uri?: string
-  name?: string
-  contentPath?: string
-  contentType?: string
-  contentLength?: number
-}
-
-export interface TaskElementValuePrincipalItem {
-  id: string
-  type: PrincipalType
-  name?: string
+export interface WebhookEventProcessItemTaskStateChangedData {
+  processId: string
+  processItemId: string
+  /** Process Item Type */
+  processItemType: ProcessItemType
+  processItemTaskCode: string
+  /** Process Item Task state */
+  processItemState: ProcessItemTaskState
 }
 
 export interface Authentication extends AbstractAudited {
@@ -293,27 +346,23 @@ export interface Authentication extends AbstractAudited {
   type?: AuthenticationType
   /** Tenant id. This attribute is required when an OAuth2 authentication is used. */
   tenantId?: string
-  /**
-   * Engine authentication token.
-   *
-   * @deprecated use engineToken.token
-   *
-   */
-  token?: string
-  /**
-   * Engine authentication token expiration.
-   *
-   * @deprecated use engineToken.expiredAt
-   *  - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z
-   */
-  expiredAt?: string
   engineToken?: AuthenticationEngineToken
   engineCertificate?: AuthenticationEngineCertificate
 }
 
+export interface TenantUserPageItem extends AbstractAudited {
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly id: string
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly principalId: string
+  /** NOTE: This property will not be serialized. It can only be populated by the server. */
+  readonly tenantId: string
+}
+
 export interface TenantUser extends AbstractAudited {
   id: string
-  metadata?: TenantUserMetadata
+  /** Json value. */
+  metadata?: JsonValue
   principal: Principal
   /** NOTE: This property will not be serialized. It can only be populated by the server. */
   readonly tenantId: string
@@ -321,81 +370,55 @@ export interface TenantUser extends AbstractAudited {
 
 export interface ProcessPageItem extends AbstractAudited {
   /** Process ID. */
-  id?: string
-  /** Process subject. */
-  subject?: string
+  id: string
   /** Process state */
-  state?: ProcessState
+  state: ProcessState
   processDefinition: ProcessDefinitionSummary
-  /** Process element values, an ElementValueDocument is not allowed. */
-  elementValues?: Record<string, ProcessElementValueUnion[]>
-  initiator?: Principal
+  /** Principal ID. */
+  initiatorId?: string
   /** Tenant ID. */
-  tenantId?: string
+  tenantId: string
 }
 
 export interface Process extends AbstractAudited {
   /** Process ID. */
-  id?: string
-  /** Process subject. */
-  subject?: string
+  id: string
   /** Process state */
-  state?: ProcessState
+  state: ProcessState
   processDefinition: ProcessDefinitionSummary
-  /** Process element values, an ElementValueDocument is not allowed. */
-  elementValues?: Record<string, ProcessElementValueUnion[]>
-  /**
-   * Json form values, used when the render type selected is JSON Forms.
-   *
-   */
-  entity?: JsonFormsValue
-  initiator?: Principal
-  relatedProcess?: RelatedProcess
+  /** Json value. */
+  metadata?: JsonValue
+  /** Json value. */
+  entity?: JsonValue
+  processRelated?: ProcessRelated
+  /** Process initiator id, Principal ID. */
+  initiatorId?: string
   /** Tenant ID. */
-  tenantId?: string
+  tenantId: string
 }
 
-export interface TaskPageItem extends AbstractAudited {
-  id?: string
-  /** Task state */
-  state?: TaskState
-  /** In creation task, one of 'id, version or code' is mandatory. */
-  taskDefinition: TaskDefinitionSummary
+export interface ProcessItemPageItem extends AbstractAudited {
+  id: string
+  /** Process Item Type */
+  type: ProcessItemType
   processId: string
-  /** Task element values, en ElementValueDocument is not allowed. */
-  elementValues?: Record<string, TaskElementValueUnion[]>
-  /**
-   * Json form values, used when the render type selected is JSON Forms.
-   *
-   */
-  jsonFormsValue?: JsonFormsValue
-  owner?: Principal
+  /** Principal ID. */
+  ownerId?: string
   /** Tenant ID. */
-  tenantId?: string
+  tenantId: string
+  task?: ProcessItemTaskPageItem
 }
 
-export interface Task extends AbstractAudited {
-  id?: string
-  /** Task state */
-  state?: TaskState
-  /** In creation task, one of 'id, version or code' is mandatory. */
-  taskDefinition: TaskDefinitionSummary
+export interface ProcessItem extends AbstractAudited {
+  id: string
+  /** Process Item Type */
+  type: ProcessItemType
   processId: string
-  /**
-   * Task element values, en ElementValueDocument is not allowed, used when the task render type selected is
-   * JSON Forms
-   *
-   */
-  elementValues?: Record<string, TaskElementValueUnion[]>
-  /**
-   * Json form values, used when the render type selected is JSON Forms.
-   *
-   */
-  jsonFormsValue?: JsonFormsValue
-  logs?: Log[]
-  owner?: Principal
+  /** Owner Principal ID. */
+  ownerId?: string
   /** Tenant ID. */
   tenantId?: string
+  task?: ProcessItemTask
 }
 
 export interface Worker extends AbstractAudited {
@@ -414,6 +437,19 @@ export interface Worker extends AbstractAudited {
   tenantId?: string
 }
 
+export interface RobotPageItem extends AbstractAudited {
+  /** Robot ID. */
+  id: string
+  /** Robot Code. */
+  code: string
+  /** Robot name. */
+  name: string
+  /** Robot description. */
+  description?: string
+  /** Tenant ID. */
+  tenantId: string
+}
+
 export interface Robot extends AbstractAudited {
   /** Robot ID. */
   id: string
@@ -426,74 +462,38 @@ export interface Robot extends AbstractAudited {
   /** Robot source type */
   sourceType: RobotSourceType
   /** Robot source type */
-  sourceFile?: RobotSourceFile
+  sourceFile: RobotSourceFile
   /** Environment variables to load when the robot is executed. */
   environmentVariables?: Record<string, string>
   /** Tenant ID. */
-  tenantId?: string
+  tenantId: string
 }
 
 export interface PrincipalPage extends Page {
-  content: Principal[]
+  content: PrincipalPageItem[]
 }
 
 export interface TenantUserPage extends Page {
-  content: TenantUser[]
+  content: TenantUserPageItem[]
 }
 
 export interface ProcessPage extends Page {
   content: ProcessPageItem[]
 }
 
-export interface TaskPage extends Page {
-  content: TaskPageItem[]
+export interface ProcessItemPage extends Page {
+  content: ProcessItemPageItem[]
 }
 
 export interface RobotPage extends Page {
-  content: Robot[]
+  content: RobotPageItem[]
 }
 
-export interface ProcessElementValueString extends ProcessElementValue {
+/** Process Events */
+export interface WebhookEventProcessCreated extends WebhookEvent {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'STRING'
-  value?: string
-}
-
-export interface ProcessElementValueNumber extends ProcessElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'NUMBER'
-  value?: number
-}
-
-export interface TaskElementValueString extends TaskElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'STRING'
-  value?: string
-}
-
-export interface TaskElementValueNumber extends TaskElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'NUMBER'
-  value?: number
-}
-
-export interface TaskElementValueObject extends TaskElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'OBJECT'
-  /** Dictionary of <any> */
-  value?: Record<string, any>
-}
-
-export interface TaskElementValueDocument extends TaskElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'DOCUMENT'
-  value?: TaskElementValueDocumentItem
-}
-
-export interface TaskElementValuePrincipal extends TaskElementValue {
-  /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'PRINCIPAL'
-  value?: TaskElementValuePrincipalItem
+  type: 'PROCESS.CREATED'
+  data: WebhookEventProcessCreatedData
 }
 
 /** Process Events */
@@ -504,42 +504,64 @@ export interface WebhookEventProcessStateChanged extends WebhookEvent {
 }
 
 /** Process Events */
-export interface WebhookEventTaskStateChanged extends WebhookEvent {
+export interface WebhookEventProcessItemCreated extends WebhookEvent {
   /** Polymorphic discriminator, which specifies the different types this object can be */
-  type: 'TASK.STATE_CHANGED'
-  data: WebhookEventTaskStateChangedData
+  type: 'PROCESS_ITEM.CREATED'
+  data: WebhookEventProcessItemCreatedData
 }
 
+/** Process Events */
+export interface WebhookEventProcessItemTaskStateChanged extends WebhookEvent {
+  /** Polymorphic discriminator, which specifies the different types this object can be */
+  type: 'PROCESS_ITEM.TASK_STATE_CHANGED'
+  data: WebhookEventProcessItemTaskStateChangedData
+}
+
+/** Known values of {@link JsonPatchOperationType} that the service accepts. */
+export enum KnownJsonPatchOperationType {
+  /** Add */
+  Add = 'add',
+  /** Remove */
+  Remove = 'remove',
+  /** Replace */
+  Replace = 'replace',
+  /** Move */
+  Move = 'move',
+  /** Copy */
+  Copy = 'copy',
+  /** Test */
+  Test = 'test',
+}
+
+/**
+ * Defines values for JsonPatchOperationType. \
+ * {@link KnownJsonPatchOperationType} can be used interchangeably with JsonPatchOperationType,
+ *  this enum contains the known values that the service supports.
+ * ### Known values supported by the service
+ * **add** \
+ * **remove** \
+ * **replace** \
+ * **move** \
+ * **copy** \
+ * **test**
+ */
+export type JsonPatchOperationType = string
 /** Defines values for AuthenticationType. */
-export type AuthenticationType = 'ENGINE' | 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE'
-/** Defines values for AuditedObjectType. */
-export type AuditedObjectType =
-  | 'AUTHENTICATION'
-  | 'TENANT_USER'
-  | 'PROCESS'
-  | 'PROCESS_PAGE_ITEM'
-  | 'TASK'
-  | 'TASK_PAGE_ITEM'
-  | 'WORKER'
-  | 'ROBOT'
+export type AuthenticationType = 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE'
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
-/** Defines values for PagedObjectType. */
-export type PagedObjectType = 'PRINCIPAL_PAGE' | 'TENANT_USER_PAGE' | 'PROCESS_PAGE' | 'TASK_PAGE' | 'ROBOT_PAGE'
 /** Defines values for ProcessState. */
 export type ProcessState = 'RUNNING' | 'COMPLETED' | 'CANCELLED'
-/** Defines values for ProcessElementValueType. */
-export type ProcessElementValueType = 'STRING' | 'NUMBER'
-/** Defines values for TaskState. */
-export type TaskState = 'READY' | 'CLAIMED' | 'COMPLETED' | 'CANCELLED'
-/** Defines values for TaskElementValueType. */
-export type TaskElementValueType = 'STRING' | 'NUMBER' | 'OBJECT' | 'DOCUMENT' | 'PRINCIPAL'
-/** Defines values for LogLevel. */
-export type LogLevel = 'INFO' | 'WARN' | 'ERROR'
+/** Defines values for ProcessItemType. */
+export type ProcessItemType = 'TASK' | 'MESSAGE'
+/** Defines values for ProcessItemTaskState. */
+export type ProcessItemTaskState = 'READY' | 'CLAIMED' | 'COMPLETED' | 'CANCELLED'
+/** Defines values for ProcessItemTaskLogLevel. */
+export type ProcessItemTaskLogLevel = 'INFO' | 'WARN' | 'ERROR'
 /** Defines values for RobotFilterContext. */
 export type RobotFilterContext = 'READY' | 'DEFAULT'
 /** Defines values for RobotSourceType. */
-export type RobotSourceType = 'PACKAGE' | 'ROBOT_FRAMEWORK_PYTHON_WHEEL'
+export type RobotSourceType = 'PACKAGE' | 'UNKNOWN'
 /** Defines values for RobotAssetType. */
 export type RobotAssetType = 'PYTHON' | 'PYTHON_PIP' | 'NODEJS'
 /** Defines values for RobotAssetPlatform. */
@@ -547,7 +569,11 @@ export type RobotAssetPlatform = 'WINDOWS' | 'MAC_OS' | 'LINUX'
 /** Defines values for RobotAssetArchitecture. */
 export type RobotAssetArchitecture = 'X86_32' | 'X86_64'
 /** Defines values for WebhookType. */
-export type WebhookType = 'PROCESS.STATE_CHANGED' | 'TASK.STATE_CHANGED'
+export type WebhookType =
+  | 'PROCESS.CREATED'
+  | 'PROCESS.STATE_CHANGED'
+  | 'PROCESS_ITEM.CREATED'
+  | 'PROCESS_ITEM.TASK_STATE_CHANGED'
 
 /** Optional parameters. */
 export interface AuthenticationCreateAuthenticationOptionalParams extends coreClient.OperationOptions {}
@@ -654,58 +680,64 @@ export interface ProcessRetrieveProcessOptionalParams extends coreClient.Operati
 export type ProcessRetrieveProcessResponse = Process
 
 /** Optional parameters. */
-export interface ProcessActionsProcessChangeInitiatorOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessCompleteProcessOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsProcessChangeInitiator operation. */
-export type ProcessActionsProcessChangeInitiatorResponse = Process
-
-/** Optional parameters. */
-export interface ProcessActionsProcessSaveElementOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsProcessSaveElement operation. */
-export type ProcessActionsProcessSaveElementResponse = Process
+/** Contains response data for the completeProcess operation. */
+export type ProcessCompleteProcessResponse = Process
 
 /** Optional parameters. */
-export interface ProcessActionsProcessDeleteElementOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessCancelProcessOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsProcessDeleteElement operation. */
-export type ProcessActionsProcessDeleteElementResponse = Process
-
-/** Optional parameters. */
-export interface ProcessActionsProcessCompleteOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsProcessComplete operation. */
-export type ProcessActionsProcessCompleteResponse = Process
+/** Contains response data for the cancelProcess operation. */
+export type ProcessCancelProcessResponse = Process
 
 /** Optional parameters. */
-export interface ProcessActionsProcessCancelOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessChangeProcessInitiatorOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsProcessCancel operation. */
-export type ProcessActionsProcessCancelResponse = Process
-
-/** Optional parameters. */
-export interface ProcessActionsProcessSaveUserActionValueDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsProcessSaveUserActionValueDocument operation. */
-export type ProcessActionsProcessSaveUserActionValueDocumentResponse = Process
+/** Contains response data for the changeProcessInitiator operation. */
+export type ProcessChangeProcessInitiatorResponse = Process
 
 /** Optional parameters. */
-export interface ProcessActionsProcessSaveEntityDataOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessUploadProcessUserActionDocumentOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsProcessSaveEntityData operation. */
-export type ProcessActionsProcessSaveEntityDataResponse = Process
-
-/** Optional parameters. */
-export interface ProcessActionsProcessSaveEntityDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsProcessSaveEntityDocument operation. */
-export type ProcessActionsProcessSaveEntityDocumentResponse = ProcessSaveEntityDocumentResponseCommand
+/** Contains response data for the uploadProcessUserActionDocument operation. */
+export type ProcessUploadProcessUserActionDocumentResponse = Process
 
 /** Optional parameters. */
-export interface ProcessActionsProcessDownloadEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessUpdateProcessMetadataOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsProcessDownloadEntityDocument operation. */
-export interface ProcessActionsProcessDownloadEntityDocumentResponse {
+/** Contains response data for the updateProcessMetadata operation. */
+export type ProcessUpdateProcessMetadataResponse = Process
+
+/** Optional parameters. */
+export interface ProcessPatchProcessMetadataOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the patchProcessMetadata operation. */
+export type ProcessPatchProcessMetadataResponse = Process
+
+/** Optional parameters. */
+export interface ProcessUpdateProcessEntityOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the updateProcessEntity operation. */
+export type ProcessUpdateProcessEntityResponse = Process
+
+/** Optional parameters. */
+export interface ProcessPatchProcessEntityOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the patchProcessEntity operation. */
+export type ProcessPatchProcessEntityResponse = Process
+
+/** Optional parameters. */
+export interface ProcessUploadProcessEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the uploadProcessEntityDocument operation. */
+export type ProcessUploadProcessEntityDocumentResponse = DocumentReference
+
+/** Optional parameters. */
+export interface ProcessDownloadProcessEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the downloadProcessEntityDocument operation. */
+export interface ProcessDownloadProcessEntityDocumentResponse {
   /**
    * BROWSER ONLY
    *
@@ -723,7 +755,7 @@ export interface ProcessActionsProcessDownloadEntityDocumentResponse {
 }
 
 /** Optional parameters. */
-export interface TaskFindTasksOptionalParams extends coreClient.OperationOptions {
+export interface ProcessItemFindProcessItemsOptionalParams extends coreClient.OperationOptions {
   /** The number of records returned within a single API call. */
   size?: number
   /** The page number of the current page in the returned records, 0 is the first page. */
@@ -741,81 +773,76 @@ export interface TaskFindTasksOptionalParams extends coreClient.OperationOptions
   tenantId?: string[]
   /** Filter by an array of process ids. */
   processId?: string[]
+  /** Filter by an array of type. */
+  type?: ProcessItemType[]
   /** Filter by an array of task states. */
-  state?: TaskState[]
+  taskState?: ProcessItemTaskState[]
   /** Filter by an array of task definition codes. */
   taskDefinitionCode?: string[]
 }
 
-/** Contains response data for the findTasks operation. */
-export type TaskFindTasksResponse = TaskPage
+/** Contains response data for the findProcessItems operation. */
+export type ProcessItemFindProcessItemsResponse = ProcessItemPage
 
 /** Optional parameters. */
-export interface TaskCreateTaskOptionalParams extends coreClient.OperationOptions {
-  /**
-   * [DEPRECATED] When create a KuFlow Task backed with a Temporal.io servers, this value is required and must be
-   * set with the context task token of Temporal.io activity. It is no longer necessary because it will be never
-   * used for the latest SDKs versions
-   *
-   */
-  activityToken?: string
-}
+export interface ProcessItemCreateProcessItemOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the createTask operation. */
-export type TaskCreateTaskResponse = Task
+/** Contains response data for the createProcessItem operation. */
+export type ProcessItemCreateProcessItemResponse = ProcessItem
 
 /** Optional parameters. */
-export interface TaskRetrieveTaskOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessItemRetrieveProcessItemOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the retrieveTask operation. */
-export type TaskRetrieveTaskResponse = Task
-
-/** Optional parameters. */
-export interface TaskActionsTaskClaimOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskClaim operation. */
-export type TaskActionsTaskClaimResponse = Task
+/** Contains response data for the retrieveProcessItem operation. */
+export type ProcessItemRetrieveProcessItemResponse = ProcessItem
 
 /** Optional parameters. */
-export interface TaskActionsTaskAssignOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessItemClaimProcessItemTaskOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsTaskAssign operation. */
-export type TaskActionsTaskAssignResponse = Task
-
-/** Optional parameters. */
-export interface TaskActionsTaskSaveElementOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskSaveElement operation. */
-export type TaskActionsTaskSaveElementResponse = Task
+/** Contains response data for the claimProcessItemTask operation. */
+export type ProcessItemClaimProcessItemTaskResponse = ProcessItem
 
 /** Optional parameters. */
-export interface TaskActionsTaskSaveElementValueDocumentOptionalParams extends coreClient.OperationOptions {
-  /** Element Value ID */
-  elementValueId?: string
-  /** Element Value ID */
-  elementValueValid?: boolean
-}
+export interface ProcessItemAssignProcessItemTaskOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsTaskSaveElementValueDocument operation. */
-export type TaskActionsTaskSaveElementValueDocumentResponse = Task
+/** Contains response data for the assignProcessItemTask operation. */
+export type ProcessItemAssignProcessItemTaskResponse = ProcessItem
 
 /** Optional parameters. */
-export interface TaskActionsTaskDeleteElementOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessItemCompleteProcessItemTaskOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsTaskDeleteElement operation. */
-export type TaskActionsTaskDeleteElementResponse = Task
-
-/** Optional parameters. */
-export interface TaskActionsTaskDeleteElementValueDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskDeleteElementValueDocument operation. */
-export type TaskActionsTaskDeleteElementValueDocumentResponse = Task
+/** Contains response data for the completeProcessItemTask operation. */
+export type ProcessItemCompleteProcessItemTaskResponse = ProcessItem
 
 /** Optional parameters. */
-export interface TaskActionsTaskDownloadElementValueDocumentOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessItemAppendProcessItemTaskLogOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsTaskDownloadElementValueDocument operation. */
-export interface TaskActionsTaskDownloadElementValueDocumentResponse {
+/** Contains response data for the appendProcessItemTaskLog operation. */
+export type ProcessItemAppendProcessItemTaskLogResponse = ProcessItem
+
+/** Optional parameters. */
+export interface ProcessItemUpdateProcessItemTaskDataOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the updateProcessItemTaskData operation. */
+export type ProcessItemUpdateProcessItemTaskDataResponse = ProcessItem
+
+/** Optional parameters. */
+export interface ProcessItemPatchProcessItemTaskDataOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the patchProcessItemTaskData operation. */
+export type ProcessItemPatchProcessItemTaskDataResponse = ProcessItem
+
+/** Optional parameters. */
+export interface ProcessItemUploadProcessItemTaskDataDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the uploadProcessItemTaskDataDocument operation. */
+export type ProcessItemUploadProcessItemTaskDataDocumentResponse = DocumentReference
+
+/** Optional parameters. */
+export interface ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the downloadProcessItemTaskDataDocument operation. */
+export interface ProcessItemDownloadProcessItemTaskDataDocumentResponse {
   /**
    * BROWSER ONLY
    *
@@ -833,10 +860,11 @@ export interface TaskActionsTaskDownloadElementValueDocumentResponse {
 }
 
 /** Optional parameters. */
-export interface TaskActionsTaskDownloadElementValueRenderedOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams
+  extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsTaskDownloadElementValueRendered operation. */
-export interface TaskActionsTaskDownloadElementValueRenderedResponse {
+/** Contains response data for the downloadProcessItemTaskDataWebformsAsDocument operation. */
+export interface ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse {
   /**
    * BROWSER ONLY
    *
@@ -852,51 +880,6 @@ export interface TaskActionsTaskDownloadElementValueRenderedResponse {
    */
   readableStreamBody?: NodeJS.ReadableStream
 }
-
-/** Optional parameters. */
-export interface TaskActionsTaskSaveJsonFormsValueDataOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskSaveJsonFormsValueData operation. */
-export type TaskActionsTaskSaveJsonFormsValueDataResponse = Task
-
-/** Optional parameters. */
-export interface TaskActionsTaskSaveJsonFormsValueDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskSaveJsonFormsValueDocument operation. */
-export type TaskActionsTaskSaveJsonFormsValueDocumentResponse = TaskSaveJsonFormsValueDocumentResponseCommand
-
-/** Optional parameters. */
-export interface TaskActionsTaskDownloadJsonFormsValueDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskDownloadJsonFormsValueDocument operation. */
-export interface TaskActionsTaskDownloadJsonFormsValueDocumentResponse {
-  /**
-   * BROWSER ONLY
-   *
-   * The response body as a browser Blob.
-   * Always `undefined` in node.js.
-   */
-  blobBody?: Promise<Blob>
-  /**
-   * NODEJS ONLY
-   *
-   * The response body as a node.js Readable stream.
-   * Always `undefined` in the browser.
-   */
-  readableStreamBody?: NodeJS.ReadableStream
-}
-
-/** Optional parameters. */
-export interface TaskActionsTaskCompleteOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskComplete operation. */
-export type TaskActionsTaskCompleteResponse = Task
-
-/** Optional parameters. */
-export interface TaskActionsTaskAppendLogOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the actionsTaskAppendLog operation. */
-export type TaskActionsTaskAppendLogResponse = Task
 
 /** Optional parameters. */
 export interface WorkerCreateWorkerOptionalParams extends coreClient.OperationOptions {}
@@ -935,10 +918,10 @@ export interface RobotRetrieveRobotOptionalParams extends coreClient.OperationOp
 export type RobotRetrieveRobotResponse = Robot
 
 /** Optional parameters. */
-export interface RobotActionsRobotDownloadSourceCodeOptionalParams extends coreClient.OperationOptions {}
+export interface RobotDownloadRobotSourceCodeOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsRobotDownloadSourceCode operation. */
-export interface RobotActionsRobotDownloadSourceCodeResponse {
+/** Contains response data for the downloadRobotSourceCode operation. */
+export interface RobotDownloadRobotSourceCodeResponse {
   /**
    * BROWSER ONLY
    *
@@ -956,10 +939,10 @@ export interface RobotActionsRobotDownloadSourceCodeResponse {
 }
 
 /** Optional parameters. */
-export interface RobotActionsRobotDownloadAssetOptionalParams extends coreClient.OperationOptions {}
+export interface RobotDownloadRobotAssetOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the actionsRobotDownloadAsset operation. */
-export interface RobotActionsRobotDownloadAssetResponse {
+/** Contains response data for the downloadRobotAsset operation. */
+export interface RobotDownloadRobotAssetResponse {
   /**
    * BROWSER ONLY
    *

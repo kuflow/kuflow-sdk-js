@@ -21,20 +21,20 @@
  * THE SOFTWARE.
  */
 import {
-  type Authentication,
   type AuthenticationCreateAuthenticationOptionalParams,
   type AuthenticationCreateAuthenticationResponse,
+  type AuthenticationCreateParams,
 } from '../models'
 
 /** Interface representing a AuthenticationOperations. */
 export interface AuthenticationOperations {
   /**
    * Create an authentication for the current principal.
-   * @param authentication Authentication to be created.
+   * @param params Authentication to be created.
    * @param options The options parameters.
    */
   createAuthentication: (
-    authentication: Authentication,
+    params: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ) => Promise<AuthenticationCreateAuthenticationResponse>
 }

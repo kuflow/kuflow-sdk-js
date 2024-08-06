@@ -21,21 +21,17 @@
  * THE SOFTWARE.
  */
 // Only import the activity types
-import { type Task } from '@kuflow/kuflow-rest'
+import { type ProcessItemCreateParams } from '@kuflow/kuflow-rest'
 import {
   type createKuFlowActivities,
-  type SaveProcessElementRequest,
-  type SaveTaskJsonFormsValueDataRequest,
+  type ProcessItemTaskDataUpdateRequest,
+  type ProcessMetadataUpdateRequest,
   type WorkflowRequest,
   type WorkflowResponse,
 } from '@kuflow/kuflow-temporal-activity-kuflow'
 // Import from here to avoid the following error:
 //   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
-import {
-  KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK,
-  SaveProcessElementRequestUtils,
-  SaveTaskJsonFormsValueDataRequestUtils,
-} from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
+import { KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK, uuid7 } from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
 import {
   condition,
   defineSignal,
@@ -43,7 +39,6 @@ import {
   proxyActivities,
   proxySinks,
   setHandler,
-  uuid4,
 } from '@temporalio/workflow'
 
 const kuFlowActivities = proxyActivities<ReturnType<typeof createKuFlowActivities>>({
@@ -65,27 +60,39 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
 
   logger.info('Start', {})
 
-  await createTaskAndWaitCompleted({
-    id: uuid4(),
+  await createProcessItemAndWaitCompleted({
+    id: uuid7(),
+    type: 'TASK',
     processId: request.processId,
-    taskDefinition: {
-      code: 'TASK_0001',
+    task: {
+      taskDefinitionCode: 'TASK_0001',
     },
   })
 
-  const saveProcessElementRequest: SaveProcessElementRequest = {
+  const updateProcessMetadataRequest: ProcessMetadataUpdateRequest = {
     processId: request.processId,
-    elementDefinitionCode: 'CODE_001',
+    params: {
+      metadata: {
+        value: {
+          CODE_001: 'value',
+        },
+      },
+    },
   }
-  SaveProcessElementRequestUtils.addElementValueAsString(saveProcessElementRequest, 'value')
 
-  await kuFlowActivities.KuFlow_Engine_saveProcessElement(saveProcessElementRequest)
+  await kuFlowActivities.KuFlow_Engine_updateProcessMetadata(updateProcessMetadataRequest)
 
-  const saveTaskJsonFormsValueDataRequest: SaveTaskJsonFormsValueDataRequest = {
-    taskId: '',
+  const updateProcessItemTaskData: ProcessItemTaskDataUpdateRequest = {
+    processItemId: '',
+    params: {
+      data: {
+        value: {
+          name: 'value',
+        },
+      },
+    },
   }
-  SaveTaskJsonFormsValueDataRequestUtils.updateJsonFormsProperty(saveTaskJsonFormsValueDataRequest, '.name', 'value')
-  await kuFlowActivities.KuFlow_Engine_saveTaskJsonFormsValueData(saveTaskJsonFormsValueDataRequest)
+  await kuFlowActivities.KuFlow_Engine_updateProcessItemTaskData(updateProcessItemTaskData)
 
   logger.info('End', {})
 
@@ -93,8 +100,10 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
     message: 'OK',
   }
 
-  async function createTaskAndWaitCompleted(task: Task & { id: string }): Promise<void> {
-    await kuFlowActivities.KuFlow_Engine_createTask({ task })
-    await condition(() => kuFlowCompletedTaskIds.includes(task.id))
+  async function createProcessItemAndWaitCompleted(
+    processItem: ProcessItemCreateParams & { id: string },
+  ): Promise<void> {
+    await kuFlowActivities.KuFlow_Engine_createProcessItem({ params: processItem })
+    await condition(() => kuFlowCompletedTaskIds.includes(processItem.id))
   }
 }

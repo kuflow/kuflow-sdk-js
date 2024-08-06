@@ -23,7 +23,12 @@
 import type * as coreClient from '@azure/core-client'
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { type PrincipalType, type RobotFilterContext, type TaskState } from '../generated'
+import {
+  type PrincipalType,
+  type ProcessItemTaskState,
+  type ProcessItemType,
+  type RobotFilterContext,
+} from '../generated'
 
 export interface Document {
   fileName: string
@@ -33,35 +38,37 @@ export interface Document {
   fileContent: coreRestPipeline.RequestBodyType
 }
 
-export interface TaskSaveElementValueDocumentCommand {
-  elementDefinitionCode: string
-  elementValueId?: string
-  elementValueValid?: boolean
+/** Optional parameters. */
+export interface ProcessFindProcessesOptionalExtParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
 }
 
-export interface TaskSaveJsonFormsValueDocumentRequestCommand {
-  schemaPath: string
-}
-
-export interface ProcessSaveUserActionValueDocumentCommand {
+export interface ProcessUploadProcessUserActionDocumentParams {
   userActionValueId: string
 }
 
-export interface ProcessSaveEntityDocumentRequestCommand {
+export interface ProcessUploadProcessEntityDocumentParams {
+  /**
+   * JSON Schema path related to the document. The uploaded document will be validated by the passed
+   * schema path.
+   * <p>
+   * ie: "#/properties/file", "#/definitions/UserType/name".
+   */
   schemaPath: string
-}
-
-export interface JsonFormsPrincipal {
-  id: string
-  type: PrincipalType
-  name: string
-}
-
-export interface JsonFormsFile {
-  uri: string
-  type: string
-  name: string
-  size: number
 }
 
 /** Optional parameters. */
@@ -85,6 +92,16 @@ export interface PrincipalFindPrincipalsOptionalExtParams extends coreClient.Ope
   groupId?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
+}
+
+export interface ProcessItemUploadProcessItemTaskDataDocumentParams {
+  /**
+   * JSON Schema path related to the document. The uploaded document will be validated by the passed
+   * schema path.
+   * <p>
+   * ie: "#/properties/file", "#/definitions/UserType/name".
+   */
+  schemaPath: string
 }
 
 /** Optional parameters. */
@@ -111,26 +128,7 @@ export interface TenantUserFindTenantUsersOptionalExtParams extends coreClient.O
 }
 
 /** Optional parameters. */
-export interface ProcessFindProcessesOptionalExtParams extends coreClient.OperationOptions {
-  /** The number of records returned within a single API call. */
-  size?: number
-  /** The page number of the current page in the returned records, 0 is the first page. */
-  page?: number
-  /**
-   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
-   *
-   * Default sort order is ascending. Multiple sort criteria are supported.
-   *
-   * Please refer to the method description for supported properties.
-   *
-   */
-  sort?: string | string[]
-  /** Filter by tenantId. */
-  tenantId?: string | string[]
-}
-
-/** Optional parameters. */
-export interface TaskFindTasksOptionalExtParams extends coreClient.OperationOptions {
+export interface ProcessItemFindProcessItemsOptionalExtParams extends coreClient.OperationOptions {
   /** The number of records returned within a single API call. */
   size?: number
   /** The page number of the current page in the returned records, 0 is the first page. */
@@ -149,7 +147,9 @@ export interface TaskFindTasksOptionalExtParams extends coreClient.OperationOpti
   /** Filter by an array of process ids. */
   processId?: string | string[]
   /** Filter by an array of task states. */
-  state?: TaskState | TaskState[]
+  type?: ProcessItemType | ProcessItemType[]
+  /** Filter by an array of task states. */
+  taskState?: ProcessItemTaskState | ProcessItemTaskState[]
   /** Filter by an array of task definition codes. */
   taskDefinitionCode?: string | string[]
 }

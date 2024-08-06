@@ -22,13 +22,13 @@
  */
 import {
   type KuFlowRestClientGenerated,
-  type RobotActionsRobotDownloadAssetOptionalParams,
-  type RobotActionsRobotDownloadAssetResponse,
-  type RobotActionsRobotDownloadSourceCodeOptionalParams,
-  type RobotActionsRobotDownloadSourceCodeResponse,
   type RobotAssetArchitecture,
   type RobotAssetPlatform,
   type RobotAssetType,
+  type RobotDownloadRobotAssetOptionalParams,
+  type RobotDownloadRobotAssetResponse,
+  type RobotDownloadRobotSourceCodeOptionalParams,
+  type RobotDownloadRobotSourceCodeResponse,
   type RobotFindRobotsResponse,
   type RobotOperations as RobotOperationsGenerated,
   type RobotRetrieveRobotOptionalParams,
@@ -79,11 +79,11 @@ export class RobotOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsRobotDownloadSourceCode(
+  async downloadRobotSourceCode(
     id: string,
-    options?: RobotActionsRobotDownloadSourceCodeOptionalParams,
-  ): Promise<RobotActionsRobotDownloadSourceCodeResponse> {
-    return await this.robotOperationsGenerated.actionsRobotDownloadSourceCode(id, options)
+    options?: RobotDownloadRobotSourceCodeOptionalParams,
+  ): Promise<RobotDownloadRobotSourceCodeResponse> {
+    return await this.robotOperationsGenerated.downloadRobotSourceCode(id, options)
   }
 
   /**
@@ -95,15 +95,15 @@ export class RobotOperations {
    * @param architecture The asset platform architecture.
    * @param options The options parameters.
    */
-  async actionsRobotDownloadAsset(
+  async downloadRobotAsset(
     id: string,
     typeParam: RobotAssetType,
     version: string,
     platform: RobotAssetPlatform,
     architecture: RobotAssetArchitecture,
-    options?: RobotActionsRobotDownloadAssetOptionalParams,
-  ): Promise<RobotActionsRobotDownloadAssetResponse> {
-    return await this.robotOperationsGenerated.actionsRobotDownloadAsset(
+    options?: RobotDownloadRobotAssetOptionalParams,
+  ): Promise<RobotDownloadRobotAssetResponse> {
+    return await this.robotOperationsGenerated.downloadRobotAsset(
       id,
       typeParam,
       version,

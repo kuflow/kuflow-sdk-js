@@ -25,35 +25,37 @@ import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  type Process,
-  type ProcessActionsProcessCancelOptionalParams,
-  type ProcessActionsProcessCancelResponse,
-  type ProcessActionsProcessChangeInitiatorOptionalParams,
-  type ProcessActionsProcessChangeInitiatorResponse,
-  type ProcessActionsProcessCompleteOptionalParams,
-  type ProcessActionsProcessCompleteResponse,
-  type ProcessActionsProcessDeleteElementOptionalParams,
-  type ProcessActionsProcessDeleteElementResponse,
-  type ProcessActionsProcessDownloadEntityDocumentOptionalParams,
-  type ProcessActionsProcessDownloadEntityDocumentResponse,
-  type ProcessActionsProcessSaveElementOptionalParams,
-  type ProcessActionsProcessSaveElementResponse,
-  type ProcessActionsProcessSaveEntityDataOptionalParams,
-  type ProcessActionsProcessSaveEntityDataResponse,
-  type ProcessActionsProcessSaveEntityDocumentOptionalParams,
-  type ProcessActionsProcessSaveEntityDocumentResponse,
-  type ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  type ProcessActionsProcessSaveUserActionValueDocumentResponse,
-  type ProcessChangeInitiatorCommand,
+  type JsonPatchOperation,
+  type ProcessCancelProcessOptionalParams,
+  type ProcessCancelProcessResponse,
+  type ProcessChangeInitiatorParams,
+  type ProcessChangeProcessInitiatorOptionalParams,
+  type ProcessChangeProcessInitiatorResponse,
+  type ProcessCompleteProcessOptionalParams,
+  type ProcessCompleteProcessResponse,
+  type ProcessCreateParams,
   type ProcessCreateProcessOptionalParams,
   type ProcessCreateProcessResponse,
-  type ProcessDeleteElementCommand,
+  type ProcessDownloadProcessEntityDocumentOptionalParams,
+  type ProcessDownloadProcessEntityDocumentResponse,
+  type ProcessEntityUpdateParams,
   type ProcessFindProcessesOptionalParams,
   type ProcessFindProcessesResponse,
+  type ProcessMetadataUpdateParams,
+  type ProcessPatchProcessEntityOptionalParams,
+  type ProcessPatchProcessEntityResponse,
+  type ProcessPatchProcessMetadataOptionalParams,
+  type ProcessPatchProcessMetadataResponse,
   type ProcessRetrieveProcessOptionalParams,
   type ProcessRetrieveProcessResponse,
-  type ProcessSaveElementCommand,
-  type ProcessSaveEntityDataCommand,
+  type ProcessUpdateProcessEntityOptionalParams,
+  type ProcessUpdateProcessEntityResponse,
+  type ProcessUpdateProcessMetadataOptionalParams,
+  type ProcessUpdateProcessMetadataResponse,
+  type ProcessUploadProcessEntityDocumentOptionalParams,
+  type ProcessUploadProcessEntityDocumentResponse,
+  type ProcessUploadProcessUserActionDocumentOptionalParams,
+  type ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
@@ -86,24 +88,16 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * Creates a process. This option has direct correspondence to the action of starting a process in the
    * Kuflow GUI.
    *
-   * When a process is created, the current user is assigned as the process initiator, if you want to
-   * change it, you can pass a valid initiator using the following options:
-   *
-   * * If you know the `principal ID` you can assign it to `initiator.id`
-   * * If you know the `user ID` you can assign it to `initiator.user.id`
-   * * If you know the `user email` you can assign it to `initiator.user.email`
-   * * If you know the `application ID` you can assign it to `initiator.application.id`
-   *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param process Process to create
+   * @param params Process to create
    * @param options The options parameters.
    */
   async createProcess(
-    process: Process,
+    params: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ): Promise<ProcessCreateProcessResponse> {
-    return await this.client.sendOperationRequest({ process, options }, createProcessOperationSpec)
+    return await this.client.sendOperationRequest({ params, options }, createProcessOperationSpec)
   }
 
   /**
@@ -119,62 +113,6 @@ export class ProcessOperationsImpl implements ProcessOperations {
   }
 
   /**
-   * Change the current initiator of a process.
-   *
-   * Allows you to choose a user (by email or principal identifier) or an application (principal
-   * identifier).
-   * Only one option will be necessary.
-   *
-   * @param id The resource ID.
-   * @param command Command to change the process initiator.
-   * @param options The options parameters.
-   */
-  async actionsProcessChangeInitiator(
-    id: string,
-    command: ProcessChangeInitiatorCommand,
-    options?: ProcessActionsProcessChangeInitiatorOptionalParams,
-  ): Promise<ProcessActionsProcessChangeInitiatorResponse> {
-    return await this.client.sendOperationRequest({ id, command, options }, actionsProcessChangeInitiatorOperationSpec)
-  }
-
-  /**
-   * Allow to save an element.
-   *
-   * If values already exist for the provided element code, it replaces them with the new ones, otherwise
-   * it creates them. The values of the previous elements that no longer exist will be deleted.
-   *
-   * If the process is already finished the invocations fails with an error.
-   *
-   * @param id The resource ID.
-   * @param command Command to save an element.
-   * @param options The options parameters.
-   */
-  async actionsProcessSaveElement(
-    id: string,
-    command: ProcessSaveElementCommand,
-    options?: ProcessActionsProcessSaveElementOptionalParams,
-  ): Promise<ProcessActionsProcessSaveElementResponse> {
-    return await this.client.sendOperationRequest({ id, command, options }, actionsProcessSaveElementOperationSpec)
-  }
-
-  /**
-   * Allow to delete a process element by specifying the item definition code.
-   *
-   * Remove all the element values.
-   *
-   * @param id The resource ID.
-   * @param command Command to delete an element.
-   * @param options The options parameters.
-   */
-  async actionsProcessDeleteElement(
-    id: string,
-    command: ProcessDeleteElementCommand,
-    options?: ProcessActionsProcessDeleteElementOptionalParams,
-  ): Promise<ProcessActionsProcessDeleteElementResponse> {
-    return await this.client.sendOperationRequest({ id, command, options }, actionsProcessDeleteElementOperationSpec)
-  }
-
-  /**
    * Complete a Process. The state of Process is set to 'completed'.
    *
    * If you are already in this state, no action is taken.
@@ -182,28 +120,44 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsProcessComplete(
+  async completeProcess(
     id: string,
-    options?: ProcessActionsProcessCompleteOptionalParams,
-  ): Promise<ProcessActionsProcessCompleteResponse> {
-    return await this.client.sendOperationRequest({ id, options }, actionsProcessCompleteOperationSpec)
+    options?: ProcessCompleteProcessOptionalParams,
+  ): Promise<ProcessCompleteProcessResponse> {
+    return await this.client.sendOperationRequest({ id, options }, completeProcessOperationSpec)
   }
 
   /**
    * Cancel a Process. The Process state is set to 'cancelled'.
    *
-   * All the active tasks will be marked as cancelled too.
+   * All the active process items will be marked as cancelled too.
    *
    * If you are already in this state, no action is taken.
    *
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async actionsProcessCancel(
+  async cancelProcess(id: string, options?: ProcessCancelProcessOptionalParams): Promise<ProcessCancelProcessResponse> {
+    return await this.client.sendOperationRequest({ id, options }, cancelProcessOperationSpec)
+  }
+
+  /**
+   * Change the current initiator of a process.
+   *
+   * Allows you to choose a user (by email or principal identifier) or an application (principal
+   * identifier).
+   * Only one option will be necessary.
+   *
+   * @param id The resource ID.
+   * @param params Params to change the process initiator.
+   * @param options The options parameters.
+   */
+  async changeProcessInitiator(
     id: string,
-    options?: ProcessActionsProcessCancelOptionalParams,
-  ): Promise<ProcessActionsProcessCancelResponse> {
-    return await this.client.sendOperationRequest({ id, options }, actionsProcessCancelOperationSpec)
+    params: ProcessChangeInitiatorParams,
+    options?: ProcessChangeProcessInitiatorOptionalParams,
+  ): Promise<ProcessChangeProcessInitiatorResponse> {
+    return await this.client.sendOperationRequest({ id, params, options }, changeProcessInitiatorOperationSpec)
   }
 
   /**
@@ -216,18 +170,49 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * @param file Document to save.
    * @param options The options parameters.
    */
-  async actionsProcessSaveUserActionValueDocument(
+  async uploadProcessUserActionDocument(
     id: string,
     fileContentType: string,
     fileName: string,
     userActionValueId: string,
     file: coreRestPipeline.RequestBodyType,
-    options?: ProcessActionsProcessSaveUserActionValueDocumentOptionalParams,
-  ): Promise<ProcessActionsProcessSaveUserActionValueDocumentResponse> {
+    options?: ProcessUploadProcessUserActionDocumentOptionalParams,
+  ): Promise<ProcessUploadProcessUserActionDocumentResponse> {
     return await this.client.sendOperationRequest(
       { id, fileContentType, fileName, userActionValueId, file, options },
-      actionsProcessSaveUserActionValueDocumentOperationSpec,
+      uploadProcessUserActionDocumentOperationSpec,
     )
+  }
+
+  /**
+   * Save process metadata
+   * @param id The resource ID.
+   * @param params Params to save de entity data.
+   * @param options The options parameters.
+   */
+  async updateProcessMetadata(
+    id: string,
+    params: ProcessMetadataUpdateParams,
+    options?: ProcessUpdateProcessMetadataOptionalParams,
+  ): Promise<ProcessUpdateProcessMetadataResponse> {
+    return await this.client.sendOperationRequest({ id, params, options }, updateProcessMetadataOperationSpec)
+  }
+
+  /**
+   * Allow to patch a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param jsonPatch Params to save the JSON value.
+   * @param options The options parameters.
+   */
+  async patchProcessMetadata(
+    id: string,
+    jsonPatch: JsonPatchOperation[],
+    options?: ProcessPatchProcessMetadataOptionalParams,
+  ): Promise<ProcessPatchProcessMetadataResponse> {
+    return await this.client.sendOperationRequest({ id, jsonPatch, options }, patchProcessMetadataOperationSpec)
   }
 
   /**
@@ -236,15 +221,32 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param command Command to save the JSON value.
+   * @param params Params to save the JSON value.
    * @param options The options parameters.
    */
-  async actionsProcessSaveEntityData(
+  async updateProcessEntity(
     id: string,
-    command: ProcessSaveEntityDataCommand,
-    options?: ProcessActionsProcessSaveEntityDataOptionalParams,
-  ): Promise<ProcessActionsProcessSaveEntityDataResponse> {
-    return await this.client.sendOperationRequest({ id, command, options }, actionsProcessSaveEntityDataOperationSpec)
+    params: ProcessEntityUpdateParams,
+    options?: ProcessUpdateProcessEntityOptionalParams,
+  ): Promise<ProcessUpdateProcessEntityResponse> {
+    return await this.client.sendOperationRequest({ id, params, options }, updateProcessEntityOperationSpec)
+  }
+
+  /**
+   * Allow to patch a JSON data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param params Params to save the JSON value.
+   * @param options The options parameters.
+   */
+  async patchProcessEntity(
+    id: string,
+    params: JsonPatchOperation[],
+    options?: ProcessPatchProcessEntityOptionalParams,
+  ): Promise<ProcessPatchProcessEntityResponse> {
+    return await this.client.sendOperationRequest({ id, params, options }, patchProcessEntityOperationSpec)
   }
 
   /**
@@ -256,20 +258,22 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
    *                   by the passed schema path.
    *
+   * ie: "#/properties/file", "#/definitions/UserType/name"
+   *
    * @param file Document to save.
    * @param options The options parameters.
    */
-  async actionsProcessSaveEntityDocument(
+  async uploadProcessEntityDocument(
     id: string,
     fileContentType: string,
     fileName: string,
     schemaPath: string,
     file: coreRestPipeline.RequestBodyType,
-    options?: ProcessActionsProcessSaveEntityDocumentOptionalParams,
-  ): Promise<ProcessActionsProcessSaveEntityDocumentResponse> {
+    options?: ProcessUploadProcessEntityDocumentOptionalParams,
+  ): Promise<ProcessUploadProcessEntityDocumentResponse> {
     return await this.client.sendOperationRequest(
       { id, fileContentType, fileName, schemaPath, file, options },
-      actionsProcessSaveEntityDocumentOperationSpec,
+      uploadProcessEntityDocumentOperationSpec,
     )
   }
 
@@ -279,14 +283,14 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  async actionsProcessDownloadEntityDocument(
+  async downloadProcessEntityDocument(
     id: string,
     documentUri: string,
-    options?: ProcessActionsProcessDownloadEntityDocumentOptionalParams,
-  ): Promise<ProcessActionsProcessDownloadEntityDocumentResponse> {
+    options?: ProcessDownloadProcessEntityDocumentOptionalParams,
+  ): Promise<ProcessDownloadProcessEntityDocumentResponse> {
     return await this.client.sendOperationRequest(
       { id, documentUri, options },
-      actionsProcessDownloadEntityDocumentOperationSpec,
+      downloadProcessEntityDocumentOperationSpec,
     )
   }
 }
@@ -323,7 +327,7 @@ const createProcessOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.process,
+  requestBody: Parameters.params1,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -344,58 +348,7 @@ const retrieveProcessOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 }
-const actionsProcessChangeInitiatorOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/change-initiator',
-  httpMethod: 'POST',
-  responses: {
-    200: {
-      bodyMapper: Mappers.Process,
-    },
-    default: {
-      bodyMapper: Mappers.DefaultError,
-    },
-  },
-  requestBody: Parameters.command,
-  urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.contentType, Parameters.accept],
-  mediaType: 'json',
-  serializer,
-}
-const actionsProcessSaveElementOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/save-element',
-  httpMethod: 'POST',
-  responses: {
-    200: {
-      bodyMapper: Mappers.Process,
-    },
-    default: {
-      bodyMapper: Mappers.DefaultError,
-    },
-  },
-  requestBody: Parameters.command1,
-  urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.contentType, Parameters.accept],
-  mediaType: 'json',
-  serializer,
-}
-const actionsProcessDeleteElementOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/delete-element',
-  httpMethod: 'POST',
-  responses: {
-    200: {
-      bodyMapper: Mappers.Process,
-    },
-    default: {
-      bodyMapper: Mappers.DefaultError,
-    },
-  },
-  requestBody: Parameters.command2,
-  urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.contentType, Parameters.accept],
-  mediaType: 'json',
-  serializer,
-}
-const actionsProcessCompleteOperationSpec: coreClient.OperationSpec = {
+const completeProcessOperationSpec: coreClient.OperationSpec = {
   path: '/processes/{id}/~actions/complete',
   httpMethod: 'POST',
   responses: {
@@ -410,7 +363,7 @@ const actionsProcessCompleteOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 }
-const actionsProcessCancelOperationSpec: coreClient.OperationSpec = {
+const cancelProcessOperationSpec: coreClient.OperationSpec = {
   path: '/processes/{id}/~actions/cancel',
   httpMethod: 'POST',
   responses: {
@@ -425,8 +378,25 @@ const actionsProcessCancelOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 }
-const actionsProcessSaveUserActionValueDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/save-user-action-value-document',
+const changeProcessInitiatorOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/~actions/change-initiator',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.Process,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.params2,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: 'json',
+  serializer,
+}
+const uploadProcessUserActionDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/~actions/upload-user-action-document',
   httpMethod: 'POST',
   responses: {
     200: {
@@ -444,9 +414,9 @@ const actionsProcessSaveUserActionValueDocumentOperationSpec: coreClient.Operati
   mediaType: 'binary',
   serializer,
 }
-const actionsProcessSaveEntityDataOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/save-entity-data',
-  httpMethod: 'POST',
+const updateProcessMetadataOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/metadata',
+  httpMethod: 'PUT',
   responses: {
     200: {
       bodyMapper: Mappers.Process,
@@ -455,18 +425,69 @@ const actionsProcessSaveEntityDataOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.command3,
+  requestBody: Parameters.params3,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }
-const actionsProcessSaveEntityDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/save-entity-document',
+const patchProcessMetadataOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/metadata',
+  httpMethod: 'PATCH',
+  responses: {
+    200: {
+      bodyMapper: Mappers.Process,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.jsonPatch,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.accept, Parameters.contentType2],
+  mediaType: 'json',
+  serializer,
+}
+const updateProcessEntityOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/entity',
+  httpMethod: 'PUT',
+  responses: {
+    200: {
+      bodyMapper: Mappers.Process,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.params4,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: 'json',
+  serializer,
+}
+const patchProcessEntityOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/entity',
+  httpMethod: 'PATCH',
+  responses: {
+    200: {
+      bodyMapper: Mappers.Process,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.params5,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.accept, Parameters.contentType2],
+  mediaType: 'json',
+  serializer,
+}
+const uploadProcessEntityDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/entity/~actions/upload-document',
   httpMethod: 'POST',
   responses: {
     200: {
-      bodyMapper: Mappers.ProcessSaveEntityDocumentResponseCommand,
+      bodyMapper: Mappers.DocumentReference,
     },
     default: {
       bodyMapper: Mappers.DefaultError,
@@ -479,8 +500,8 @@ const actionsProcessSaveEntityDocumentOperationSpec: coreClient.OperationSpec = 
   mediaType: 'binary',
   serializer,
 }
-const actionsProcessDownloadEntityDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/download-entity-document',
+const downloadProcessEntityDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/entity/~actions/download-document',
   httpMethod: 'GET',
   responses: {
     200: {

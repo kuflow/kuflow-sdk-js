@@ -24,11 +24,12 @@ import {
   type Principal,
   type PrincipalPage,
   type Process,
+  type ProcessCreateParams,
+  type ProcessItem,
+  type ProcessItemPage,
+  type ProcessItemPageItem,
   type ProcessPage,
   type ProcessPageItem,
-  type Task,
-  type TaskPage,
-  type TaskPageItem,
   type TenantUser,
 } from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
@@ -95,66 +96,53 @@ export function mockProcessPage(): ProcessPage {
 export function mockProcess(): Process {
   return {
     id: randomUUID(),
-    subject: `Subject ${randomInt(1, 1_000)}`,
     state: 'RUNNING',
     processDefinition: {
       id: randomUUID(),
       version: randomUUID(),
       name: `Name ${randomInt(1, 1_000)}`,
     },
-    elementValues: {
-      CODE_1: [
-        {
-          type: 'STRING',
-          value: `Value ${randomInt(1, 1_000)}`,
-          valid: true,
-        },
-      ],
-      CODE_2: [
-        {
-          type: 'NUMBER',
-          value: randomInt(1, 1_000),
-          valid: true,
-        },
-      ],
+    metadata: {
+      valid: true,
+      value: {
+        CODE_1: `Value ${randomInt(1, 1_000)}`,
+        CODE_2: randomInt(1, 1_000),
+      },
     },
-    initiator: mockPrincipalUser(),
-
+    initiatorId: randomUUID(),
+    tenantId: randomUUID(),
     createdBy: randomUUID(),
     createdAt: new Date().toString(),
     lastModifiedBy: randomUUID(),
     lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockProcessCreateParams(): ProcessCreateParams {
+  return {
+    id: randomUUID(),
+    processDefinitionId: randomUUID(),
+    metadata: {
+      value: {
+        CODE_1: `Value ${randomInt(1, 1_000)}`,
+        CODE_2: randomInt(1, 1_000),
+      },
+    },
+    initiatorId: randomUUID(),
   }
 }
 
 export function mockProcessPageItem(): ProcessPageItem {
   return {
     id: randomUUID(),
-    subject: `Subject ${randomInt(1, 1_000)}`,
     state: 'RUNNING',
     processDefinition: {
       id: randomUUID(),
       version: randomUUID(),
       name: `Name ${randomInt(1, 1_000)}`,
     },
-    elementValues: {
-      CODE_1: [
-        {
-          type: 'STRING',
-          value: `Value ${randomInt(1, 1_000)}`,
-          valid: true,
-        },
-      ],
-      CODE_2: [
-        {
-          type: 'NUMBER',
-          value: randomInt(1, 1_000),
-          valid: true,
-        },
-      ],
-    },
-    initiator: mockPrincipalUser(),
-
+    initiatorId: randomUUID(),
+    tenantId: randomUUID(),
     createdBy: randomUUID(),
     createdAt: new Date().toString(),
     lastModifiedBy: randomUUID(),
@@ -162,7 +150,7 @@ export function mockProcessPageItem(): ProcessPageItem {
   }
 }
 
-export function mockTaskPage(): TaskPage {
+export function mockProcessItemPage(): ProcessItemPage {
   return {
     metadata: {
       size: 25,
@@ -170,63 +158,32 @@ export function mockTaskPage(): TaskPage {
       totalElements: 2,
       totalPages: 1,
     },
-    content: [mockTaskPageItem(), mockTaskPageItem()],
+    content: [mockProcessItemPageItem(), mockProcessItemPageItem()],
   }
 }
 
-export function mockTask(): Task {
+export function mockProcessItem(): ProcessItem {
   return {
     id: randomUUID(),
-    state: 'READY',
-    taskDefinition: {
-      id: randomUUID(),
-      version: randomUUID(),
-      name: `Name ${randomInt(1, 1_000)}`,
-    },
+    type: 'TASK',
     processId: randomUUID(),
-    elementValues: {
-      CODE_1: [
-        {
-          type: 'STRING',
-          value: `Value ${randomInt(1, 1_000)}`,
-          valid: true,
-        },
-      ],
-      CODE_2: [
-        {
-          type: 'NUMBER',
-          value: randomInt(1, 1_000),
-          valid: true,
-        },
-      ],
-    },
-    owner: mockPrincipalUser(),
-
-    createdBy: randomUUID(),
-    createdAt: new Date().toString(),
-    lastModifiedBy: randomUUID(),
-    lastModifiedAt: new Date().toString(),
-  }
-}
-
-export function mockTaskJsonForms(): Task {
-  return {
-    id: randomUUID(),
-    state: 'READY',
-    taskDefinition: {
-      id: randomUUID(),
-      version: randomUUID(),
-      name: `Name ${randomInt(1, 1_000)}`,
-    },
-    processId: randomUUID(),
-    jsonFormsValue: {
-      valid: true,
+    ownerId: randomUUID(),
+    tenantId: randomUUID(),
+    task: {
+      state: 'READY',
+      taskDefinition: {
+        id: randomUUID(),
+        version: randomUUID(),
+        code: `CODE-${randomInt(1, 1_000)}`,
+        name: `Name ${randomInt(1, 1_000)}`,
+      },
       data: {
-        key1: 'value1',
-        key2: 'value2',
+        value: {
+          CODE_1: `Value ${randomInt(1, 1_000)}`,
+          CODE_2: randomInt(1, 1_000),
+        },
       },
     },
-    owner: mockPrincipalUser(),
 
     createdBy: randomUUID(),
     createdAt: new Date().toString(),
@@ -235,33 +192,22 @@ export function mockTaskJsonForms(): Task {
   }
 }
 
-export function mockTaskPageItem(): TaskPageItem {
+export function mockProcessItemPageItem(): ProcessItemPageItem {
   return {
     id: randomUUID(),
-    state: 'READY',
-    taskDefinition: {
-      id: randomUUID(),
-      version: randomUUID(),
-      name: `Name ${randomInt(1, 1_000)}`,
-    },
+    type: 'TASK',
     processId: randomUUID(),
-    elementValues: {
-      CODE_1: [
-        {
-          type: 'STRING',
-          value: `Value ${randomInt(1, 1_000)}`,
-          valid: true,
-        },
-      ],
-      CODE_2: [
-        {
-          type: 'NUMBER',
-          value: randomInt(1, 1_000),
-          valid: true,
-        },
-      ],
+    ownerId: randomUUID(),
+    tenantId: randomUUID(),
+    task: {
+      state: 'READY',
+      taskDefinition: {
+        id: randomUUID(),
+        version: randomUUID(),
+        code: `CODE-${randomInt(1, 1_000)}`,
+        name: `Name ${randomInt(1, 1_000)}`,
+      },
     },
-    owner: mockPrincipalUser(),
 
     createdBy: randomUUID(),
     createdAt: new Date().toString(),

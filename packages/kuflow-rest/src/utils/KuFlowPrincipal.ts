@@ -20,8 +20,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './principal'
-export * from './process'
-export * from './process-item'
-export * from './tenant-user'
-export * from './workflow'
+
+export interface KuFlowPrincipal {
+  source: string
+
+  id: string
+
+  type: string
+
+  name: string
+}
+
+export function parseKuFlowPrincipal(source: unknown): KuFlowPrincipal | undefined {
+  if (source == null) {
+    return undefined
+  }
+
+  if (typeof source !== 'string') {
+    return undefined
+  }
+
+  if (!source.toLowerCase().startsWith('kuflow-principal:')) {
+    return undefined
+  }
+
+  const sourceWithoutPrefix = source.slice('kuflow-principal:'.length)
+
+  const keyValuePairs = sourceWithoutPrefix.split(';')
+  const keyValueObject: Record<string, string | undefined> = {}
+
+  for (const pair of keyValuePairs) {
+    const [key, value] = pair.split('=')
+    keyValueObject[key] = decodeURIComponent(value)
+  }
+
+  const id = keyValueObject.id
+  const type = keyValueObject.type
+  const name = keyValueObject.name
+
+  if (id == null || type == null || name == null) {
+    return
+  }
+
+  return { source, id, type, name }
+}

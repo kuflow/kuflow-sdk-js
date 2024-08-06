@@ -24,9 +24,9 @@ import * as coreClient from '@azure/core-client'
 
 import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import {
-  type Authentication,
   type AuthenticationCreateAuthenticationOptionalParams,
   type AuthenticationCreateAuthenticationResponse,
+  type AuthenticationCreateParams,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
@@ -46,14 +46,14 @@ export class AuthenticationOperationsImpl implements AuthenticationOperations {
 
   /**
    * Create an authentication for the current principal.
-   * @param authentication Authentication to be created.
+   * @param params Authentication to be created.
    * @param options The options parameters.
    */
   async createAuthentication(
-    authentication: Authentication,
+    params: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ): Promise<AuthenticationCreateAuthenticationResponse> {
-    return await this.client.sendOperationRequest({ authentication, options }, createAuthenticationOperationSpec)
+    return await this.client.sendOperationRequest({ params, options }, createAuthenticationOperationSpec)
   }
 }
 // Operation Specifications
@@ -70,7 +70,7 @@ const createAuthenticationOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.authentication,
+  requestBody: Parameters.params,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',

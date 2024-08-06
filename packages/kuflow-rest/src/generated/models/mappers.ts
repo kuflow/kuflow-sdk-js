@@ -22,6 +22,29 @@
  */
 import type * as coreClient from '@azure/core-client'
 
+export const AuthenticationCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'AuthenticationCreateParams',
+    modelProperties: {
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['ENGINE_TOKEN', 'ENGINE_CERTIFICATE'],
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
 export const AuthenticationEngineToken: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -103,22 +126,6 @@ export const AbstractAudited: coreClient.CompositeMapper = {
     name: 'Composite',
     className: 'AbstractAudited',
     modelProperties: {
-      objectType: {
-        serializedName: 'objectType',
-        type: {
-          name: 'Enum',
-          allowedValues: [
-            'AUTHENTICATION',
-            'TENANT_USER',
-            'PROCESS',
-            'PROCESS_PAGE_ITEM',
-            'TASK',
-            'TASK_PAGE_ITEM',
-            'WORKER',
-            'ROBOT',
-          ],
-        },
-      },
       createdBy: {
         serializedName: 'createdBy',
         type: {
@@ -224,6 +231,93 @@ export const DefaultErrorInfo: coreClient.CompositeMapper = {
   },
 }
 
+export const PrincipalPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'PrincipalPageItem',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        type: {
+          name: 'Enum',
+          allowedValues: ['USER', 'APPLICATION', 'SYSTEM'],
+        },
+      },
+      name: {
+        serializedName: 'name',
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const Page: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'Page',
+    modelProperties: {
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Composite',
+          className: 'PageMetadata',
+        },
+      },
+    },
+  },
+}
+
+export const PageMetadata: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'PageMetadata',
+    modelProperties: {
+      size: {
+        constraints: {
+          InclusiveMinimum: 0,
+        },
+        serializedName: 'size',
+        required: true,
+        type: {
+          name: 'Number',
+        },
+      },
+      page: {
+        constraints: {
+          InclusiveMinimum: 0,
+        },
+        serializedName: 'page',
+        required: true,
+        type: {
+          name: 'Number',
+        },
+      },
+      totalElements: {
+        serializedName: 'totalElements',
+        required: true,
+        type: {
+          name: 'Number',
+        },
+      },
+      totalPages: {
+        serializedName: 'totalPages',
+        required: true,
+        type: {
+          name: 'Number',
+        },
+      },
+    },
+  },
+}
+
 export const Principal: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -302,80 +396,14 @@ export const PrincipalApplication: coreClient.CompositeMapper = {
   },
 }
 
-export const Page: coreClient.CompositeMapper = {
+export const JsonValue: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'Page',
-    modelProperties: {
-      objectType: {
-        serializedName: 'objectType',
-        type: {
-          name: 'Enum',
-          allowedValues: ['PRINCIPAL_PAGE', 'TENANT_USER_PAGE', 'PROCESS_PAGE', 'TASK_PAGE', 'ROBOT_PAGE'],
-        },
-      },
-      metadata: {
-        serializedName: 'metadata',
-        type: {
-          name: 'Composite',
-          className: 'PageMetadata',
-        },
-      },
-    },
-  },
-}
-
-export const PageMetadata: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'PageMetadata',
-    modelProperties: {
-      size: {
-        constraints: {
-          InclusiveMinimum: 0,
-        },
-        serializedName: 'size',
-        required: true,
-        type: {
-          name: 'Number',
-        },
-      },
-      page: {
-        constraints: {
-          InclusiveMinimum: 0,
-        },
-        serializedName: 'page',
-        required: true,
-        type: {
-          name: 'Number',
-        },
-      },
-      totalElements: {
-        serializedName: 'totalElements',
-        required: true,
-        type: {
-          name: 'Number',
-        },
-      },
-      totalPages: {
-        serializedName: 'totalPages',
-        required: true,
-        type: {
-          name: 'Number',
-        },
-      },
-    },
-  },
-}
-
-export const TenantUserMetadata: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'TenantUserMetadata',
+    className: 'JsonValue',
     modelProperties: {
       valid: {
         serializedName: 'valid',
-        required: true,
+        readOnly: true,
         type: {
           name: 'Boolean',
         },
@@ -386,6 +414,40 @@ export const TenantUserMetadata: coreClient.CompositeMapper = {
         type: {
           name: 'Dictionary',
           value: { type: { name: 'any' } },
+        },
+      },
+      errors: {
+        serializedName: 'errors',
+        readOnly: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'JsonValueError',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const JsonValueError: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'JsonValueError',
+    modelProperties: {
+      propertyPath: {
+        serializedName: 'propertyPath',
+        type: {
+          name: 'String',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        type: {
+          name: 'String',
         },
       },
     },
@@ -406,6 +468,7 @@ export const ProcessDefinitionSummary: coreClient.CompositeMapper = {
       },
       version: {
         serializedName: 'version',
+        required: true,
         type: {
           name: 'Uuid',
         },
@@ -416,6 +479,7 @@ export const ProcessDefinitionSummary: coreClient.CompositeMapper = {
           MinLength: 1,
         },
         serializedName: 'name',
+        required: true,
         type: {
           name: 'String',
         },
@@ -424,61 +488,51 @@ export const ProcessDefinitionSummary: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessElementValue: coreClient.CompositeMapper = {
+export const ProcessCreateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessElementValue',
-    uberParent: 'ProcessElementValue',
-    polymorphicDiscriminator: {
-      serializedName: 'type',
-      clientName: 'type',
-    },
+    className: 'ProcessCreateParams',
     modelProperties: {
-      valid: {
-        defaultValue: true,
-        serializedName: 'valid',
+      id: {
+        serializedName: 'id',
         type: {
-          name: 'Boolean',
+          name: 'Uuid',
         },
       },
-      type: {
-        serializedName: 'type',
+      processDefinitionId: {
+        serializedName: 'processDefinitionId',
         required: true,
         type: {
-          name: 'Enum',
-          allowedValues: ['STRING', 'NUMBER'],
+          name: 'Uuid',
+        },
+      },
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      initiatorId: {
+        serializedName: 'initiatorId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      initiatorEmail: {
+        serializedName: 'initiatorEmail',
+        type: {
+          name: 'String',
         },
       },
     },
   },
 }
 
-export const JsonFormsValue: coreClient.CompositeMapper = {
+export const ProcessRelated: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'JsonFormsValue',
-    modelProperties: {
-      valid: {
-        serializedName: 'valid',
-        type: {
-          name: 'Boolean',
-        },
-      },
-      data: {
-        serializedName: 'data',
-        type: {
-          name: 'Dictionary',
-          value: { type: { name: 'any' } },
-        },
-      },
-    },
-  },
-}
-
-export const RelatedProcess: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'RelatedProcess',
+    className: 'ProcessRelated',
     modelProperties: {
       incoming: {
         serializedName: 'incoming',
@@ -506,19 +560,19 @@ export const RelatedProcess: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessChangeInitiatorCommand: coreClient.CompositeMapper = {
+export const ProcessChangeInitiatorParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessChangeInitiatorCommand',
+    className: 'ProcessChangeInitiatorParams',
     modelProperties: {
-      principalId: {
-        serializedName: 'principalId',
+      initiatorId: {
+        serializedName: 'initiatorId',
         type: {
           name: 'Uuid',
         },
       },
-      email: {
-        serializedName: 'email',
+      initiatorEmail: {
+        serializedName: 'initiatorEmail',
         type: {
           name: 'String',
         },
@@ -527,77 +581,115 @@ export const ProcessChangeInitiatorCommand: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessSaveElementCommand: coreClient.CompositeMapper = {
+export const ProcessMetadataUpdateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessSaveElementCommand',
+    className: 'ProcessMetadataUpdateParams',
     modelProperties: {
-      elementDefinitionCode: {
-        serializedName: 'elementDefinitionCode',
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const JsonPatchOperation: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'JsonPatchOperation',
+    modelProperties: {
+      op: {
+        serializedName: 'op',
         required: true,
         type: {
           name: 'String',
         },
       },
-      elementValues: {
-        serializedName: 'elementValues',
+      from: {
+        serializedName: 'from',
         type: {
-          name: 'Sequence',
-          element: {
-            type: {
-              name: 'Composite',
-              className: 'ProcessElementValue',
-            },
-          },
+          name: 'String',
         },
       },
-    },
-  },
-}
-
-export const ProcessDeleteElementCommand: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'ProcessDeleteElementCommand',
-    modelProperties: {
-      elementDefinitionCode: {
-        serializedName: 'elementDefinitionCode',
+      path: {
+        serializedName: 'path',
         required: true,
         type: {
           name: 'String',
         },
       },
-    },
-  },
-}
-
-export const ProcessSaveEntityDataCommand: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'ProcessSaveEntityDataCommand',
-    modelProperties: {
-      data: {
-        serializedName: 'data',
-        required: true,
-        type: {
-          name: 'Dictionary',
-          value: { type: { name: 'any' } },
-        },
-      },
-    },
-  },
-}
-
-export const ProcessSaveEntityDocumentResponseCommand: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'ProcessSaveEntityDocumentResponseCommand',
-    modelProperties: {
       value: {
         serializedName: 'value',
+        nullable: true,
+        type: {
+          name: 'any',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessEntityUpdateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessEntityUpdateParams',
+    modelProperties: {
+      entity: {
+        serializedName: 'entity',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const DocumentReference: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'DocumentReference',
+    modelProperties: {
+      schemaPath: {
+        serializedName: 'schemaPath',
         required: true,
         type: {
           name: 'String',
+        },
+      },
+      documentUri: {
+        serializedName: 'documentUri',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemTaskPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemTaskPageItem',
+    modelProperties: {
+      state: {
+        serializedName: 'state',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      taskDefinition: {
+        serializedName: 'taskDefinition',
+        type: {
+          name: 'Composite',
+          className: 'TaskDefinitionSummary',
         },
       },
     },
@@ -611,18 +703,21 @@ export const TaskDefinitionSummary: coreClient.CompositeMapper = {
     modelProperties: {
       id: {
         serializedName: 'id',
+        required: true,
         type: {
           name: 'Uuid',
         },
       },
       version: {
         serializedName: 'version',
+        required: true,
         type: {
           name: 'Uuid',
         },
       },
       code: {
         serializedName: 'code',
+        required: true,
         type: {
           name: 'String',
         },
@@ -633,6 +728,7 @@ export const TaskDefinitionSummary: coreClient.CompositeMapper = {
           MinLength: 1,
         },
         serializedName: 'name',
+        required: true,
         type: {
           name: 'String',
         },
@@ -641,39 +737,10 @@ export const TaskDefinitionSummary: coreClient.CompositeMapper = {
   },
 }
 
-export const TaskElementValue: coreClient.CompositeMapper = {
+export const ProcessItemCreateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskElementValue',
-    uberParent: 'TaskElementValue',
-    polymorphicDiscriminator: {
-      serializedName: 'type',
-      clientName: 'type',
-    },
-    modelProperties: {
-      valid: {
-        defaultValue: true,
-        serializedName: 'valid',
-        type: {
-          name: 'Boolean',
-        },
-      },
-      type: {
-        serializedName: 'type',
-        required: true,
-        type: {
-          name: 'Enum',
-          allowedValues: ['STRING', 'NUMBER', 'OBJECT', 'DOCUMENT', 'PRINCIPAL'],
-        },
-      },
-    },
-  },
-}
-
-export const Log: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'Log',
+    className: 'ProcessItemCreateParams',
     modelProperties: {
       id: {
         serializedName: 'id',
@@ -681,8 +748,125 @@ export const Log: coreClient.CompositeMapper = {
           name: 'Uuid',
         },
       },
-      createdAt: {
-        serializedName: 'createdAt',
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['TASK', 'MESSAGE'],
+        },
+      },
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      ownerId: {
+        serializedName: 'ownerId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      ownerEmail: {
+        serializedName: 'ownerEmail',
+        type: {
+          name: 'String',
+        },
+      },
+      task: {
+        serializedName: 'task',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemTaskCreateParams',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemTaskCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemTaskCreateParams',
+    modelProperties: {
+      taskDefinitionCode: {
+        serializedName: 'taskDefinitionCode',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemTask: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemTask',
+    modelProperties: {
+      state: {
+        serializedName: 'state',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      taskDefinition: {
+        serializedName: 'taskDefinition',
+        type: {
+          name: 'Composite',
+          className: 'TaskDefinitionSummary',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      logs: {
+        serializedName: 'logs',
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'ProcessItemTaskLog',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemTaskLog: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemTaskLog',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      timestamp: {
+        serializedName: 'timestamp',
+        required: true,
         type: {
           name: 'String',
         },
@@ -706,19 +890,19 @@ export const Log: coreClient.CompositeMapper = {
   },
 }
 
-export const TaskAssignCommand: coreClient.CompositeMapper = {
+export const ProcessItemTaskAssignParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskAssignCommand',
+    className: 'ProcessItemTaskAssignParams',
     modelProperties: {
-      principalId: {
-        serializedName: 'principalId',
+      ownerId: {
+        serializedName: 'ownerId',
         type: {
           name: 'Uuid',
         },
       },
-      email: {
-        serializedName: 'email',
+      ownerEmail: {
+        serializedName: 'ownerEmail',
         type: {
           name: 'String',
         },
@@ -727,92 +911,146 @@ export const TaskAssignCommand: coreClient.CompositeMapper = {
   },
 }
 
-export const TaskSaveElementCommand: coreClient.CompositeMapper = {
+export const ProcessItemTaskAppendLogParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskSaveElementCommand',
+    className: 'ProcessItemTaskAppendLogParams',
     modelProperties: {
-      elementDefinitionCode: {
-        serializedName: 'elementDefinitionCode',
+      message: {
+        serializedName: 'message',
         required: true,
         type: {
           name: 'String',
         },
       },
-      elementValues: {
-        serializedName: 'elementValues',
-        type: {
-          name: 'Sequence',
-          element: {
-            type: {
-              name: 'Composite',
-              className: 'TaskElementValue',
-            },
-          },
-        },
-      },
-    },
-  },
-}
-
-export const TaskDeleteElementCommand: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'TaskDeleteElementCommand',
-    modelProperties: {
-      elementDefinitionCode: {
-        serializedName: 'elementDefinitionCode',
+      level: {
+        serializedName: 'level',
         required: true,
         type: {
-          name: 'String',
+          name: 'Enum',
+          allowedValues: ['INFO', 'WARN', 'ERROR'],
         },
       },
     },
   },
 }
 
-export const TaskDeleteElementValueDocumentCommand: coreClient.CompositeMapper = {
+export const ProcessItemTaskDataUpdateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskDeleteElementValueDocumentCommand',
-    modelProperties: {
-      documentId: {
-        serializedName: 'documentId',
-        required: true,
-        type: {
-          name: 'Uuid',
-        },
-      },
-    },
-  },
-}
-
-export const TaskSaveJsonFormsValueDataCommand: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'TaskSaveJsonFormsValueDataCommand',
+    className: 'ProcessItemTaskDataUpdateParams',
     modelProperties: {
       data: {
         serializedName: 'data',
         type: {
-          name: 'Dictionary',
-          value: { type: { name: 'any' } },
+          name: 'Composite',
+          className: 'JsonValue',
         },
       },
     },
   },
 }
 
-export const TaskSaveJsonFormsValueDocumentResponseCommand: coreClient.CompositeMapper = {
+export const WorkerCreateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskSaveJsonFormsValueDocumentResponseCommand',
+    className: 'WorkerCreateParams',
     modelProperties: {
-      value: {
-        serializedName: 'value',
+      identity: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'identity',
         required: true,
         type: {
           name: 'String',
+        },
+      },
+      taskQueue: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'taskQueue',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      workflowTypes: {
+        serializedName: 'workflowTypes',
+        type: {
+          name: 'Sequence',
+          element: {
+            constraints: {
+              MaxLength: 255,
+              MinLength: 1,
+            },
+            type: {
+              name: 'String',
+            },
+          },
+        },
+      },
+      activityTypes: {
+        serializedName: 'activityTypes',
+        type: {
+          name: 'Sequence',
+          element: {
+            constraints: {
+              MaxLength: 255,
+              MinLength: 1,
+            },
+            type: {
+              name: 'String',
+            },
+          },
+        },
+      },
+      hostname: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'hostname',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      ip: {
+        constraints: {
+          MaxLength: 40,
+          MinLength: 7,
+        },
+        serializedName: 'ip',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      installationId: {
+        serializedName: 'installationId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      robotIds: {
+        serializedName: 'robotIds',
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Uuid',
+            },
+          },
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -863,6 +1101,78 @@ export const RobotSourceFile: coreClient.CompositeMapper = {
   },
 }
 
+export const WebhookEvent: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'WebhookEvent',
+    uberParent: 'WebhookEvent',
+    polymorphicDiscriminator: {
+      serializedName: 'type',
+      clientName: 'type',
+    },
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      version: {
+        serializedName: 'version',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: [
+            'PROCESS.CREATED',
+            'PROCESS.STATE_CHANGED',
+            'PROCESS_ITEM.CREATED',
+            'PROCESS_ITEM.TASK_STATE_CHANGED',
+          ],
+        },
+      },
+      timestamp: {
+        serializedName: 'timestamp',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const WebhookEventProcessCreatedData: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'WebhookEventProcessCreatedData',
+    modelProperties: {
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processState: {
+        serializedName: 'processState',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+    },
+  },
+}
+
 export const WebhookEventProcessStateChangedData: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -887,10 +1197,10 @@ export const WebhookEventProcessStateChangedData: coreClient.CompositeMapper = {
   },
 }
 
-export const WebhookEventTaskStateChangedData: coreClient.CompositeMapper = {
+export const WebhookEventProcessItemCreatedData: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'WebhookEventTaskStateChangedData',
+    className: 'WebhookEventProcessItemCreatedData',
     modelProperties: {
       processId: {
         serializedName: 'processId',
@@ -899,23 +1209,29 @@ export const WebhookEventTaskStateChangedData: coreClient.CompositeMapper = {
           name: 'Uuid',
         },
       },
-      taskId: {
-        serializedName: 'taskId',
+      processItemId: {
+        serializedName: 'processItemId',
         required: true,
         type: {
           name: 'Uuid',
         },
       },
-      taskCode: {
-        serializedName: 'taskCode',
+      processItemType: {
+        serializedName: 'processItemType',
         required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['TASK', 'MESSAGE'],
+        },
+      },
+      processItemTaskCode: {
+        serializedName: 'processItemTaskCode',
         type: {
           name: 'String',
         },
       },
-      taskState: {
-        serializedName: 'taskState',
-        required: true,
+      processItemState: {
+        serializedName: 'processItemState',
         type: {
           name: 'Enum',
           allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
@@ -925,111 +1241,46 @@ export const WebhookEventTaskStateChangedData: coreClient.CompositeMapper = {
   },
 }
 
-export const WebhookEvent: coreClient.CompositeMapper = {
+export const WebhookEventProcessItemTaskStateChangedData: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'WebhookEvent',
-    uberParent: 'WebhookEvent',
-    polymorphicDiscriminator: {
-      serializedName: 'type',
-      clientName: 'type',
-    },
+    className: 'WebhookEventProcessItemTaskStateChangedData',
     modelProperties: {
-      id: {
-        serializedName: 'id',
+      processId: {
+        serializedName: 'processId',
         required: true,
         type: {
           name: 'Uuid',
         },
       },
-      type: {
-        serializedName: 'type',
+      processItemId: {
+        serializedName: 'processItemId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processItemType: {
+        serializedName: 'processItemType',
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['PROCESS.STATE_CHANGED', 'TASK.STATE_CHANGED'],
+          allowedValues: ['TASK', 'MESSAGE'],
         },
       },
-      timestamp: {
-        serializedName: 'timestamp',
+      processItemTaskCode: {
+        serializedName: 'processItemTaskCode',
         required: true,
         type: {
           name: 'String',
         },
       },
-    },
-  },
-}
-
-export const TaskElementValueDocumentItem: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValueDocumentItem',
-    modelProperties: {
-      id: {
-        serializedName: 'id',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      uri: {
-        serializedName: 'uri',
-        type: {
-          name: 'String',
-        },
-      },
-      name: {
-        serializedName: 'name',
-        type: {
-          name: 'String',
-        },
-      },
-      contentPath: {
-        serializedName: 'contentPath',
-        type: {
-          name: 'String',
-        },
-      },
-      contentType: {
-        serializedName: 'contentType',
-        type: {
-          name: 'String',
-        },
-      },
-      contentLength: {
-        serializedName: 'contentLength',
-        type: {
-          name: 'Number',
-        },
-      },
-    },
-  },
-}
-
-export const TaskElementValuePrincipalItem: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValuePrincipalItem',
-    modelProperties: {
-      id: {
-        serializedName: 'id',
-        required: true,
-        type: {
-          name: 'Uuid',
-        },
-      },
-      type: {
-        serializedName: 'type',
+      processItemState: {
+        serializedName: 'processItemState',
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['USER', 'APPLICATION', 'SYSTEM'],
-        },
-      },
-      name: {
-        serializedName: 'name',
-        type: {
-          name: 'String',
+          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
         },
       },
     },
@@ -1052,25 +1303,13 @@ export const Authentication: coreClient.CompositeMapper = {
         serializedName: 'type',
         type: {
           name: 'Enum',
-          allowedValues: ['ENGINE', 'ENGINE_TOKEN', 'ENGINE_CERTIFICATE'],
+          allowedValues: ['ENGINE_TOKEN', 'ENGINE_CERTIFICATE'],
         },
       },
       tenantId: {
         serializedName: 'tenantId',
         type: {
           name: 'Uuid',
-        },
-      },
-      token: {
-        serializedName: 'token',
-        type: {
-          name: 'String',
-        },
-      },
-      expiredAt: {
-        serializedName: 'expiredAt',
-        type: {
-          name: 'String',
         },
       },
       engineToken: {
@@ -1085,6 +1324,40 @@ export const Authentication: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'AuthenticationEngineCertificate',
+        },
+      },
+    },
+  },
+}
+
+export const TenantUserPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TenantUserPageItem',
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      principalId: {
+        serializedName: 'principalId',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        readOnly: true,
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -1108,7 +1381,7 @@ export const TenantUser: coreClient.CompositeMapper = {
         serializedName: 'metadata',
         type: {
           name: 'Composite',
-          className: 'TenantUserMetadata',
+          className: 'JsonValue',
         },
       },
       principal: {
@@ -1138,22 +1411,14 @@ export const ProcessPageItem: coreClient.CompositeMapper = {
       ...AbstractAudited.type.modelProperties,
       id: {
         serializedName: 'id',
+        required: true,
         type: {
           name: 'Uuid',
         },
       },
-      subject: {
-        constraints: {
-          MaxLength: 255,
-          MinLength: 1,
-        },
-        serializedName: 'subject',
-        type: {
-          name: 'String',
-        },
-      },
       state: {
         serializedName: 'state',
+        required: true,
         type: {
           name: 'Enum',
           allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
@@ -1166,29 +1431,15 @@ export const ProcessPageItem: coreClient.CompositeMapper = {
           className: 'ProcessDefinitionSummary',
         },
       },
-      elementValues: {
-        serializedName: 'elementValues',
+      initiatorId: {
+        serializedName: 'initiatorId',
         type: {
-          name: 'Dictionary',
-          value: {
-            type: {
-              name: 'Sequence',
-              element: {
-                type: { name: 'Composite', className: 'ProcessElementValue' },
-              },
-            },
-          },
-        },
-      },
-      initiator: {
-        serializedName: 'initiator',
-        type: {
-          name: 'Composite',
-          className: 'Principal',
+          name: 'Uuid',
         },
       },
       tenantId: {
         serializedName: 'tenantId',
+        required: true,
         type: {
           name: 'Uuid',
         },
@@ -1205,22 +1456,14 @@ export const Process: coreClient.CompositeMapper = {
       ...AbstractAudited.type.modelProperties,
       id: {
         serializedName: 'id',
+        required: true,
         type: {
           name: 'Uuid',
         },
       },
-      subject: {
-        constraints: {
-          MaxLength: 255,
-          MinLength: 1,
-        },
-        serializedName: 'subject',
-        type: {
-          name: 'String',
-        },
-      },
       state: {
         serializedName: 'state',
+        required: true,
         type: {
           name: 'Enum',
           allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
@@ -1233,43 +1476,36 @@ export const Process: coreClient.CompositeMapper = {
           className: 'ProcessDefinitionSummary',
         },
       },
-      elementValues: {
-        serializedName: 'elementValues',
+      metadata: {
+        serializedName: 'metadata',
         type: {
-          name: 'Dictionary',
-          value: {
-            type: {
-              name: 'Sequence',
-              element: {
-                type: { name: 'Composite', className: 'ProcessElementValue' },
-              },
-            },
-          },
+          name: 'Composite',
+          className: 'JsonValue',
         },
       },
       entity: {
         serializedName: 'entity',
         type: {
           name: 'Composite',
-          className: 'JsonFormsValue',
+          className: 'JsonValue',
         },
       },
-      initiator: {
-        serializedName: 'initiator',
+      processRelated: {
+        serializedName: 'processRelated',
         type: {
           name: 'Composite',
-          className: 'Principal',
+          className: 'ProcessRelated',
         },
       },
-      relatedProcess: {
-        serializedName: 'relatedProcess',
+      initiatorId: {
+        serializedName: 'initiatorId',
         type: {
-          name: 'Composite',
-          className: 'RelatedProcess',
+          name: 'Uuid',
         },
       },
       tenantId: {
         serializedName: 'tenantId',
+        required: true,
         type: {
           name: 'Uuid',
         },
@@ -1278,30 +1514,25 @@ export const Process: coreClient.CompositeMapper = {
   },
 }
 
-export const TaskPageItem: coreClient.CompositeMapper = {
+export const ProcessItemPageItem: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskPageItem',
+    className: 'ProcessItemPageItem',
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
         serializedName: 'id',
+        required: true,
         type: {
           name: 'Uuid',
         },
       },
-      state: {
-        serializedName: 'state',
+      type: {
+        serializedName: 'type',
+        required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
-        },
-      },
-      taskDefinition: {
-        serializedName: 'taskDefinition',
-        type: {
-          name: 'Composite',
-          className: 'TaskDefinitionSummary',
+          allowedValues: ['TASK', 'MESSAGE'],
         },
       },
       processId: {
@@ -1311,68 +1542,49 @@ export const TaskPageItem: coreClient.CompositeMapper = {
           name: 'Uuid',
         },
       },
-      elementValues: {
-        serializedName: 'elementValues',
+      ownerId: {
+        serializedName: 'ownerId',
         type: {
-          name: 'Dictionary',
-          value: {
-            type: {
-              name: 'Sequence',
-              element: {
-                type: { name: 'Composite', className: 'TaskElementValue' },
-              },
-            },
-          },
-        },
-      },
-      jsonFormsValue: {
-        serializedName: 'jsonFormsValue',
-        type: {
-          name: 'Composite',
-          className: 'JsonFormsValue',
-        },
-      },
-      owner: {
-        serializedName: 'owner',
-        type: {
-          name: 'Composite',
-          className: 'Principal',
+          name: 'Uuid',
         },
       },
       tenantId: {
         serializedName: 'tenantId',
+        required: true,
         type: {
           name: 'Uuid',
+        },
+      },
+      task: {
+        serializedName: 'task',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemTaskPageItem',
         },
       },
     },
   },
 }
 
-export const Task: coreClient.CompositeMapper = {
+export const ProcessItem: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'Task',
+    className: 'ProcessItem',
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
         serializedName: 'id',
+        required: true,
         type: {
           name: 'Uuid',
         },
       },
-      state: {
-        serializedName: 'state',
+      type: {
+        serializedName: 'type',
+        required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
-        },
-      },
-      taskDefinition: {
-        serializedName: 'taskDefinition',
-        type: {
-          name: 'Composite',
-          className: 'TaskDefinitionSummary',
+          allowedValues: ['TASK', 'MESSAGE'],
         },
       },
       processId: {
@@ -1382,50 +1594,23 @@ export const Task: coreClient.CompositeMapper = {
           name: 'Uuid',
         },
       },
-      elementValues: {
-        serializedName: 'elementValues',
+      ownerId: {
+        serializedName: 'ownerId',
         type: {
-          name: 'Dictionary',
-          value: {
-            type: {
-              name: 'Sequence',
-              element: {
-                type: { name: 'Composite', className: 'TaskElementValue' },
-              },
-            },
-          },
-        },
-      },
-      jsonFormsValue: {
-        serializedName: 'jsonFormsValue',
-        type: {
-          name: 'Composite',
-          className: 'JsonFormsValue',
-        },
-      },
-      logs: {
-        serializedName: 'logs',
-        type: {
-          name: 'Sequence',
-          element: {
-            type: {
-              name: 'Composite',
-              className: 'Log',
-            },
-          },
-        },
-      },
-      owner: {
-        serializedName: 'owner',
-        type: {
-          name: 'Composite',
-          className: 'Principal',
+          name: 'Uuid',
         },
       },
       tenantId: {
         serializedName: 'tenantId',
         type: {
           name: 'Uuid',
+        },
+      },
+      task: {
+        serializedName: 'task',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemTask',
         },
       },
     },
@@ -1545,6 +1730,62 @@ export const Worker: coreClient.CompositeMapper = {
   },
 }
 
+export const RobotPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'RobotPageItem',
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      code: {
+        constraints: {
+          MaxLength: 50,
+          MinLength: 1,
+        },
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      name: {
+        constraints: {
+          MaxLength: 50,
+          MinLength: 1,
+        },
+        serializedName: 'name',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      description: {
+        constraints: {
+          MaxLength: 4000,
+          MinLength: 1,
+        },
+        serializedName: 'description',
+        type: {
+          name: 'String',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
 export const Robot: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -1595,7 +1836,7 @@ export const Robot: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['PACKAGE', 'ROBOT_FRAMEWORK_PYTHON_WHEEL'],
+          allowedValues: ['PACKAGE', 'UNKNOWN'],
         },
       },
       sourceFile: {
@@ -1617,6 +1858,7 @@ export const Robot: coreClient.CompositeMapper = {
       },
       tenantId: {
         serializedName: 'tenantId',
+        required: true,
         type: {
           name: 'Uuid',
         },
@@ -1639,7 +1881,7 @@ export const PrincipalPage: coreClient.CompositeMapper = {
           element: {
             type: {
               name: 'Composite',
-              className: 'Principal',
+              className: 'PrincipalPageItem',
             },
           },
         },
@@ -1662,7 +1904,7 @@ export const TenantUserPage: coreClient.CompositeMapper = {
           element: {
             type: {
               name: 'Composite',
-              className: 'TenantUser',
+              className: 'TenantUserPageItem',
             },
           },
         },
@@ -1694,10 +1936,10 @@ export const ProcessPage: coreClient.CompositeMapper = {
   },
 }
 
-export const TaskPage: coreClient.CompositeMapper = {
+export const ProcessItemPage: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'TaskPage',
+    className: 'ProcessItemPage',
     modelProperties: {
       ...Page.type.modelProperties,
       content: {
@@ -1708,7 +1950,7 @@ export const TaskPage: coreClient.CompositeMapper = {
           element: {
             type: {
               name: 'Composite',
-              className: 'TaskPageItem',
+              className: 'ProcessItemPageItem',
             },
           },
         },
@@ -1731,7 +1973,7 @@ export const RobotPage: coreClient.CompositeMapper = {
           element: {
             type: {
               name: 'Composite',
-              className: 'Robot',
+              className: 'RobotPageItem',
             },
           },
         },
@@ -1740,136 +1982,20 @@ export const RobotPage: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessElementValueString: coreClient.CompositeMapper = {
-  serializedName: 'STRING',
+export const WebhookEventProcessCreated: coreClient.CompositeMapper = {
+  serializedName: 'PROCESS.CREATED',
   type: {
     name: 'Composite',
-    className: 'ProcessElementValueString',
-    uberParent: 'ProcessElementValue',
-    polymorphicDiscriminator: ProcessElementValue.type.polymorphicDiscriminator,
+    className: 'WebhookEventProcessCreated',
+    uberParent: 'WebhookEvent',
+    polymorphicDiscriminator: WebhookEvent.type.polymorphicDiscriminator,
     modelProperties: {
-      ...ProcessElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
-        type: {
-          name: 'String',
-        },
-      },
-    },
-  },
-}
-
-export const ProcessElementValueNumber: coreClient.CompositeMapper = {
-  serializedName: 'NUMBER',
-  type: {
-    name: 'Composite',
-    className: 'ProcessElementValueNumber',
-    uberParent: 'ProcessElementValue',
-    polymorphicDiscriminator: ProcessElementValue.type.polymorphicDiscriminator,
-    modelProperties: {
-      ...ProcessElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
-        type: {
-          name: 'Number',
-        },
-      },
-    },
-  },
-}
-
-export const TaskElementValueString: coreClient.CompositeMapper = {
-  serializedName: 'STRING',
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValueString',
-    uberParent: 'TaskElementValue',
-    polymorphicDiscriminator: TaskElementValue.type.polymorphicDiscriminator,
-    modelProperties: {
-      ...TaskElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
-        type: {
-          name: 'String',
-        },
-      },
-    },
-  },
-}
-
-export const TaskElementValueNumber: coreClient.CompositeMapper = {
-  serializedName: 'NUMBER',
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValueNumber',
-    uberParent: 'TaskElementValue',
-    polymorphicDiscriminator: TaskElementValue.type.polymorphicDiscriminator,
-    modelProperties: {
-      ...TaskElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
-        type: {
-          name: 'Number',
-        },
-      },
-    },
-  },
-}
-
-export const TaskElementValueObject: coreClient.CompositeMapper = {
-  serializedName: 'OBJECT',
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValueObject',
-    uberParent: 'TaskElementValue',
-    polymorphicDiscriminator: TaskElementValue.type.polymorphicDiscriminator,
-    modelProperties: {
-      ...TaskElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
-        type: {
-          name: 'Dictionary',
-          value: { type: { name: 'any' } },
-        },
-      },
-    },
-  },
-}
-
-export const TaskElementValueDocument: coreClient.CompositeMapper = {
-  serializedName: 'DOCUMENT',
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValueDocument',
-    uberParent: 'TaskElementValue',
-    polymorphicDiscriminator: TaskElementValue.type.polymorphicDiscriminator,
-    modelProperties: {
-      ...TaskElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
+      ...WebhookEvent.type.modelProperties,
+      data: {
+        serializedName: 'data',
         type: {
           name: 'Composite',
-          className: 'TaskElementValueDocumentItem',
-        },
-      },
-    },
-  },
-}
-
-export const TaskElementValuePrincipal: coreClient.CompositeMapper = {
-  serializedName: 'PRINCIPAL',
-  type: {
-    name: 'Composite',
-    className: 'TaskElementValuePrincipal',
-    uberParent: 'TaskElementValue',
-    polymorphicDiscriminator: TaskElementValue.type.polymorphicDiscriminator,
-    modelProperties: {
-      ...TaskElementValue.type.modelProperties,
-      value: {
-        serializedName: 'value',
-        type: {
-          name: 'Composite',
-          className: 'TaskElementValuePrincipalItem',
+          className: 'WebhookEventProcessCreatedData',
         },
       },
     },
@@ -1896,11 +2022,11 @@ export const WebhookEventProcessStateChanged: coreClient.CompositeMapper = {
   },
 }
 
-export const WebhookEventTaskStateChanged: coreClient.CompositeMapper = {
-  serializedName: 'TASK.STATE_CHANGED',
+export const WebhookEventProcessItemCreated: coreClient.CompositeMapper = {
+  serializedName: 'PROCESS_ITEM.CREATED',
   type: {
     name: 'Composite',
-    className: 'WebhookEventTaskStateChanged',
+    className: 'WebhookEventProcessItemCreated',
     uberParent: 'WebhookEvent',
     polymorphicDiscriminator: WebhookEvent.type.polymorphicDiscriminator,
     modelProperties: {
@@ -1909,7 +2035,27 @@ export const WebhookEventTaskStateChanged: coreClient.CompositeMapper = {
         serializedName: 'data',
         type: {
           name: 'Composite',
-          className: 'WebhookEventTaskStateChangedData',
+          className: 'WebhookEventProcessItemCreatedData',
+        },
+      },
+    },
+  },
+}
+
+export const WebhookEventProcessItemTaskStateChanged: coreClient.CompositeMapper = {
+  serializedName: 'PROCESS_ITEM.TASK_STATE_CHANGED',
+  type: {
+    name: 'Composite',
+    className: 'WebhookEventProcessItemTaskStateChanged',
+    uberParent: 'WebhookEvent',
+    polymorphicDiscriminator: WebhookEvent.type.polymorphicDiscriminator,
+    modelProperties: {
+      ...WebhookEvent.type.modelProperties,
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'WebhookEventProcessItemTaskStateChangedData',
         },
       },
     },
@@ -1917,16 +2063,9 @@ export const WebhookEventTaskStateChanged: coreClient.CompositeMapper = {
 }
 
 export const discriminators = {
-  ProcessElementValue,
-  TaskElementValue,
   WebhookEvent,
-  'ProcessElementValue.STRING': ProcessElementValueString,
-  'ProcessElementValue.NUMBER': ProcessElementValueNumber,
-  'TaskElementValue.STRING': TaskElementValueString,
-  'TaskElementValue.NUMBER': TaskElementValueNumber,
-  'TaskElementValue.OBJECT': TaskElementValueObject,
-  'TaskElementValue.DOCUMENT': TaskElementValueDocument,
-  'TaskElementValue.PRINCIPAL': TaskElementValuePrincipal,
+  'WebhookEvent.PROCESS.CREATED': WebhookEventProcessCreated,
   'WebhookEvent.PROCESS.STATE_CHANGED': WebhookEventProcessStateChanged,
-  'WebhookEvent.TASK.STATE_CHANGED': WebhookEventTaskStateChanged,
+  'WebhookEvent.PROCESS_ITEM.CREATED': WebhookEventProcessItemCreated,
+  'WebhookEvent.PROCESS_ITEM.TASK_STATE_CHANGED': WebhookEventProcessItemTaskStateChanged,
 }

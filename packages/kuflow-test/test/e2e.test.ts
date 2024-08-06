@@ -23,17 +23,7 @@
 
 import * as logger from '@azure/logger'
 import { describe, test } from '@jest/globals'
-import {
-  type Document,
-  KuFlowRestClient,
-  type Process,
-  type Task,
-  type TaskSaveElementCommand,
-  TaskSaveElementCommandUtils,
-  type TaskSaveElementValueDocumentCommand,
-  TaskUtils,
-} from '@kuflow/kuflow-rest'
-import * as fs from 'fs'
+import { KuFlowRestClient, type ProcessItemCreateParams } from '@kuflow/kuflow-rest'
 
 describe('E2E Test', () => {
   test.skip('test', async () => {
@@ -56,68 +46,64 @@ describe('E2E Test', () => {
 
     console.log(authentication)
 
-    const process: Process = {
+    const process = await kuFlowRestClient.processOperations.createProcess({
       id: '4a82baf2-2df1-4ecf-a3c4-a046c071ecb0',
-      processDefinition: {
-        id: 'be35212b-deb8-4719-a10d-b8550219d156',
-      },
-    }
-    const processCreated = await kuFlowRestClient.processOperations.createProcess(process)
-    if (processCreated.id == null) {
-      return
-    }
+      processDefinitionId: 'be35212b-deb8-4719-a10d-b8550219d156',
+    })
 
-    console.log(processCreated)
+    console.log(process)
 
-    const task: Task = {
+    const processItemParams: ProcessItemCreateParams = {
       id: 'a883aed1-815f-4b55-9bdd-6ddae1cc31df',
-      processId: processCreated.id,
-      taskDefinition: {
-        code: 'TASK_0001',
+      processId: process.id,
+      type: 'TASK',
+      task: {
+        taskDefinitionCode: 'TASK_0001',
+        data: {
+          value: {
+            ss: [2, 5],
+          },
+        },
       },
     }
-    TaskUtils.setElementValueAsNumberList(task, 'ss', [2, 5])
-    const taskCreated = await kuFlowRestClient.taskOperations.createTask(task)
-    if (taskCreated.id == null) {
-      return
-    }
+    const processItem = await kuFlowRestClient.processItemOperations.createProcessItem(processItemParams)
 
-    await kuFlowRestClient.taskOperations.actionsTaskClaim(taskCreated.id)
+    await kuFlowRestClient.processItemOperations.claimProcessItemTask(processItem.id)
 
-    const command1: TaskSaveElementCommand = {
-      elementDefinitionCode: 'TEXT_001',
-    }
-    TaskSaveElementCommandUtils.setElementValueAsString(command1, 'Value 1')
-    await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command1)
-
-    const command2: TaskSaveElementCommand = {
-      elementDefinitionCode: 'TEXT_002',
-    }
-    TaskSaveElementCommandUtils.setElementValueAsStringList(command2, ['Value 1', 'Value 2'])
-    await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command2)
-
-    const command3: TaskSaveElementCommand = {
-      elementDefinitionCode: 'NUMBER_001',
-    }
-    TaskSaveElementCommandUtils.setElementValueAsNumber(command3, 50)
-    await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command3)
-
-    const command4: TaskSaveElementValueDocumentCommand = {
-      elementDefinitionCode: 'DOC_001',
-    }
-    const document: Document = {
-      fileName: 'bugs-bunny.png',
-      contentType: 'image/png',
-      fileContent: fs.createReadStream('/Users/kuflow/Downloads/bugs-bunny.png'),
-    }
-    const elementDocument = await kuFlowRestClient.taskOperations.actionsTaskSaveElementValueDocument(
-      taskCreated.id,
-      command4,
-      document,
-    )
-    if (elementDocument.id == null) {
-      return
-    }
+    // const command1: TaskSaveElementCommand = {
+    //   elementDefinitionCode: 'TEXT_001',
+    // }
+    // TaskSaveElementCommandUtils.setElementValueAsString(command1, 'Value 1')
+    // await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command1)
+    //
+    // const command2: TaskSaveElementCommand = {
+    //   elementDefinitionCode: 'TEXT_002',
+    // }
+    // TaskSaveElementCommandUtils.setElementValueAsStringList(command2, ['Value 1', 'Value 2'])
+    // await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command2)
+    //
+    // const command3: TaskSaveElementCommand = {
+    //   elementDefinitionCode: 'NUMBER_001',
+    // }
+    // TaskSaveElementCommandUtils.setElementValueAsNumber(command3, 50)
+    // await kuFlowRestClient.taskOperations.actionsTaskSaveElement(taskCreated.id, command3)
+    //
+    // const command4: TaskSaveElementValueDocumentCommand = {
+    //   elementDefinitionCode: 'DOC_001',
+    // }
+    // const document: Document = {
+    //   fileName: 'bugs-bunny.png',
+    //   contentType: 'image/png',
+    //   fileContent: fs.createReadStream('/Users/kuflow/Downloads/bugs-bunny.png'),
+    // }
+    // const elementDocument = await kuFlowRestClient.taskOperations.actionsTaskSaveElementValueDocument(
+    //   taskCreated.id,
+    //   command4,
+    //   document,
+    // )
+    // if (elementDocument.id == null) {
+    //   return
+    // }
 
     // if (!taskCreated.elementValues) {
     //   return
@@ -133,6 +119,6 @@ describe('E2E Test', () => {
     // const b1 = await kuFlowRestClient.taskOperations.findTasks()
     //
     // console.log(b)
-    console.log(elementDocument)
+    // console.log(elementDocument)
   })
 })

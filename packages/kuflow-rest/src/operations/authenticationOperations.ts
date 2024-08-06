@@ -21,9 +21,9 @@
  * THE SOFTWARE.
  */
 import {
-  type Authentication,
   type AuthenticationCreateAuthenticationOptionalParams,
   type AuthenticationCreateAuthenticationResponse,
+  type AuthenticationCreateParams,
   type AuthenticationOperations as AuthenticationOperationsGenerated,
   type KuFlowRestClientGenerated,
 } from '../generated'
@@ -42,13 +42,13 @@ export class AuthenticationOperations {
 
   /**
    * Create an authentication for the current principal.
-   * @param authentication Authentication to be created.
+   * @param params Authentication to be created.
    * @param options The options parameters.
    */
   async createAuthentication(
-    authentication: Authentication,
+    params: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ): Promise<AuthenticationCreateAuthenticationResponse> {
-    return await this.authenticationOperations.createAuthentication(authentication, options)
+    return await this.authenticationOperations.createAuthentication(params, options)
   }
 }

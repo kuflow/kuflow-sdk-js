@@ -21,34 +21,7 @@
  * THE SOFTWARE.
  */
 
-import { type KuFlowObject } from './element-values'
-import * as ElementValueUtils from './element-values'
-import { type JsonFormsComplexType, type JsonFormsSimpleType, type UpdateJsonFormsPropertyOptions } from './json-forms'
-import * as JsonFormsUtils from './json-forms'
-import * as ProcessPageItemUtils from './process-page-item-utils'
-import * as ProcessSaveElementCommandUtils from './process-save-element-command-utils'
-import * as ProcessSaveEntityDataCommandUtils from './process-save-entity-data-command-utils'
-import * as ProcessUtils from './process-utils'
-import * as TaskPageItemUtils from './task-page-item-utils'
-import * as TaskSaveElementCommandUtils from './task-save-element-command-utils'
-import * as TaskSaveJsonFormsValueDataCommandUtils from './task-save-json-forms-value-data-command-utils'
-import * as TaskUtils from './task-utils'
-import * as TenantUserUtils from './tenant-user-utils'
+import { type KuFlowFile, parseKuFlowFile } from './KuFlowFile'
+import { type KuFlowPrincipal, parseKuFlowPrincipal } from './KuFlowPrincipal'
 
-export {
-  ElementValueUtils,
-  type JsonFormsComplexType,
-  type JsonFormsSimpleType,
-  JsonFormsUtils,
-  type KuFlowObject,
-  ProcessPageItemUtils,
-  ProcessSaveElementCommandUtils,
-  ProcessSaveEntityDataCommandUtils,
-  ProcessUtils,
-  TaskPageItemUtils,
-  TaskSaveElementCommandUtils,
-  TaskSaveJsonFormsValueDataCommandUtils,
-  TaskUtils,
-  TenantUserUtils,
-  type UpdateJsonFormsPropertyOptions,
-}
+export { type KuFlowFile, type KuFlowPrincipal, parseKuFlowFile, parseKuFlowPrincipal }

@@ -27,18 +27,18 @@ import { type KuFlowRestClientGeneratedOptionalParams } from './models'
 import {
   AuthenticationOperationsImpl,
   PrincipalOperationsImpl,
+  ProcessItemOperationsImpl,
   ProcessOperationsImpl,
   RobotOperationsImpl,
-  TaskOperationsImpl,
   TenantUserOperationsImpl,
   WorkerOperationsImpl,
 } from './operations'
 import {
   type AuthenticationOperations,
   type PrincipalOperations,
+  type ProcessItemOperations,
   type ProcessOperations,
   type RobotOperations,
-  type TaskOperations,
   type TenantUserOperations,
   type WorkerOperations,
 } from './operationsInterfaces'
@@ -83,17 +83,17 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
         options.endpoint ??
         // eslint-disable-next-line deprecation/deprecation
         options.baseUri ??
-        'https://api.kuflow.com/v2022-10-08',
+        'https://api.kuflow.com/v2024-06-14',
     }
     super(optionsWithDefaults)
 
     // Assigning values to Constant parameters
-    this.$host = options.$host ?? 'https://api.kuflow.com/v2022-10-08'
+    this.$host = options.$host ?? 'https://api.kuflow.com/v2024-06-14'
     this.authenticationOperations = new AuthenticationOperationsImpl(this)
     this.principalOperations = new PrincipalOperationsImpl(this)
     this.tenantUserOperations = new TenantUserOperationsImpl(this)
     this.processOperations = new ProcessOperationsImpl(this)
-    this.taskOperations = new TaskOperationsImpl(this)
+    this.processItemOperations = new ProcessItemOperationsImpl(this)
     this.workerOperations = new WorkerOperationsImpl(this)
     this.robotOperations = new RobotOperationsImpl(this)
   }
@@ -102,7 +102,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
   principalOperations: PrincipalOperations
   tenantUserOperations: TenantUserOperations
   processOperations: ProcessOperations
-  taskOperations: TaskOperations
+  processItemOperations: ProcessItemOperations
   workerOperations: WorkerOperations
   robotOperations: RobotOperations
 }

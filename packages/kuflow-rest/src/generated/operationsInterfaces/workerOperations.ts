@@ -20,7 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Worker, type WorkerCreateWorkerOptionalParams, type WorkerCreateWorkerResponse } from '../models'
+import {
+  type WorkerCreateParams,
+  type WorkerCreateWorkerOptionalParams,
+  type WorkerCreateWorkerResponse,
+} from '../models'
 
 /** Interface representing a WorkerOperations. */
 export interface WorkerOperations {
@@ -29,8 +33,11 @@ export interface WorkerOperations {
    *
    * If already exist a worker for the same identity, the worker will be updated.
    *
-   * @param worker Worker to create or update
+   * @param params Worker to create or update
    * @param options The options parameters.
    */
-  createWorker: (worker: Worker, options?: WorkerCreateWorkerOptionalParams) => Promise<WorkerCreateWorkerResponse>
+  createWorker: (
+    params: WorkerCreateParams,
+    options?: WorkerCreateWorkerOptionalParams,
+  ) => Promise<WorkerCreateWorkerResponse>
 }

@@ -21,57 +21,73 @@
  * THE SOFTWARE.
  */
 import {
+  type JsonPatchOperation,
   type Process,
-  type ProcessElementValueNumber,
-  type ProcessElementValueString,
+  type ProcessChangeInitiatorParams,
+  type ProcessEntityUpdateParams,
+  type ProcessMetadataUpdateParams,
   type ProcessPage,
 } from '@kuflow/kuflow-rest'
 
-export interface FindProcessesRequest {
+export interface ProcessFindRequest {
   page?: number
   size?: number
   sorts?: string[]
 }
 
-export interface FindProcessesResponse {
+export interface ProcessFindResponse {
   processes: ProcessPage
 }
 
-export interface RetrieveProcessRequest {
+export interface ProcessRetrieveRequest {
   processId: string
 }
 
-export interface RetrieveProcessResponse {
+export interface ProcessRetrieveResponse {
   process: Process
 }
 
-export type ProcessElementValues = ProcessElementValueString[] | ProcessElementValueNumber[]
-
-export interface SaveProcessElementRequest {
+export interface ProcessEntityUpdateRequest {
   processId: string
-  elementDefinitionCode: string
-  elementValues?: ProcessElementValues
+  params: ProcessEntityUpdateParams
 }
 
-export interface SaveProcessElementResponse {
+export interface ProcessEntityUpdateResponse {
   process: Process
 }
 
-export interface DeleteProcessElementRequest {
+export interface ProcessEntityPatchRequest {
   processId: string
-  elementDefinitionCode: string
+  params: JsonPatchOperation[]
 }
 
-export interface DeleteProcessElementResponse {
+export interface ProcessEntityPatchResponse {
   process: Process
 }
 
-export interface ChangeProcessInitiatorRequest {
+export interface ProcessMetadataUpdateRequest {
   processId: string
-  email?: string
-  principalId?: string
+  params: ProcessMetadataUpdateParams
 }
 
-export interface ChangeProcessInitiatorResponse {
+export interface ProcessMetadataUpdateResponse {
+  process: Process
+}
+
+export interface ProcessMetadataPatchRequest {
+  processId: string
+  params: JsonPatchOperation[]
+}
+
+export interface ProcessMetadataPatchResponse {
+  process: Process
+}
+
+export interface ProcessInitiatorChangeRequest {
+  processId: string
+  params: ProcessChangeInitiatorParams
+}
+
+export interface ProcessInitiatorChangeResponse {
   process: Process
 }
