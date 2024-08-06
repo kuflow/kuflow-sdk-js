@@ -20,65 +20,90 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-// // Only import the activity types
-// import {
-//   type WorkflowRequest,
-//   type WorkflowResponse,
-// } from '@kuflow/kuflow-temporal-activity-kuflow'
-// // Import from here to avoid the following error:
-// //   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
-// import { KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK } from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
-// import { defineSignal, type LoggerSinks, proxySinks, setHandler } from '@temporalio/workflow'
-//
-// // const kuFlowActivities = proxyActivities<ReturnType<typeof createKuFlowActivities>>({
-// //   startToCloseTimeout: '10 minutes',
-// //   scheduleToCloseTimeout: '356 days',
-// // })
-//
-// const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
-//
-// export const kuFlowEngineCompletedTaskSignal = defineSignal<[string]>(KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK)
-//
-// /** A workflow that simply calls an activity */
-// export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
-//   const kuFlowCompletedTaskIds: string[] = []
-//
-//   setHandler(kuFlowEngineCompletedTaskSignal, (taskId: string) => {
-//     kuFlowCompletedTaskIds.push(taskId)
-//   })
-//
-//   logger.info('Start', {})
-//
-//   // await createTaskAndWaitCompleted({
-//   //   id: uuid4(),
-//   //   processId: request.processId,
-//   //   taskDefinition: {
-//   //     code: 'TASK_0001',
-//   //   },
-//   // })
-//   //
-//   // const saveProcessElementRequest: SaveProcessElementRequest = {
-//   //   processId: request.processId,
-//   //   elementDefinitionCode: 'CODE_001',
-//   // }
-//   // SaveProcessElementRequestUtils.addElementValueAsString(saveProcessElementRequest, 'value')
-//   //
-//   // await kuFlowActivities.KuFlow_Engine_saveProcessElement(saveProcessElementRequest)
-//   //
-//   // const saveTaskJsonFormsValueDataRequest: SaveTaskJsonFormsValueDataRequest = {
-//   //   taskId: '',
-//   // }
-//   // SaveTaskJsonFormsValueDataRequestUtils.updateJsonFormsProperty(saveTaskJsonFormsValueDataRequest, '.name', 'value')
-//   // await kuFlowActivities.KuFlow_Engine_saveTaskJsonFormsValueData(saveTaskJsonFormsValueDataRequest)
-//
-//   logger.info('End', {})
-//
-//   return {
-//     message: 'OK',
-//   }
-//
-//   // async function createTaskAndWaitCompleted(processItem: ProcessItemCreateParams & { id: string }): Promise<void> {
-//   //   await kuFlowActivities.KuFlow_Engine_createProcessItem({ params: processItem })
-//   //   await condition(() => kuFlowCompletedTaskIds.includes(processItem.id))
-//   // }
-// }
+// Only import the activity types
+import { type ProcessItemCreateParams } from '@kuflow/kuflow-rest'
+import {
+  type createKuFlowActivities,
+  type ProcessItemTaskDataUpdateRequest,
+  type ProcessMetadataUpdateRequest,
+  type WorkflowRequest,
+  type WorkflowResponse,
+} from '@kuflow/kuflow-temporal-activity-kuflow'
+// Import from here to avoid the following error:
+//   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
+import { KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK, uuid7 } from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
+import {
+  condition,
+  defineSignal,
+  type LoggerSinks,
+  proxyActivities,
+  proxySinks,
+  setHandler,
+} from '@temporalio/workflow'
+
+const kuFlowActivities = proxyActivities<ReturnType<typeof createKuFlowActivities>>({
+  startToCloseTimeout: '10 minutes',
+  scheduleToCloseTimeout: '356 days',
+})
+
+const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
+
+export const kuFlowEngineCompletedTaskSignal = defineSignal<[string]>(KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK)
+
+/** A workflow that simply calls an activity */
+export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
+  const kuFlowCompletedTaskIds: string[] = []
+
+  setHandler(kuFlowEngineCompletedTaskSignal, (taskId: string) => {
+    kuFlowCompletedTaskIds.push(taskId)
+  })
+
+  logger.info('Start', {})
+
+  await createProcessItemAndWaitCompleted({
+    id: uuid7(),
+    type: 'TASK',
+    processId: request.processId,
+    task: {
+      taskDefinitionCode: 'TASK_0001',
+    },
+  })
+
+  const updateProcessMetadataRequest: ProcessMetadataUpdateRequest = {
+    processId: request.processId,
+    params: {
+      metadata: {
+        value: {
+          CODE_001: 'value',
+        },
+      },
+    },
+  }
+
+  await kuFlowActivities.KuFlow_Engine_updateProcessMetadata(updateProcessMetadataRequest)
+
+  const updateProcessItemTaskData: ProcessItemTaskDataUpdateRequest = {
+    processItemId: '',
+    params: {
+      data: {
+        value: {
+          name: 'value',
+        },
+      },
+    },
+  }
+  await kuFlowActivities.KuFlow_Engine_updateProcessItemTaskData(updateProcessItemTaskData)
+
+  logger.info('End', {})
+
+  return {
+    message: 'OK',
+  }
+
+  async function createProcessItemAndWaitCompleted(
+    processItem: ProcessItemCreateParams & { id: string },
+  ): Promise<void> {
+    await kuFlowActivities.KuFlow_Engine_createProcessItem({ params: processItem })
+    await condition(() => kuFlowCompletedTaskIds.includes(processItem.id))
+  }
+}
