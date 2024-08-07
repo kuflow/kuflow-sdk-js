@@ -20,18 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type PrincipalFindPrincipalsOptionalParams,
-  type PrincipalFindPrincipalsResponse,
-  type PrincipalRetrievePrincipalOptionalParams,
-  type PrincipalRetrievePrincipalResponse,
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type {
+  PrincipalFindPrincipalsOptionalParams,
+  PrincipalFindPrincipalsResponse,
+  PrincipalRetrievePrincipalOptionalParams,
+  PrincipalRetrievePrincipalResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type PrincipalOperations } from '../operationsInterfaces'
+import type { PrincipalOperations } from '../operationsInterfaces'
 
 /** Class containing PrincipalOperations operations. */
 export class PrincipalOperationsImpl implements PrincipalOperations {

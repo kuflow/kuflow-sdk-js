@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type AccessToken, type TokenCredential } from '@azure/core-auth'
-import { type CommonClientOptions } from '@azure/core-client'
+
+import type { AccessToken, TokenCredential } from '@azure/core-auth'
+import type { CommonClientOptions } from '@azure/core-client'
 
 import { KuFlowRestClientGenerated } from './generated'
 import {
@@ -93,7 +94,7 @@ export class KuFlowRestClient {
    * @param authentication Credentials which uniquely identify the client.
    * @param options The parameter options
    */
-  constructor(authentication: KuFlowRestClientAuthenticationOptions, options?: KuFlowRestClientOptionals) {
+  public constructor(authentication: KuFlowRestClientAuthenticationOptions, options?: KuFlowRestClientOptionals) {
     options = this.normalizeOptions(options)
 
     const tokenCredential = kuflowTokenCredential(authentication)

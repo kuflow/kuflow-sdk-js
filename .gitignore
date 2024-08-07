@@ -1,7 +1,6 @@
 # Ignore all dot files except
 .*
 !.editorconfig
-!.eslintrc.yaml
 !.gitignore
 !.prettierignore
 !.prettierrc

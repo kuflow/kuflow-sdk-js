@@ -20,44 +20,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type JsonPatchOperation,
-  type ProcessItemAppendProcessItemTaskLogOptionalParams,
-  type ProcessItemAppendProcessItemTaskLogResponse,
-  type ProcessItemAssignProcessItemTaskOptionalParams,
-  type ProcessItemAssignProcessItemTaskResponse,
-  type ProcessItemClaimProcessItemTaskOptionalParams,
-  type ProcessItemClaimProcessItemTaskResponse,
-  type ProcessItemCompleteProcessItemTaskOptionalParams,
-  type ProcessItemCompleteProcessItemTaskResponse,
-  type ProcessItemCreateParams,
-  type ProcessItemCreateProcessItemOptionalParams,
-  type ProcessItemCreateProcessItemResponse,
-  type ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  type ProcessItemDownloadProcessItemTaskDataDocumentResponse,
-  type ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
-  type ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
-  type ProcessItemFindProcessItemsOptionalParams,
-  type ProcessItemFindProcessItemsResponse,
-  type ProcessItemPatchProcessItemTaskDataOptionalParams,
-  type ProcessItemPatchProcessItemTaskDataResponse,
-  type ProcessItemRetrieveProcessItemOptionalParams,
-  type ProcessItemRetrieveProcessItemResponse,
-  type ProcessItemTaskAppendLogParams,
-  type ProcessItemTaskAssignParams,
-  type ProcessItemTaskDataUpdateParams,
-  type ProcessItemUpdateProcessItemTaskDataOptionalParams,
-  type ProcessItemUpdateProcessItemTaskDataResponse,
-  type ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  type ProcessItemUploadProcessItemTaskDataDocumentResponse,
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type {
+  JsonPatchOperation,
+  ProcessItemAppendProcessItemTaskLogOptionalParams,
+  ProcessItemAppendProcessItemTaskLogResponse,
+  ProcessItemAssignProcessItemTaskOptionalParams,
+  ProcessItemAssignProcessItemTaskResponse,
+  ProcessItemClaimProcessItemTaskOptionalParams,
+  ProcessItemClaimProcessItemTaskResponse,
+  ProcessItemCompleteProcessItemTaskOptionalParams,
+  ProcessItemCompleteProcessItemTaskResponse,
+  ProcessItemCreateParams,
+  ProcessItemCreateProcessItemOptionalParams,
+  ProcessItemCreateProcessItemResponse,
+  ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
+  ProcessItemDownloadProcessItemTaskDataDocumentResponse,
+  ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
+  ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
+  ProcessItemFindProcessItemsOptionalParams,
+  ProcessItemFindProcessItemsResponse,
+  ProcessItemPatchProcessItemTaskDataOptionalParams,
+  ProcessItemPatchProcessItemTaskDataResponse,
+  ProcessItemRetrieveProcessItemOptionalParams,
+  ProcessItemRetrieveProcessItemResponse,
+  ProcessItemTaskAppendLogParams,
+  ProcessItemTaskAssignParams,
+  ProcessItemTaskDataUpdateParams,
+  ProcessItemUpdateProcessItemTaskDataOptionalParams,
+  ProcessItemUpdateProcessItemTaskDataResponse,
+  ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
+  ProcessItemUploadProcessItemTaskDataDocumentResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type ProcessItemOperations } from '../operationsInterfaces'
+import type { ProcessItemOperations } from '../operationsInterfaces'
 
 /** Class containing ProcessItemOperations operations. */
 export class ProcessItemOperationsImpl implements ProcessItemOperations {

@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import type { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import type { NativeConnectionOptions, WorkerOptions } from '@temporalio/worker'
 

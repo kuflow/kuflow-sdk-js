@@ -20,7 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type OperationParameter, type OperationQueryParameter, type OperationURLParameter } from '@azure/core-client'
+
+import type { OperationParameter, OperationQueryParameter, OperationURLParameter } from '@azure/core-client'
 
 import {
   AuthenticationCreateParams as AuthenticationCreateParamsMapper,

@@ -20,18 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type TenantUserFindTenantUsersOptionalParams,
-  type TenantUserFindTenantUsersResponse,
-  type TenantUserRetrieveTenantUserOptionalParams,
-  type TenantUserRetrieveTenantUserResponse,
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type {
+  TenantUserFindTenantUsersOptionalParams,
+  TenantUserFindTenantUsersResponse,
+  TenantUserRetrieveTenantUserOptionalParams,
+  TenantUserRetrieveTenantUserResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type TenantUserOperations } from '../operationsInterfaces'
+import type { TenantUserOperations } from '../operationsInterfaces'
 
 /** Class containing TenantUserOperations operations. */
 export class TenantUserOperationsImpl implements TenantUserOperations {

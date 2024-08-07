@@ -20,13 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type JsonPatchOperation,
-  type Process,
-  type ProcessChangeInitiatorParams,
-  type ProcessEntityUpdateParams,
-  type ProcessMetadataUpdateParams,
-  type ProcessPage,
+
+import type {
+  JsonPatchOperation,
+  Process,
+  ProcessChangeInitiatorParams,
+  ProcessEntityUpdateParams,
+  ProcessMetadataUpdateParams,
+  ProcessPage,
 } from '@kuflow/kuflow-rest'
 
 export interface ProcessFindRequest {

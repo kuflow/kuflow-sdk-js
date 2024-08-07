@@ -20,11 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type TenantUserFindTenantUsersOptionalParams,
-  type TenantUserFindTenantUsersResponse,
-  type TenantUserRetrieveTenantUserOptionalParams,
-  type TenantUserRetrieveTenantUserResponse,
+
+import type {
+  TenantUserFindTenantUsersOptionalParams,
+  TenantUserFindTenantUsersResponse,
+  TenantUserRetrieveTenantUserOptionalParams,
+  TenantUserRetrieveTenantUserResponse,
 } from '../models'
 
 /** Interface representing a TenantUserOperations. */

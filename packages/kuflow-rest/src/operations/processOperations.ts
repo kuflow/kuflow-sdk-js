@@ -20,47 +20,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type FullOperationResponse } from '@azure/core-client'
 
-import {
-  type JsonPatchOperation,
-  type KuFlowRestClientGenerated,
-  type ProcessCancelProcessOptionalParams,
-  type ProcessCancelProcessResponse,
-  type ProcessChangeInitiatorParams,
-  type ProcessChangeProcessInitiatorOptionalParams,
-  type ProcessChangeProcessInitiatorResponse,
-  type ProcessCompleteProcessOptionalParams,
-  type ProcessCompleteProcessResponse,
-  type ProcessCreateParams,
-  type ProcessCreateProcessOptionalParams,
-  type ProcessCreateProcessResponse,
-  type ProcessDownloadProcessEntityDocumentOptionalParams,
-  type ProcessDownloadProcessEntityDocumentResponse,
-  type ProcessEntityUpdateParams,
-  type ProcessFindProcessesResponse,
-  type ProcessMetadataUpdateParams,
-  type ProcessOperations as ProcessOperationsGenerated,
-  type ProcessPatchProcessEntityOptionalParams,
-  type ProcessPatchProcessEntityResponse,
-  type ProcessPatchProcessMetadataOptionalParams,
-  type ProcessPatchProcessMetadataResponse,
-  type ProcessRetrieveProcessOptionalParams,
-  type ProcessRetrieveProcessResponse,
-  type ProcessUpdateProcessEntityOptionalParams,
-  type ProcessUpdateProcessEntityResponse,
-  type ProcessUpdateProcessMetadataOptionalParams,
-  type ProcessUpdateProcessMetadataResponse,
-  type ProcessUploadProcessEntityDocumentOptionalParams,
-  type ProcessUploadProcessEntityDocumentResponse,
-  type ProcessUploadProcessUserActionDocumentOptionalParams,
-  type ProcessUploadProcessUserActionDocumentResponse,
+import type { FullOperationResponse } from '@azure/core-client'
+
+import type {
+  JsonPatchOperation,
+  KuFlowRestClientGenerated,
+  ProcessCancelProcessOptionalParams,
+  ProcessCancelProcessResponse,
+  ProcessChangeInitiatorParams,
+  ProcessChangeProcessInitiatorOptionalParams,
+  ProcessChangeProcessInitiatorResponse,
+  ProcessCompleteProcessOptionalParams,
+  ProcessCompleteProcessResponse,
+  ProcessCreateParams,
+  ProcessCreateProcessOptionalParams,
+  ProcessCreateProcessResponse,
+  ProcessDownloadProcessEntityDocumentOptionalParams,
+  ProcessDownloadProcessEntityDocumentResponse,
+  ProcessEntityUpdateParams,
+  ProcessFindProcessesResponse,
+  ProcessMetadataUpdateParams,
+  ProcessOperations as ProcessOperationsGenerated,
+  ProcessPatchProcessEntityOptionalParams,
+  ProcessPatchProcessEntityResponse,
+  ProcessPatchProcessMetadataOptionalParams,
+  ProcessPatchProcessMetadataResponse,
+  ProcessRetrieveProcessOptionalParams,
+  ProcessRetrieveProcessResponse,
+  ProcessUpdateProcessEntityOptionalParams,
+  ProcessUpdateProcessEntityResponse,
+  ProcessUpdateProcessMetadataOptionalParams,
+  ProcessUpdateProcessMetadataResponse,
+  ProcessUploadProcessEntityDocumentOptionalParams,
+  ProcessUploadProcessEntityDocumentResponse,
+  ProcessUploadProcessUserActionDocumentOptionalParams,
+  ProcessUploadProcessUserActionDocumentResponse,
 } from '../generated'
-import {
-  type Document,
-  type ProcessFindProcessesOptionalExtParams,
-  type ProcessUploadProcessEntityDocumentParams,
-  type ProcessUploadProcessUserActionDocumentParams,
+import type {
+  Document,
+  ProcessFindProcessesOptionalExtParams,
+  ProcessUploadProcessEntityDocumentParams,
+  ProcessUploadProcessUserActionDocumentParams,
 } from '../models'
 
 /** Class containing ProcessOperations operations. */
@@ -71,7 +72,7 @@ export class ProcessOperations {
    * Initialize a new instance of the class ProcessOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.processOperations = clientGenerated.processOperations
   }
 
@@ -82,7 +83,7 @@ export class ProcessOperations {
    *
    * @param options The options parameters.
    */
-  async findProcesses(options?: ProcessFindProcessesOptionalExtParams): Promise<ProcessFindProcessesResponse> {
+  public async findProcesses(options?: ProcessFindProcessesOptionalExtParams): Promise<ProcessFindProcessesResponse> {
     const { sort, tenantId, ...optionsRest } = options ?? {}
 
     return await this.processOperations.findProcesses({
@@ -109,7 +110,7 @@ export class ProcessOperations {
    * @param params Process to create
    * @param options The options parameters.
    */
-  async createProcess(
+  public async createProcess(
     params: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ): Promise<ProcessCreateProcessResponse> {
@@ -121,7 +122,7 @@ export class ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async retrieveProcess(
+  public async retrieveProcess(
     id: string,
     options?: ProcessRetrieveProcessOptionalParams,
   ): Promise<ProcessRetrieveProcessResponse> {
@@ -136,7 +137,7 @@ export class ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async completeProcess(
+  public async completeProcess(
     id: string,
     options?: ProcessCompleteProcessOptionalParams,
   ): Promise<ProcessCompleteProcessResponse> {
@@ -153,7 +154,10 @@ export class ProcessOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async cancelProcess(id: string, options?: ProcessCancelProcessOptionalParams): Promise<ProcessCancelProcessResponse> {
+  public async cancelProcess(
+    id: string,
+    options?: ProcessCancelProcessOptionalParams,
+  ): Promise<ProcessCancelProcessResponse> {
     return await this.processOperations.cancelProcess(id, options)
   }
 
@@ -167,7 +171,7 @@ export class ProcessOperations {
    * @param params Params to change the process initiator.
    * @param options The options parameters.
    */
-  async changeProcessInitiator(
+  public async changeProcessInitiator(
     id: string,
     params: ProcessChangeInitiatorParams,
     options?: ProcessChangeProcessInitiatorOptionalParams,
@@ -185,7 +189,7 @@ export class ProcessOperations {
    *
    * @return the process if the document could be saved or undefined if not
    */
-  async uploadProcessUserActionDocument(
+  public async uploadProcessUserActionDocument(
     id: string,
     params: ProcessUploadProcessUserActionDocumentParams,
     document: Document,
@@ -196,7 +200,7 @@ export class ProcessOperations {
     const file = document.fileContent
     const userActionValueId = params.userActionValueId
 
-    let rawResponse: FullOperationResponse | undefined
+    let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
     const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
       ...options,
       onResponse: rawResponseInner => {
@@ -235,7 +239,7 @@ export class ProcessOperations {
    * @param params Params to save de entity data.
    * @param options The options parameters.
    */
-  async updateProcessMetadata(
+  public async updateProcessMetadata(
     id: string,
     params: ProcessMetadataUpdateParams,
     options?: ProcessUpdateProcessMetadataOptionalParams,
@@ -251,7 +255,7 @@ export class ProcessOperations {
    * @param params Params to save de entity data.
    * @param options The options parameters.
    */
-  async patchProcessMetadata(
+  public async patchProcessMetadata(
     id: string,
     params: JsonPatchOperation[],
     options?: ProcessPatchProcessMetadataOptionalParams,
@@ -268,7 +272,7 @@ export class ProcessOperations {
    * @param params Params to save the JSON value.
    * @param options The options parameters.
    */
-  async updateProcessEntity(
+  public async updateProcessEntity(
     id: string,
     params: ProcessEntityUpdateParams,
     options?: ProcessUpdateProcessEntityOptionalParams,
@@ -284,7 +288,7 @@ export class ProcessOperations {
    * @param params Params to save the JSON value.
    * @param options The options parameters.
    */
-  async patchProcessEntity(
+  public async patchProcessEntity(
     id: string,
     params: JsonPatchOperation[],
     options?: ProcessPatchProcessEntityOptionalParams,
@@ -300,7 +304,7 @@ export class ProcessOperations {
    * @param document Document to upload.
    * @param options The options parameters.
    */
-  async uploadProcessEntityDocument(
+  public async uploadProcessEntityDocument(
     id: string,
     params: ProcessUploadProcessEntityDocumentParams,
     document: Document,
@@ -311,7 +315,7 @@ export class ProcessOperations {
     const file = document.fileContent
     const schemaPath = params.schemaPath
 
-    let rawResponse: FullOperationResponse | undefined
+    let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
     const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
       ...options,
       onResponse: rawResponseInner => {
@@ -349,7 +353,7 @@ export class ProcessOperations {
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  async downloadProcessEntityDocument(
+  public async downloadProcessEntityDocument(
     id: string,
     documentUri: string,
     options?: ProcessDownloadProcessEntityDocumentOptionalParams,

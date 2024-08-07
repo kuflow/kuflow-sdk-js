@@ -27,7 +27,7 @@ export async function streamToString(stream: NodeJS.ReadableStream): Promise<str
   return await new Promise((resolve, reject) => {
     stream.on('data', chunk => chunks.push(Buffer.from(chunk as ArrayBuffer)))
     stream.on('error', err => {
-      reject(err)
+      reject(err) // eslint-disable-line @typescript-eslint/prefer-promise-reject-errors
     })
     stream.on('end', () => {
       resolve(Buffer.concat(chunks).toString('utf8'))

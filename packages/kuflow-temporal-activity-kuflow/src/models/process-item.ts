@@ -20,15 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type JsonPatchOperation,
-  type ProcessItem,
-  type ProcessItemCreateParams,
-  type ProcessItemPage,
-  type ProcessItemTaskAppendLogParams,
-  type ProcessItemTaskDataUpdateParams,
-  type ProcessItemTaskState,
-  type ProcessItemType,
+
+import type {
+  JsonPatchOperation,
+  ProcessItem,
+  ProcessItemCreateParams,
+  ProcessItemPage,
+  ProcessItemTaskAppendLogParams,
+  ProcessItemTaskDataUpdateParams,
+  ProcessItemTaskState,
+  ProcessItemType,
 } from '@kuflow/kuflow-rest'
 
 export interface ProcessItemFindRequest {

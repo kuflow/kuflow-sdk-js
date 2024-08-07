@@ -20,14 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 // Only import the activity types
-import { type ProcessItemCreateParams } from '@kuflow/kuflow-rest'
-import {
-  type createKuFlowActivities,
-  type ProcessItemTaskDataUpdateRequest,
-  type ProcessMetadataUpdateRequest,
-  type WorkflowRequest,
-  type WorkflowResponse,
+import type { ProcessItemCreateParams } from '@kuflow/kuflow-rest'
+import type {
+  createKuFlowActivities,
+  ProcessItemTaskDataUpdateRequest,
+  ProcessMetadataUpdateRequest,
+  WorkflowRequest,
+  WorkflowResponse,
 } from '@kuflow/kuflow-temporal-activity-kuflow'
 // Import from here to avoid the following error:
 //   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
@@ -65,7 +66,7 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
     type: 'TASK',
     processId: request.processId,
     task: {
-      taskDefinitionCode: 'TASK_0001',
+      taskDefinitionCode: 'LOAN_APPLICATION',
     },
   })
 
@@ -74,7 +75,7 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
     params: {
       metadata: {
         value: {
-          CODE_001: 'value',
+          REASON: 'Updated',
         },
       },
     },
@@ -82,17 +83,17 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
 
   await kuFlowActivities.KuFlow_Engine_updateProcessMetadata(updateProcessMetadataRequest)
 
-  const updateProcessItemTaskData: ProcessItemTaskDataUpdateRequest = {
-    processItemId: '',
-    params: {
-      data: {
-        value: {
-          name: 'value',
-        },
-      },
-    },
-  }
-  await kuFlowActivities.KuFlow_Engine_updateProcessItemTaskData(updateProcessItemTaskData)
+  // const updateProcessItemTaskData: ProcessItemTaskDataUpdateRequest = {
+  //   processItemId: '',
+  //   params: {
+  //     data: {
+  //       value: {
+  //         name: 'value',
+  //       },
+  //     },
+  //   },
+  // }
+  // await kuFlowActivities.KuFlow_Engine_updateProcessItemTaskData(updateProcessItemTaskData)
 
   logger.info('End', {})
 

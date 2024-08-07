@@ -20,12 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type KuFlowRestClientGenerated,
-  type Worker,
-  type WorkerCreateWorkerOptionalParams,
-  type WorkerCreateWorkerResponse,
-  type WorkerOperations as WorkerOperationsGenerated,
+
+import type {
+  KuFlowRestClientGenerated,
+  Worker,
+  WorkerCreateWorkerOptionalParams,
+  WorkerCreateWorkerResponse,
+  WorkerOperations as WorkerOperationsGenerated,
 } from '../generated'
 
 /** Class containing WorkerOperations operations. */
@@ -36,7 +37,7 @@ export class WorkerOperations {
    * Initialize a new instance of the class WorkerOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.workerOperations = clientGenerated.workerOperations
   }
 

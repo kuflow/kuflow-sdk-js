@@ -20,26 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import { ApplicationFailure } from '@temporalio/activity'
 
 import { KuFlowFailureType } from './kuflow-failure-type'
-import {
-  type PrincipalRetrieveRequest,
-  type ProcessEntityPatchRequest,
-  type ProcessEntityUpdateRequest,
-  type ProcessInitiatorChangeRequest,
-  type ProcessItemRetrieveRequest,
-  type ProcessItemTaskAssignRequest,
-  type ProcessItemTaskClaimRequest,
-  type ProcessItemTaskCompleteRequest,
-  type ProcessItemTaskCreateRequest,
-  type ProcessItemTaskDataPatchRequest,
-  type ProcessItemTaskDataUpdateRequest,
-  type ProcessItemTaskLogAppendRequest,
-  type ProcessMetadataPatchRequest,
-  type ProcessMetadataUpdateRequest,
-  type ProcessRetrieveRequest,
-  type TenantUserRetrieveRequest,
+import type {
+  PrincipalRetrieveRequest,
+  ProcessEntityPatchRequest,
+  ProcessEntityUpdateRequest,
+  ProcessInitiatorChangeRequest,
+  ProcessItemRetrieveRequest,
+  ProcessItemTaskAssignRequest,
+  ProcessItemTaskClaimRequest,
+  ProcessItemTaskCompleteRequest,
+  ProcessItemTaskCreateRequest,
+  ProcessItemTaskDataPatchRequest,
+  ProcessItemTaskDataUpdateRequest,
+  ProcessItemTaskLogAppendRequest,
+  ProcessMetadataPatchRequest,
+  ProcessMetadataUpdateRequest,
+  ProcessRetrieveRequest,
+  TenantUserRetrieveRequest,
 } from './models'
 
 export function validateRetrievePrincipalRequest(request: PrincipalRetrieveRequest): void {

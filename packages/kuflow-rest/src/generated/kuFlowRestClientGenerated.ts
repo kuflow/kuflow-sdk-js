@@ -20,10 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import type * as coreAuth from '@azure/core-auth'
 import * as coreClient from '@azure/core-client'
 
-import { type KuFlowRestClientGeneratedOptionalParams } from './models'
+import type { KuFlowRestClientGeneratedOptionalParams } from './models'
 import {
   AuthenticationOperationsImpl,
   PrincipalOperationsImpl,
@@ -33,14 +34,14 @@ import {
   TenantUserOperationsImpl,
   WorkerOperationsImpl,
 } from './operations'
-import {
-  type AuthenticationOperations,
-  type PrincipalOperations,
-  type ProcessItemOperations,
-  type ProcessOperations,
-  type RobotOperations,
-  type TenantUserOperations,
-  type WorkerOperations,
+import type {
+  AuthenticationOperations,
+  PrincipalOperations,
+  ProcessItemOperations,
+  ProcessOperations,
+  RobotOperations,
+  TenantUserOperations,
+  WorkerOperations,
 } from './operationsInterfaces'
 
 /** @internal */
@@ -66,7 +67,6 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
       credential: credentials,
     }
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-var-requires
     const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`
     const userAgentPrefix =
       options.userAgentOptions?.userAgentPrefix != null
@@ -79,11 +79,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
       userAgentOptions: {
         userAgentPrefix,
       },
-      endpoint:
-        options.endpoint ??
-        // eslint-disable-next-line deprecation/deprecation
-        options.baseUri ??
-        'https://api.kuflow.com/v2024-06-14',
+      endpoint: options.endpoint ?? options.baseUri ?? 'https://api.kuflow.com/v2024-06-14',
     }
     super(optionsWithDefaults)
 

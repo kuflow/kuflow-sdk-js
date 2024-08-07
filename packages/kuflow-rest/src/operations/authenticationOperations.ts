@@ -20,12 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type AuthenticationCreateAuthenticationOptionalParams,
-  type AuthenticationCreateAuthenticationResponse,
-  type AuthenticationCreateParams,
-  type AuthenticationOperations as AuthenticationOperationsGenerated,
-  type KuFlowRestClientGenerated,
+
+import type {
+  AuthenticationCreateAuthenticationOptionalParams,
+  AuthenticationCreateAuthenticationResponse,
+  AuthenticationCreateParams,
+  AuthenticationOperations as AuthenticationOperationsGenerated,
+  KuFlowRestClientGenerated,
 } from '../generated'
 
 /** Class containing AuthenticationOperations operations. */
@@ -36,7 +37,7 @@ export class AuthenticationOperations {
    * Initialize a new instance of the class AuthenticationOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.authenticationOperations = clientGenerated.authenticationOperations
   }
 
@@ -45,7 +46,7 @@ export class AuthenticationOperations {
    * @param params Authentication to be created.
    * @param options The options parameters.
    */
-  async createAuthentication(
+  public async createAuthentication(
     params: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ): Promise<AuthenticationCreateAuthenticationResponse> {

@@ -20,7 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type TenantUser } from '@kuflow/kuflow-rest'
+
+import type { TenantUser } from '@kuflow/kuflow-rest'
 
 export interface TenantUserRetrieveRequest {
   tenantUserId: string
