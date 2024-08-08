@@ -20,17 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type Principal,
-  type PrincipalPage,
-  type Process,
-  type ProcessCreateParams,
-  type ProcessItem,
-  type ProcessItemPage,
-  type ProcessItemPageItem,
-  type ProcessPage,
-  type ProcessPageItem,
-  type TenantUser,
+
+import type {
+  Principal,
+  PrincipalPage,
+  Process,
+  ProcessCreateParams,
+  ProcessItem,
+  ProcessItemPage,
+  ProcessItemPageItem,
+  ProcessPage,
+  ProcessPageItem,
+  TenantUser,
 } from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
 

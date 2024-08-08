@@ -20,17 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type AuthenticationCreateAuthenticationOptionalParams,
-  type AuthenticationCreateAuthenticationResponse,
-  type AuthenticationCreateParams,
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type {
+  AuthenticationCreateAuthenticationOptionalParams,
+  AuthenticationCreateAuthenticationResponse,
+  AuthenticationCreateParams,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type AuthenticationOperations } from '../operationsInterfaces'
+import type { AuthenticationOperations } from '../operationsInterfaces'
 
 /** Class containing AuthenticationOperations operations. */
 export class AuthenticationOperationsImpl implements AuthenticationOperations {

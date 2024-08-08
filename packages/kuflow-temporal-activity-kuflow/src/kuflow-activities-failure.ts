@@ -20,16 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import { RestError } from '@azure/core-rest-pipeline'
 import { CompleteAsyncError } from '@temporalio/activity'
 import { ApplicationFailure, TemporalFailure } from '@temporalio/common'
 
 import { KuFlowFailureType } from './kuflow-failure-type'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const catchAllErrors = <T extends any[], U, R extends Promise<U>>(cb: (...args: T) => R) => {
   return async (...args: T): Promise<Awaited<R>> => {
     try {
-      // eslint-disable-next-line n/no-callback-literal
       return await cb(...args)
     } catch (e) {
       if (e instanceof TemporalFailure) {

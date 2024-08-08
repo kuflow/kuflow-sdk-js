@@ -30,8 +30,8 @@
     "format:check": "npm run prettier:check && npm run lint:check",
     "format:write": "npm run prettier:write && npm run lint:fix",
     "lint": "npm run lint:check",
-    "lint:check": "eslint . --ext ts,tsx",
-    "lint:fix": "eslint . --fix --ext ts,tsx",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prepack": "npm run build && npm run format:check && npm run test",
     "pack": "npm pack 2>&1",
     "prettier": "npm run prettier:check",
@@ -40,28 +40,29 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@tsconfig/node18": "18.2.2",
-    "@types/node": "18.14.2",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
+    "@eslint/js": "9.8.0",
+    "@tsconfig/node20": "20.1.4",
+    "@types/node": "22.1.0",
     "dotenv": "16.4.5",
-    "eslint": "8.57.0",
+    "eslint": "9.8.0",
     "eslint-config-prettier": "9.1.0",
-    "eslint-config-standard-with-typescript": "43.0.1",
-    "eslint-plugin-deprecation": "2.0.0",
-    "eslint-plugin-header": "3.1.1",
-    "eslint-plugin-simple-import-sort": "12.0.0",
-    "lerna": "8.1.2",
+    "eslint-plugin-headers": "1.1.2",
+    "eslint-plugin-n": "17.10.2",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-promise": "7.1.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "lerna": "8.1.8",
     "nock": "13.5.4",
-    "nodemon": "3.1.0",
-    "prettier": "3.2.5",
-    "rimraf": "5.0.5",
-    "ts-jest": "29.1.2",
+    "nodemon": "3.1.4",
+    "prettier": "3.3.3",
+    "rimraf": "6.0.1",
+    "ts-jest": "29.2.4",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.5.4",
+    "typescript-eslint": "8.0.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "publishConfig": {
     "access": "public"

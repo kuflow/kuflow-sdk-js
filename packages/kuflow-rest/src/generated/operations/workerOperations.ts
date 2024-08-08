@@ -20,17 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type WorkerCreateParams,
-  type WorkerCreateWorkerOptionalParams,
-  type WorkerCreateWorkerResponse,
-} from '../models'
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type { WorkerCreateParams, WorkerCreateWorkerOptionalParams, WorkerCreateWorkerResponse } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type WorkerOperations } from '../operationsInterfaces'
+import type { WorkerOperations } from '../operationsInterfaces'
 
 /** Class containing WorkerOperations operations. */
 export class WorkerOperationsImpl implements WorkerOperations {

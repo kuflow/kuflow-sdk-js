@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@kuflow/kuflow-temporal-core": "2.0.0-alpha.0",
-    "@temporalio/activity": "1.7.4"
+    "@temporalio/activity": "1.10.3"
   },
   "publishConfig": {
     "access": "public"

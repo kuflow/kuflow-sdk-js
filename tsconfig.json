@@ -1,0 +1,10 @@
+{
+  // TSConfig used only by eslint
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // ensure that nobody can accidentally use this config for a build
+    "noEmit": true,
+    "allowJs": true
+  },
+  "include": ["eslint.config.mjs", "eslint.config.love.mjs"]
+}

@@ -20,11 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type AuthenticationCreateParams } from '@kuflow/kuflow-rest'
+
+import type { AuthenticationCreateParams } from '@kuflow/kuflow-rest'
 import { NativeConnection, Runtime, Worker } from '@temporalio/worker'
 
 import { KuFlowAuthorizationTokenProvider } from './kuflow-authorization-token-provider'
-import { type KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
+import type { KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
 import { KuFlowWorkerInformationNotifier } from './kuflow-worker-information-notifier'
 
 /**
@@ -34,28 +35,28 @@ export class KuFlowTemporalConnection {
   /**
    * Get the registered workflow types
    */
-  get workflowTypes(): string[] {
+  public get workflowTypes(): string[] {
     return [...this._workflowTypes]
   }
 
   /**
    * Get the registered activity types
    */
-  get activityTypes(): string[] {
+  public get activityTypes(): string[] {
     return [...this._activityTypes]
   }
 
   /**
    * Get the nativeConnection started
    */
-  get nativeConnection(): NativeConnection | undefined {
+  public get nativeConnection(): NativeConnection | undefined {
     return this._nativeConnection
   }
 
   /**
    * Get the worker started
    */
-  get worker(): Worker | undefined {
+  public get worker(): Worker | undefined {
     return this._worker
   }
 

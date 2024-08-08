@@ -20,41 +20,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type JsonPatchOperation,
-  type KuFlowRestClientGenerated,
-  type ProcessItemAppendProcessItemTaskLogOptionalParams,
-  type ProcessItemAppendProcessItemTaskLogResponse,
-  type ProcessItemAssignProcessItemTaskOptionalParams,
-  type ProcessItemAssignProcessItemTaskResponse,
-  type ProcessItemClaimProcessItemTaskOptionalParams,
-  type ProcessItemClaimProcessItemTaskResponse,
-  type ProcessItemCompleteProcessItemTaskOptionalParams,
-  type ProcessItemCompleteProcessItemTaskResponse,
-  type ProcessItemCreateParams,
-  type ProcessItemCreateProcessItemOptionalParams,
-  type ProcessItemCreateProcessItemResponse,
-  type ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  type ProcessItemDownloadProcessItemTaskDataDocumentResponse,
-  type ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
-  type ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
-  type ProcessItemFindProcessItemsResponse,
-  type ProcessItemOperations as ProcessItemOperationsGenerated,
-  type ProcessItemPatchProcessItemTaskDataOptionalParams,
-  type ProcessItemRetrieveProcessItemOptionalParams,
-  type ProcessItemRetrieveProcessItemResponse,
-  type ProcessItemTaskAppendLogParams,
-  type ProcessItemTaskAssignParams,
-  type ProcessItemTaskDataUpdateParams,
-  type ProcessItemUpdateProcessItemTaskDataOptionalParams,
-  type ProcessItemUpdateProcessItemTaskDataResponse,
-  type ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  type ProcessItemUploadProcessItemTaskDataDocumentResponse,
+
+import type {
+  JsonPatchOperation,
+  KuFlowRestClientGenerated,
+  ProcessItemAppendProcessItemTaskLogOptionalParams,
+  ProcessItemAppendProcessItemTaskLogResponse,
+  ProcessItemAssignProcessItemTaskOptionalParams,
+  ProcessItemAssignProcessItemTaskResponse,
+  ProcessItemClaimProcessItemTaskOptionalParams,
+  ProcessItemClaimProcessItemTaskResponse,
+  ProcessItemCompleteProcessItemTaskOptionalParams,
+  ProcessItemCompleteProcessItemTaskResponse,
+  ProcessItemCreateParams,
+  ProcessItemCreateProcessItemOptionalParams,
+  ProcessItemCreateProcessItemResponse,
+  ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
+  ProcessItemDownloadProcessItemTaskDataDocumentResponse,
+  ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
+  ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
+  ProcessItemFindProcessItemsResponse,
+  ProcessItemOperations as ProcessItemOperationsGenerated,
+  ProcessItemPatchProcessItemTaskDataOptionalParams,
+  ProcessItemRetrieveProcessItemOptionalParams,
+  ProcessItemRetrieveProcessItemResponse,
+  ProcessItemTaskAppendLogParams,
+  ProcessItemTaskAssignParams,
+  ProcessItemTaskDataUpdateParams,
+  ProcessItemUpdateProcessItemTaskDataOptionalParams,
+  ProcessItemUpdateProcessItemTaskDataResponse,
+  ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
+  ProcessItemUploadProcessItemTaskDataDocumentResponse,
 } from '../generated'
-import {
-  type Document,
-  type ProcessItemFindProcessItemsOptionalExtParams,
-  type ProcessItemUploadProcessItemTaskDataDocumentParams,
+import type {
+  Document,
+  ProcessItemFindProcessItemsOptionalExtParams,
+  ProcessItemUploadProcessItemTaskDataDocumentParams,
 } from '../models'
 
 /** Class containing TaskOperations operations. */
@@ -65,7 +66,7 @@ export class ProcessItemOperations {
    * Initialize a new instance of the class TaskOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.processItemOperations = clientGenerated.processItemOperations
   }
 

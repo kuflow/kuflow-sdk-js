@@ -20,14 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type KuFlowRestClientGenerated,
-  type PrincipalFindPrincipalsResponse,
-  type PrincipalOperations as PrincipalOperationsGenerated,
-  type PrincipalRetrievePrincipalOptionalParams,
-  type PrincipalRetrievePrincipalResponse,
+
+import type {
+  KuFlowRestClientGenerated,
+  PrincipalFindPrincipalsResponse,
+  PrincipalOperations as PrincipalOperationsGenerated,
+  PrincipalRetrievePrincipalOptionalParams,
+  PrincipalRetrievePrincipalResponse,
 } from '../generated'
-import { type PrincipalFindPrincipalsOptionalExtParams } from '../models'
+import type { PrincipalFindPrincipalsOptionalExtParams } from '../models'
 
 export class PrincipalOperations {
   private readonly principalOperations: PrincipalOperationsGenerated
@@ -36,7 +37,7 @@ export class PrincipalOperations {
    * Initialize a new instance of the class PrincipalOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.principalOperations = clientGenerated.principalOperations
   }
 
@@ -47,7 +48,9 @@ export class PrincipalOperations {
    *
    * @param options The options parameters.
    */
-  async findPrincipals(options?: PrincipalFindPrincipalsOptionalExtParams): Promise<PrincipalFindPrincipalsResponse> {
+  public async findPrincipals(
+    options?: PrincipalFindPrincipalsOptionalExtParams,
+  ): Promise<PrincipalFindPrincipalsResponse> {
     const { sort, type, groupId, tenantId, ...optionsRest } = options ?? {}
 
     return await this.principalOperations.findPrincipals({
@@ -64,7 +67,7 @@ export class PrincipalOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async retrievePrincipal(
+  public async retrievePrincipal(
     id: string,
     options?: PrincipalRetrievePrincipalOptionalParams,
   ): Promise<PrincipalRetrievePrincipalResponse> {

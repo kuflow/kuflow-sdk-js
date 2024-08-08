@@ -20,14 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import type * as coreClient from '@azure/core-client'
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import {
-  type PrincipalType,
-  type ProcessItemTaskState,
-  type ProcessItemType,
-  type RobotFilterContext,
+import type {
+  PrincipalType,
+  ProcessItemTaskState,
+  ProcessItemType,
+  RobotAssetArchitecture,
+  RobotAssetPlatform,
+  RobotAssetType,
+  RobotFilterContext,
 } from '../generated'
 
 export interface Document {
@@ -173,4 +177,15 @@ export interface RobotFindRobotExtParams extends coreClient.OperationOptions {
   tenantId?: string | string[]
   /** Filter by the specified context. */
   filterContext?: RobotFilterContext
+}
+
+export interface RobotDownloadRobotAssetParams {
+  /** The asset type **/
+  type: RobotAssetType
+  /** The asset version. **/
+  version: string
+  /** The asset platform. **/
+  platform: RobotAssetPlatform
+  /** The asset platform architecture. **/
+  architecture: RobotAssetArchitecture
 }

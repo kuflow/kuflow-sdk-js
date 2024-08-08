@@ -20,21 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type KuFlowRestClientGenerated,
-  type RobotAssetArchitecture,
-  type RobotAssetPlatform,
-  type RobotAssetType,
-  type RobotDownloadRobotAssetOptionalParams,
-  type RobotDownloadRobotAssetResponse,
-  type RobotDownloadRobotSourceCodeOptionalParams,
-  type RobotDownloadRobotSourceCodeResponse,
-  type RobotFindRobotsResponse,
-  type RobotOperations as RobotOperationsGenerated,
-  type RobotRetrieveRobotOptionalParams,
-  type RobotRetrieveRobotResponse,
+
+import type {
+  KuFlowRestClientGenerated,
+  RobotDownloadRobotAssetOptionalParams,
+  RobotDownloadRobotAssetResponse,
+  RobotDownloadRobotSourceCodeOptionalParams,
+  RobotDownloadRobotSourceCodeResponse,
+  RobotFindRobotsResponse,
+  RobotOperations as RobotOperationsGenerated,
+  RobotRetrieveRobotOptionalParams,
+  RobotRetrieveRobotResponse,
 } from '../generated'
-import { type RobotFindRobotExtParams } from '../models'
+import type { RobotDownloadRobotAssetParams, RobotFindRobotExtParams } from '../models'
 
 /** Class containing RobotOperations operations. */
 export class RobotOperations {
@@ -44,7 +42,7 @@ export class RobotOperations {
    * Initialize a new instance of the class TenantUserOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.robotOperationsGenerated = clientGenerated.robotOperations
   }
 
@@ -55,7 +53,7 @@ export class RobotOperations {
    *
    * @param options The options parameters.
    */
-  async findRobots(options?: RobotFindRobotExtParams): Promise<RobotFindRobotsResponse> {
+  public async findRobots(options?: RobotFindRobotExtParams): Promise<RobotFindRobotsResponse> {
     const { sort, tenantId, ...optionsRest } = options ?? {}
 
     return await this.robotOperationsGenerated.findRobots({
@@ -70,7 +68,10 @@ export class RobotOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async retrieveRobot(id: string, options?: RobotRetrieveRobotOptionalParams): Promise<RobotRetrieveRobotResponse> {
+  public async retrieveRobot(
+    id: string,
+    options?: RobotRetrieveRobotOptionalParams,
+  ): Promise<RobotRetrieveRobotResponse> {
     return await this.robotOperationsGenerated.retrieveRobot(id, options)
   }
 
@@ -79,7 +80,7 @@ export class RobotOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async downloadRobotSourceCode(
+  public async downloadRobotSourceCode(
     id: string,
     options?: RobotDownloadRobotSourceCodeOptionalParams,
   ): Promise<RobotDownloadRobotSourceCodeResponse> {
@@ -89,26 +90,20 @@ export class RobotOperations {
   /**
    * Given a robot, download the requested asset.
    * @param id The resource ID.
-   * @param typeParam The asset type.
-   * @param version The asset version.
-   * @param platform The asset platform.
-   * @param architecture The asset platform architecture.
+   * @param params Download params
    * @param options The options parameters.
    */
-  async downloadRobotAsset(
+  public async downloadRobotAsset(
     id: string,
-    typeParam: RobotAssetType,
-    version: string,
-    platform: RobotAssetPlatform,
-    architecture: RobotAssetArchitecture,
+    params: RobotDownloadRobotAssetParams,
     options?: RobotDownloadRobotAssetOptionalParams,
   ): Promise<RobotDownloadRobotAssetResponse> {
     return await this.robotOperationsGenerated.downloadRobotAsset(
       id,
-      typeParam,
-      version,
-      platform,
-      architecture,
+      params.type,
+      params.version,
+      params.platform,
+      params.architecture,
       options,
     )
   }

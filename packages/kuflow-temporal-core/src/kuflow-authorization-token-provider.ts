@@ -20,12 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type Authentication, type AuthenticationCreateParams } from '@kuflow/kuflow-rest'
+
+import type { Authentication, AuthenticationCreateParams } from '@kuflow/kuflow-rest'
 import { type NativeConnection, Runtime } from '@temporalio/worker'
 
-import { type KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
+import type { KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
 
-const NOOP = (): void => {}
+const NOOP = (): void => {} // eslint-disable-line @typescript-eslint/no-empty-function
 
 export interface KuFlowAuthorizationTokenProviderBackoff {
   /**

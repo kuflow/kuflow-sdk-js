@@ -20,11 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type WorkerCreateParams,
-  type WorkerCreateWorkerOptionalParams,
-  type WorkerCreateWorkerResponse,
-} from '../models'
+
+import type { WorkerCreateParams, WorkerCreateWorkerOptionalParams, WorkerCreateWorkerResponse } from '../models'
 
 /** Interface representing a WorkerOperations. */
 export interface WorkerOperations {

@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { type FullOperationResponse } from '@azure/core-client'
-import { type Worker } from '@kuflow/kuflow-rest'
+
+import type { FullOperationResponse } from '@azure/core-client'
+import type { Worker } from '@kuflow/kuflow-rest'
 import { Runtime } from '@temporalio/worker'
 import os from 'os'
 
@@ -121,7 +122,7 @@ export class KuFlowWorkerInformationNotifier {
     const workerOperations = this.options.kuflow.restClient.workerOperations
 
     try {
-      let rawResponse: FullOperationResponse | undefined
+      let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
       const workerResponse = await workerOperations.createWorker(workerRequest, {
         onResponse: rawResponseInner => {
           rawResponse = rawResponseInner
@@ -175,8 +176,9 @@ export class KuFlowWorkerInformationNotifier {
 
       for (let i = 0; i < iface.length; i++) {
         const alias = iface[i]
-        if (alias.address !== '127.0.0.1' && alias.address !== '0:0:0:0:0:0:0:1' && !alias.internal)
+        if (alias.address !== '127.0.0.1' && alias.address !== '0:0:0:0:0:0:0:1' && !alias.internal) {
           return alias.address
+        }
       }
     }
 

@@ -20,11 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type PrincipalFindPrincipalsOptionalParams,
-  type PrincipalFindPrincipalsResponse,
-  type PrincipalRetrievePrincipalOptionalParams,
-  type PrincipalRetrievePrincipalResponse,
+
+import type {
+  PrincipalFindPrincipalsOptionalParams,
+  PrincipalFindPrincipalsResponse,
+  PrincipalRetrievePrincipalOptionalParams,
+  PrincipalRetrievePrincipalResponse,
 } from '../models'
 
 /** Interface representing a PrincipalOperations. */

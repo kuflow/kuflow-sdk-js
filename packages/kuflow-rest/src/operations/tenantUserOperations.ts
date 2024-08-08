@@ -20,14 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type KuFlowRestClientGenerated,
-  type TenantUserFindTenantUsersResponse,
-  type TenantUserOperations as TenantUserOperationsGenerated,
-  type TenantUserRetrieveTenantUserOptionalParams,
-  type TenantUserRetrieveTenantUserResponse,
+
+import type {
+  KuFlowRestClientGenerated,
+  TenantUserFindTenantUsersResponse,
+  TenantUserOperations as TenantUserOperationsGenerated,
+  TenantUserRetrieveTenantUserOptionalParams,
+  TenantUserRetrieveTenantUserResponse,
 } from '../generated'
-import { type TenantUserFindTenantUsersOptionalExtParams } from '../models'
+import type { TenantUserFindTenantUsersOptionalExtParams } from '../models'
 
 export class TenantUserOperations {
   private readonly tenantUserOperations: TenantUserOperationsGenerated
@@ -36,7 +37,7 @@ export class TenantUserOperations {
    * Initialize a new instance of the class TenantUserOperations class.
    * @param clientGenerated Reference to the service client
    */
-  constructor(clientGenerated: KuFlowRestClientGenerated) {
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
     this.tenantUserOperations = clientGenerated.tenantUserOperations
   }
 
@@ -47,7 +48,7 @@ export class TenantUserOperations {
    *
    * @param options The options parameters.
    */
-  async findTenantUsers(
+  public async findTenantUsers(
     options?: TenantUserFindTenantUsersOptionalExtParams,
   ): Promise<TenantUserFindTenantUsersResponse> {
     const { sort, groupId, tenantId, email, ...optionsRest } = options ?? {}
@@ -66,7 +67,7 @@ export class TenantUserOperations {
    * @param id The resource ID.
    * @param options The options parameters.
    */
-  async retrieveTenantUser(
+  public async retrieveTenantUser(
     id: string,
     options?: TenantUserRetrieveTenantUserOptionalParams,
   ): Promise<TenantUserRetrieveTenantUserResponse> {

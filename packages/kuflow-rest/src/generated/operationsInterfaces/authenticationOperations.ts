@@ -20,10 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type AuthenticationCreateAuthenticationOptionalParams,
-  type AuthenticationCreateAuthenticationResponse,
-  type AuthenticationCreateParams,
+
+import type {
+  AuthenticationCreateAuthenticationOptionalParams,
+  AuthenticationCreateAuthenticationResponse,
+  AuthenticationCreateParams,
 } from '../models'
 
 /** Interface representing a AuthenticationOperations. */

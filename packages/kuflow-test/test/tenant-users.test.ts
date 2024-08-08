@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import { describe, expect, test } from '@jest/globals'
 import { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import nock from 'nock'
@@ -63,7 +64,7 @@ describe('API /tenant-users', () => {
 
     test('Check that unknown properties body are ignored', async () => {
       const expectedObject = mockPrincipalPage()
-      const expectedObjectAny = expectedObject as any
+      const expectedObjectAny = expectedObject as any // eslint-disable-line @typescript-eslint/no-explicit-any
       expectedObjectAny.dummy = 'value'
       expectedObjectAny.metadata.dummy = 'value2'
 

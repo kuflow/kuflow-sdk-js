@@ -20,18 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-  type RobotAssetArchitecture,
-  type RobotAssetPlatform,
-  type RobotAssetType,
-  type RobotDownloadRobotAssetOptionalParams,
-  type RobotDownloadRobotAssetResponse,
-  type RobotDownloadRobotSourceCodeOptionalParams,
-  type RobotDownloadRobotSourceCodeResponse,
-  type RobotFindRobotsOptionalParams,
-  type RobotFindRobotsResponse,
-  type RobotRetrieveRobotOptionalParams,
-  type RobotRetrieveRobotResponse,
+
+import type {
+  RobotAssetArchitecture,
+  RobotAssetPlatform,
+  RobotAssetType,
+  RobotDownloadRobotAssetOptionalParams,
+  RobotDownloadRobotAssetResponse,
+  RobotDownloadRobotSourceCodeOptionalParams,
+  RobotDownloadRobotSourceCodeResponse,
+  RobotFindRobotsOptionalParams,
+  RobotFindRobotsResponse,
+  RobotRetrieveRobotOptionalParams,
+  RobotRetrieveRobotResponse,
 } from '../models'
 
 /** Interface representing a RobotOperations. */

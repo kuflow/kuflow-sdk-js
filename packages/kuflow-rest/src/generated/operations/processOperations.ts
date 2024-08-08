@@ -20,46 +20,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type JsonPatchOperation,
-  type ProcessCancelProcessOptionalParams,
-  type ProcessCancelProcessResponse,
-  type ProcessChangeInitiatorParams,
-  type ProcessChangeProcessInitiatorOptionalParams,
-  type ProcessChangeProcessInitiatorResponse,
-  type ProcessCompleteProcessOptionalParams,
-  type ProcessCompleteProcessResponse,
-  type ProcessCreateParams,
-  type ProcessCreateProcessOptionalParams,
-  type ProcessCreateProcessResponse,
-  type ProcessDownloadProcessEntityDocumentOptionalParams,
-  type ProcessDownloadProcessEntityDocumentResponse,
-  type ProcessEntityUpdateParams,
-  type ProcessFindProcessesOptionalParams,
-  type ProcessFindProcessesResponse,
-  type ProcessMetadataUpdateParams,
-  type ProcessPatchProcessEntityOptionalParams,
-  type ProcessPatchProcessEntityResponse,
-  type ProcessPatchProcessMetadataOptionalParams,
-  type ProcessPatchProcessMetadataResponse,
-  type ProcessRetrieveProcessOptionalParams,
-  type ProcessRetrieveProcessResponse,
-  type ProcessUpdateProcessEntityOptionalParams,
-  type ProcessUpdateProcessEntityResponse,
-  type ProcessUpdateProcessMetadataOptionalParams,
-  type ProcessUpdateProcessMetadataResponse,
-  type ProcessUploadProcessEntityDocumentOptionalParams,
-  type ProcessUploadProcessEntityDocumentResponse,
-  type ProcessUploadProcessUserActionDocumentOptionalParams,
-  type ProcessUploadProcessUserActionDocumentResponse,
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type {
+  JsonPatchOperation,
+  ProcessCancelProcessOptionalParams,
+  ProcessCancelProcessResponse,
+  ProcessChangeInitiatorParams,
+  ProcessChangeProcessInitiatorOptionalParams,
+  ProcessChangeProcessInitiatorResponse,
+  ProcessCompleteProcessOptionalParams,
+  ProcessCompleteProcessResponse,
+  ProcessCreateParams,
+  ProcessCreateProcessOptionalParams,
+  ProcessCreateProcessResponse,
+  ProcessDownloadProcessEntityDocumentOptionalParams,
+  ProcessDownloadProcessEntityDocumentResponse,
+  ProcessEntityUpdateParams,
+  ProcessFindProcessesOptionalParams,
+  ProcessFindProcessesResponse,
+  ProcessMetadataUpdateParams,
+  ProcessPatchProcessEntityOptionalParams,
+  ProcessPatchProcessEntityResponse,
+  ProcessPatchProcessMetadataOptionalParams,
+  ProcessPatchProcessMetadataResponse,
+  ProcessRetrieveProcessOptionalParams,
+  ProcessRetrieveProcessResponse,
+  ProcessUpdateProcessEntityOptionalParams,
+  ProcessUpdateProcessEntityResponse,
+  ProcessUpdateProcessMetadataOptionalParams,
+  ProcessUpdateProcessMetadataResponse,
+  ProcessUploadProcessEntityDocumentOptionalParams,
+  ProcessUploadProcessEntityDocumentResponse,
+  ProcessUploadProcessUserActionDocumentOptionalParams,
+  ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type ProcessOperations } from '../operationsInterfaces'
+import type { ProcessOperations } from '../operationsInterfaces'
 
 /** Class containing ProcessOperations operations. */
 export class ProcessOperationsImpl implements ProcessOperations {

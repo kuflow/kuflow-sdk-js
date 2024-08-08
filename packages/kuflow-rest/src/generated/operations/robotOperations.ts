@@ -20,25 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import * as coreClient from '@azure/core-client'
 
-import { type KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
-import {
-  type RobotAssetArchitecture,
-  type RobotAssetPlatform,
-  type RobotAssetType,
-  type RobotDownloadRobotAssetOptionalParams,
-  type RobotDownloadRobotAssetResponse,
-  type RobotDownloadRobotSourceCodeOptionalParams,
-  type RobotDownloadRobotSourceCodeResponse,
-  type RobotFindRobotsOptionalParams,
-  type RobotFindRobotsResponse,
-  type RobotRetrieveRobotOptionalParams,
-  type RobotRetrieveRobotResponse,
+import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
+import type {
+  RobotAssetArchitecture,
+  RobotAssetPlatform,
+  RobotAssetType,
+  RobotDownloadRobotAssetOptionalParams,
+  RobotDownloadRobotAssetResponse,
+  RobotDownloadRobotSourceCodeOptionalParams,
+  RobotDownloadRobotSourceCodeResponse,
+  RobotFindRobotsOptionalParams,
+  RobotFindRobotsResponse,
+  RobotRetrieveRobotOptionalParams,
+  RobotRetrieveRobotResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
-import { type RobotOperations } from '../operationsInterfaces'
+import type { RobotOperations } from '../operationsInterfaces'
 
 /** Class containing RobotOperations operations. */
 export class RobotOperationsImpl implements RobotOperations {
