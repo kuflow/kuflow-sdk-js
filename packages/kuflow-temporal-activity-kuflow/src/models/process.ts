@@ -21,14 +21,7 @@
  * THE SOFTWARE.
  */
 
-import type {
-  JsonPatchOperation,
-  Process,
-  ProcessChangeInitiatorParams,
-  ProcessEntityUpdateParams,
-  ProcessMetadataUpdateParams,
-  ProcessPage,
-} from '@kuflow/kuflow-rest'
+import type { JsonPatchOperation, JsonValue, Process, ProcessPage } from '@kuflow/kuflow-rest'
 
 export interface ProcessFindRequest {
   page?: number
@@ -50,7 +43,7 @@ export interface ProcessRetrieveResponse {
 
 export interface ProcessEntityUpdateRequest {
   processId: string
-  params: ProcessEntityUpdateParams
+  entity: JsonValue
 }
 
 export interface ProcessEntityUpdateResponse {
@@ -59,7 +52,7 @@ export interface ProcessEntityUpdateResponse {
 
 export interface ProcessEntityPatchRequest {
   processId: string
-  params: JsonPatchOperation[]
+  jsonPatch: JsonPatchOperation[]
 }
 
 export interface ProcessEntityPatchResponse {
@@ -68,7 +61,7 @@ export interface ProcessEntityPatchResponse {
 
 export interface ProcessMetadataUpdateRequest {
   processId: string
-  params: ProcessMetadataUpdateParams
+  metadata: JsonValue
 }
 
 export interface ProcessMetadataUpdateResponse {
@@ -77,7 +70,7 @@ export interface ProcessMetadataUpdateResponse {
 
 export interface ProcessMetadataPatchRequest {
   processId: string
-  params: JsonPatchOperation[]
+  jsonPatch: JsonPatchOperation[]
 }
 
 export interface ProcessMetadataPatchResponse {
@@ -86,7 +79,8 @@ export interface ProcessMetadataPatchResponse {
 
 export interface ProcessInitiatorChangeRequest {
   processId: string
-  params: ProcessChangeInitiatorParams
+  initiatorId?: string
+  initiatorEmail?: string
 }
 
 export interface ProcessInitiatorChangeResponse {

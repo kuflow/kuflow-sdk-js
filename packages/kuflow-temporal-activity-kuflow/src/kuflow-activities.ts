@@ -22,7 +22,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { KuFlowRestClient, Process, ProcessItemTaskAssignParams } from '@kuflow/kuflow-rest'
+import type { KuFlowRestClient, Process } from '@kuflow/kuflow-rest'
 
 import { catchAllErrors } from './kuflow-activities-failure'
 import type {
@@ -321,10 +321,9 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessEntityUpdateResponse> {
     validateProcessEntityUpdateRequest(request)
 
-    const process: Process = await kuFlowRestClient.processOperations.updateProcessEntity(
-      request.processId,
-      request.params,
-    )
+    const process: Process = await kuFlowRestClient.processOperations.updateProcessEntity(request.processId, {
+      entity: request.entity,
+    })
 
     return {
       process,
@@ -338,7 +337,7 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
 
     const process: Process = await kuFlowRestClient.processOperations.patchProcessEntity(
       request.processId,
-      request.params,
+      request.jsonPatch,
     )
 
     return {
@@ -351,10 +350,9 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessMetadataUpdateResponse> {
     validateProcessMetadataUpdateRequest(request)
 
-    const process: Process = await kuFlowRestClient.processOperations.updateProcessMetadata(
-      request.processId,
-      request.params,
-    )
+    const process: Process = await kuFlowRestClient.processOperations.updateProcessMetadata(request.processId, {
+      metadata: request.metadata,
+    })
 
     return {
       process,
@@ -368,7 +366,7 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
 
     const process: Process = await kuFlowRestClient.processOperations.patchProcessMetadata(
       request.processId,
-      request.params,
+      request.jsonPatch,
     )
 
     return {
@@ -381,7 +379,10 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessInitiatorChangeResponse> {
     validateProcessInitiatorChangeRequest(request)
 
-    const process = await kuFlowRestClient.processOperations.changeProcessInitiator(request.processId, request.params)
+    const process = await kuFlowRestClient.processOperations.changeProcessInitiator(request.processId, {
+      initiatorId: request.initiatorId,
+      initiatorEmail: request.initiatorEmail,
+    })
 
     return {
       process,
@@ -415,7 +416,14 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessItemTaskCreateResponse> {
     validateProcessItemTaskCreateRequest(request)
 
-    const processItem = await kuFlowRestClient.processItemOperations.createProcessItem(request.params)
+    const processItem = await kuFlowRestClient.processItemOperations.createProcessItem({
+      id: request.id,
+      type: request.type,
+      processId: request.processId,
+      ownerId: request.ownerId,
+      ownerEmail: request.ownerEmail,
+      task: request.task,
+    })
 
     return {
       processItem,
@@ -451,14 +459,10 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessItemTaskAssignResponse> {
     validateProcessItemTaskAssignRequest(request)
 
-    const params: ProcessItemTaskAssignParams = {
+    const processItem = await kuFlowRestClient.processItemOperations.assignProcessItemTask(request.processItemId, {
       ownerEmail: request.ownerEmail,
       ownerId: request.ownerId,
-    }
-    const processItem = await kuFlowRestClient.processItemOperations.assignProcessItemTask(
-      request.processItemId,
-      params,
-    )
+    })
 
     return {
       processItem,
@@ -470,10 +474,9 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessItemTaskDataUpdateResponse> {
     validateProcessItemTaskDataUpdateRequest(request)
 
-    const processItem = await kuFlowRestClient.processItemOperations.updateProcessItemTaskData(
-      request.processItemId,
-      request.params,
-    )
+    const processItem = await kuFlowRestClient.processItemOperations.updateProcessItemTaskData(request.processItemId, {
+      data: request.data,
+    })
 
     return {
       processItem,
@@ -487,7 +490,7 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
 
     const processItem = await kuFlowRestClient.processItemOperations.patchProcessItemTaskData(
       request.processItemId,
-      request.params,
+      request.jsonPatch,
     )
 
     return {
@@ -500,10 +503,10 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   ): Promise<ProcessItemTaskLogAppendResponse> {
     validateProcessItemTaskLogAppendRequest(request)
 
-    const processItem = await kuFlowRestClient.processItemOperations.appendProcessItemTaskLog(
-      request.processItemId,
-      request.params,
-    )
+    const processItem = await kuFlowRestClient.processItemOperations.appendProcessItemTaskLog(request.processItemId, {
+      level: request.level,
+      message: request.message,
+    })
 
     return {
       processItem,
