@@ -25,7 +25,6 @@
 import type { ProcessItemCreateParams } from '@kuflow/kuflow-rest'
 import type {
   createKuFlowActivities,
-  ProcessItemTaskDataUpdateRequest,
   ProcessMetadataUpdateRequest,
   WorkflowRequest,
   WorkflowResponse,

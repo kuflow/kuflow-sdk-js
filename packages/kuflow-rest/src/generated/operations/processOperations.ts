@@ -91,14 +91,14 @@ export class ProcessOperationsImpl implements ProcessOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param params Process to create
+   * @param processCreateParams Process to create
    * @param options The options parameters.
    */
   async createProcess(
-    params: ProcessCreateParams,
+    processCreateParams: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ): Promise<ProcessCreateProcessResponse> {
-    return await this.client.sendOperationRequest({ params, options }, createProcessOperationSpec)
+    return await this.client.sendOperationRequest({ processCreateParams, options }, createProcessOperationSpec)
   }
 
   /**
@@ -150,15 +150,18 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * Only one option will be necessary.
    *
    * @param id The resource ID.
-   * @param params Params to change the process initiator.
+   * @param processChangeInitiatorParams Params to change the process initiator.
    * @param options The options parameters.
    */
   async changeProcessInitiator(
     id: string,
-    params: ProcessChangeInitiatorParams,
+    processChangeInitiatorParams: ProcessChangeInitiatorParams,
     options?: ProcessChangeProcessInitiatorOptionalParams,
   ): Promise<ProcessChangeProcessInitiatorResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, changeProcessInitiatorOperationSpec)
+    return await this.client.sendOperationRequest(
+      { id, processChangeInitiatorParams, options },
+      changeProcessInitiatorOperationSpec,
+    )
   }
 
   /**
@@ -188,15 +191,18 @@ export class ProcessOperationsImpl implements ProcessOperations {
   /**
    * Save process metadata
    * @param id The resource ID.
-   * @param params Params to save de entity data.
+   * @param processMetadataUpdateParams Params to save the metadata data.
    * @param options The options parameters.
    */
   async updateProcessMetadata(
     id: string,
-    params: ProcessMetadataUpdateParams,
+    processMetadataUpdateParams: ProcessMetadataUpdateParams,
     options?: ProcessUpdateProcessMetadataOptionalParams,
   ): Promise<ProcessUpdateProcessMetadataResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, updateProcessMetadataOperationSpec)
+    return await this.client.sendOperationRequest(
+      { id, processMetadataUpdateParams, options },
+      updateProcessMetadataOperationSpec,
+    )
   }
 
   /**
@@ -222,15 +228,18 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param processEntityUpdateParams Params to save the JSON value.
    * @param options The options parameters.
    */
   async updateProcessEntity(
     id: string,
-    params: ProcessEntityUpdateParams,
+    processEntityUpdateParams: ProcessEntityUpdateParams,
     options?: ProcessUpdateProcessEntityOptionalParams,
   ): Promise<ProcessUpdateProcessEntityResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, updateProcessEntityOperationSpec)
+    return await this.client.sendOperationRequest(
+      { id, processEntityUpdateParams, options },
+      updateProcessEntityOperationSpec,
+    )
   }
 
   /**
@@ -239,15 +248,15 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param jsonPatch Params to save the JSON value.
    * @param options The options parameters.
    */
   async patchProcessEntity(
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessPatchProcessEntityOptionalParams,
   ): Promise<ProcessPatchProcessEntityResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, patchProcessEntityOperationSpec)
+    return await this.client.sendOperationRequest({ id, jsonPatch, options }, patchProcessEntityOperationSpec)
   }
 
   /**
@@ -328,7 +337,7 @@ const createProcessOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params1,
+  requestBody: Parameters.processCreateParams,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -390,7 +399,7 @@ const changeProcessInitiatorOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params2,
+  requestBody: Parameters.processChangeInitiatorParams,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -426,7 +435,7 @@ const updateProcessMetadataOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params3,
+  requestBody: Parameters.processMetadataUpdateParams,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -460,7 +469,7 @@ const updateProcessEntityOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params4,
+  requestBody: Parameters.processEntityUpdateParams,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -477,7 +486,7 @@ const patchProcessEntityOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params5,
+  requestBody: Parameters.jsonPatch,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept, Parameters.contentType2],
   mediaType: 'json',

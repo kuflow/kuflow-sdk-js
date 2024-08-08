@@ -104,14 +104,14 @@ export class ProcessItemOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param params Process Item to be created
+   * @param processItemCreateParams Process Item to be created
    * @param options The options parameters.
    */
   public async createProcessItem(
-    params: ProcessItemCreateParams,
+    processItemCreateParams: ProcessItemCreateParams,
     options?: ProcessItemCreateProcessItemOptionalParams,
   ): Promise<ProcessItemCreateProcessItemResponse> {
-    return await this.processItemOperations.createProcessItem(params, options)
+    return await this.processItemOperations.createProcessItem(processItemCreateParams, options)
   }
 
   /**
@@ -141,15 +141,15 @@ export class ProcessItemOperations {
   /**
    * Allow to assign a task to a user or application. Only one option will be necessary.
    * @param id The resource ID.
-   * @param params Params to change the process item task owner.
+   * @param processItemTaskAssignParams Params to change the process item task owner.
    * @param options The options parameters.
    */
   public async assignProcessItemTask(
     id: string,
-    params: ProcessItemTaskAssignParams,
+    processItemTaskAssignParams: ProcessItemTaskAssignParams,
     options?: ProcessItemAssignProcessItemTaskOptionalParams,
   ): Promise<ProcessItemAssignProcessItemTaskResponse> {
-    return await this.processItemOperations.assignProcessItemTask(id, params, options)
+    return await this.processItemOperations.assignProcessItemTask(id, processItemTaskAssignParams, options)
   }
 
   /**
@@ -169,15 +169,15 @@ export class ProcessItemOperations {
    * removed.
    *
    * @param id The resource ID.
-   * @param params Log to be created.
+   * @param processItemTaskAppendLogParams Log to be created.
    * @param options The options parameters.
    */
   public async appendProcessItemTaskLog(
     id: string,
-    params: ProcessItemTaskAppendLogParams,
+    processItemTaskAppendLogParams: ProcessItemTaskAppendLogParams,
     options?: ProcessItemAppendProcessItemTaskLogOptionalParams,
   ): Promise<ProcessItemAppendProcessItemTaskLogResponse> {
-    return await this.processItemOperations.appendProcessItemTaskLog(id, params, options)
+    return await this.processItemOperations.appendProcessItemTaskLog(id, processItemTaskAppendLogParams, options)
   }
 
   /**
@@ -186,15 +186,15 @@ export class ProcessItemOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params used to update the JSON value.
+   * @param processItemTaskDataUpdateParams Params used to update the JSON value.
    * @param options The options parameters.
    */
   public async updateProcessItemTaskData(
     id: string,
-    params: ProcessItemTaskDataUpdateParams,
+    processItemTaskDataUpdateParams: ProcessItemTaskDataUpdateParams,
     options?: ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ): Promise<ProcessItemUpdateProcessItemTaskDataResponse> {
-    return await this.processItemOperations.updateProcessItemTaskData(id, params, options)
+    return await this.processItemOperations.updateProcessItemTaskData(id, processItemTaskDataUpdateParams, options)
   }
 
   /**
@@ -203,34 +203,34 @@ export class ProcessItemOperations {
    * the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param jsonPatch Params to save the JSON value.
    * @param options The options parameters.
    */
   public async patchProcessItemTaskData(
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
   ): Promise<ProcessItemUpdateProcessItemTaskDataResponse> {
-    return await this.processItemOperations.patchProcessItemTaskData(id, params, options)
+    return await this.processItemOperations.patchProcessItemTaskData(id, jsonPatch, options)
   }
 
   /**
    * Save a document in the task to later be linked into the JSON data.
    *
    * @param id The resource ID.
-   * @param params Params info.
+   * @param processItemUploadProcessItemTaskDataDocumentParams Params info.
    * @param document Document to upload.
    * @param options The options parameters.
    */
   public async uploadProcessItemTaskDataDocument(
     id: string,
-    params: ProcessItemUploadProcessItemTaskDataDocumentParams,
+    processItemUploadProcessItemTaskDataDocumentParams: ProcessItemUploadProcessItemTaskDataDocumentParams,
     document: Document,
     options?: ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
   ): Promise<ProcessItemUploadProcessItemTaskDataDocumentResponse> {
     const fileContentType = document.contentType
     const fileName = document.fileName
-    const schemaPath = params.schemaPath
+    const schemaPath = processItemUploadProcessItemTaskDataDocumentParams.schemaPath
     const file = document.fileContent
 
     return await this.processItemOperations.uploadProcessItemTaskDataDocument(

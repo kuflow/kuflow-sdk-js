@@ -46,14 +46,14 @@ export class WorkerOperationsImpl implements WorkerOperations {
    *
    * If already exist a worker for the same identity, the worker will be updated.
    *
-   * @param params Worker to create or update
+   * @param workerCreateParams Worker to create or update
    * @param options The options parameters.
    */
   async createWorker(
-    params: WorkerCreateParams,
+    workerCreateParams: WorkerCreateParams,
     options?: WorkerCreateWorkerOptionalParams,
   ): Promise<WorkerCreateWorkerResponse> {
-    return await this.client.sendOperationRequest({ params, options }, createWorkerOperationSpec)
+    return await this.client.sendOperationRequest({ workerCreateParams, options }, createWorkerOperationSpec)
   }
 }
 // Operation Specifications
@@ -73,7 +73,7 @@ const createWorkerOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params10,
+  requestBody: Parameters.workerCreateParams,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',

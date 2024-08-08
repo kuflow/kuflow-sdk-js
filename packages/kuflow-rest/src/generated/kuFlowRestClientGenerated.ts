@@ -59,7 +59,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     }
 
     // Initializing default values for options
-    if (options == null) {
+    if (!options) {
       options = {}
     }
     const defaults: KuFlowRestClientGeneratedOptionalParams = {
@@ -68,10 +68,9 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     }
 
     const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`
-    const userAgentPrefix =
-      options.userAgentOptions?.userAgentPrefix != null
-        ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
-        : `${packageDetails}`
+    const userAgentPrefix = options.userAgentOptions?.userAgentPrefix
+      ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
+      : `${packageDetails}`
 
     const optionsWithDefaults = {
       ...defaults,
@@ -84,7 +83,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     super(optionsWithDefaults)
 
     // Assigning values to Constant parameters
-    this.$host = options.$host ?? 'https://api.kuflow.com/v2024-06-14'
+    this.$host = options.$host || 'https://api.kuflow.com/v2024-06-14'
     this.authenticationOperations = new AuthenticationOperationsImpl(this)
     this.principalOperations = new PrincipalOperationsImpl(this)
     this.tenantUserOperations = new TenantUserOperationsImpl(this)

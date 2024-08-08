@@ -43,13 +43,13 @@ export class AuthenticationOperations {
 
   /**
    * Create an authentication for the current principal.
-   * @param params Authentication to be created.
+   * @param authenticationCreateParams Authentication to be created.
    * @param options The options parameters.
    */
   public async createAuthentication(
-    params: AuthenticationCreateParams,
+    authenticationCreateParams: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ): Promise<AuthenticationCreateAuthenticationResponse> {
-    return await this.authenticationOperations.createAuthentication(params, options)
+    return await this.authenticationOperations.createAuthentication(authenticationCreateParams, options)
   }
 }

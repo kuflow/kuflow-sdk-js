@@ -30,11 +30,11 @@ export interface WorkerOperations {
    *
    * If already exist a worker for the same identity, the worker will be updated.
    *
-   * @param params Worker to create or update
+   * @param workerCreateParams Worker to create or update
    * @param options The options parameters.
    */
   createWorker: (
-    params: WorkerCreateParams,
+    workerCreateParams: WorkerCreateParams,
     options?: WorkerCreateWorkerOptionalParams,
   ) => Promise<WorkerCreateWorkerResponse>
 }

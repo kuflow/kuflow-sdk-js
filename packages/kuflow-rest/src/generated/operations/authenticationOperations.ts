@@ -47,14 +47,17 @@ export class AuthenticationOperationsImpl implements AuthenticationOperations {
 
   /**
    * Create an authentication for the current principal.
-   * @param params Authentication to be created.
+   * @param authenticationCreateParams Authentication to be created.
    * @param options The options parameters.
    */
   async createAuthentication(
-    params: AuthenticationCreateParams,
+    authenticationCreateParams: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ): Promise<AuthenticationCreateAuthenticationResponse> {
-    return await this.client.sendOperationRequest({ params, options }, createAuthenticationOperationSpec)
+    return await this.client.sendOperationRequest(
+      { authenticationCreateParams, options },
+      createAuthenticationOperationSpec,
+    )
   }
 }
 // Operation Specifications
@@ -71,7 +74,7 @@ const createAuthenticationOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params,
+  requestBody: Parameters.authenticationCreateParams,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',

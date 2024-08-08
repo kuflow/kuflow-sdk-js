@@ -73,11 +73,11 @@ export interface ProcessOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param params Process to create
+   * @param processCreateParams Process to create
    * @param options The options parameters.
    */
   createProcess: (
-    params: ProcessCreateParams,
+    processCreateParams: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ) => Promise<ProcessCreateProcessResponse>
   /**
@@ -120,12 +120,12 @@ export interface ProcessOperations {
    * Only one option will be necessary.
    *
    * @param id The resource ID.
-   * @param params Params to change the process initiator.
+   * @param processChangeInitiatorParams Params to change the process initiator.
    * @param options The options parameters.
    */
   changeProcessInitiator: (
     id: string,
-    params: ProcessChangeInitiatorParams,
+    processChangeInitiatorParams: ProcessChangeInitiatorParams,
     options?: ProcessChangeProcessInitiatorOptionalParams,
   ) => Promise<ProcessChangeProcessInitiatorResponse>
   /**
@@ -149,12 +149,12 @@ export interface ProcessOperations {
   /**
    * Save process metadata
    * @param id The resource ID.
-   * @param params Params to save de entity data.
+   * @param processMetadataUpdateParams Params to save the metadata data.
    * @param options The options parameters.
    */
   updateProcessMetadata: (
     id: string,
-    params: ProcessMetadataUpdateParams,
+    processMetadataUpdateParams: ProcessMetadataUpdateParams,
     options?: ProcessUpdateProcessMetadataOptionalParams,
   ) => Promise<ProcessUpdateProcessMetadataResponse>
   /**
@@ -177,12 +177,12 @@ export interface ProcessOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param processEntityUpdateParams Params to save the JSON value.
    * @param options The options parameters.
    */
   updateProcessEntity: (
     id: string,
-    params: ProcessEntityUpdateParams,
+    processEntityUpdateParams: ProcessEntityUpdateParams,
     options?: ProcessUpdateProcessEntityOptionalParams,
   ) => Promise<ProcessUpdateProcessEntityResponse>
   /**
@@ -191,12 +191,12 @@ export interface ProcessOperations {
    * the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param jsonPatch Params to save the JSON value.
    * @param options The options parameters.
    */
   patchProcessEntity: (
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessPatchProcessEntityOptionalParams,
   ) => Promise<ProcessPatchProcessEntityResponse>
   /**

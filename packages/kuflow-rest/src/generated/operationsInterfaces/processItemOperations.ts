@@ -78,11 +78,11 @@ export interface ProcessItemOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param params Process Item to be created
+   * @param processItemCreateParams Process Item to be created
    * @param options The options parameters.
    */
   createProcessItem: (
-    params: ProcessItemCreateParams,
+    processItemCreateParams: ProcessItemCreateParams,
     options?: ProcessItemCreateProcessItemOptionalParams,
   ) => Promise<ProcessItemCreateProcessItemResponse>
   /**
@@ -106,12 +106,12 @@ export interface ProcessItemOperations {
   /**
    * Allow to assign a process item task to a user or application. Only one option will be necessary.
    * @param id The resource ID.
-   * @param params Params to change the process item task owner.
+   * @param processItemTaskAssignParams Params to change the process item task owner.
    * @param options The options parameters.
    */
   assignProcessItemTask: (
     id: string,
-    params: ProcessItemTaskAssignParams,
+    processItemTaskAssignParams: ProcessItemTaskAssignParams,
     options?: ProcessItemAssignProcessItemTaskOptionalParams,
   ) => Promise<ProcessItemAssignProcessItemTaskResponse>
   /**
@@ -128,12 +128,12 @@ export interface ProcessItemOperations {
    * removed.
    *
    * @param id The resource ID.
-   * @param params Log to be created.
+   * @param processItemTaskAppendLogParams Log to be created.
    * @param options The options parameters.
    */
   appendProcessItemTaskLog: (
     id: string,
-    params: ProcessItemTaskAppendLogParams,
+    processItemTaskAppendLogParams: ProcessItemTaskAppendLogParams,
     options?: ProcessItemAppendProcessItemTaskLogOptionalParams,
   ) => Promise<ProcessItemAppendProcessItemTaskLogResponse>
   /**
@@ -142,12 +142,12 @@ export interface ProcessItemOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params used to update the JSON value.
+   * @param processItemTaskDataUpdateParams Params used to update the JSON value.
    * @param options The options parameters.
    */
   updateProcessItemTaskData: (
     id: string,
-    params: ProcessItemTaskDataUpdateParams,
+    processItemTaskDataUpdateParams: ProcessItemTaskDataUpdateParams,
     options?: ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ) => Promise<ProcessItemUpdateProcessItemTaskDataResponse>
   /**
@@ -156,12 +156,12 @@ export interface ProcessItemOperations {
    * the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param jsonPatch Params to save the JSON value.
    * @param options The options parameters.
    */
   patchProcessItemTaskData: (
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
   ) => Promise<ProcessItemPatchProcessItemTaskDataResponse>
   /**

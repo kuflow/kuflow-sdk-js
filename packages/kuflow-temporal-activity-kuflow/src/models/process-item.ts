@@ -23,11 +23,11 @@
 
 import type {
   JsonPatchOperation,
+  JsonValue,
   ProcessItem,
-  ProcessItemCreateParams,
   ProcessItemPage,
-  ProcessItemTaskAppendLogParams,
-  ProcessItemTaskDataUpdateParams,
+  ProcessItemTaskCreateParams,
+  ProcessItemTaskLogLevel,
   ProcessItemTaskState,
   ProcessItemType,
 } from '@kuflow/kuflow-rest'
@@ -55,7 +55,12 @@ export interface ProcessItemRetrieveResponse {
 }
 
 export interface ProcessItemTaskCreateRequest {
-  params: ProcessItemCreateParams
+  id: string
+  type: ProcessItemType
+  processId: string
+  ownerId?: string
+  ownerEmail?: string
+  task?: ProcessItemTaskCreateParams
 }
 
 export interface ProcessItemTaskCreateResponse {
@@ -80,7 +85,7 @@ export interface ProcessItemTaskClaimResponse {
 
 export interface ProcessItemTaskDataUpdateRequest {
   processItemId: string
-  params: ProcessItemTaskDataUpdateParams
+  data: JsonValue
 }
 
 export interface ProcessItemTaskDataUpdateResponse {
@@ -89,7 +94,7 @@ export interface ProcessItemTaskDataUpdateResponse {
 
 export interface ProcessItemTaskDataPatchRequest {
   processItemId: string
-  params: JsonPatchOperation[]
+  jsonPatch: JsonPatchOperation[]
 }
 
 export interface ProcessItemTaskDataPatchResponse {
@@ -108,7 +113,8 @@ export interface ProcessItemTaskAssignResponse {
 
 export interface ProcessItemTaskLogAppendRequest {
   processItemId: string
-  params: ProcessItemTaskAppendLogParams
+  message: string
+  level: ProcessItemTaskLogLevel
 }
 
 export interface ProcessItemTaskLogAppendResponse {

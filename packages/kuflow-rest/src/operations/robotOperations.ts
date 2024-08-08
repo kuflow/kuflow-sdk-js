@@ -90,20 +90,20 @@ export class RobotOperations {
   /**
    * Given a robot, download the requested asset.
    * @param id The resource ID.
-   * @param params Download params
+   * @param robotDownloadRobotAssetParams Download params
    * @param options The options parameters.
    */
   public async downloadRobotAsset(
     id: string,
-    params: RobotDownloadRobotAssetParams,
+    robotDownloadRobotAssetParams: RobotDownloadRobotAssetParams,
     options?: RobotDownloadRobotAssetOptionalParams,
   ): Promise<RobotDownloadRobotAssetResponse> {
     return await this.robotOperationsGenerated.downloadRobotAsset(
       id,
-      params.type,
-      params.version,
-      params.platform,
-      params.architecture,
+      robotDownloadRobotAssetParams.type,
+      robotDownloadRobotAssetParams.version,
+      robotDownloadRobotAssetParams.platform,
+      robotDownloadRobotAssetParams.architecture,
       options,
     )
   }

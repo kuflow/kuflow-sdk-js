@@ -31,11 +31,11 @@ import type {
 export interface AuthenticationOperations {
   /**
    * Create an authentication for the current principal.
-   * @param params Authentication to be created.
+   * @param authenticationCreateParams Authentication to be created.
    * @param options The options parameters.
    */
   createAuthentication: (
-    params: AuthenticationCreateParams,
+    authenticationCreateParams: AuthenticationCreateParams,
     options?: AuthenticationCreateAuthenticationOptionalParams,
   ) => Promise<AuthenticationCreateAuthenticationResponse>
 }

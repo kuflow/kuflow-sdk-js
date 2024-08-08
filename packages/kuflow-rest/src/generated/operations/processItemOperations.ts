@@ -96,14 +96,14 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param params Process Item to be created
+   * @param processItemCreateParams Process Item to be created
    * @param options The options parameters.
    */
   async createProcessItem(
-    params: ProcessItemCreateParams,
+    processItemCreateParams: ProcessItemCreateParams,
     options?: ProcessItemCreateProcessItemOptionalParams,
   ): Promise<ProcessItemCreateProcessItemResponse> {
-    return await this.client.sendOperationRequest({ params, options }, createProcessItemOperationSpec)
+    return await this.client.sendOperationRequest({ processItemCreateParams, options }, createProcessItemOperationSpec)
   }
 
   /**
@@ -133,15 +133,18 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
   /**
    * Allow to assign a process item task to a user or application. Only one option will be necessary.
    * @param id The resource ID.
-   * @param params Params to change the process item task owner.
+   * @param processItemTaskAssignParams Params to change the process item task owner.
    * @param options The options parameters.
    */
   async assignProcessItemTask(
     id: string,
-    params: ProcessItemTaskAssignParams,
+    processItemTaskAssignParams: ProcessItemTaskAssignParams,
     options?: ProcessItemAssignProcessItemTaskOptionalParams,
   ): Promise<ProcessItemAssignProcessItemTaskResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, assignProcessItemTaskOperationSpec)
+    return await this.client.sendOperationRequest(
+      { id, processItemTaskAssignParams, options },
+      assignProcessItemTaskOperationSpec,
+    )
   }
 
   /**
@@ -161,15 +164,18 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
    * removed.
    *
    * @param id The resource ID.
-   * @param params Log to be created.
+   * @param processItemTaskAppendLogParams Log to be created.
    * @param options The options parameters.
    */
   async appendProcessItemTaskLog(
     id: string,
-    params: ProcessItemTaskAppendLogParams,
+    processItemTaskAppendLogParams: ProcessItemTaskAppendLogParams,
     options?: ProcessItemAppendProcessItemTaskLogOptionalParams,
   ): Promise<ProcessItemAppendProcessItemTaskLogResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, appendProcessItemTaskLogOperationSpec)
+    return await this.client.sendOperationRequest(
+      { id, processItemTaskAppendLogParams, options },
+      appendProcessItemTaskLogOperationSpec,
+    )
   }
 
   /**
@@ -178,15 +184,18 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params used to update the JSON value.
+   * @param processItemTaskDataUpdateParams Params used to update the JSON value.
    * @param options The options parameters.
    */
   async updateProcessItemTaskData(
     id: string,
-    params: ProcessItemTaskDataUpdateParams,
+    processItemTaskDataUpdateParams: ProcessItemTaskDataUpdateParams,
     options?: ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ): Promise<ProcessItemUpdateProcessItemTaskDataResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, updateProcessItemTaskDataOperationSpec)
+    return await this.client.sendOperationRequest(
+      { id, processItemTaskDataUpdateParams, options },
+      updateProcessItemTaskDataOperationSpec,
+    )
   }
 
   /**
@@ -195,15 +204,15 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
    * the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param jsonPatch Params to save the JSON value.
    * @param options The options parameters.
    */
   async patchProcessItemTaskData(
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
   ): Promise<ProcessItemPatchProcessItemTaskDataResponse> {
-    return await this.client.sendOperationRequest({ id, params, options }, patchProcessItemTaskDataOperationSpec)
+    return await this.client.sendOperationRequest({ id, jsonPatch, options }, patchProcessItemTaskDataOperationSpec)
   }
 
   /**
@@ -318,7 +327,7 @@ const createProcessItemOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params6,
+  requestBody: Parameters.processItemCreateParams,
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -365,7 +374,7 @@ const assignProcessItemTaskOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params7,
+  requestBody: Parameters.processItemTaskAssignParams,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -397,7 +406,7 @@ const appendProcessItemTaskLogOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params8,
+  requestBody: Parameters.processItemTaskAppendLogParams,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -414,7 +423,7 @@ const updateProcessItemTaskDataOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params9,
+  requestBody: Parameters.processItemTaskDataUpdateParams,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
@@ -431,7 +440,7 @@ const patchProcessItemTaskDataOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  requestBody: Parameters.params5,
+  requestBody: Parameters.jsonPatch,
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept, Parameters.contentType2],
   mediaType: 'json',
