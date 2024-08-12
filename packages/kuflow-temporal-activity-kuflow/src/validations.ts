@@ -66,8 +66,8 @@ export function validateProcessEntityUpdateRequest(request: ProcessEntityUpdateR
     throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.entity == null) {
+    throw ApplicationFailure.nonRetryable("'entity' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
@@ -76,8 +76,8 @@ export function validateProcessEntityPatchRequest(request: ProcessEntityPatchReq
     throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.jsonPatch == null) {
+    throw ApplicationFailure.nonRetryable("'jsonPatch' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
@@ -86,8 +86,8 @@ export function validateProcessMetadataUpdateRequest(request: ProcessMetadataUpd
     throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.metadata == null) {
+    throw ApplicationFailure.nonRetryable("'metadata' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
@@ -96,8 +96,8 @@ export function validateProcessMetadataPatchRequest(request: ProcessMetadataPatc
     throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.jsonPatch == null) {
+    throw ApplicationFailure.nonRetryable("'jsonPatch' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
@@ -105,10 +105,7 @@ export function validateProcessInitiatorChangeRequest(request: ProcessInitiatorC
   if (request.processId == null) {
     throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-  if (request.params.initiatorId == null || request.params.initiatorEmail == null) {
+  if (request.initiatorId == null || request.initiatorEmail == null) {
     throw ApplicationFailure.nonRetryable(
       "'initiatorId' or 'initiatorEmail' is required",
       KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
@@ -126,11 +123,8 @@ export function validateProcessItemRetrieveRequest(request: ProcessItemRetrieveR
 }
 
 export function validateProcessItemTaskCreateRequest(request: ProcessItemTaskCreateRequest): void {
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-  if (request.params.type === 'TASK' && request.params.task == null) {
-    throw ApplicationFailure.nonRetryable("'params.task' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.type === 'TASK' && request.task == null) {
+    throw ApplicationFailure.nonRetryable("'task' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 

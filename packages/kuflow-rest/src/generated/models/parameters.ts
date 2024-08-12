@@ -48,8 +48,8 @@ export const contentType: OperationParameter = {
   },
 }
 
-export const params: OperationParameter = {
-  parameterPath: 'params',
+export const authenticationCreateParams: OperationParameter = {
+  parameterPath: 'authenticationCreateParams',
   mapper: AuthenticationCreateParamsMapper,
 }
 
@@ -192,13 +192,13 @@ export const email: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const params1: OperationParameter = {
-  parameterPath: 'params',
+export const processCreateParams: OperationParameter = {
+  parameterPath: 'processCreateParams',
   mapper: ProcessCreateParamsMapper,
 }
 
-export const params2: OperationParameter = {
-  parameterPath: 'params',
+export const processChangeInitiatorParams: OperationParameter = {
+  parameterPath: 'processChangeInitiatorParams',
   mapper: ProcessChangeInitiatorParamsMapper,
 }
 
@@ -270,8 +270,8 @@ export const userActionValueId: OperationQueryParameter = {
   },
 }
 
-export const params3: OperationParameter = {
-  parameterPath: 'params',
+export const processMetadataUpdateParams: OperationParameter = {
+  parameterPath: 'processMetadataUpdateParams',
   mapper: ProcessMetadataUpdateParamsMapper,
 }
 
@@ -307,29 +307,9 @@ export const jsonPatch: OperationParameter = {
   },
 }
 
-export const params4: OperationParameter = {
-  parameterPath: 'params',
+export const processEntityUpdateParams: OperationParameter = {
+  parameterPath: 'processEntityUpdateParams',
   mapper: ProcessEntityUpdateParamsMapper,
-}
-
-export const params5: OperationParameter = {
-  parameterPath: 'params',
-  mapper: {
-    constraints: {
-      MinItems: 1,
-    },
-    serializedName: 'params',
-    required: true,
-    type: {
-      name: 'Sequence',
-      element: {
-        type: {
-          name: 'Composite',
-          className: 'JsonPatchOperation',
-        },
-      },
-    },
-  },
 }
 
 export const schemaPath: OperationQueryParameter = {
@@ -432,23 +412,23 @@ export const taskDefinitionCode: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const params6: OperationParameter = {
-  parameterPath: 'params',
+export const processItemCreateParams: OperationParameter = {
+  parameterPath: 'processItemCreateParams',
   mapper: ProcessItemCreateParamsMapper,
 }
 
-export const params7: OperationParameter = {
-  parameterPath: 'params',
+export const processItemTaskAssignParams: OperationParameter = {
+  parameterPath: 'processItemTaskAssignParams',
   mapper: ProcessItemTaskAssignParamsMapper,
 }
 
-export const params8: OperationParameter = {
-  parameterPath: 'params',
+export const processItemTaskAppendLogParams: OperationParameter = {
+  parameterPath: 'processItemTaskAppendLogParams',
   mapper: ProcessItemTaskAppendLogParamsMapper,
 }
 
-export const params9: OperationParameter = {
-  parameterPath: 'params',
+export const processItemTaskDataUpdateParams: OperationParameter = {
+  parameterPath: 'processItemTaskDataUpdateParams',
   mapper: ProcessItemTaskDataUpdateParamsMapper,
 }
 
@@ -475,8 +455,8 @@ export const propertyPath: OperationQueryParameter = {
   },
 }
 
-export const params10: OperationParameter = {
-  parameterPath: 'params',
+export const workerCreateParams: OperationParameter = {
+  parameterPath: 'workerCreateParams',
   mapper: WorkerCreateParamsMapper,
 }
 

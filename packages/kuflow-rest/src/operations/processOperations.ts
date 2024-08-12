@@ -107,14 +107,14 @@ export class ProcessOperations {
    *
    * If you want the method to be idempotent, please specify the `id` field in the request body.
    *
-   * @param params Process to create
+   * @param processCreateParams Process to create
    * @param options The options parameters.
    */
   public async createProcess(
-    params: ProcessCreateParams,
+    processCreateParams: ProcessCreateParams,
     options?: ProcessCreateProcessOptionalParams,
   ): Promise<ProcessCreateProcessResponse> {
-    return await this.processOperations.createProcess(params, options)
+    return await this.processOperations.createProcess(processCreateParams, options)
   }
 
   /**
@@ -168,22 +168,22 @@ export class ProcessOperations {
    * Only one option will be necessary.
    *
    * @param id The resource ID.
-   * @param params Params to change the process initiator.
+   * @param processChangeInitiatorParams Params to change the process initiator.
    * @param options The options parameters.
    */
   public async changeProcessInitiator(
     id: string,
-    params: ProcessChangeInitiatorParams,
+    processChangeInitiatorParams: ProcessChangeInitiatorParams,
     options?: ProcessChangeProcessInitiatorOptionalParams,
   ): Promise<ProcessChangeProcessInitiatorResponse> {
-    return await this.processOperations.changeProcessInitiator(id, params, options)
+    return await this.processOperations.changeProcessInitiator(id, processChangeInitiatorParams, options)
   }
 
   /**
    * Allow saving a user action document uploading the content.
    *
    * @param id The resource ID.
-   * @param params Params info
+   * @param processUploadProcessUserActionDocumentParams Params info
    * @param document Document to upload.
    * @param options The options parameters.
    *
@@ -191,14 +191,14 @@ export class ProcessOperations {
    */
   public async uploadProcessUserActionDocument(
     id: string,
-    params: ProcessUploadProcessUserActionDocumentParams,
+    processUploadProcessUserActionDocumentParams: ProcessUploadProcessUserActionDocumentParams,
     document: Document,
     options?: ProcessUploadProcessUserActionDocumentOptionalParams,
   ): Promise<ProcessUploadProcessUserActionDocumentResponse | undefined> {
     const fileContentType = document.contentType
     const fileName = document.fileName
     const file = document.fileContent
-    const userActionValueId = params.userActionValueId
+    const userActionValueId = processUploadProcessUserActionDocumentParams.userActionValueId
 
     let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
     const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
@@ -236,15 +236,15 @@ export class ProcessOperations {
    * Save process metadata validating the data following the related schema.
    *
    * @param id The resource ID.
-   * @param params Params to save de entity data.
+   * @param processMetadataUpdateParams Params to save de entity data.
    * @param options The options parameters.
    */
   public async updateProcessMetadata(
     id: string,
-    params: ProcessMetadataUpdateParams,
+    processMetadataUpdateParams: ProcessMetadataUpdateParams,
     options?: ProcessUpdateProcessMetadataOptionalParams,
   ): Promise<ProcessUpdateProcessMetadataResponse> {
-    return await this.processOperations.updateProcessMetadata(id, params, options)
+    return await this.processOperations.updateProcessMetadata(id, processMetadataUpdateParams, options)
   }
 
   /**
@@ -252,15 +252,15 @@ export class ProcessOperations {
    * invalid, then the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save de entity data.
+   * @param jsonPatch Params to save de entity data.
    * @param options The options parameters.
    */
   public async patchProcessMetadata(
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessPatchProcessMetadataOptionalParams,
   ): Promise<ProcessPatchProcessMetadataResponse> {
-    return await this.processOperations.patchProcessMetadata(id, params, options)
+    return await this.processOperations.patchProcessMetadata(id, jsonPatch, options)
   }
 
   /**
@@ -269,15 +269,15 @@ export class ProcessOperations {
    * the json form is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param processEntityUpdateParams Params to save the JSON value.
    * @param options The options parameters.
    */
   public async updateProcessEntity(
     id: string,
-    params: ProcessEntityUpdateParams,
+    processEntityUpdateParams: ProcessEntityUpdateParams,
     options?: ProcessUpdateProcessEntityOptionalParams,
   ): Promise<ProcessUpdateProcessEntityResponse> {
-    return await this.processOperations.updateProcessEntity(id, params, options)
+    return await this.processOperations.updateProcessEntity(id, processEntityUpdateParams, options)
   }
 
   /**
@@ -285,35 +285,35 @@ export class ProcessOperations {
    * invalid, then the json is marked as invalid.
    *
    * @param id The resource ID.
-   * @param params Params to save the JSON value.
+   * @param jsonPatch Params to save the JSON value.
    * @param options The options parameters.
    */
   public async patchProcessEntity(
     id: string,
-    params: JsonPatchOperation[],
+    jsonPatch: JsonPatchOperation[],
     options?: ProcessPatchProcessEntityOptionalParams,
   ): Promise<ProcessPatchProcessEntityResponse> {
-    return await this.processOperations.patchProcessEntity(id, params, options)
+    return await this.processOperations.patchProcessEntity(id, jsonPatch, options)
   }
 
   /**
    * Save a document in the process to later be linked into the JSON data.
    *
    * @param id The resource ID.
-   * @param params Params info
+   * @param processUploadProcessEntityDocumentParams Params info
    * @param document Document to upload.
    * @param options The options parameters.
    */
   public async uploadProcessEntityDocument(
     id: string,
-    params: ProcessUploadProcessEntityDocumentParams,
+    processUploadProcessEntityDocumentParams: ProcessUploadProcessEntityDocumentParams,
     document: Document,
     options?: ProcessUploadProcessEntityDocumentOptionalParams,
   ): Promise<ProcessUploadProcessEntityDocumentResponse | undefined> {
     const fileContentType = document.contentType
     const fileName = document.fileName
     const file = document.fileContent
-    const schemaPath = params.schemaPath
+    const schemaPath = processUploadProcessEntityDocumentParams.schemaPath
 
     let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
     const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
