@@ -35,8 +35,8 @@ import type {
   ProcessCreateParams,
   ProcessCreateProcessOptionalParams,
   ProcessCreateProcessResponse,
-  ProcessDownloadProcessEntityDocumentOptionalParams,
-  ProcessDownloadProcessEntityDocumentResponse,
+  ProcessDownloadProcessDocumentOptionalParams,
+  ProcessDownloadProcessDocumentResponse,
   ProcessEntityUpdateParams,
   ProcessFindProcessesOptionalParams,
   ProcessFindProcessesResponse,
@@ -51,8 +51,8 @@ import type {
   ProcessUpdateProcessEntityResponse,
   ProcessUpdateProcessMetadataOptionalParams,
   ProcessUpdateProcessMetadataResponse,
-  ProcessUploadProcessEntityDocumentOptionalParams,
-  ProcessUploadProcessEntityDocumentResponse,
+  ProcessUploadProcessDocumentOptionalParams,
+  ProcessUploadProcessDocumentResponse,
   ProcessUploadProcessUserActionDocumentOptionalParams,
   ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
@@ -200,36 +200,35 @@ export interface ProcessOperations {
     options?: ProcessPatchProcessEntityOptionalParams,
   ) => Promise<ProcessPatchProcessEntityResponse>
   /**
-   * Save a document in the process to later be linked into the JSON data.
+   * Upload a temporal document into the process that later on must be linked with a process domain
+   * resource.
+   *
+   * Documents uploaded with this API will be deleted after 24 hours as long as they have not been linked
+   * to a
+   * process or process item..
    *
    * @param id The resource ID.
    * @param fileContentType Document content type
    * @param fileName Document name
-   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
-   *                   by the passed schema path.
-   *
-   * ie: "#/properties/file", "#/definitions/UserType/name"
-   *
    * @param file Document to save.
    * @param options The options parameters.
    */
-  uploadProcessEntityDocument: (
+  uploadProcessDocument: (
     id: string,
     fileContentType: string,
     fileName: string,
-    schemaPath: string,
     file: coreRestPipeline.RequestBodyType,
-    options?: ProcessUploadProcessEntityDocumentOptionalParams,
-  ) => Promise<ProcessUploadProcessEntityDocumentResponse>
+    options?: ProcessUploadProcessDocumentOptionalParams,
+  ) => Promise<ProcessUploadProcessDocumentResponse>
   /**
-   * Given a process and a documentUri, download a document.
+   * Given a document uri download a document.
    * @param id The resource ID.
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  downloadProcessEntityDocument: (
+  downloadProcessDocument: (
     id: string,
     documentUri: string,
-    options?: ProcessDownloadProcessEntityDocumentOptionalParams,
-  ) => Promise<ProcessDownloadProcessEntityDocumentResponse>
+    options?: ProcessDownloadProcessDocumentOptionalParams,
+  ) => Promise<ProcessDownloadProcessDocumentResponse>
 }

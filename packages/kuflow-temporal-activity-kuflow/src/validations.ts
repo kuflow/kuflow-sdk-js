@@ -168,8 +168,8 @@ export function validateProcessItemTaskDataUpdateRequest(request: ProcessItemTas
       KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.data == null) {
+    throw ApplicationFailure.nonRetryable("'data' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
@@ -180,8 +180,8 @@ export function validateProcessItemTaskDataPatchRequest(request: ProcessItemTask
       KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.jsonPatch == null) {
+    throw ApplicationFailure.nonRetryable("'jsonPatch' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }
 
@@ -192,7 +192,10 @@ export function validateProcessItemTaskLogAppendRequest(request: ProcessItemTask
       KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
     )
   }
-  if (request.params == null) {
-    throw ApplicationFailure.nonRetryable("'params' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  if (request.message == null) {
+    throw ApplicationFailure.nonRetryable("'message' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+  if (request.level == null) {
+    throw ApplicationFailure.nonRetryable("'level' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }
 }

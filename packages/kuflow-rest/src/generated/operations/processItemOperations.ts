@@ -22,7 +22,6 @@
  */
 
 import * as coreClient from '@azure/core-client'
-import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import type {
@@ -38,8 +37,6 @@ import type {
   ProcessItemCreateParams,
   ProcessItemCreateProcessItemOptionalParams,
   ProcessItemCreateProcessItemResponse,
-  ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  ProcessItemDownloadProcessItemTaskDataDocumentResponse,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
   ProcessItemFindProcessItemsOptionalParams,
@@ -53,8 +50,6 @@ import type {
   ProcessItemTaskDataUpdateParams,
   ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ProcessItemUpdateProcessItemTaskDataResponse,
-  ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  ProcessItemUploadProcessItemTaskDataDocumentResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
@@ -213,51 +208,6 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
   ): Promise<ProcessItemPatchProcessItemTaskDataResponse> {
     return await this.client.sendOperationRequest({ id, jsonPatch, options }, patchProcessItemTaskDataOperationSpec)
-  }
-
-  /**
-   * Save a document in the task to later be linked into the JSON data.
-   *
-   * @param id The resource ID.
-   * @param fileContentType Document content type
-   * @param fileName Document name
-   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
-   *                   by the passed schema path.
-   *
-   * ie: "#/properties/file", "#/definitions/UserType/name"
-   *
-   * @param file Document to save.
-   * @param options The options parameters.
-   */
-  async uploadProcessItemTaskDataDocument(
-    id: string,
-    fileContentType: string,
-    fileName: string,
-    schemaPath: string,
-    file: coreRestPipeline.RequestBodyType,
-    options?: ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  ): Promise<ProcessItemUploadProcessItemTaskDataDocumentResponse> {
-    return await this.client.sendOperationRequest(
-      { id, fileContentType, fileName, schemaPath, file, options },
-      uploadProcessItemTaskDataDocumentOperationSpec,
-    )
-  }
-
-  /**
-   * Given a task, download a document from a json form data.
-   * @param id The resource ID.
-   * @param documentUri Document URI to download.
-   * @param options The options parameters.
-   */
-  async downloadProcessItemTaskDataDocument(
-    id: string,
-    documentUri: string,
-    options?: ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  ): Promise<ProcessItemDownloadProcessItemTaskDataDocumentResponse> {
-    return await this.client.sendOperationRequest(
-      { id, documentUri, options },
-      downloadProcessItemTaskDataDocumentOperationSpec,
-    )
   }
 
   /**
@@ -444,43 +394,6 @@ const patchProcessItemTaskDataOperationSpec: coreClient.OperationSpec = {
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept, Parameters.contentType2],
   mediaType: 'json',
-  serializer,
-}
-const uploadProcessItemTaskDataDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/process-items/{id}/task/data/~actions/upload-document',
-  httpMethod: 'POST',
-  responses: {
-    200: {
-      bodyMapper: Mappers.DocumentReference,
-    },
-    default: {
-      bodyMapper: Mappers.DefaultError,
-    },
-  },
-  requestBody: Parameters.file,
-  queryParameters: [Parameters.fileContentType, Parameters.fileName, Parameters.schemaPath],
-  urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.contentType1, Parameters.accept1],
-  mediaType: 'binary',
-  serializer,
-}
-const downloadProcessItemTaskDataDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/process-items/{id}/task/data/~actions/download-document',
-  httpMethod: 'GET',
-  responses: {
-    200: {
-      bodyMapper: {
-        type: { name: 'Stream' },
-        serializedName: 'parsedResponse',
-      },
-    },
-    default: {
-      bodyMapper: Mappers.DefaultError,
-    },
-  },
-  queryParameters: [Parameters.documentUri],
-  urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept2],
   serializer,
 }
 const downloadProcessItemTaskDataWebformsAsDocumentOperationSpec: coreClient.OperationSpec = {

@@ -312,17 +312,6 @@ export const processEntityUpdateParams: OperationParameter = {
   mapper: ProcessEntityUpdateParamsMapper,
 }
 
-export const schemaPath: OperationQueryParameter = {
-  parameterPath: 'schemaPath',
-  mapper: {
-    serializedName: 'schemaPath',
-    required: true,
-    type: {
-      name: 'String',
-    },
-  },
-}
-
 export const accept2: OperationParameter = {
   parameterPath: 'accept',
   mapper: {

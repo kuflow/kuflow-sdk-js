@@ -655,13 +655,6 @@ export const DocumentReference: coreClient.CompositeMapper = {
     name: 'Composite',
     className: 'DocumentReference',
     modelProperties: {
-      schemaPath: {
-        serializedName: 'schemaPath',
-        required: true,
-        type: {
-          name: 'String',
-        },
-      },
       documentUri: {
         serializedName: 'documentUri',
         required: true,
@@ -738,6 +731,27 @@ export const TaskDefinitionSummary: coreClient.CompositeMapper = {
   },
 }
 
+export const ProcessItemMessagePageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemMessagePageItem',
+    modelProperties: {
+      text: {
+        serializedName: 'text',
+        type: {
+          name: 'String',
+        },
+      },
+      dataStructureDataDefinitionCode: {
+        serializedName: 'dataStructureDataDefinitionCode',
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const ProcessItemCreateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -783,6 +797,13 @@ export const ProcessItemCreateParams: coreClient.CompositeMapper = {
           className: 'ProcessItemTaskCreateParams',
         },
       },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemMessageCreateParams',
+        },
+      },
     },
   },
 }
@@ -804,6 +825,34 @@ export const ProcessItemTaskCreateParams: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemMessageCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemMessageCreateParams',
+    modelProperties: {
+      text: {
+        serializedName: 'text',
+        type: {
+          name: 'String',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      dataStructureDataDefinitionCode: {
+        serializedName: 'dataStructureDataDefinitionCode',
+        type: {
+          name: 'String',
         },
       },
     },
@@ -885,6 +934,34 @@ export const ProcessItemTaskLog: coreClient.CompositeMapper = {
         type: {
           name: 'Enum',
           allowedValues: ['INFO', 'WARN', 'ERROR'],
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemMessage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemMessage',
+    modelProperties: {
+      text: {
+        serializedName: 'text',
+        type: {
+          name: 'String',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      dataStructureDataDefinitionCode: {
+        serializedName: 'dataStructureDataDefinitionCode',
+        type: {
+          name: 'String',
         },
       },
     },
@@ -1563,6 +1640,13 @@ export const ProcessItemPageItem: coreClient.CompositeMapper = {
           className: 'ProcessItemTaskPageItem',
         },
       },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemMessagePageItem',
+        },
+      },
     },
   },
 }
@@ -1612,6 +1696,13 @@ export const ProcessItem: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'ProcessItemTask',
+        },
+      },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemMessage',
         },
       },
     },

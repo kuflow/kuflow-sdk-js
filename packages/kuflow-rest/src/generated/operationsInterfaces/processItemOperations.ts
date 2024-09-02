@@ -21,8 +21,6 @@
  * THE SOFTWARE.
  */
 
-import type * as coreRestPipeline from '@azure/core-rest-pipeline'
-
 import type {
   JsonPatchOperation,
   ProcessItemAppendProcessItemTaskLogOptionalParams,
@@ -36,8 +34,6 @@ import type {
   ProcessItemCreateParams,
   ProcessItemCreateProcessItemOptionalParams,
   ProcessItemCreateProcessItemResponse,
-  ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  ProcessItemDownloadProcessItemTaskDataDocumentResponse,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
   ProcessItemFindProcessItemsOptionalParams,
@@ -51,8 +47,6 @@ import type {
   ProcessItemTaskDataUpdateParams,
   ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ProcessItemUpdateProcessItemTaskDataResponse,
-  ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  ProcessItemUploadProcessItemTaskDataDocumentResponse,
 } from '../models'
 
 /** Interface representing a ProcessItemOperations. */
@@ -164,39 +158,6 @@ export interface ProcessItemOperations {
     jsonPatch: JsonPatchOperation[],
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
   ) => Promise<ProcessItemPatchProcessItemTaskDataResponse>
-  /**
-   * Save a document in the task to later be linked into the JSON data.
-   *
-   * @param id The resource ID.
-   * @param fileContentType Document content type
-   * @param fileName Document name
-   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
-   *                   by the passed schema path.
-   *
-   * ie: "#/properties/file", "#/definitions/UserType/name"
-   *
-   * @param file Document to save.
-   * @param options The options parameters.
-   */
-  uploadProcessItemTaskDataDocument: (
-    id: string,
-    fileContentType: string,
-    fileName: string,
-    schemaPath: string,
-    file: coreRestPipeline.RequestBodyType,
-    options?: ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  ) => Promise<ProcessItemUploadProcessItemTaskDataDocumentResponse>
-  /**
-   * Given a task, download a document from a json form data.
-   * @param id The resource ID.
-   * @param documentUri Document URI to download.
-   * @param options The options parameters.
-   */
-  downloadProcessItemTaskDataDocument: (
-    id: string,
-    documentUri: string,
-    options?: ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  ) => Promise<ProcessItemDownloadProcessItemTaskDataDocumentResponse>
   /**
    * Given a task, generate a PDF from a Form type element with the data filled in, if any. If there are
    * multiple form values, they are packed into a ZIP.

@@ -195,13 +195,6 @@ export interface ProcessEntityUpdateParams {
 
 export interface DocumentReference {
   /**
-   * JSON Schema path related to the document. The uploaded document will be validated by the passed schema path.
-   *
-   * ie: "#/properties/file", "#/definitions/UserType/name"
-   *
-   */
-  schemaPath: string
-  /**
    * JSON value representing the uploaded file.
    *
    * Example: `kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;`
@@ -223,6 +216,11 @@ export interface TaskDefinitionSummary {
   name: string
 }
 
+export interface ProcessItemMessagePageItem {
+  text?: string
+  dataStructureDataDefinitionCode?: string
+}
+
 export interface ProcessItemCreateParams {
   id?: string
   /** Process Item Type */
@@ -231,12 +229,20 @@ export interface ProcessItemCreateParams {
   ownerId?: string
   ownerEmail?: string
   task?: ProcessItemTaskCreateParams
+  message?: ProcessItemMessageCreateParams
 }
 
 export interface ProcessItemTaskCreateParams {
   taskDefinitionCode: string
   /** Json value. */
   data?: JsonValue
+}
+
+export interface ProcessItemMessageCreateParams {
+  text?: string
+  /** Json value. */
+  data?: JsonValue
+  dataStructureDataDefinitionCode?: string
 }
 
 export interface ProcessItemTask {
@@ -254,6 +260,13 @@ export interface ProcessItemTaskLog {
   timestamp: string
   message: string
   level: ProcessItemTaskLogLevel
+}
+
+export interface ProcessItemMessage {
+  text?: string
+  /** Json value. */
+  data?: JsonValue
+  dataStructureDataDefinitionCode?: string
 }
 
 /** Params to assign a process item task, only one option is required. */
@@ -408,6 +421,7 @@ export interface ProcessItemPageItem extends AbstractAudited {
   /** Tenant ID. */
   tenantId: string
   task?: ProcessItemTaskPageItem
+  message?: ProcessItemMessagePageItem
 }
 
 export interface ProcessItem extends AbstractAudited {
@@ -420,6 +434,7 @@ export interface ProcessItem extends AbstractAudited {
   /** Tenant ID. */
   tenantId?: string
   task?: ProcessItemTask
+  message?: ProcessItemMessage
 }
 
 export interface Worker extends AbstractAudited {
@@ -729,16 +744,16 @@ export interface ProcessPatchProcessEntityOptionalParams extends coreClient.Oper
 export type ProcessPatchProcessEntityResponse = Process
 
 /** Optional parameters. */
-export interface ProcessUploadProcessEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessUploadProcessDocumentOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the uploadProcessEntityDocument operation. */
-export type ProcessUploadProcessEntityDocumentResponse = DocumentReference
+/** Contains response data for the uploadProcessDocument operation. */
+export type ProcessUploadProcessDocumentResponse = DocumentReference
 
 /** Optional parameters. */
-export interface ProcessDownloadProcessEntityDocumentOptionalParams extends coreClient.OperationOptions {}
+export interface ProcessDownloadProcessDocumentOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the downloadProcessEntityDocument operation. */
-export interface ProcessDownloadProcessEntityDocumentResponse {
+/** Contains response data for the downloadProcessDocument operation. */
+export interface ProcessDownloadProcessDocumentResponse {
   /**
    * BROWSER ONLY
    *
@@ -832,33 +847,6 @@ export interface ProcessItemPatchProcessItemTaskDataOptionalParams extends coreC
 
 /** Contains response data for the patchProcessItemTaskData operation. */
 export type ProcessItemPatchProcessItemTaskDataResponse = ProcessItem
-
-/** Optional parameters. */
-export interface ProcessItemUploadProcessItemTaskDataDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the uploadProcessItemTaskDataDocument operation. */
-export type ProcessItemUploadProcessItemTaskDataDocumentResponse = DocumentReference
-
-/** Optional parameters. */
-export interface ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the downloadProcessItemTaskDataDocument operation. */
-export interface ProcessItemDownloadProcessItemTaskDataDocumentResponse {
-  /**
-   * BROWSER ONLY
-   *
-   * The response body as a browser Blob.
-   * Always `undefined` in node.js.
-   */
-  blobBody?: Promise<Blob>
-  /**
-   * NODEJS ONLY
-   *
-   * The response body as a node.js Readable stream.
-   * Always `undefined` in the browser.
-   */
-  readableStreamBody?: NodeJS.ReadableStream
-}
 
 /** Optional parameters. */
 export interface ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams
