@@ -71,11 +71,9 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
 
   const updateProcessMetadataRequest: ProcessMetadataUpdateRequest = {
     processId: request.processId,
-    params: {
-      metadata: {
-        value: {
-          REASON: 'Updated',
-        },
+    metadata: {
+      value: {
+        REASON: 'Updated',
       },
     },
   }
@@ -103,7 +101,7 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
   async function createProcessItemAndWaitCompleted(
     processItem: ProcessItemCreateParams & { id: string },
   ): Promise<void> {
-    await kuFlowActivities.KuFlow_Engine_createProcessItem({ params: processItem })
+    await kuFlowActivities.KuFlow_Engine_createProcessItem(processItem)
     await condition(() => kuFlowCompletedTaskIds.includes(processItem.id))
   }
 }

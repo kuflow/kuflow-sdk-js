@@ -29,8 +29,7 @@ import {
   type ProcessCreateParams,
   type ProcessEntityUpdateParams,
   type ProcessMetadataUpdateParams,
-  type ProcessUploadProcessEntityDocumentParams,
-  type ProcessUploadProcessEntityDocumentResponse,
+  type ProcessUploadProcessDocumentResponse,
   type ProcessUploadProcessUserActionDocumentParams,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
@@ -364,15 +363,11 @@ describe('API /processes', () => {
     })
   })
 
-  describe('POST /processes/{id}/entity/~actions/upload-document', () => {
+  describe('POST /processes/{id}/~actions/upload-document', () => {
     test('Check happy path', async () => {
       const processId = randomUUID()
-      const expectedObject: ProcessUploadProcessEntityDocumentResponse = {
-        schemaPath: '#/properties/file',
+      const expectedObject: ProcessUploadProcessDocumentResponse = {
         documentUri: 'kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;',
-      }
-      const command: ProcessUploadProcessEntityDocumentParams = {
-        schemaPath: '#/properties/file',
       }
       const document: Document = {
         contentType: 'application/json',
@@ -381,19 +376,14 @@ describe('API /processes', () => {
       }
 
       const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .post(`/processes/${processId}/entity/~actions/upload-document`)
+        .post(`/processes/${processId}/~actions/upload-document`)
         .query({
           fileContentType: document.contentType,
           fileName: document.fileName,
-          schemaPath: command.schemaPath,
         })
         .reply(200, JSON.stringify(expectedObject))
 
-      const processes = await kuFlowRestClient.processOperations.uploadProcessEntityDocument(
-        processId,
-        command,
-        document,
-      )
+      const processes = await kuFlowRestClient.processOperations.uploadProcessDocument(processId, document)
 
       scope.done()
 
@@ -401,19 +391,19 @@ describe('API /processes', () => {
     })
   })
 
-  describe('GET /processes/{id}/entity/~actions/download-document', () => {
+  describe('GET /processes/{id}/~actions/download-document', () => {
     test('Check happy path', async () => {
       const processId = randomUUID()
       const documentUri = randomUUID()
 
       const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .get(`/processes/${processId}/entity/~actions/download-document`)
+        .get(`/processes/${processId}/~actions/download-document`)
         .query({
           documentUri,
         })
         .reply(200, '{}')
 
-      const download = await kuFlowRestClient.processOperations.downloadProcessEntityDocument(processId, documentUri)
+      const download = await kuFlowRestClient.processOperations.downloadProcessDocument(processId, documentUri)
 
       scope.done()
 

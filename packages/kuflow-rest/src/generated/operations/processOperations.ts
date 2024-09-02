@@ -37,8 +37,8 @@ import type {
   ProcessCreateParams,
   ProcessCreateProcessOptionalParams,
   ProcessCreateProcessResponse,
-  ProcessDownloadProcessEntityDocumentOptionalParams,
-  ProcessDownloadProcessEntityDocumentResponse,
+  ProcessDownloadProcessDocumentOptionalParams,
+  ProcessDownloadProcessDocumentResponse,
   ProcessEntityUpdateParams,
   ProcessFindProcessesOptionalParams,
   ProcessFindProcessesResponse,
@@ -53,8 +53,8 @@ import type {
   ProcessUpdateProcessEntityResponse,
   ProcessUpdateProcessMetadataOptionalParams,
   ProcessUpdateProcessMetadataResponse,
-  ProcessUploadProcessEntityDocumentOptionalParams,
-  ProcessUploadProcessEntityDocumentResponse,
+  ProcessUploadProcessDocumentOptionalParams,
+  ProcessUploadProcessDocumentResponse,
   ProcessUploadProcessUserActionDocumentOptionalParams,
   ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
@@ -260,48 +260,44 @@ export class ProcessOperationsImpl implements ProcessOperations {
   }
 
   /**
-   * Save a document in the process to later be linked into the JSON data.
+   * Upload a temporal document into the process that later on must be linked with a process domain
+   * resource.
+   *
+   * Documents uploaded with this API will be deleted after 24 hours as long as they have not been linked
+   * to a
+   * process or process item..
    *
    * @param id The resource ID.
    * @param fileContentType Document content type
    * @param fileName Document name
-   * @param schemaPath JSON Schema path related to the document. The uploaded document will be validated
-   *                   by the passed schema path.
-   *
-   * ie: "#/properties/file", "#/definitions/UserType/name"
-   *
    * @param file Document to save.
    * @param options The options parameters.
    */
-  async uploadProcessEntityDocument(
+  async uploadProcessDocument(
     id: string,
     fileContentType: string,
     fileName: string,
-    schemaPath: string,
     file: coreRestPipeline.RequestBodyType,
-    options?: ProcessUploadProcessEntityDocumentOptionalParams,
-  ): Promise<ProcessUploadProcessEntityDocumentResponse> {
+    options?: ProcessUploadProcessDocumentOptionalParams,
+  ): Promise<ProcessUploadProcessDocumentResponse> {
     return await this.client.sendOperationRequest(
-      { id, fileContentType, fileName, schemaPath, file, options },
-      uploadProcessEntityDocumentOperationSpec,
+      { id, fileContentType, fileName, file, options },
+      uploadProcessDocumentOperationSpec,
     )
   }
 
   /**
-   * Given a process and a documentUri, download a document.
+   * Given a document uri download a document.
    * @param id The resource ID.
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  async downloadProcessEntityDocument(
+  async downloadProcessDocument(
     id: string,
     documentUri: string,
-    options?: ProcessDownloadProcessEntityDocumentOptionalParams,
-  ): Promise<ProcessDownloadProcessEntityDocumentResponse> {
-    return await this.client.sendOperationRequest(
-      { id, documentUri, options },
-      downloadProcessEntityDocumentOperationSpec,
-    )
+    options?: ProcessDownloadProcessDocumentOptionalParams,
+  ): Promise<ProcessDownloadProcessDocumentResponse> {
+    return await this.client.sendOperationRequest({ id, documentUri, options }, downloadProcessDocumentOperationSpec)
   }
 }
 // Operation Specifications
@@ -492,8 +488,8 @@ const patchProcessEntityOperationSpec: coreClient.OperationSpec = {
   mediaType: 'json',
   serializer,
 }
-const uploadProcessEntityDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/entity/~actions/upload-document',
+const uploadProcessDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/~actions/upload-document',
   httpMethod: 'POST',
   responses: {
     200: {
@@ -504,14 +500,14 @@ const uploadProcessEntityDocumentOperationSpec: coreClient.OperationSpec = {
     },
   },
   requestBody: Parameters.file,
-  queryParameters: [Parameters.fileContentType, Parameters.fileName, Parameters.schemaPath],
+  queryParameters: [Parameters.fileContentType, Parameters.fileName],
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType1, Parameters.accept1],
   mediaType: 'binary',
   serializer,
 }
-const downloadProcessEntityDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/entity/~actions/download-document',
+const downloadProcessDocumentOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/~actions/download-document',
   httpMethod: 'GET',
   responses: {
     200: {

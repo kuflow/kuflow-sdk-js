@@ -36,8 +36,8 @@ import type {
   ProcessCreateParams,
   ProcessCreateProcessOptionalParams,
   ProcessCreateProcessResponse,
-  ProcessDownloadProcessEntityDocumentOptionalParams,
-  ProcessDownloadProcessEntityDocumentResponse,
+  ProcessDownloadProcessDocumentOptionalParams,
+  ProcessDownloadProcessDocumentResponse,
   ProcessEntityUpdateParams,
   ProcessFindProcessesResponse,
   ProcessMetadataUpdateParams,
@@ -52,15 +52,14 @@ import type {
   ProcessUpdateProcessEntityResponse,
   ProcessUpdateProcessMetadataOptionalParams,
   ProcessUpdateProcessMetadataResponse,
-  ProcessUploadProcessEntityDocumentOptionalParams,
-  ProcessUploadProcessEntityDocumentResponse,
+  ProcessUploadProcessDocumentOptionalParams,
+  ProcessUploadProcessDocumentResponse,
   ProcessUploadProcessUserActionDocumentOptionalParams,
   ProcessUploadProcessUserActionDocumentResponse,
 } from '../generated'
 import type {
   Document,
   ProcessFindProcessesOptionalExtParams,
-  ProcessUploadProcessEntityDocumentParams,
   ProcessUploadProcessUserActionDocumentParams,
 } from '../models'
 
@@ -297,40 +296,34 @@ export class ProcessOperations {
   }
 
   /**
-   * Save a document in the process to later be linked into the JSON data.
+   * Upload a temporal document into the process that later on must be linked with a process domain
+   * resource.
+   * <p>
+   * Documents uploaded with this API will be deleted after 24 hours as long as they have not been linked
+   * to a process or process item.
    *
    * @param id The resource ID.
-   * @param processUploadProcessEntityDocumentParams Params info
    * @param document Document to upload.
    * @param options The options parameters.
    */
-  public async uploadProcessEntityDocument(
+  public async uploadProcessDocument(
     id: string,
-    processUploadProcessEntityDocumentParams: ProcessUploadProcessEntityDocumentParams,
     document: Document,
-    options?: ProcessUploadProcessEntityDocumentOptionalParams,
-  ): Promise<ProcessUploadProcessEntityDocumentResponse | undefined> {
+    options?: ProcessUploadProcessDocumentOptionalParams,
+  ): Promise<ProcessUploadProcessDocumentResponse | undefined> {
     const fileContentType = document.contentType
     const fileName = document.fileName
     const file = document.fileContent
-    const schemaPath = processUploadProcessEntityDocumentParams.schemaPath
 
     let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
-    const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
+    const optionsExt: ProcessUploadProcessDocumentOptionalParams = {
       ...options,
       onResponse: rawResponseInner => {
         rawResponse = rawResponseInner
       },
     }
 
-    const process = await this.processOperations.uploadProcessEntityDocument(
-      id,
-      fileContentType,
-      fileName,
-      schemaPath,
-      file,
-      optionsExt,
-    )
+    const process = await this.processOperations.uploadProcessDocument(id, fileContentType, fileName, file, optionsExt)
 
     if (rawResponse == null) {
       return
@@ -353,11 +346,11 @@ export class ProcessOperations {
    * @param documentUri Document URI to download.
    * @param options The options parameters.
    */
-  public async downloadProcessEntityDocument(
+  public async downloadProcessDocument(
     id: string,
     documentUri: string,
-    options?: ProcessDownloadProcessEntityDocumentOptionalParams,
-  ): Promise<ProcessDownloadProcessEntityDocumentResponse> {
-    return await this.processOperations.downloadProcessEntityDocument(id, documentUri, options)
+    options?: ProcessDownloadProcessDocumentOptionalParams,
+  ): Promise<ProcessDownloadProcessDocumentResponse> {
+    return await this.processOperations.downloadProcessDocument(id, documentUri, options)
   }
 }

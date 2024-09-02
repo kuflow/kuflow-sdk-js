@@ -23,13 +23,11 @@
 
 import { describe, expect, test } from '@jest/globals'
 import {
-  type Document,
   type JsonPatchOperation,
   KuFlowRestClient,
   type ProcessItemCreateParams,
   type ProcessItemTaskAssignParams,
   type ProcessItemTaskDataUpdateParams,
-  type ProcessItemUploadProcessItemTaskDataDocumentParams,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
@@ -299,67 +297,6 @@ describe('API /process-items', () => {
       scope.done()
 
       expect(processItem).toStrictEqual(expectedObject)
-    })
-  })
-
-  describe('POST /process-items/{id}/task/data/~actions/upload-document', () => {
-    test('Check happy path', async () => {
-      const expectedObject = mockProcessItem()
-      const params: ProcessItemUploadProcessItemTaskDataDocumentParams = {
-        schemaPath: '#/properties/file"',
-      }
-      const document: Document = {
-        contentType: 'application/json',
-        fileName: 'file.json',
-        fileContent: '{}',
-      }
-      const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .post(`/process-items/${expectedObject.id}/task/data/~actions/upload-document`)
-        .query({
-          schemaPath: params.schemaPath,
-          fileContentType: document.contentType,
-          fileName: document.fileName,
-        })
-        .reply(200, JSON.stringify(expectedObject))
-
-      const processItem = await kuFlowRestClient.processItemOperations.uploadProcessItemTaskDataDocument(
-        expectedObject.id,
-        params,
-        document,
-      )
-
-      scope.done()
-
-      expect(processItem).toStrictEqual(expectedObject)
-    })
-  })
-
-  describe('GET /process-items/{id}/task/data/~actions/download-document', () => {
-    test('Check happy path', async () => {
-      const processItemId = randomUUID()
-      const documentUri = randomUUID()
-      const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .get(`/process-items/${processItemId}/task/data/~actions/download-document`)
-        .query({
-          documentUri,
-        })
-        .reply(200, '{}')
-
-      const download = await kuFlowRestClient.processItemOperations.downloadProcessItemTaskDataDocument(
-        processItemId,
-        documentUri,
-      )
-
-      scope.done()
-
-      expect(download.readableStreamBody).toBeTruthy()
-      if (download.readableStreamBody == null) {
-        return
-      }
-
-      const body = await streamToString(download.readableStreamBody)
-
-      expect(body).toStrictEqual('{}')
     })
   })
 

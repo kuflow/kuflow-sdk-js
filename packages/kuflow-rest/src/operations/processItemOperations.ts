@@ -35,8 +35,6 @@ import type {
   ProcessItemCreateParams,
   ProcessItemCreateProcessItemOptionalParams,
   ProcessItemCreateProcessItemResponse,
-  ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  ProcessItemDownloadProcessItemTaskDataDocumentResponse,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
   ProcessItemFindProcessItemsResponse,
@@ -49,14 +47,8 @@ import type {
   ProcessItemTaskDataUpdateParams,
   ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ProcessItemUpdateProcessItemTaskDataResponse,
-  ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  ProcessItemUploadProcessItemTaskDataDocumentResponse,
 } from '../generated'
-import type {
-  Document,
-  ProcessItemFindProcessItemsOptionalExtParams,
-  ProcessItemUploadProcessItemTaskDataDocumentParams,
-} from '../models'
+import type { ProcessItemFindProcessItemsOptionalExtParams } from '../models'
 
 /** Class containing TaskOperations operations. */
 export class ProcessItemOperations {
@@ -212,49 +204,6 @@ export class ProcessItemOperations {
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
   ): Promise<ProcessItemUpdateProcessItemTaskDataResponse> {
     return await this.processItemOperations.patchProcessItemTaskData(id, jsonPatch, options)
-  }
-
-  /**
-   * Save a document in the task to later be linked into the JSON data.
-   *
-   * @param id The resource ID.
-   * @param processItemUploadProcessItemTaskDataDocumentParams Params info.
-   * @param document Document to upload.
-   * @param options The options parameters.
-   */
-  public async uploadProcessItemTaskDataDocument(
-    id: string,
-    processItemUploadProcessItemTaskDataDocumentParams: ProcessItemUploadProcessItemTaskDataDocumentParams,
-    document: Document,
-    options?: ProcessItemUploadProcessItemTaskDataDocumentOptionalParams,
-  ): Promise<ProcessItemUploadProcessItemTaskDataDocumentResponse> {
-    const fileContentType = document.contentType
-    const fileName = document.fileName
-    const schemaPath = processItemUploadProcessItemTaskDataDocumentParams.schemaPath
-    const file = document.fileContent
-
-    return await this.processItemOperations.uploadProcessItemTaskDataDocument(
-      id,
-      fileContentType,
-      fileName,
-      schemaPath,
-      file,
-      options,
-    )
-  }
-
-  /**
-   * Given a task, download a document from a json form data.
-   * @param id The resource ID.
-   * @param documentUri Document URI to download.
-   * @param options The options parameters.
-   */
-  public async downloadProcessItemTaskDataDocument(
-    id: string,
-    documentUri: string,
-    options?: ProcessItemDownloadProcessItemTaskDataDocumentOptionalParams,
-  ): Promise<ProcessItemDownloadProcessItemTaskDataDocumentResponse> {
-    return await this.processItemOperations.downloadProcessItemTaskDataDocument(id, documentUri, options)
   }
 
   /**

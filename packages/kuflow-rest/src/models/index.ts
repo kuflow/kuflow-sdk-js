@@ -65,16 +65,6 @@ export interface ProcessUploadProcessUserActionDocumentParams {
   userActionValueId: string
 }
 
-export interface ProcessUploadProcessEntityDocumentParams {
-  /**
-   * JSON Schema path related to the document. The uploaded document will be validated by the passed
-   * schema path.
-   * <p>
-   * ie: "#/properties/file", "#/definitions/UserType/name".
-   */
-  schemaPath: string
-}
-
 /** Optional parameters. */
 export interface PrincipalFindPrincipalsOptionalExtParams extends coreClient.OperationOptions {
   /** The number of records returned within a single API call. */
@@ -96,16 +86,6 @@ export interface PrincipalFindPrincipalsOptionalExtParams extends coreClient.Ope
   groupId?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
-}
-
-export interface ProcessItemUploadProcessItemTaskDataDocumentParams {
-  /**
-   * JSON Schema path related to the document. The uploaded document will be validated by the passed
-   * schema path.
-   * <p>
-   * ie: "#/properties/file", "#/definitions/UserType/name".
-   */
-  schemaPath: string
 }
 
 /** Optional parameters. */
