@@ -6,7 +6,8 @@
   },
   "references": [
     { "path": "../kuflow-temporal-activity-kuflow" },
-    { "path": "../kuflow-temporal-core" },
+    { "path": "../kuflow-temporal-workflow-kuflow" },
+    { "path": "../kuflow-temporal-worker" },
     { "path": "../kuflow-rest" }
   ],
   "include": ["./test/**/*.ts"]

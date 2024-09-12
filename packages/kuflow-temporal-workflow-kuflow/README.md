@@ -1,4 +1,6 @@
-# KuFlow Temporal test
+[![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-workflow-kuflow?style=flat-square&label=@kuflow/kuflow-temporal-workflow-kuflow)](https://www.npmjs.com/package/@kuflow/kuflow-temporal-workflow-kuflow)
+
+# KuFlow Temporal workflow KuFlow
 
 > **_"KuFlow is a platform on which you can design and execute your business processes"_**
 

@@ -23,7 +23,7 @@
 
 import { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import { createKuFlowActivities } from '@kuflow/kuflow-temporal-activity-kuflow'
-import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-core'
+import { KuFlowTemporalConnection } from '@kuflow/kuflow-temporal-worker'
 import { Runtime } from '@temporalio/worker'
 import * as dotenv from 'dotenv'
 

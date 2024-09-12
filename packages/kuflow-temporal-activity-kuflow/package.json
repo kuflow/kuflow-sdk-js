@@ -33,7 +33,6 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-temporal-core": "2.0.0-alpha.0",
     "@temporalio/activity": "1.10.3"
   },
   "publishConfig": {

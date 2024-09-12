@@ -29,36 +29,32 @@ import type {
   WorkflowRequest,
   WorkflowResponse,
 } from '@kuflow/kuflow-temporal-activity-kuflow'
-// Import from here to avoid the following error:
-//   Your Workflow code (or a library used by your Workflow code) is importing the following disallowed modules...
-import { KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK, uuid7 } from '@kuflow/kuflow-temporal-activity-kuflow/lib/utils'
 import {
-  condition,
-  defineSignal,
-  type LoggerSinks,
-  proxyActivities,
-  proxySinks,
-  setHandler,
-} from '@temporalio/workflow'
+  KUFLOW_ENGINE_SIGNAL_PROCESS_ITEM,
+  type SignalProcessItem,
+  SignalProcessItemType,
+  uuid7,
+} from '@kuflow/kuflow-temporal-workflow-kuflow'
+import { condition, defineSignal, log, proxyActivities, setHandler } from '@temporalio/workflow'
 
 const kuFlowActivities = proxyActivities<ReturnType<typeof createKuFlowActivities>>({
   startToCloseTimeout: '10 minutes',
   scheduleToCloseTimeout: '356 days',
 })
 
-const { defaultWorkerLogger: logger } = proxySinks<LoggerSinks>()
-
-export const kuFlowEngineCompletedTaskSignal = defineSignal<[string]>(KUFLOW_ENGINE_SIGNAL_COMPLETED_TASK)
+export const kuFlowEngineSignalProcessItem = defineSignal<[SignalProcessItem]>(KUFLOW_ENGINE_SIGNAL_PROCESS_ITEM)
 
 /** A workflow that simply calls an activity */
 export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): Promise<WorkflowResponse> {
   const kuFlowCompletedTaskIds: string[] = []
 
-  setHandler(kuFlowEngineCompletedTaskSignal, (taskId: string) => {
-    kuFlowCompletedTaskIds.push(taskId)
+  setHandler(kuFlowEngineSignalProcessItem, (signal: SignalProcessItem) => {
+    if (signal.type === SignalProcessItemType.TASK) {
+      kuFlowCompletedTaskIds.push(signal.id)
+    }
   })
 
-  logger.info('Start', {})
+  log.info('Start', {})
 
   await createProcessItemAndWaitCompleted({
     id: uuid7(),
@@ -92,7 +88,7 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
   // }
   // await kuFlowActivities.KuFlow_Engine_updateProcessItemTaskData(updateProcessItemTaskData)
 
-  logger.info('End', {})
+  log.info('End', {})
 
   return {
     message: 'OK',

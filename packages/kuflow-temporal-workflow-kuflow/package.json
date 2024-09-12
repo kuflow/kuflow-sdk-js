@@ -1,7 +1,7 @@
 {
-  "name": "@kuflow/kuflow-temporal-core",
+  "name": "@kuflow/kuflow-temporal-workflow-kuflow",
   "version": "2.0.0-alpha.0",
-  "description": "Core library used by KuFlow SDKs and Temporal.",
+  "description": "KuFlow SDK :: Temporal workflows for KuFlow.",
   "keywords": [
     "node",
     "typescript",
@@ -33,8 +33,7 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-rest": "2.0.0-alpha.0",
-    "@temporalio/worker": "1.10.3"
+    "@temporalio/workflow": "1.10.3"
   },
   "publishConfig": {
     "access": "public"

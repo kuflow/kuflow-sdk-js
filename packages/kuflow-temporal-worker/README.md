@@ -1,6 +1,6 @@
-[![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-core?style=flat-square&label=@kuflow/kuflow-temporal-core)](https://www.npmjs.com/package/@kuflow/kuflow-temporal-core)
+[![npm](https://img.shields.io/npm/v/@kuflow/kuflow-temporal-worker?style=flat-square&label=@kuflow/kuflow-temporal-worker)](https://www.npmjs.com/package/@kuflow/kuflow-temporal-worker)
 
-# KuFlow Temporal core
+# KuFlow Temporal worker
 
 > **_"KuFlow is a platform on which you can design and execute your business processes"_**
 
