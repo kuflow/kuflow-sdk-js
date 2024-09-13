@@ -1,7 +1,7 @@
 {
-  "name": "@kuflow/kuflow-temporal-sample",
+  "name": "@kuflow/kuflow-temporal-worker",
   "version": "2.0.0-alpha.0",
-  "private": true,
+  "description": "Worker library used by KuFlow SDKs and Temporal.",
   "keywords": [
     "node",
     "typescript",
@@ -20,32 +20,21 @@
   "license": "MIT",
   "author": "KuFlow S.L. <kuflow@kuflow.com>",
   "sideEffects": false,
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "src",
+    "lib"
+  ],
   "scripts": {
     "build": "npm run build:typescript",
     "build:typescript": "tsc --build",
     "build:watch": "npm run clean && npm run build:typescript -- --watch",
-    "clean": "rimraf lib tsconfig.tsbuildinfo",
-    "start": "ts-node src/worker.ts",
-    "start:watch": "nodemon src/worker.ts"
-  },
-  "nodemonConfig": {
-    "execMap": {
-      "ts": "ts-node"
-    },
-    "ext": "ts",
-    "watch": [
-      "src"
-    ]
+    "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@kuflow/kuflow-rest": "2.0.0-alpha.0",
-    "@kuflow/kuflow-temporal-workflow-kuflow": "2.0.0-alpha.0",
-    "@kuflow/kuflow-temporal-activity-kuflow": "2.0.0-alpha.0",
-    "@kuflow/kuflow-temporal-worker": "2.0.0-alpha.0",
-    "@temporalio/activity": "1.10.3",
-    "@temporalio/client": "1.10.3",
-    "@temporalio/worker": "1.10.3",
-    "@temporalio/workflow": "1.10.3"
+    "@temporalio/worker": "1.10.3"
   },
   "publishConfig": {
     "access": "public"

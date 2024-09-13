@@ -4,6 +4,10 @@
     "outDir": "./lib",
     "rootDir": "./src"
   },
-  "references": [{ "path": "../kuflow-temporal-activity-kuflow" }, { "path": "../kuflow-temporal-core" }],
+  "references": [
+    { "path": "../kuflow-temporal-activity-kuflow" },
+    { "path": "../kuflow-temporal-workflow-kuflow" },
+    { "path": "../kuflow-temporal-worker" }
+  ],
   "include": ["./src/**/*.ts"]
 }
