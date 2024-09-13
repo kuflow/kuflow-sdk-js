@@ -19,7 +19,8 @@ npm run build
 Set the new version to release:
 
 ```bash
-
+npx lerna version --no-push --no-git-tag-version
+npm run prettier:write
 ```
 
 Commit and push the changes:

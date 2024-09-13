@@ -1,6 +1,6 @@
 {
   "name": "@kuflow/kuflow-temporal-worker",
-  "version": "2.0.0",
+  "version": "2.0.1-alpha.0",
   "description": "Worker library used by KuFlow SDKs and Temporal.",
   "keywords": [
     "node",
@@ -33,7 +33,7 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@kuflow/kuflow-rest": "2.0.0",
+    "@kuflow/kuflow-rest": "2.0.1-alpha.0",
     "@temporalio/worker": "1.10.3"
   },
   "publishConfig": {
