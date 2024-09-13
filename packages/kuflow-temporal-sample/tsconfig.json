@@ -5,6 +5,7 @@
     "rootDir": "./src"
   },
   "references": [
+    { "path": "../kuflow-rest" },
     { "path": "../kuflow-temporal-activity-kuflow" },
     { "path": "../kuflow-temporal-workflow-kuflow" },
     { "path": "../kuflow-temporal-worker" }
