@@ -54,7 +54,7 @@ export interface ProcessItemRetrieveResponse {
   processItem: ProcessItem
 }
 
-export interface ProcessItemTaskCreateRequest {
+export interface ProcessItemCreateRequest {
   id: string
   type: ProcessItemType
   processId: string
@@ -63,7 +63,7 @@ export interface ProcessItemTaskCreateRequest {
   task?: ProcessItemTaskCreateParams
 }
 
-export interface ProcessItemTaskCreateResponse {
+export interface ProcessItemCreateResponse {
   processItem: ProcessItem
 }
 

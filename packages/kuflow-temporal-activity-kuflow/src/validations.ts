@@ -29,11 +29,11 @@ import type {
   ProcessEntityPatchRequest,
   ProcessEntityUpdateRequest,
   ProcessInitiatorChangeRequest,
+  ProcessItemCreateRequest,
   ProcessItemRetrieveRequest,
   ProcessItemTaskAssignRequest,
   ProcessItemTaskClaimRequest,
   ProcessItemTaskCompleteRequest,
-  ProcessItemTaskCreateRequest,
   ProcessItemTaskDataPatchRequest,
   ProcessItemTaskDataUpdateRequest,
   ProcessItemTaskLogAppendRequest,
@@ -122,7 +122,7 @@ export function validateProcessItemRetrieveRequest(request: ProcessItemRetrieveR
   }
 }
 
-export function validateProcessItemTaskCreateRequest(request: ProcessItemTaskCreateRequest): void {
+export function validateProcessItemTaskCreateRequest(request: ProcessItemCreateRequest): void {
   if (request.type === 'TASK' && request.task == null) {
     throw ApplicationFailure.nonRetryable("'task' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
   }

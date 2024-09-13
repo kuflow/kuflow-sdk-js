@@ -36,6 +36,8 @@ import type {
   ProcessFindResponse,
   ProcessInitiatorChangeRequest,
   ProcessInitiatorChangeResponse,
+  ProcessItemCreateRequest,
+  ProcessItemCreateResponse,
   ProcessItemFindRequest,
   ProcessItemFindResponse,
   ProcessItemRetrieveRequest,
@@ -46,8 +48,6 @@ import type {
   ProcessItemTaskClaimResponse,
   ProcessItemTaskCompleteRequest,
   ProcessItemTaskCompleteResponse,
-  ProcessItemTaskCreateRequest,
-  ProcessItemTaskCreateResponse,
   ProcessItemTaskDataPatchRequest,
   ProcessItemTaskDataPatchResponse,
   ProcessItemTaskDataUpdateRequest,
@@ -178,7 +178,7 @@ export interface KuFlowActivities {
    * @param request must not be {@literal undefined}.
    * @return process item created
    */
-  KuFlow_Engine_createProcessItem: (request: ProcessItemTaskCreateRequest) => Promise<ProcessItemTaskCreateResponse>
+  KuFlow_Engine_createProcessItem: (request: ProcessItemCreateRequest) => Promise<ProcessItemCreateResponse>
 
   /**
    * Complete a Process Item Task.
@@ -412,8 +412,8 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   }
 
   async function KuFlow_Engine_createProcessItem(
-    request: ProcessItemTaskCreateRequest,
-  ): Promise<ProcessItemTaskCreateResponse> {
+    request: ProcessItemCreateRequest,
+  ): Promise<ProcessItemCreateResponse> {
     validateProcessItemTaskCreateRequest(request)
 
     const processItem = await kuFlowRestClient.processItemOperations.createProcessItem({
