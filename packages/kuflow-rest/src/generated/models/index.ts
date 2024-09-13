@@ -536,41 +536,14 @@ export interface WebhookEventProcessItemTaskStateChanged extends WebhookEvent {
   data: WebhookEventProcessItemTaskStateChangedData
 }
 
-/** Known values of {@link JsonPatchOperationType} that the service accepts. */
-export enum KnownJsonPatchOperationType {
-  /** Add */
-  Add = 'add',
-  /** Remove */
-  Remove = 'remove',
-  /** Replace */
-  Replace = 'replace',
-  /** Move */
-  Move = 'move',
-  /** Copy */
-  Copy = 'copy',
-  /** Test */
-  Test = 'test',
-}
-
-/**
- * Defines values for JsonPatchOperationType. \
- * {@link KnownJsonPatchOperationType} can be used interchangeably with JsonPatchOperationType,
- *  this enum contains the known values that the service supports.
- * ### Known values supported by the service
- * **add** \
- * **remove** \
- * **replace** \
- * **move** \
- * **copy** \
- * **test**
- */
-export type JsonPatchOperationType = string
 /** Defines values for AuthenticationType. */
 export type AuthenticationType = 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE'
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
 /** Defines values for ProcessState. */
 export type ProcessState = 'RUNNING' | 'COMPLETED' | 'CANCELLED'
+/** Defines values for JsonPatchOperationType. */
+export type JsonPatchOperationType = 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test'
 /** Defines values for ProcessItemType. */
 export type ProcessItemType = 'TASK' | 'MESSAGE'
 /** Defines values for ProcessItemTaskState. */

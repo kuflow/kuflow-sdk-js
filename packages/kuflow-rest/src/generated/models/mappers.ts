@@ -607,7 +607,8 @@ export const JsonPatchOperation: coreClient.CompositeMapper = {
         serializedName: 'op',
         required: true,
         type: {
-          name: 'String',
+          name: 'Enum',
+          allowedValues: ['add', 'remove', 'replace', 'move', 'copy', 'test'],
         },
       },
       from: {
