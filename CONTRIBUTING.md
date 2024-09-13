@@ -19,7 +19,7 @@ npm run build
 Set the new version to release:
 
 ```bash
-npx lerna version --no-push --no-git-tag-version
+
 ```
 
 Commit and push the changes:
