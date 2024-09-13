@@ -217,6 +217,7 @@ export interface TaskDefinitionSummary {
 }
 
 export interface ProcessItemMessagePageItem {
+  /** Message text in Markdown format according to the specification https://spec.commonmark.org/ */
   text?: string
   dataStructureDataDefinitionCode?: string
 }
@@ -239,6 +240,7 @@ export interface ProcessItemTaskCreateParams {
 }
 
 export interface ProcessItemMessageCreateParams {
+  /** Message text in Markdown format according to the specification https://spec.commonmark.org/ */
   text?: string
   /** Json value. */
   data?: JsonValue
@@ -263,6 +265,7 @@ export interface ProcessItemTaskLog {
 }
 
 export interface ProcessItemMessage {
+  /** Message text in Markdown format according to the specification https://spec.commonmark.org/ */
   text?: string
   /** Json value. */
   data?: JsonValue
