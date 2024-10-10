@@ -21,11 +21,27 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import type {
+  TenantFindTenantsOptionalParams,
+  TenantFindTenantsResponse,
+  TenantRetrieveTenantOptionalParams,
+  TenantRetrieveTenantResponse,
+} from '../models'
+
+/** Interface representing a TenantOperations. */
+export interface TenantOperations {
+  /**
+   * List all the Tenants that the credentials used has access to.
+   *
+   * Available sort query values: id, name
+   *
+   * @param options The options parameters.
+   */
+  findTenants: (options?: TenantFindTenantsOptionalParams) => Promise<TenantFindTenantsResponse>
+  /**
+   * Returns the requested Tenant when has access to do it.
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  retrieveTenant: (id: string, options?: TenantRetrieveTenantOptionalParams) => Promise<TenantRetrieveTenantResponse>
+}
