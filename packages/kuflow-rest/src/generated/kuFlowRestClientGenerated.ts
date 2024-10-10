@@ -69,7 +69,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
       credential: credentials,
     }
 
-    const packageDetails = `azsdk-js-kuflow-rest/0.0.1`
+    const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`
     const userAgentPrefix = options.userAgentOptions?.userAgentPrefix
       ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
       : `${packageDetails}`

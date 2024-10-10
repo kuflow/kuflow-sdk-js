@@ -31,6 +31,9 @@ import type {
   ProcessItemPageItem,
   ProcessPage,
   ProcessPageItem,
+  Tenant,
+  TenantPage,
+  TenantPageItem,
   TenantUser,
 } from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
@@ -56,6 +59,33 @@ export function mockPrincipalUser(): Principal {
       id: randomUUID(),
       email: `dummy-${randomInt(1, 1_000)}@example.com`,
     },
+  }
+}
+
+export function mockTenant(): Tenant {
+  return {
+    id: randomUUID(),
+    name: 'My tenant name',
+    plan: 'FREE',
+  }
+}
+
+export function mockTenantPageItem(): TenantPageItem {
+  return {
+    id: randomUUID(),
+    name: 'My tenant name',
+  }
+}
+
+export function mockTenantPage(): TenantPage {
+  return {
+    metadata: {
+      size: 25,
+      page: 0,
+      totalElements: 1,
+      totalPages: 1,
+    },
+    content: [mockTenantPageItem()],
   }
 }
 
