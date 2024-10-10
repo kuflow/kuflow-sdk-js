@@ -14,7 +14,7 @@ Run all the tests with:
 npm run build
 ```
 
-## Create a new version and let to the CI publish the new version
+## Automatic way (CI): Create a new version and let to the CI publish the new version
 
 Set the new version to release:
 
@@ -33,7 +33,7 @@ git push
 
 Let the CI/CD publish the new version to the registry.
 
-## Release a new version
+## Manual way: Release a new version
 
 From `main` branch do
 
@@ -43,7 +43,7 @@ npx lerna version --force-publish
 
 Select the version that you want to release and follow the lerna instructions.
 
-## Publish a new version in next tag
+Publish a new version in next tag
 
 ```bash
 npx lerna publish from-package --registry https://registry.npmjs.org --dist-tag next
