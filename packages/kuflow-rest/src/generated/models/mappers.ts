@@ -397,6 +397,29 @@ export const PrincipalApplication: coreClient.CompositeMapper = {
   },
 }
 
+export const TenantPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TenantPageItem',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      name: {
+        serializedName: 'name',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
 export const JsonValue: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -1409,6 +1432,38 @@ export const Authentication: coreClient.CompositeMapper = {
   },
 }
 
+export const Tenant: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'Tenant',
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      name: {
+        serializedName: 'name',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      plan: {
+        serializedName: 'plan',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['FREE', 'PREMIUM', 'UNLIMITED'],
+        },
+      },
+    },
+  },
+}
+
 export const TenantUserPageItem: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -1868,6 +1923,21 @@ export const RobotPageItem: coreClient.CompositeMapper = {
           name: 'String',
         },
       },
+      sourceType: {
+        serializedName: 'sourceType',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['PACKAGE', 'UNKNOWN'],
+        },
+      },
+      sourceFile: {
+        serializedName: 'sourceFile',
+        type: {
+          name: 'Composite',
+          className: 'RobotSourceFile',
+        },
+      },
       tenantId: {
         serializedName: 'tenantId',
         required: true,
@@ -1975,6 +2045,29 @@ export const PrincipalPage: coreClient.CompositeMapper = {
             type: {
               name: 'Composite',
               className: 'PrincipalPageItem',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const TenantPage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'TenantPage',
+    modelProperties: {
+      ...Page.type.modelProperties,
+      content: {
+        serializedName: 'content',
+        required: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'TenantPageItem',
             },
           },
         },

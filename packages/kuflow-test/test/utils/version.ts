@@ -21,11 +21,14 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+
+// Resolving the path to package.json
+const packageJsonPath = resolve(__dirname, '../../../kuflow-rest/package.json')
+
+// Read the package.json file and parse its content
+const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'))
+
+// Export the version as a constant
+export const version: string = packageJson.version

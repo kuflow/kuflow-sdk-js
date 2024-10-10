@@ -117,6 +117,11 @@ export interface PrincipalApplication {
   id?: string
 }
 
+export interface TenantPageItem {
+  id: string
+  name: string
+}
+
 /** Json value. */
 export interface JsonValue {
   /**
@@ -367,6 +372,13 @@ export interface Authentication extends AbstractAudited {
   engineCertificate?: AuthenticationEngineCertificate
 }
 
+export interface Tenant extends AbstractAudited {
+  id: string
+  name: string
+  /** Tenant pricing plan */
+  plan: TenantPricingPlan
+}
+
 export interface TenantUserPageItem extends AbstractAudited {
   /** NOTE: This property will not be serialized. It can only be populated by the server. */
   readonly id: string
@@ -465,6 +477,10 @@ export interface RobotPageItem extends AbstractAudited {
   name: string
   /** Robot description. */
   description?: string
+  /** Robot source type */
+  sourceType: RobotSourceType
+  /** Robot source type */
+  sourceFile: RobotSourceFile
   /** Tenant ID. */
   tenantId: string
 }
@@ -490,6 +506,10 @@ export interface Robot extends AbstractAudited {
 
 export interface PrincipalPage extends Page {
   content: PrincipalPageItem[]
+}
+
+export interface TenantPage extends Page {
+  content: TenantPageItem[]
 }
 
 export interface TenantUserPage extends Page {
@@ -540,6 +560,8 @@ export interface WebhookEventProcessItemTaskStateChanged extends WebhookEvent {
 export type AuthenticationType = 'ENGINE_TOKEN' | 'ENGINE_CERTIFICATE'
 /** Defines values for PrincipalType. */
 export type PrincipalType = 'USER' | 'APPLICATION' | 'SYSTEM'
+/** Defines values for TenantPricingPlan. */
+export type TenantPricingPlan = 'FREE' | 'PREMIUM' | 'UNLIMITED'
 /** Defines values for ProcessState. */
 export type ProcessState = 'RUNNING' | 'COMPLETED' | 'CANCELLED'
 /** Defines values for JsonPatchOperationType. */
@@ -604,6 +626,34 @@ export interface PrincipalRetrievePrincipalOptionalParams extends coreClient.Ope
 
 /** Contains response data for the retrievePrincipal operation. */
 export type PrincipalRetrievePrincipalResponse = Principal
+
+/** Optional parameters. */
+export interface TenantFindTenantsOptionalParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string[]
+  /** Filter by tenantId. */
+  tenantId?: string[]
+}
+
+/** Contains response data for the findTenants operation. */
+export type TenantFindTenantsResponse = TenantPage
+
+/** Optional parameters. */
+export interface TenantRetrieveTenantOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the retrieveTenant operation. */
+export type TenantRetrieveTenantResponse = Tenant
 
 /** Optional parameters. */
 export interface TenantUserFindTenantUsersOptionalParams extends coreClient.OperationOptions {

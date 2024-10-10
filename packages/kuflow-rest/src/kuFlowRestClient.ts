@@ -31,6 +31,7 @@ import {
   ProcessItemOperations,
   ProcessOperations,
   RobotOperations,
+  TenantOperations,
   TenantUserOperations,
   WorkerOperations,
 } from './operations'
@@ -63,6 +64,11 @@ export class KuFlowRestClient {
    * Principal API operations.
    */
   public readonly principalOperations: PrincipalOperations
+
+  /**
+   * Tenant API operations.
+   */
+  public readonly tenantOperations: TenantOperations
 
   /**
    * Tenant User API operations.
@@ -105,6 +111,7 @@ export class KuFlowRestClient {
 
     this.authenticationOperations = new AuthenticationOperations(clientGenerated)
     this.principalOperations = new PrincipalOperations(clientGenerated)
+    this.tenantOperations = new TenantOperations(clientGenerated)
     this.tenantUserOperations = new TenantUserOperations(clientGenerated)
     this.processOperations = new ProcessOperations(clientGenerated)
     this.processItemOperations = new ProcessItemOperations(clientGenerated)

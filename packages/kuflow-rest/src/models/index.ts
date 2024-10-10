@@ -89,6 +89,25 @@ export interface PrincipalFindPrincipalsOptionalExtParams extends coreClient.Ope
 }
 
 /** Optional parameters. */
+export interface TenantFindTenantOptionalExtParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
+}
+
+/** Optional parameters. */
 export interface TenantUserFindTenantUsersOptionalExtParams extends coreClient.OperationOptions {
   /** The number of records returned within a single API call. */
   size?: number

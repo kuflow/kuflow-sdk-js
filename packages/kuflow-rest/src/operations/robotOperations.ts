@@ -39,7 +39,7 @@ export class RobotOperations {
   private readonly robotOperationsGenerated: RobotOperationsGenerated
 
   /**
-   * Initialize a new instance of the class TenantUserOperations class.
+   * Initialize a new instance of the class RobotOperations class.
    * @param clientGenerated Reference to the service client
    */
   public constructor(clientGenerated: KuFlowRestClientGenerated) {

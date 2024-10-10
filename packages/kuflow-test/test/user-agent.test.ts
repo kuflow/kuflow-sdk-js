@@ -21,11 +21,33 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import { describe, expect, test } from '@jest/globals'
+import { KuFlowRestClient } from '@kuflow/kuflow-rest'
+import nock from 'nock'
+
+import { version } from './utils/version'
+
+const clientId = 'USER1'
+const clientSecret = 'PASS1'
+const token = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+
+const kuFlowRestClient = new KuFlowRestClient({ clientId, clientSecret })
+
+describe('API User Agent', () => {
+  test('Check User Agent', async () => {
+    const userAgent = `sdk-js-kuflow-rest/${version}`
+
+    const scope = nock('https://api.kuflow.com/v2024-06-14')
+      .get('/tenants')
+      .matchHeader('authorization', 'Bearer ' + token)
+      .query({ size: 25, page: 0 })
+      .reply(function (uri, requestBody) {
+        expect(this.req.headers['user-agent']).toContain(userAgent)
+        return [200, {}]
+      })
+
+    await kuFlowRestClient.tenantOperations.findTenants()
+
+    scope.done()
+  })
+})
