@@ -122,9 +122,58 @@ export function validateProcessItemRetrieveRequest(request: ProcessItemRetrieveR
   }
 }
 
-export function validateProcessItemTaskCreateRequest(request: ProcessItemCreateRequest): void {
-  if (request.type === 'TASK' && request.task == null) {
-    throw ApplicationFailure.nonRetryable("'task' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+export function validateProcessItemCreateRequest(request: ProcessItemCreateRequest): void {
+  if (request.id == null) {
+    throw ApplicationFailure.nonRetryable("'id' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+
+  if (request.processId == null) {
+    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+
+  if (request.type == null) {
+    throw ApplicationFailure.nonRetryable("'type' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  }
+
+  if (request.type === 'TASK') {
+    if (request.processItemDefinitionCode == null) {
+      throw ApplicationFailure.nonRetryable(
+        "'processItemDefinitionCode' is required for task items",
+        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
+      )
+    }
+  }
+
+  if (request.type === 'MESSAGE') {
+    if (request.message == null) {
+      throw ApplicationFailure.nonRetryable(
+        "'message' is required for message items",
+        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
+      )
+    }
+
+    if (request.message.text == null && request.message.data == null) {
+      throw ApplicationFailure.nonRetryable(
+        "'message.text' and/or 'message.data' is required for message items",
+        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
+      )
+    }
+
+    if (request.message.data != null && request.message.dataStructureDataDefinitionCode == null) {
+      throw ApplicationFailure.nonRetryable(
+        "'message.dataStructureDataDefinitionCode' is required for message items when 'message.data' is set",
+        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
+      )
+    }
+  }
+
+  if (request.type === 'THREAD') {
+    if (request.processItemDefinitionCode == null) {
+      throw ApplicationFailure.nonRetryable(
+        "'processItemDefinitionCode' is required for thread items",
+        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
+      )
+    }
   }
 }
 

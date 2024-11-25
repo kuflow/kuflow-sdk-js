@@ -80,7 +80,7 @@ describe('API /process-items', () => {
           processId: 'a0ae7688-eb96-4c0b-94fc-0e998610e9c9',
           type: 'TASK',
           taskState: 'READY',
-          taskDefinitionCode: 'CODE',
+          processItemDefinitionCode: 'CODE',
         })
         .reply(200, {})
 
@@ -91,7 +91,7 @@ describe('API /process-items', () => {
         processId: 'a0ae7688-eb96-4c0b-94fc-0e998610e9c9',
         type: 'TASK',
         taskState: 'READY',
-        taskDefinitionCode: 'CODE',
+        processItemDefinitionCode: 'CODE',
       })
 
       scope.done()
@@ -107,7 +107,7 @@ describe('API /process-items', () => {
           processId: 'a0ae7688-eb96-4c0b-94fc-0e998610e9c9',
           type: 'TASK',
           taskState: 'READY',
-          taskDefinitionCode: 'CODE',
+          processItemDefinitionCode: 'CODE',
         })
         .reply(200, {})
 
@@ -118,7 +118,7 @@ describe('API /process-items', () => {
         processId: ['a0ae7688-eb96-4c0b-94fc-0e998610e9c9'],
         type: ['TASK'],
         taskState: ['READY'],
-        taskDefinitionCode: ['CODE'],
+        processItemDefinitionCode: ['CODE'],
       })
 
       scope.done()
@@ -134,7 +134,7 @@ describe('API /process-items', () => {
           processId: ['a0ae7688-eb96-4c0b-94fc-0e998610e9c9', 'f5b088a4-be04-44e2-b1be-3a5eefdbf6b2'],
           type: ['TASK', 'MESSAGE'],
           taskState: ['READY', 'CLAIMED'],
-          taskDefinitionCode: ['CODE_1', 'CODE_2'],
+          processItemDefinitionCode: ['CODE_1', 'CODE_2'],
         })
         .reply(200, {})
 
@@ -145,7 +145,7 @@ describe('API /process-items', () => {
         processId: ['a0ae7688-eb96-4c0b-94fc-0e998610e9c9', 'f5b088a4-be04-44e2-b1be-3a5eefdbf6b2'],
         type: ['TASK', 'MESSAGE'],
         taskState: ['READY', 'CLAIMED'],
-        taskDefinitionCode: ['CODE_1', 'CODE_2'],
+        processItemDefinitionCode: ['CODE_1', 'CODE_2'],
       })
 
       scope.done()

@@ -57,8 +57,8 @@ describe('E2E Test', () => {
       id: 'a883aed1-815f-4b55-9bdd-6ddae1cc31df',
       processId: process.id,
       type: 'TASK',
+      processItemDefinitionCode: 'TASK_0001',
       task: {
-        taskDefinitionCode: 'TASK_0001',
         data: {
           value: {
             ss: [2, 5],

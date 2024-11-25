@@ -257,7 +257,7 @@ const findProcessItemsOperationSpec: coreClient.OperationSpec = {
     Parameters.processId,
     Parameters.typeParam1,
     Parameters.taskState,
-    Parameters.taskDefinitionCode,
+    Parameters.processItemDefinitionCode,
   ],
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.accept],

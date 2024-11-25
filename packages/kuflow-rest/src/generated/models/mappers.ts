@@ -478,10 +478,10 @@ export const JsonValueError: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessDefinitionSummary: coreClient.CompositeMapper = {
+export const ProcessDefinitionRef: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessDefinitionSummary',
+    className: 'ProcessDefinitionRef',
     modelProperties: {
       id: {
         serializedName: 'id',
@@ -495,17 +495,6 @@ export const ProcessDefinitionSummary: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Uuid',
-        },
-      },
-      name: {
-        constraints: {
-          MaxLength: 50,
-          MinLength: 1,
-        },
-        serializedName: 'name',
-        required: true,
-        type: {
-          name: 'String',
         },
       },
     },
@@ -690,34 +679,10 @@ export const DocumentReference: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessItemTaskPageItem: coreClient.CompositeMapper = {
+export const ProcessItemDefinitionRef: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessItemTaskPageItem',
-    modelProperties: {
-      state: {
-        serializedName: 'state',
-        required: true,
-        type: {
-          name: 'Enum',
-          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
-        },
-      },
-      taskDefinition: {
-        serializedName: 'taskDefinition',
-        type: {
-          name: 'Composite',
-          className: 'TaskDefinitionSummary',
-        },
-      },
-    },
-  },
-}
-
-export const TaskDefinitionSummary: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'TaskDefinitionSummary',
+    className: 'ProcessItemDefinitionRef',
     modelProperties: {
       id: {
         serializedName: 'id',
@@ -740,15 +705,21 @@ export const TaskDefinitionSummary: coreClient.CompositeMapper = {
           name: 'String',
         },
       },
-      name: {
-        constraints: {
-          MaxLength: 50,
-          MinLength: 1,
-        },
-        serializedName: 'name',
+    },
+  },
+}
+
+export const ProcessItemTaskPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemTaskPageItem',
+    modelProperties: {
+      state: {
+        serializedName: 'state',
         required: true,
         type: {
-          name: 'String',
+          name: 'Enum',
+          allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
         },
       },
     },
@@ -792,7 +763,7 @@ export const ProcessItemCreateParams: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE'],
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
         },
       },
       processId: {
@@ -810,6 +781,12 @@ export const ProcessItemCreateParams: coreClient.CompositeMapper = {
       },
       ownerEmail: {
         serializedName: 'ownerEmail',
+        type: {
+          name: 'String',
+        },
+      },
+      processItemDefinitionCode: {
+        serializedName: 'processItemDefinitionCode',
         type: {
           name: 'String',
         },
@@ -837,13 +814,6 @@ export const ProcessItemTaskCreateParams: coreClient.CompositeMapper = {
     name: 'Composite',
     className: 'ProcessItemTaskCreateParams',
     modelProperties: {
-      taskDefinitionCode: {
-        serializedName: 'taskDefinitionCode',
-        required: true,
-        type: {
-          name: 'String',
-        },
-      },
       data: {
         serializedName: 'data',
         type: {
@@ -894,13 +864,6 @@ export const ProcessItemTask: coreClient.CompositeMapper = {
         type: {
           name: 'Enum',
           allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
-        },
-      },
-      taskDefinition: {
-        serializedName: 'taskDefinition',
-        type: {
-          name: 'Composite',
-          className: 'TaskDefinitionSummary',
         },
       },
       data: {
@@ -1323,13 +1286,7 @@ export const WebhookEventProcessItemCreatedData: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE'],
-        },
-      },
-      processItemTaskCode: {
-        serializedName: 'processItemTaskCode',
-        type: {
-          name: 'String',
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
         },
       },
       processItemState: {
@@ -1337,6 +1294,12 @@ export const WebhookEventProcessItemCreatedData: coreClient.CompositeMapper = {
         type: {
           name: 'Enum',
           allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      processItemDefinitionCode: {
+        serializedName: 'processItemDefinitionCode',
+        type: {
+          name: 'String',
         },
       },
     },
@@ -1367,14 +1330,7 @@ export const WebhookEventProcessItemTaskStateChangedData: coreClient.CompositeMa
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE'],
-        },
-      },
-      processItemTaskCode: {
-        serializedName: 'processItemTaskCode',
-        required: true,
-        type: {
-          name: 'String',
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
         },
       },
       processItemState: {
@@ -1383,6 +1339,13 @@ export const WebhookEventProcessItemTaskStateChangedData: coreClient.CompositeMa
         type: {
           name: 'Enum',
           allowedValues: ['READY', 'CLAIMED', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      processItemDefinitionCode: {
+        serializedName: 'processItemDefinitionCode',
+        required: true,
+        type: {
+          name: 'String',
         },
       },
     },
@@ -1558,11 +1521,11 @@ export const ProcessPageItem: coreClient.CompositeMapper = {
           allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
         },
       },
-      processDefinition: {
-        serializedName: 'processDefinition',
+      processDefinitionRef: {
+        serializedName: 'processDefinitionRef',
         type: {
           name: 'Composite',
-          className: 'ProcessDefinitionSummary',
+          className: 'ProcessDefinitionRef',
         },
       },
       initiatorId: {
@@ -1603,11 +1566,11 @@ export const Process: coreClient.CompositeMapper = {
           allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
         },
       },
-      processDefinition: {
-        serializedName: 'processDefinition',
+      processDefinitionRef: {
+        serializedName: 'processDefinitionRef',
         type: {
           name: 'Composite',
-          className: 'ProcessDefinitionSummary',
+          className: 'ProcessDefinitionRef',
         },
       },
       metadata: {
@@ -1666,7 +1629,7 @@ export const ProcessItemPageItem: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE'],
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
         },
       },
       processId: {
@@ -1687,6 +1650,13 @@ export const ProcessItemPageItem: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Uuid',
+        },
+      },
+      processItemDefinitionRef: {
+        serializedName: 'processItemDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemDefinitionRef',
         },
       },
       task: {
@@ -1725,7 +1695,7 @@ export const ProcessItem: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE'],
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
         },
       },
       processId: {
@@ -1745,6 +1715,13 @@ export const ProcessItem: coreClient.CompositeMapper = {
         serializedName: 'tenantId',
         type: {
           name: 'Uuid',
+        },
+      },
+      processItemDefinitionRef: {
+        serializedName: 'processItemDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemDefinitionRef',
         },
       },
       task: {

@@ -148,10 +148,9 @@ export interface JsonValueError {
   type?: string
 }
 
-export interface ProcessDefinitionSummary {
+export interface ProcessDefinitionRef {
   id: string
   version: string
-  name: string
 }
 
 export interface ProcessCreateParams {
@@ -208,17 +207,15 @@ export interface DocumentReference {
   documentUri: string
 }
 
-export interface ProcessItemTaskPageItem {
-  /** Process Item Task state */
-  state: ProcessItemTaskState
-  taskDefinition: TaskDefinitionSummary
-}
-
-export interface TaskDefinitionSummary {
+export interface ProcessItemDefinitionRef {
   id: string
   version: string
   code: string
-  name: string
+}
+
+export interface ProcessItemTaskPageItem {
+  /** Process Item Task state */
+  state: ProcessItemTaskState
 }
 
 export interface ProcessItemMessagePageItem {
@@ -234,12 +231,12 @@ export interface ProcessItemCreateParams {
   processId: string
   ownerId?: string
   ownerEmail?: string
+  processItemDefinitionCode?: string
   task?: ProcessItemTaskCreateParams
   message?: ProcessItemMessageCreateParams
 }
 
 export interface ProcessItemTaskCreateParams {
-  taskDefinitionCode: string
   /** Json value. */
   data?: JsonValue
 }
@@ -255,7 +252,6 @@ export interface ProcessItemMessageCreateParams {
 export interface ProcessItemTask {
   /** Process Item Task state */
   state: ProcessItemTaskState
-  taskDefinition: TaskDefinitionSummary
   /** Json value. */
   data?: JsonValue
   logs?: ProcessItemTaskLog[]
@@ -348,9 +344,9 @@ export interface WebhookEventProcessItemCreatedData {
   processItemId: string
   /** Process Item Type */
   processItemType: ProcessItemType
-  processItemTaskCode?: string
   /** Process Item Task state */
   processItemState?: ProcessItemTaskState
+  processItemDefinitionCode?: string
 }
 
 export interface WebhookEventProcessItemTaskStateChangedData {
@@ -358,9 +354,9 @@ export interface WebhookEventProcessItemTaskStateChangedData {
   processItemId: string
   /** Process Item Type */
   processItemType: ProcessItemType
-  processItemTaskCode: string
   /** Process Item Task state */
   processItemState: ProcessItemTaskState
+  processItemDefinitionCode: string
 }
 
 export interface Authentication extends AbstractAudited {
@@ -402,7 +398,7 @@ export interface ProcessPageItem extends AbstractAudited {
   id: string
   /** Process state */
   state: ProcessState
-  processDefinition: ProcessDefinitionSummary
+  processDefinitionRef: ProcessDefinitionRef
   /** Principal ID. */
   initiatorId?: string
   /** Tenant ID. */
@@ -414,7 +410,7 @@ export interface Process extends AbstractAudited {
   id: string
   /** Process state */
   state: ProcessState
-  processDefinition: ProcessDefinitionSummary
+  processDefinitionRef?: ProcessDefinitionRef
   /** Json value. */
   metadata?: JsonValue
   /** Json value. */
@@ -435,6 +431,7 @@ export interface ProcessItemPageItem extends AbstractAudited {
   ownerId?: string
   /** Tenant ID. */
   tenantId: string
+  processItemDefinitionRef?: ProcessItemDefinitionRef
   task?: ProcessItemTaskPageItem
   message?: ProcessItemMessagePageItem
 }
@@ -448,6 +445,7 @@ export interface ProcessItem extends AbstractAudited {
   ownerId?: string
   /** Tenant ID. */
   tenantId?: string
+  processItemDefinitionRef?: ProcessItemDefinitionRef
   task?: ProcessItemTask
   message?: ProcessItemMessage
 }
@@ -567,7 +565,7 @@ export type ProcessState = 'RUNNING' | 'COMPLETED' | 'CANCELLED'
 /** Defines values for JsonPatchOperationType. */
 export type JsonPatchOperationType = 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test'
 /** Defines values for ProcessItemType. */
-export type ProcessItemType = 'TASK' | 'MESSAGE'
+export type ProcessItemType = 'TASK' | 'MESSAGE' | 'THREAD'
 /** Defines values for ProcessItemTaskState. */
 export type ProcessItemTaskState = 'READY' | 'CLAIMED' | 'COMPLETED' | 'CANCELLED'
 /** Defines values for ProcessItemTaskLogLevel. */
@@ -820,7 +818,7 @@ export interface ProcessItemFindProcessItemsOptionalParams extends coreClient.Op
   /** Filter by an array of task states. */
   taskState?: ProcessItemTaskState[]
   /** Filter by an array of task definition codes. */
-  taskDefinitionCode?: string[]
+  processItemDefinitionCode?: string[]
 }
 
 /** Contains response data for the findProcessItems operation. */

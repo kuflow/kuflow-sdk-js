@@ -27,7 +27,8 @@ typescript: true
 title: KuFlow
 override-client-name: KuFlowRestClientGenerated
 
-input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/35722a6f30bf79a8c3a3f0faf85860ceb224fd37/specs/api.kuflow.com/v2024-06-14/openapi.yaml
+#input-file: https://raw.githubusercontent.com/kuflow/kuflow-openapi/35722a6f30bf79a8c3a3f0faf85860ceb224fd37/specs/api.kuflow.com/v2024-06-14/openapi.yaml
+input-file: /home/jrodped/Projects/kuflow-openapi/specs/api.kuflow.com/v2024-06-14/openapi.yaml
 output-folder: ../
 source-code-folder-path: ./src/generated
 
@@ -77,5 +78,19 @@ directive:
       if ($.format === 'date-time') {
         $.format = undefined;
         $.description = `${$.description ? ($.description + ' - ') : ''}date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z`;
+      }
+```
+
+### Mark all enums with 'modelAsString = false'
+
+```yaml
+directive:
+  - from: openapi-document
+    where: $.components.schemas[*]
+    transform: |
+      if ($.enum && !$['x-ms-enum']) {
+        $['x-ms-enum'] = {
+          modelAsString: false
+        }
       }
 ```

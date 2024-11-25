@@ -153,8 +153,8 @@ export interface ProcessItemFindProcessItemsOptionalExtParams extends coreClient
   type?: ProcessItemType | ProcessItemType[]
   /** Filter by an array of task states. */
   taskState?: ProcessItemTaskState | ProcessItemTaskState[]
-  /** Filter by an array of task definition codes. */
-  taskDefinitionCode?: string | string[]
+  /** Filter by an array of process item definition codes. */
+  processItemDefinitionCode?: string | string[]
 }
 
 /** Optional parameters. */

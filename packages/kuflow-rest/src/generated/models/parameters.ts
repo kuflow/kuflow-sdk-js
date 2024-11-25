@@ -360,7 +360,7 @@ export const typeParam1: OperationQueryParameter = {
       element: {
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE'],
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
         },
       },
     },
@@ -385,10 +385,10 @@ export const taskState: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
-export const taskDefinitionCode: OperationQueryParameter = {
-  parameterPath: ['options', 'taskDefinitionCode'],
+export const processItemDefinitionCode: OperationQueryParameter = {
+  parameterPath: ['options', 'processItemDefinitionCode'],
   mapper: {
-    serializedName: 'taskDefinitionCode',
+    serializedName: 'processItemDefinitionCode',
     type: {
       name: 'Sequence',
       element: {
