@@ -32,7 +32,6 @@ import type {
 import {
   KUFLOW_ENGINE_SIGNAL_PROCESS_ITEM,
   type SignalProcessItem,
-  SignalProcessItemType,
   uuid7,
 } from '@kuflow/kuflow-temporal-workflow-kuflow'
 import { condition, defineSignal, log, proxyActivities, setHandler } from '@temporalio/workflow'
@@ -49,7 +48,7 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
   const kuFlowCompletedTaskIds: string[] = []
 
   setHandler(kuFlowEngineSignalProcessItem, (signal: SignalProcessItem) => {
-    if (signal.type === SignalProcessItemType.TASK) {
+    if (signal.type === 'TASK') {
       kuFlowCompletedTaskIds.push(signal.id)
     }
   })
@@ -60,9 +59,7 @@ export async function SampleEngineWorkerLoanWorkflow(request: WorkflowRequest): 
     id: uuid7(),
     type: 'TASK',
     processId: request.processId,
-    task: {
-      taskDefinitionCode: 'LOAN_APPLICATION',
-    },
+    processItemDefinitionCode: 'LOAN_APPLICATION',
   })
 
   const updateProcessMetadataRequest: ProcessMetadataUpdateRequest = {

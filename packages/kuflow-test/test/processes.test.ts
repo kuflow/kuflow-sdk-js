@@ -153,7 +153,7 @@ describe('API /processes', () => {
 
       const processCreateParams: ProcessCreateParams = {
         id: expectedObject.id,
-        processDefinitionId: expectedObject.processDefinition.id,
+        processDefinitionId: expectedObject.processDefinitionRef?.id ?? '',
         metadata: expectedObject.metadata,
       }
 
@@ -173,7 +173,7 @@ describe('API /processes', () => {
 
       const processCreateParams: ProcessCreateParams = {
         id: expectedObject.id,
-        processDefinitionId: expectedObject.processDefinition.id,
+        processDefinitionId: expectedObject.processDefinitionRef?.id ?? '',
         metadata: expectedObject.metadata,
       }
 
@@ -235,7 +235,7 @@ describe('API /processes', () => {
       }
 
       const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .put(`/processes/${expectedObject.id}/metadata`, body => params.metadata.value.key === 'value')
+        .put(`/processes/${expectedObject.id}/metadata`, () => params.metadata.value.key === 'value')
         .reply(200, JSON.stringify(expectedObject))
 
       const processes = await kuFlowRestClient.processOperations.updateProcessMetadata(expectedObject.id, params)

@@ -72,7 +72,7 @@ export class ProcessItemOperations {
   public async findProcessItems(
     options?: ProcessItemFindProcessItemsOptionalExtParams,
   ): Promise<ProcessItemFindProcessItemsResponse> {
-    const { sort, tenantId, processId, type, taskState, taskDefinitionCode, ...optionsRest } = options ?? {}
+    const { sort, tenantId, processId, type, taskState, processItemDefinitionCode, ...optionsRest } = options ?? {}
 
     return await this.processItemOperations.findProcessItems({
       ...optionsRest,
@@ -81,7 +81,8 @@ export class ProcessItemOperations {
       processId: typeof processId === 'string' ? [processId] : processId,
       type: typeof type === 'string' ? [type] : type,
       taskState: typeof taskState === 'string' ? [taskState] : taskState,
-      taskDefinitionCode: typeof taskDefinitionCode === 'string' ? [taskDefinitionCode] : taskDefinitionCode,
+      processItemDefinitionCode:
+        typeof processItemDefinitionCode === 'string' ? [processItemDefinitionCode] : processItemDefinitionCode,
     })
   }
 

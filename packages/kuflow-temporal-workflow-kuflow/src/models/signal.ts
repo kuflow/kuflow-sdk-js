@@ -23,18 +23,13 @@
 
 export const KUFLOW_ENGINE_SIGNAL_PROCESS_ITEM = 'KuFlow_Engine_Signal_Process_Item'
 
-export enum SignalProcessItemType {
-  TASK = 'TASK',
-  MESSAGE = 'MESSAGE',
-}
-
 export interface SignalProcessItemPayload {
-  taskDefinitionCode?: string
+  processItemDefinitionCode?: string
   dataStructureDataDefinitionCode?: string
 }
 
 export interface SignalProcessItem {
   id: string
-  type: SignalProcessItemType
+  type: 'TASK' | 'MESSAGE' | 'THREAD'
   payload: SignalProcessItemPayload
 }

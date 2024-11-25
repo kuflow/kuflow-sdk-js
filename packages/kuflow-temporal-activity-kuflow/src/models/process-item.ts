@@ -25,6 +25,7 @@ import type {
   JsonPatchOperation,
   JsonValue,
   ProcessItem,
+  ProcessItemMessageCreateParams,
   ProcessItemPage,
   ProcessItemTaskCreateParams,
   ProcessItemTaskLogLevel,
@@ -39,7 +40,7 @@ export interface ProcessItemFindRequest {
   processIds?: string[]
   types?: ProcessItemType[]
   taskStates?: ProcessItemTaskState[]
-  taskDefinitionCodes?: string[]
+  processItemDefinitionCodes?: string[]
 }
 
 export interface ProcessItemFindResponse {
@@ -60,7 +61,9 @@ export interface ProcessItemCreateRequest {
   processId: string
   ownerId?: string
   ownerEmail?: string
+  processItemDefinitionCode?: string
   task?: ProcessItemTaskCreateParams
+  message?: ProcessItemMessageCreateParams
 }
 
 export interface ProcessItemCreateResponse {

@@ -128,10 +128,9 @@ export function mockProcess(): Process {
   return {
     id: randomUUID(),
     state: 'RUNNING',
-    processDefinition: {
+    processDefinitionRef: {
       id: randomUUID(),
       version: randomUUID(),
-      name: `Name ${randomInt(1, 1_000)}`,
     },
     metadata: {
       valid: true,
@@ -167,10 +166,9 @@ export function mockProcessPageItem(): ProcessPageItem {
   return {
     id: randomUUID(),
     state: 'RUNNING',
-    processDefinition: {
+    processDefinitionRef: {
       id: randomUUID(),
       version: randomUUID(),
-      name: `Name ${randomInt(1, 1_000)}`,
     },
     initiatorId: randomUUID(),
     tenantId: randomUUID(),
@@ -200,14 +198,13 @@ export function mockProcessItem(): ProcessItem {
     processId: randomUUID(),
     ownerId: randomUUID(),
     tenantId: randomUUID(),
+    processItemDefinitionRef: {
+      id: randomUUID(),
+      version: randomUUID(),
+      code: `CODE-${randomInt(1, 1_000)}`,
+    },
     task: {
       state: 'READY',
-      taskDefinition: {
-        id: randomUUID(),
-        version: randomUUID(),
-        code: `CODE-${randomInt(1, 1_000)}`,
-        name: `Name ${randomInt(1, 1_000)}`,
-      },
       data: {
         value: {
           CODE_1: `Value ${randomInt(1, 1_000)}`,
@@ -230,14 +227,13 @@ export function mockProcessItemPageItem(): ProcessItemPageItem {
     processId: randomUUID(),
     ownerId: randomUUID(),
     tenantId: randomUUID(),
+    processItemDefinitionRef: {
+      id: randomUUID(),
+      version: randomUUID(),
+      code: `CODE-${randomInt(1, 1_000)}`,
+    },
     task: {
       state: 'READY',
-      taskDefinition: {
-        id: randomUUID(),
-        version: randomUUID(),
-        code: `CODE-${randomInt(1, 1_000)}`,
-        name: `Name ${randomInt(1, 1_000)}`,
-      },
     },
 
     createdBy: randomUUID(),

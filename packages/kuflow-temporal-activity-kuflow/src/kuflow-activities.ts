@@ -22,7 +22,7 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { KuFlowRestClient, Process } from '@kuflow/kuflow-rest'
+import type { KuFlowRestClient, Process, ProcessItemFindProcessItemsOptionalExtParams } from '@kuflow/kuflow-rest'
 
 import { catchAllErrors } from './kuflow-activities-failure'
 import type {
@@ -67,11 +67,11 @@ import {
   validateProcessEntityPatchRequest,
   validateProcessEntityUpdateRequest,
   validateProcessInitiatorChangeRequest,
+  validateProcessItemCreateRequest,
   validateProcessItemRetrieveRequest,
   validateProcessItemTaskAssignRequest,
   validateProcessItemTaskClaimRequest,
   validateProcessItemTaskCompleteRequest,
-  validateProcessItemTaskCreateRequest,
   validateProcessItemTaskDataPatchRequest,
   validateProcessItemTaskDataUpdateRequest,
   validateProcessItemTaskLogAppendRequest,
@@ -390,9 +390,16 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   }
 
   async function KuFlow_Engine_findProcessItems(request: ProcessItemFindRequest): Promise<ProcessItemFindResponse> {
-    const processItems = await kuFlowRestClient.processItemOperations.findProcessItems({
-      ...request,
-    })
+    const options: ProcessItemFindProcessItemsOptionalExtParams = {
+      page: request.page,
+      size: request.size,
+      sort: request.sorts,
+      processId: request.processIds,
+      type: request.types,
+      taskState: request.taskStates,
+      processItemDefinitionCode: request.processItemDefinitionCodes,
+    }
+    const processItems = await kuFlowRestClient.processItemOperations.findProcessItems(options)
 
     return {
       processItems,
@@ -414,7 +421,7 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
   async function KuFlow_Engine_createProcessItem(
     request: ProcessItemCreateRequest,
   ): Promise<ProcessItemCreateResponse> {
-    validateProcessItemTaskCreateRequest(request)
+    validateProcessItemCreateRequest(request)
 
     const processItem = await kuFlowRestClient.processItemOperations.createProcessItem({
       id: request.id,
@@ -422,7 +429,9 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
       processId: request.processId,
       ownerId: request.ownerId,
       ownerEmail: request.ownerEmail,
+      processItemDefinitionCode: request.processItemDefinitionCode,
       task: request.task,
+      message: request.message,
     })
 
     return {
