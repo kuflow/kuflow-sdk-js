@@ -23,4 +23,4 @@
 
 export * from './kuflow-activities'
 export * from './kuflow-activities-failure'
-export * from './models'
+export type * from './models'

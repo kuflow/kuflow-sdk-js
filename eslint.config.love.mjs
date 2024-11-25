@@ -21,6 +21,7 @@
  * THE SOFTWARE.
  */
 
+import eslintPluginImport from 'eslint-plugin-import'
 import eslintPluginN from 'eslint-plugin-n'
 import eslintPluginPromise from 'eslint-plugin-promise'
 
@@ -42,6 +43,7 @@ export default {
   plugins: {
     n: eslintPluginN,
     promise: eslintPluginPromise,
+    import: eslintPluginImport,
   },
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': ['error'],
@@ -382,16 +384,12 @@ export default {
     'valid-typeof': ['error', { requireStringLiterals: true }],
     'yoda': ['error', 'never'],
 
-    // eslint-plugin-import doesn't support eslint 9 yet: https://github.com/import-js/eslint-plugin-import/issues/2948
-    // 'import/export': ['error'],
-    // 'import/first': ['error'],
-    // 'import/no-absolute-path': [
-    //   'error',
-    //   { esmodule: true, commonjs: true, amd: false },
-    // ],
-    // 'import/no-duplicates': ['error'],
-    // 'import/no-named-default': ['error'],
-    // 'import/no-webpack-loader-syntax': ['error'],
+    'import/export': ['error'],
+    'import/first': ['error'],
+    'import/no-absolute-path': ['error', { esmodule: true, commonjs: true, amd: false }],
+    'import/no-duplicates': ['error'],
+    'import/no-named-default': ['error'],
+    'import/no-webpack-loader-syntax': ['error'],
 
     'n/handle-callback-err': ['error', '^(err|error)$'],
     'n/no-callback-literal': ['error'],

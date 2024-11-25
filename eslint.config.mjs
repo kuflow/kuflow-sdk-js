@@ -31,14 +31,8 @@ import tseslint from 'typescript-eslint'
 
 import eslintConfigLove from './eslint.config.love.mjs'
 
-/**
- * eslint-plugin-deprecation: is not supported in ESLint v9 yet, https://github.com/gund/eslint-plugin-deprecation/issues/78
- * rules:
- *   'deprecation/deprecation': 'warn'
- */
-
 export default tseslint.config(
-  eslint.configs.recommended, // eslint-disable-line @typescript-eslint/no-unsafe-argument
+  eslint.configs.recommended,
   ...tseslint.configs.recommended,
   eslintPluginPrettierRecommended,
   // Not needed when https://github.com/mightyiam/eslint-config-love can be used
@@ -55,6 +49,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/class-methods-use-this': 'off',
       '@typescript-eslint/explicit-member-accessibility': 'error',
+      '@typescript-eslint/no-deprecated': 'error',
       '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       'comma-dangle': ['error', 'always-multiline'],
@@ -70,6 +65,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/explicit-member-accessibility': 'off',
       '@typescript-eslint/max-params': 'off',
+      '@typescript-eslint/no-deprecated': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-require-imports': 'off',
