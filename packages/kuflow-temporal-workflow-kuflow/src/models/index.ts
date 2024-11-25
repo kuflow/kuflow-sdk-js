@@ -22,4 +22,4 @@
  */
 
 export * from './signal'
-export * from './workflow'
+export type * from './workflow'

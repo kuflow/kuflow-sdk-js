@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
-export * from './principal'
-export * from './process'
-export * from './process-item'
-export * from './tenant-user'
-export * from './workflow'
+export type * from './principal'
+export type * from './process'
+export type * from './process-item'
+export type * from './tenant-user'
+export type * from './workflow'

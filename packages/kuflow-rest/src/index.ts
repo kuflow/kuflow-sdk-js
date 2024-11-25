@@ -21,8 +21,8 @@
  * THE SOFTWARE.
  */
 
-export * from './generated/models'
+export type * from './generated/models'
 export * from './kuFlowRestClient'
-export * from './models'
+export type * from './models'
 export * from './operations'
 export * from './utils'

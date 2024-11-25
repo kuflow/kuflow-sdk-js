@@ -23,4 +23,4 @@
 
 export * from './kuflow-authorization-token-provider'
 export * from './kuflow-temporal-connection'
-export * from './kuflow-temporal-connection-options'
+export type * from './kuflow-temporal-connection-options'

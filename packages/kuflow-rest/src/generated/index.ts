@@ -22,5 +22,5 @@
  */
 
 export { KuFlowRestClientGenerated } from './kuFlowRestClientGenerated'
-export * from './models'
-export * from './operationsInterfaces'
+export type * from './models'
+export type * from './operationsInterfaces'

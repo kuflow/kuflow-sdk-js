@@ -21,11 +21,11 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+export type * from './authenticationOperations'
+export type * from './principalOperations'
+export type * from './processItemOperations'
+export type * from './processOperations'
+export type * from './robotOperations'
+export type * from './tenantOperations'
+export type * from './tenantUserOperations'
+export type * from './workerOperations'
