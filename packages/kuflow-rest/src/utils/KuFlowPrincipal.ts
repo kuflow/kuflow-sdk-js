@@ -21,6 +21,11 @@
  * THE SOFTWARE.
  */
 
+const PREFIX = "kuflow-principal:";
+const METADATA_ID = "id";
+const METADATA_TYPE = "type";
+const METADATA_NAME = "name";
+
 export interface KuFlowPrincipal {
   source: string
 
@@ -63,4 +68,18 @@ export function parseKuFlowPrincipal(source: unknown): KuFlowPrincipal | undefin
   }
 
   return { source, id, type, name }
+}
+
+export function generateKuflowPrincipalString(id: string, principalType: string, name: string): string {
+  return `${PREFIX}${METADATA_ID}=${encode(id)};` +
+         `${METADATA_TYPE}=${encode(principalType)};` +
+         `${METADATA_NAME}=${encode(name)};`;
+}
+
+function encode(value: string | null): string {
+  if (!value) {
+      return "";
+  }
+
+  return encodeURIComponent(value.trim()).replace(/\+/g, "%20");
 }
