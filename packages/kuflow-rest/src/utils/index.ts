@@ -22,6 +22,6 @@
  */
 
 import { type KuFlowFile, parseKuFlowFile } from './KuFlowFile'
-import { type KuFlowPrincipal, parseKuFlowPrincipal } from './KuFlowPrincipal'
+import { generateKuflowPrincipalString, type KuFlowPrincipal, parseKuFlowPrincipal } from './KuFlowPrincipal'
 
-export { type KuFlowFile, type KuFlowPrincipal, parseKuFlowFile, parseKuFlowPrincipal }
+export { generateKuflowPrincipalString, type KuFlowFile, type KuFlowPrincipal, parseKuFlowFile, parseKuFlowPrincipal}
