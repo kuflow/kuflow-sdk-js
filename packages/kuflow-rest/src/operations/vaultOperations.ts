@@ -28,6 +28,7 @@ import type {
   VaultCodecDecodeResponse,
   VaultCodecEncodeOptionalParams,
   VaultCodecEncodeResponse,
+  VaultCodecPayload,
   VaultCodecPayloads,
 } from '../generated'
 
@@ -52,7 +53,11 @@ export class VaultOperations {
     vaultCodecEncodeParams: VaultCodecPayloads,
     options?: VaultCodecEncodeOptionalParams,
   ): Promise<VaultCodecEncodeResponse> {
-    return await this.vaultOperations.codecEncode(vaultCodecEncodeParams, options)
+    const payloads = vaultCodecEncodeParams.payloads.map(payload => {
+      return this.workaround(payload)
+    })
+
+    return await this.vaultOperations.codecEncode({ ...vaultCodecEncodeParams, payloads }, options)
   }
 
   /**
@@ -64,6 +69,39 @@ export class VaultOperations {
     vaultCodecDecodeParams: VaultCodecPayloads,
     options?: VaultCodecDecodeOptionalParams,
   ): Promise<VaultCodecDecodeResponse> {
-    return await this.vaultOperations.codecDecode(vaultCodecDecodeParams, options)
+    const payloads = vaultCodecDecodeParams.payloads.map(payload => {
+      return this.workaround(payload)
+    })
+
+    return await this.vaultOperations.codecDecode({ ...vaultCodecDecodeParams, payloads }, options)
+  }
+
+  /**
+   * Workaround for an issue in @azure/core-client (base64.js) where `encodeByteArray`
+   * incorrectly converts a `Uint8Array` to Base64. The issue occurs when `value`
+   * is not an instance of `Buffer`, leading to an incorrect conversion with `Buffer.from(value.buffer)`.
+   * This method ensures `value` is used instead for proper encoding.
+   *
+   * Related file: @azure/core-client/dist/commonjs/base64.js
+   * Affected function: encodeByteArray(value)
+   *
+   * Remove this workaround once the issue is fixed upstream.
+   */
+  private workaround(payload: VaultCodecPayload): VaultCodecPayload {
+    let metadata: Record<string, Uint8Array> | undefined = undefined
+    if (payload.metadata != null) {
+      metadata = Object.fromEntries(
+        Object.entries(payload.metadata).map(([key, value]) => [
+          key,
+          value instanceof Buffer ? value : Buffer.from(value),
+        ]),
+      )
+    }
+    const data = Buffer.from(payload.data)
+
+    return {
+      metadata,
+      data,
+    }
   }
 }

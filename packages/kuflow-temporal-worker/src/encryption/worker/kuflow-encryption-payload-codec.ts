@@ -112,28 +112,15 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
   }
 
   private readonly transformPayloadToVaultCodecPayload = (payload: Payload): VaultCodecPayload => {
-    // TODO HAGO ESTO PORQUE LOS BINARIOS NO LOS TRANSFORMA BIEN
-    // TODO HAGO ESTO PORQUE LOS BINARIOS NO LOS TRANSFORMA BIEN
-    // TODO HAGO ESTO PORQUE LOS BINARIOS NO LOS TRANSFORMA BIEN
-    // TODO HAGO ESTO PORQUE LOS BINARIOS NO LOS TRANSFORMA BIEN
-    // TODO MIRAR ESTO: node_modules/@temporalio/common/src/converter/payload-converter.ts
-    // TODO Tal vez esto lo hago en el operations ??? del rest ???? o cambio el tipo de dato?? en este SDK ????
-    const metadata = Object.fromEntries(
-      Object.entries(payload.metadata ?? {}).map(([key, value]) => [key, Buffer.from(value)]),
-    )
-    const data = Buffer.from(payload.data ?? new Uint8Array())
-
     return {
-      metadata,
-      data,
+      metadata: payload.metadata ?? undefined,
+      data: payload.data ?? new Uint8Array(),
     }
   }
 
   private readonly transformVaultCodecPayloadToPayload = (payload: VaultCodecPayload): Payload => {
     return {
-      metadata: {
-        ...payload.metadata,
-      },
+      metadata: payload.metadata ?? undefined,
       data: payload.data ?? new Uint8Array(),
     }
   }
