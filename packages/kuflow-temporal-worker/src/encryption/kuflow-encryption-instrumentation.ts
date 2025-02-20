@@ -21,31 +21,42 @@
  * THE SOFTWARE.
  */
 
-import type { KuFlowRestClient } from '@kuflow/kuflow-rest'
-import type { NativeConnectionOptions, WorkerOptions } from '@temporalio/worker'
+import { defaultPayloadConverter } from '@temporalio/common'
+import type { Headers } from '@temporalio/workflow'
 
-import type { KuFlowAuthorizationTokenProviderBackoff } from './kuflow-authorization-token-provider'
-import type { KuFlowWorkerInformationNotifierBackoff } from './kuflow-worker-information-notifier'
+export const METADATA_KUFLOW_ENCODING_KEY = 'x-kuflow-encoding'
 
-export interface KuFlowTemporalConnectionOptions {
-  kuflow: {
-    restClient: KuFlowRestClient
+export const METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME = 'binary/encrypted?vendor=KuFlow'
 
-    authorizationTokenProviderBackoff?: KuFlowAuthorizationTokenProviderBackoff
-
-    workerInformationNotifierBackoff?: KuFlowWorkerInformationNotifierBackoff
-
-    /** Installation Id. */
-    installationId?: string
-
-    /** Robot Ids that this worker implements. */
-    robotIds?: string[]
-
-    /** Tenant ID. */
-    tenantId?: string
+export function isEncryptionRequired(header: Headers): boolean {
+  if (header[METADATA_KUFLOW_ENCODING_KEY] == null) {
+    return false
   }
-  temporalio: {
-    connection?: NativeConnectionOptions
-    worker?: Omit<WorkerOptions, 'connection' | 'interceptors' | 'dataConverter'>
+
+  const value = defaultPayloadConverter.fromPayload(header[METADATA_KUFLOW_ENCODING_KEY])
+
+  return value === METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME
+}
+
+export function addEncryptionEncoding(headers: Headers): Headers {
+  return {
+    ...headers,
+    [METADATA_KUFLOW_ENCODING_KEY]: defaultPayloadConverter.toPayload(METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME),
+  }
+}
+
+export function markObjectsToBeEncrypted(args: unknown[]): unknown[] {
+  return args.map(arg => EncryptionWrapper.of(arg))
+}
+
+export class EncryptionWrapper<T = unknown> {
+  public static of<T = unknown>(value: T): EncryptionWrapper<T> {
+    return new EncryptionWrapper(value)
+  }
+
+  public readonly value: T
+
+  protected constructor(value: T) {
+    this.value = value
   }
 }

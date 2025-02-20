@@ -232,6 +232,54 @@ export const DefaultErrorInfo: coreClient.CompositeMapper = {
   },
 }
 
+export const VaultCodecPayloads: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'VaultCodecPayloads',
+    modelProperties: {
+      payloads: {
+        constraints: {
+          MinItems: 1,
+        },
+        serializedName: 'payloads',
+        required: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'VaultCodecPayload',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const VaultCodecPayload: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'VaultCodecPayload',
+    modelProperties: {
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'ByteArray' } },
+        },
+      },
+      data: {
+        serializedName: 'data',
+        required: true,
+        type: {
+          name: 'ByteArray',
+        },
+      },
+    },
+  },
+}
+
 export const PrincipalPageItem: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',

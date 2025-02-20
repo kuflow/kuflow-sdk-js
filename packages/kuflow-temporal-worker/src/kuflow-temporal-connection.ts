@@ -24,6 +24,7 @@
 import type { AuthenticationCreateParams } from '@kuflow/kuflow-rest'
 import { NativeConnection, Runtime, Worker } from '@temporalio/worker'
 
+import { kuFlowEncryptionActivityInterceptorsFactory, KuflowEncryptionPayloadCodec } from './encryption/worker'
 import { KuFlowAuthorizationTokenProvider } from './kuflow-authorization-token-provider'
 import type { KuFlowTemporalConnectionOptions } from './kuflow-temporal-connection-options'
 import { KuFlowWorkerInformationNotifier } from './kuflow-worker-information-notifier'
@@ -151,8 +152,16 @@ export class KuFlowTemporalConnection {
     const connection = await this.connect()
 
     this._worker = await Worker.create({
-      connection,
       ...this.options.temporalio.worker,
+      connection,
+      interceptors: {
+        activity: [kuFlowEncryptionActivityInterceptorsFactory],
+        workflowModules: [require.resolve('./encryption/workflow/kuflow-encryption-workflow-interceptors')],
+      },
+      dataConverter: {
+        payloadConverterPath: require.resolve('./encryption/workflow/kuflow-encryption-payload-converter'),
+        payloadCodecs: [new KuflowEncryptionPayloadCodec(this.options.kuflow.restClient)],
+      },
     })
 
     Runtime.instance().logger.info('Worker initialized')

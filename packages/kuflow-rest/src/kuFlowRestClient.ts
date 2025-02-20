@@ -33,6 +33,7 @@ import {
   RobotOperations,
   TenantOperations,
   TenantUserOperations,
+  VaultOperations,
   WorkerOperations,
 } from './operations'
 
@@ -59,6 +60,11 @@ export class KuFlowRestClient {
    * Authentication API operations.
    */
   public readonly authenticationOperations: AuthenticationOperations
+
+  /**
+   * Vault API operations.
+   */
+  public readonly vaultOperations: VaultOperations
 
   /**
    * Principal API operations.
@@ -110,6 +116,7 @@ export class KuFlowRestClient {
     })
 
     this.authenticationOperations = new AuthenticationOperations(clientGenerated)
+    this.vaultOperations = new VaultOperations(clientGenerated)
     this.principalOperations = new PrincipalOperations(clientGenerated)
     this.tenantOperations = new TenantOperations(clientGenerated)
     this.tenantUserOperations = new TenantUserOperations(clientGenerated)

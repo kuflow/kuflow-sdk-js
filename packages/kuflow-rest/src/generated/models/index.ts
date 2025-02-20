@@ -83,6 +83,17 @@ export interface DefaultErrorInfo {
   locationType?: string
 }
 
+export interface VaultCodecPayloads {
+  payloads: VaultCodecPayload[]
+}
+
+export interface VaultCodecPayload {
+  /** Payload data. */
+  metadata?: Record<string, Uint8Array>
+  /** Payload data */
+  data: Uint8Array
+}
+
 export interface PrincipalPageItem {
   id?: string
   type?: PrincipalType
@@ -592,6 +603,18 @@ export interface AuthenticationCreateAuthenticationOptionalParams extends coreCl
 
 /** Contains response data for the createAuthentication operation. */
 export type AuthenticationCreateAuthenticationResponse = Authentication
+
+/** Optional parameters. */
+export interface VaultCodecEncodeOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the codecEncode operation. */
+export type VaultCodecEncodeResponse = VaultCodecPayloads
+
+/** Optional parameters. */
+export interface VaultCodecDecodeOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the codecDecode operation. */
+export type VaultCodecDecodeResponse = VaultCodecPayloads
 
 /** Optional parameters. */
 export interface PrincipalFindPrincipalsOptionalParams extends coreClient.OperationOptions {

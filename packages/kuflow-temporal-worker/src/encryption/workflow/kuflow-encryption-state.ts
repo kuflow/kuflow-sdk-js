@@ -21,12 +21,16 @@
  * THE SOFTWARE.
  */
 
-export type * from './authenticationOperations'
-export type * from './principalOperations'
-export type * from './processItemOperations'
-export type * from './processOperations'
-export type * from './robotOperations'
-export type * from './tenantOperations'
-export type * from './tenantUserOperations'
-export type * from './vault'
-export type * from './workerOperations'
+class KuflowEncryptionState {
+  private encryptionRequired = false
+
+  public requireEncryption(encryptionRequired: boolean): void {
+    this.encryptionRequired = encryptionRequired
+  }
+
+  public isEncryptionRequired(): boolean {
+    return this.encryptionRequired
+  }
+}
+
+export const kuflowEncryptionState = new KuflowEncryptionState()
