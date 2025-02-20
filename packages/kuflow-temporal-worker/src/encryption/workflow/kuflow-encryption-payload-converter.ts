@@ -21,14 +21,7 @@
  * THE SOFTWARE.
  */
 
-import {
-  BinaryPayloadConverter,
-  CompositePayloadConverter,
-  JsonPayloadConverter,
-  type Payload,
-  type PayloadConverterWithEncoding,
-  UndefinedPayloadConverter,
-} from '@temporalio/common'
+import type { Payload, PayloadConverterWithEncoding } from '@temporalio/common'
 import { encode } from '@temporalio/common/lib/encoding'
 
 import {
@@ -37,10 +30,12 @@ import {
   METADATA_KUFLOW_ENCODING_KEY,
 } from '../kuflow-encryption-instrumentation'
 
-class EncryptionPayloadConverter implements PayloadConverterWithEncoding {
-  private readonly delegate: JsonPayloadConverter = new JsonPayloadConverter()
+export class EncryptionPayloadConverter implements PayloadConverterWithEncoding {
+  public readonly encodingType: string
 
-  public readonly encodingType = this.delegate.encodingType
+  public constructor(private readonly delegate: PayloadConverterWithEncoding) {
+    this.encodingType = this.delegate.encodingType
+  }
 
   public toPayload<T>(value: T): Payload | undefined {
     let needEncryption = false
@@ -68,9 +63,3 @@ class EncryptionPayloadConverter implements PayloadConverterWithEncoding {
     return this.delegate.fromPayload(payload)
   }
 }
-
-export const payloadConverter = new CompositePayloadConverter(
-  new UndefinedPayloadConverter(),
-  new BinaryPayloadConverter(),
-  new EncryptionPayloadConverter(),
-)

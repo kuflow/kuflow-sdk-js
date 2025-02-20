@@ -159,7 +159,7 @@ export class KuFlowTemporalConnection {
         workflowModules: [require.resolve('./encryption/workflow/kuflow-encryption-workflow-interceptors')],
       },
       dataConverter: {
-        payloadConverterPath: require.resolve('./encryption/workflow/kuflow-encryption-payload-converter'),
+        payloadConverterPath: require.resolve('./encryption/workflow/kuflow-encryption-workflow-payload-converters'),
         payloadCodecs: [new KuflowEncryptionPayloadCodec(this.options.kuflow.restClient)],
       },
     })
