@@ -8,7 +8,7 @@
   "scripts": {
     "autorest": "autorest",
     "generate": "npm run generate:autorest && npm run generate:workaround && npm run generate:format",
-    "generate:autorest": "AUTOREST_HOME=$(pwd) autorest --version=3.10.2 readme.md",
+    "generate:autorest": "AUTOREST_HOME=$(pwd) autorest --version=3.10.3 readme.md",
     "generate:workaround": "scripts/fix-generated-code.js",
     "generate:format": "cd ../../../ && npm run build && npm run format:write"
   }
