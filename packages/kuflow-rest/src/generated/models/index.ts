@@ -84,6 +84,8 @@ export interface DefaultErrorInfo {
 }
 
 export interface VaultCodecPayloads {
+  /** Tenant id. This attribute is required when an OAuth2 authentication is used. */
+  tenantId?: string
   payloads: VaultCodecPayload[]
 }
 

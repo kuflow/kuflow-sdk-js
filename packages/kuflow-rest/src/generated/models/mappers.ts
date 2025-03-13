@@ -237,6 +237,12 @@ export const VaultCodecPayloads: coreClient.CompositeMapper = {
     name: 'Composite',
     className: 'VaultCodecPayloads',
     modelProperties: {
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
       payloads: {
         constraints: {
           MinItems: 1,

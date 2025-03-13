@@ -30,8 +30,19 @@ import {
   METADATA_KUFLOW_ENCODING_KEY,
 } from '../kuflow-encryption-instrumentation'
 
+interface KuflowEncryptionPayloadCodecCto {
+  restClient: KuFlowRestClient
+  tenantId: string | undefined
+}
+
 export class KuflowEncryptionPayloadCodec implements PayloadCodec {
-  public constructor(private readonly restClient: KuFlowRestClient) {}
+  private readonly restClient: KuFlowRestClient
+  private readonly tenantId: string | undefined
+
+  public constructor({ restClient, tenantId }: KuflowEncryptionPayloadCodecCto) {
+    this.restClient = restClient
+    this.tenantId = tenantId
+  }
 
   public async encode(payloads: Payload[]): Promise<Payload[]> {
     const payloadsToEncrypt = payloads.filter(this.needPayloadBeEncrypted)
@@ -91,6 +102,7 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
     const requestPayloads = payloads.map(this.transformPayloadToVaultCodecPayload)
 
     const response = await this.restClient.vaultOperations.codecEncode({
+      tenantId: this.tenantId,
       payloads: requestPayloads,
     })
 
@@ -105,6 +117,7 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
     const requestPayloads = payloads.map(this.transformPayloadToVaultCodecPayload)
 
     const response = await this.restClient.vaultOperations.codecDecode({
+      tenantId: this.tenantId,
       payloads: requestPayloads,
     })
 
