@@ -33,3 +33,7 @@ export interface SignalProcessItem {
   type: 'TASK' | 'MESSAGE' | 'THREAD'
   payload: SignalProcessItemPayload
 }
+
+export interface SignalUserAction {
+  userActionDefinitionCode: string
+}
