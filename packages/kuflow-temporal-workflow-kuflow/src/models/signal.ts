@@ -36,4 +36,5 @@ export interface SignalProcessItem {
 
 export interface SignalUserAction {
   userActionDefinitionCode: string
+  requestInstant: string
 }
