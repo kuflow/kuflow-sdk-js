@@ -29,30 +29,29 @@ import type {
   WorkflowInboundCallsInterceptor,
 } from '@temporalio/workflow'
 
-import { EncryptionWrapper, isEncryptionRequired } from '../kuflow-encryption-instrumentation'
-import { kuflowEncryptionState } from './kuflow-encryption-state'
+import { encryptionState, EncryptionWrapper, retrieveEncryptionState } from '../kuflow-encryption-instrumentation'
 
 export class KuFlowEncryptionWorkflowInboundCallsInterceptor implements WorkflowInboundCallsInterceptor {
   public async execute(
     input: WorkflowExecuteInput,
     next: Next<WorkflowInboundCallsInterceptor, 'execute'>,
   ): Promise<unknown> {
-    kuflowEncryptionState.requireEncryption(isEncryptionRequired(input.headers))
+    const encryptionStateCurrent = retrieveEncryptionState(input.headers)
+
+    encryptionState.merge(encryptionStateCurrent)
 
     const output = await next(input)
 
-    return kuflowEncryptionState.isEncryptionRequired() ? EncryptionWrapper.of(output) : output
+    return EncryptionWrapper.of(encryptionState, output)
   }
 
   public async handleUpdate(
     input: UpdateInput,
     next: Next<WorkflowInboundCallsInterceptor, 'handleUpdate'>,
   ): Promise<unknown> {
-    kuflowEncryptionState.requireEncryption(isEncryptionRequired(input.headers))
-
     const output = await next(input)
 
-    return kuflowEncryptionState.isEncryptionRequired() ? EncryptionWrapper.of(output) : output
+    return EncryptionWrapper.of(encryptionState, output)
   }
 
   public async handleQuery(
@@ -61,6 +60,6 @@ export class KuFlowEncryptionWorkflowInboundCallsInterceptor implements Workflow
   ): Promise<unknown> {
     const output = await next(input)
 
-    return kuflowEncryptionState.isEncryptionRequired() ? EncryptionWrapper.of(output) : output
+    return EncryptionWrapper.of(encryptionState, output)
   }
 }

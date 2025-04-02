@@ -29,20 +29,18 @@ import type {
 } from '@temporalio/worker'
 import type { Next } from '@temporalio/workflow'
 
-import { EncryptionWrapper, isEncryptionRequired } from '../kuflow-encryption-instrumentation'
+import { EncryptionWrapper, retrieveEncryptionState } from '../kuflow-encryption-instrumentation'
 
 class KuFlowEncryptionActivityInboundCallsInterceptor implements ActivityInboundCallsInterceptor {
   public async execute(
     input: ActivityExecuteInput,
     next: Next<ActivityInboundCallsInterceptor, 'execute'>,
   ): Promise<unknown> {
-    let output = await next(input)
+    const output = await next(input)
 
-    if (isEncryptionRequired(input.headers)) {
-      output = EncryptionWrapper.of(output)
-    }
+    const encryptionState = retrieveEncryptionState(input.headers)
 
-    return output
+    return EncryptionWrapper.of(encryptionState, output)
   }
 }
 

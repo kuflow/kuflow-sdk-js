@@ -232,51 +232,20 @@ export const DefaultErrorInfo: coreClient.CompositeMapper = {
   },
 }
 
-export const VaultCodecPayloads: coreClient.CompositeMapper = {
+export const KmsKey: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'VaultCodecPayloads',
+    className: 'KmsKey',
     modelProperties: {
-      tenantId: {
-        serializedName: 'tenantId',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      payloads: {
-        constraints: {
-          MinItems: 1,
-        },
-        serializedName: 'payloads',
+      id: {
+        serializedName: 'id',
         required: true,
         type: {
-          name: 'Sequence',
-          element: {
-            type: {
-              name: 'Composite',
-              className: 'VaultCodecPayload',
-            },
-          },
+          name: 'String',
         },
       },
-    },
-  },
-}
-
-export const VaultCodecPayload: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'VaultCodecPayload',
-    modelProperties: {
-      metadata: {
-        serializedName: 'metadata',
-        type: {
-          name: 'Dictionary',
-          value: { type: { name: 'ByteArray' } },
-        },
-      },
-      data: {
-        serializedName: 'data',
+      value: {
+        serializedName: 'value',
         required: true,
         type: {
           name: 'ByteArray',

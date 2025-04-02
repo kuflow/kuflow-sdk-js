@@ -21,42 +21,101 @@
  * THE SOFTWARE.
  */
 
-import { defaultPayloadConverter } from '@temporalio/common'
+import { defaultPayloadConverter, METADATA_ENCODING_KEY } from '@temporalio/common'
 import type { Headers } from '@temporalio/workflow'
 
-export const METADATA_KUFLOW_ENCODING_KEY = 'x-kuflow-encoding'
+export const HEADER_KEY_KUFLOW_ENCODING = 'x-kuflow-encoding'
 
-export const METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME = 'binary/encrypted?vendor=KuFlow'
+export const HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID = 'x-kuflow-encoding-encrypted-key-id'
+
+export const HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME = 'binary/encrypted?vendor=KuFlow'
+
+export const METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID = METADATA_ENCODING_KEY + '-encrypted-key-id'
+
+export const METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME = 'binary/encrypted?vendor=KuFlow'
+
+export class EncryptionState {
+  public static empty(): EncryptionState {
+    return new EncryptionState(undefined)
+  }
+
+  public static of(keyId: string | undefined): EncryptionState {
+    return new EncryptionState(keyId)
+  }
+
+  private _keyId: string | undefined = undefined
+
+  public get keyId(): string | undefined {
+    return this._keyId
+  }
+
+  public set keyId(value: string | undefined) {
+    this._keyId = value
+  }
+
+  protected constructor(keyId: string | undefined) {
+    this._keyId = keyId
+  }
+
+  public merge(other: EncryptionState | undefined): void {
+    if (other != null) {
+      this._keyId = other.keyId
+    } else {
+      this._keyId = undefined
+    }
+  }
+}
+
+export function retrieveEncryptionState(header: Headers): EncryptionState {
+  if (!isEncryptionRequired(header)) {
+    return EncryptionState.empty()
+  }
+
+  const keyIdPayload = header[HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID]
+  const keyId: string = defaultPayloadConverter.fromPayload(keyIdPayload)
+
+  return EncryptionState.of(keyId)
+}
 
 export function isEncryptionRequired(header: Headers): boolean {
-  if (header[METADATA_KUFLOW_ENCODING_KEY] == null) {
+  if (header[HEADER_KEY_KUFLOW_ENCODING] == null || header[HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID] == null) {
     return false
   }
 
-  const value = defaultPayloadConverter.fromPayload(header[METADATA_KUFLOW_ENCODING_KEY])
+  const value = defaultPayloadConverter.fromPayload(header[HEADER_KEY_KUFLOW_ENCODING])
 
-  return value === METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME
+  return value === HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME
 }
 
-export function addEncryptionEncoding(headers: Headers): Headers {
+export function addEncryptionEncoding(encryptionState: EncryptionState, headers: Headers): Headers {
+  if (encryptionState.keyId == null) {
+    return headers
+  }
+
   return {
     ...headers,
-    [METADATA_KUFLOW_ENCODING_KEY]: defaultPayloadConverter.toPayload(METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME),
+    [HEADER_KEY_KUFLOW_ENCODING]: defaultPayloadConverter.toPayload(METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME),
+    [HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID]: defaultPayloadConverter.toPayload(encryptionState.keyId),
   }
 }
 
-export function markObjectsToBeEncrypted(args: unknown[]): unknown[] {
-  return args.map(arg => EncryptionWrapper.of(arg))
+export function markObjectsToBeEncrypted(encryptionState: EncryptionState, args: unknown[]): unknown[] {
+  if (encryptionState.keyId == null) {
+    return args
+  }
+
+  return args.map(arg => EncryptionWrapper.of(encryptionState, arg))
 }
 
 export class EncryptionWrapper<T = unknown> {
-  public static of<T = unknown>(value: T): EncryptionWrapper<T> {
-    return new EncryptionWrapper(value)
+  public static of<T = unknown>(encryptionState: EncryptionState, value: T): EncryptionWrapper<T> {
+    return new EncryptionWrapper(encryptionState, value)
   }
 
-  public readonly value: T
-
-  protected constructor(value: T) {
-    this.value = value
-  }
+  protected constructor(
+    public readonly encryptionState: EncryptionState,
+    public readonly value: T,
+  ) {}
 }
+
+export const encryptionState = EncryptionState.empty()

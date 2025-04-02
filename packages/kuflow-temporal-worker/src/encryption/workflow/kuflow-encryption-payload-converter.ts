@@ -25,9 +25,9 @@ import type { Payload, PayloadConverterWithEncoding } from '@temporalio/common'
 import { encode } from '@temporalio/common/lib/encoding'
 
 import {
+  EncryptionState,
   EncryptionWrapper,
-  METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME,
-  METADATA_KUFLOW_ENCODING_KEY,
+  METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID,
 } from '../kuflow-encryption-instrumentation'
 
 export class EncryptionPayloadConverter implements PayloadConverterWithEncoding {
@@ -38,19 +38,19 @@ export class EncryptionPayloadConverter implements PayloadConverterWithEncoding 
   }
 
   public toPayload<T>(value: T): Payload | undefined {
-    let needEncryption = false
+    let encryptionState: EncryptionState = EncryptionState.empty()
     if (value instanceof EncryptionWrapper) {
+      encryptionState = value.encryptionState
       value = value.value
-      needEncryption = true
     }
 
     let payload = this.delegate.toPayload(value)
 
-    if (payload != null && needEncryption) {
+    if (payload != null && encryptionState.keyId != null) {
       payload = {
         metadata: {
           ...payload.metadata,
-          [METADATA_KUFLOW_ENCODING_KEY]: encode(METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME),
+          [METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID]: encode(encryptionState.keyId),
         },
         data: payload.data,
       }

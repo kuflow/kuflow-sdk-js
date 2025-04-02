@@ -22,11 +22,11 @@
  */
 
 export * from './authenticationOperations'
+export * from './kms'
 export * from './principalOperations'
 export * from './processItemOperations'
 export * from './processOperations'
 export * from './robotOperations'
 export * from './tenantOperations'
 export * from './tenantUserOperations'
-export * from './vault'
 export * from './workerOperations'

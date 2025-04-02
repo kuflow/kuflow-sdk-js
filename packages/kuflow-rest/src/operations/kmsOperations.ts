@@ -21,16 +21,34 @@
  * THE SOFTWARE.
  */
 
-class KuflowEncryptionState {
-  private encryptionRequired = false
+import type {
+  Kms as KmsOperationsGenerated,
+  KmsRetrieveKmsKeyOptionalParams,
+  KmsRetrieveKmsKeyResponse,
+  KuFlowRestClientGenerated,
+} from '../generated'
 
-  public requireEncryption(encryptionRequired: boolean): void {
-    this.encryptionRequired = encryptionRequired
+/** Class containing KmsOperations operations. */
+export class KmsOperations {
+  private readonly kmsOperations: KmsOperationsGenerated
+
+  /**
+   * Initialize a new instance of the class KmsOperations class.
+   * @param clientGenerated Reference to the service client
+   */
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
+    this.kmsOperations = clientGenerated.kms
   }
 
-  public isEncryptionRequired(): boolean {
-    return this.encryptionRequired
+  /**
+   * Get the requested key id.
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  public async retrieveKmsKey(
+    id: string,
+    options?: KmsRetrieveKmsKeyOptionalParams,
+  ): Promise<KmsRetrieveKmsKeyResponse> {
+    return await this.kmsOperations.retrieveKmsKey(id, options)
   }
 }
-
-export const kuflowEncryptionState = new KuflowEncryptionState()

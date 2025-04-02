@@ -31,8 +31,7 @@ import type {
   WorkflowOutboundCallsInterceptor,
 } from '@temporalio/workflow'
 
-import { addEncryptionEncoding, markObjectsToBeEncrypted } from '../kuflow-encryption-instrumentation'
-import { kuflowEncryptionState } from './kuflow-encryption-state'
+import { addEncryptionEncoding, encryptionState, markObjectsToBeEncrypted } from '../kuflow-encryption-instrumentation'
 
 export class KuFlowEncryptionWorkflowOutboundCallsInterceptor implements WorkflowOutboundCallsInterceptor {
   public async scheduleActivity(
@@ -42,10 +41,8 @@ export class KuFlowEncryptionWorkflowOutboundCallsInterceptor implements Workflo
     let headers = input.headers
     let args = input.args
 
-    if (kuflowEncryptionState.isEncryptionRequired()) {
-      headers = addEncryptionEncoding(headers)
-      args = markObjectsToBeEncrypted(args)
-    }
+    headers = addEncryptionEncoding(encryptionState, headers)
+    args = markObjectsToBeEncrypted(encryptionState, args)
 
     return await next({
       ...input,
@@ -61,10 +58,8 @@ export class KuFlowEncryptionWorkflowOutboundCallsInterceptor implements Workflo
     let headers = input.headers
     let args = input.args
 
-    if (kuflowEncryptionState.isEncryptionRequired()) {
-      headers = addEncryptionEncoding(headers)
-      args = markObjectsToBeEncrypted(args)
-    }
+    headers = addEncryptionEncoding(encryptionState, headers)
+    args = markObjectsToBeEncrypted(encryptionState, args)
 
     return await next({
       ...input,
@@ -80,10 +75,8 @@ export class KuFlowEncryptionWorkflowOutboundCallsInterceptor implements Workflo
     let headers = input.headers
     let optionsArgs = input.options.args
 
-    if (kuflowEncryptionState.isEncryptionRequired()) {
-      headers = addEncryptionEncoding(headers)
-      optionsArgs = markObjectsToBeEncrypted(optionsArgs)
-    }
+    headers = addEncryptionEncoding(encryptionState, headers)
+    optionsArgs = markObjectsToBeEncrypted(encryptionState, optionsArgs)
 
     return await next({
       ...input,
@@ -102,10 +95,8 @@ export class KuFlowEncryptionWorkflowOutboundCallsInterceptor implements Workflo
     let headers = input.headers
     let args = input.args
 
-    if (kuflowEncryptionState.isEncryptionRequired()) {
-      headers = addEncryptionEncoding(headers)
-      args = markObjectsToBeEncrypted(args)
-    }
+    headers = addEncryptionEncoding(encryptionState, headers)
+    args = markObjectsToBeEncrypted(encryptionState, args)
 
     return await next({
       ...input,
@@ -121,10 +112,8 @@ export class KuFlowEncryptionWorkflowOutboundCallsInterceptor implements Workflo
     let headers = input.headers
     let args = input.args
 
-    if (kuflowEncryptionState.isEncryptionRequired()) {
-      headers = addEncryptionEncoding(headers)
-      args = markObjectsToBeEncrypted(args)
-    }
+    headers = addEncryptionEncoding(encryptionState, headers)
+    args = markObjectsToBeEncrypted(encryptionState, args)
 
     await next({
       ...input,

@@ -21,32 +21,14 @@
  * THE SOFTWARE.
  */
 
-import type {
-  VaultCodecDecodeOptionalParams,
-  VaultCodecDecodeResponse,
-  VaultCodecEncodeOptionalParams,
-  VaultCodecEncodeResponse,
-  VaultCodecPayloads,
-} from '../models'
+import type { KmsRetrieveKmsKeyOptionalParams, KmsRetrieveKmsKeyResponse } from '../models'
 
-/** Interface representing a Vault. */
-export interface Vault {
+/** Interface representing a Kms. */
+export interface Kms {
   /**
-   * Encode the requested payloads.
-   * @param vaultCodecEncodeParams Payloads to encode.
+   * Get the requested key id.
+   * @param keyId The resource ID.
    * @param options The options parameters.
    */
-  codecEncode: (
-    vaultCodecEncodeParams: VaultCodecPayloads,
-    options?: VaultCodecEncodeOptionalParams,
-  ) => Promise<VaultCodecEncodeResponse>
-  /**
-   * Decode the requested payloads.
-   * @param vaultCodecDecodeParams Payloads to decode.
-   * @param options The options parameters.
-   */
-  codecDecode: (
-    vaultCodecDecodeParams: VaultCodecPayloads,
-    options?: VaultCodecDecodeOptionalParams,
-  ) => Promise<VaultCodecDecodeResponse>
+  retrieveKmsKey: (keyId: string, options?: KmsRetrieveKmsKeyOptionalParams) => Promise<KmsRetrieveKmsKeyResponse>
 }

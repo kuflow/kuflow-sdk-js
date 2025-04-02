@@ -33,7 +33,6 @@ import {
   ProcessItemTaskAssignParams as ProcessItemTaskAssignParamsMapper,
   ProcessItemTaskDataUpdateParams as ProcessItemTaskDataUpdateParamsMapper,
   ProcessMetadataUpdateParams as ProcessMetadataUpdateParamsMapper,
-  VaultCodecPayloads as VaultCodecPayloadsMapper,
   WorkerCreateParams as WorkerCreateParamsMapper,
 } from '../models/mappers'
 
@@ -78,14 +77,15 @@ export const $host: OperationURLParameter = {
   skipEncoding: true,
 }
 
-export const vaultCodecEncodeParams: OperationParameter = {
-  parameterPath: 'vaultCodecEncodeParams',
-  mapper: VaultCodecPayloadsMapper,
-}
-
-export const vaultCodecDecodeParams: OperationParameter = {
-  parameterPath: 'vaultCodecDecodeParams',
-  mapper: VaultCodecPayloadsMapper,
+export const keyId: OperationURLParameter = {
+  parameterPath: 'keyId',
+  mapper: {
+    serializedName: 'keyId',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
 }
 
 export const size: OperationQueryParameter = {

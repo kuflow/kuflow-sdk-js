@@ -21,120 +21,111 @@
  * THE SOFTWARE.
  */
 
-import type { KuFlowRestClient, VaultCodecPayload } from '@kuflow/kuflow-rest'
-import { METADATA_ENCODING_KEY, type Payload, type PayloadCodec } from '@temporalio/common'
-import { decode } from '@temporalio/common/lib/encoding'
+import type { KuFlowRestClient } from '@kuflow/kuflow-rest'
+import { METADATA_ENCODING_KEY, type Payload, type PayloadCodec, ValueError } from '@temporalio/common'
+import { decode, encode } from '@temporalio/common/lib/encoding'
+import { temporal } from '@temporalio/proto'
+import type crypto from 'crypto'
 
 import {
-  METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME,
-  METADATA_KUFLOW_ENCODING_KEY,
+  METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID,
+  METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME,
 } from '../kuflow-encryption-instrumentation'
+import { type Cache, CacheBuilder } from './kuflow-cache'
+import { Ciphers } from './kuflow-crypto'
 
 interface KuflowEncryptionPayloadCodecCto {
   restClient: KuFlowRestClient
-  tenantId: string | undefined
 }
 
 export class KuflowEncryptionPayloadCodec implements PayloadCodec {
-  private readonly restClient: KuFlowRestClient
-  private readonly tenantId: string | undefined
+  private readonly kmsKeyCache: Cache<string, crypto.webcrypto.CryptoKey> = new CacheBuilder()
+    .withExpireAfterAccess(1, 'hours')
+    .build()
 
-  public constructor({ restClient, tenantId }: KuflowEncryptionPayloadCodecCto) {
+  private readonly restClient: KuFlowRestClient
+
+  public constructor({ restClient }: KuflowEncryptionPayloadCodecCto) {
     this.restClient = restClient
-    this.tenantId = tenantId
   }
 
   public async encode(payloads: Payload[]): Promise<Payload[]> {
-    const payloadsToEncrypt = payloads.filter(this.needPayloadBeEncrypted)
-
-    const payloadsEncrypted = await this.encrypt(payloadsToEncrypt)
-
-    return payloads.map((payload, i) => {
-      if (!this.needPayloadBeEncrypted(payload)) {
-        return payload
-      }
-
-      return payloadsEncrypted[i]
-    })
+    return await Promise.all(payloads.map(this.encrypt))
   }
 
   public async decode(payloads: Payload[]): Promise<Payload[]> {
-    const payloadsToDecrypt = payloads.filter(this.isPayloadEncrypted)
-
-    const payloadsDecrypted = await this.decrypt(payloadsToDecrypt)
-
-    return payloads.map((payload, i) => {
-      if (!this.isPayloadEncrypted(payload)) {
-        return payload
-      }
-
-      return payloadsDecrypted[i]
-    })
+    return await Promise.all(payloads.map(this.decrypt))
   }
 
-  private readonly needPayloadBeEncrypted = (payload: Payload): boolean => {
-    try {
-      return (
-        payload.metadata != null &&
-        decode(payload.metadata[METADATA_KUFLOW_ENCODING_KEY]) === METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME
-      )
-    } catch {
-      return false
-    }
-  }
-
-  private readonly isPayloadEncrypted = (payload: Payload): boolean => {
-    try {
-      return (
-        payload.metadata != null &&
-        decode(payload.metadata?.[METADATA_ENCODING_KEY]) === METADATA_KUFLOW_ENCODING_ENCRYPTED_NAME
-      )
-    } catch {
-      return false
-    }
-  }
-
-  private async encrypt(payloads: Payload[]): Promise<Payload[]> {
-    if (payloads.length === 0) {
-      return payloads
+  private readonly encrypt = async (payload: Payload): Promise<Payload> => {
+    if (payload.metadata?.[METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID] == null) {
+      return payload
     }
 
-    const requestPayloads = payloads.map(this.transformPayloadToVaultCodecPayload)
+    const keyId = decode(payload.metadata[METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID])
 
-    const response = await this.restClient.vaultOperations.codecEncode({
-      tenantId: this.tenantId,
-      payloads: requestPayloads,
-    })
+    const keyValue = await this.retrieveKey(keyId)
 
-    return response.payloads.map(this.transformVaultCodecPayloadToPayload)
-  }
+    const cipherTextBytes = await Ciphers.AES_256_GCM.encrypt(
+      keyValue,
+      temporal.api.common.v1.Payload.encode(payload).finish(),
+    )
 
-  private async decrypt(payloads: Payload[]): Promise<Payload[]> {
-    if (payloads.length === 0) {
-      return payloads
-    }
+    const cipherTextValue = Buffer.from(cipherTextBytes).toString('base64')
 
-    const requestPayloads = payloads.map(this.transformPayloadToVaultCodecPayload)
-
-    const response = await this.restClient.vaultOperations.codecDecode({
-      tenantId: this.tenantId,
-      payloads: requestPayloads,
-    })
-
-    return response.payloads.map(this.transformVaultCodecPayloadToPayload)
-  }
-
-  private readonly transformPayloadToVaultCodecPayload = (payload: Payload): VaultCodecPayload => {
     return {
-      metadata: payload.metadata ?? undefined,
-      data: payload.data ?? new Uint8Array(),
+      metadata: {
+        [METADATA_ENCODING_KEY]: encode(METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME),
+        [METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID]: encode(keyId),
+      },
+      data: encode(`${Ciphers.AES_256_GCM.algorithm}:${cipherTextValue}`),
     }
   }
 
-  private readonly transformVaultCodecPayloadToPayload = (payload: VaultCodecPayload): Payload => {
-    return {
-      metadata: payload.metadata ?? undefined,
-      data: payload.data ?? new Uint8Array(),
+  private readonly decrypt = async (payload: Payload): Promise<Payload> => {
+    if (
+      payload.metadata == null ||
+      decode(payload.metadata?.[METADATA_ENCODING_KEY]) !== METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME
+    ) {
+      return payload
     }
+
+    if (payload.data == null) {
+      throw new ValueError('Payload data is missing')
+    }
+
+    const keyIdBytes = payload.metadata[METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID]
+    if (keyIdBytes == null) {
+      throw new ValueError('Unable to decrypt Payload without encryption key id')
+    }
+
+    const keyId = decode(keyIdBytes)
+
+    const keyValue = await this.retrieveKey(keyId)
+
+    const cipherText = decode(payload.data)
+
+    const [cipherTextAlgorithm, cipherTextValue] = cipherText.split(':')
+    if (cipherTextAlgorithm == null || cipherTextValue == null) {
+      throw new ValueError('Invalid cipherText format')
+    }
+
+    if (cipherTextAlgorithm !== Ciphers.AES_256_GCM.algorithm) {
+      throw new ValueError(`Invalid cipherText algorithm: ${cipherTextAlgorithm}`)
+    }
+
+    const cipherTextValueBuffer: Uint8Array = Buffer.from(cipherTextValue, 'base64')
+
+    const plainText = await Ciphers.AES_256_GCM.decrypt(keyValue, cipherTextValueBuffer)
+
+    return temporal.api.common.v1.Payload.decode(plainText)
+  }
+
+  private async retrieveKey(keyId: string): Promise<crypto.webcrypto.CryptoKey> {
+    return await this.kmsKeyCache.get(keyId, async () => {
+      const key = await this.restClient.kmsOperations.retrieveKmsKey(keyId)
+
+      return await Ciphers.AES_256_GCM.importKey(key.value)
+    })
   }
 }

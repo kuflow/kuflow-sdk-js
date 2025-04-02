@@ -27,24 +27,24 @@ import * as coreClient from '@azure/core-client'
 import type { KuFlowRestClientGeneratedOptionalParams } from './models'
 import {
   AuthenticationOperationsImpl,
+  KmsImpl,
   PrincipalOperationsImpl,
   ProcessItemOperationsImpl,
   ProcessOperationsImpl,
   RobotOperationsImpl,
   TenantOperationsImpl,
   TenantUserOperationsImpl,
-  VaultImpl,
   WorkerOperationsImpl,
 } from './operations'
 import type {
   AuthenticationOperations,
+  Kms,
   PrincipalOperations,
   ProcessItemOperations,
   ProcessOperations,
   RobotOperations,
   TenantOperations,
   TenantUserOperations,
-  Vault,
   WorkerOperations,
 } from './operationsInterfaces'
 
@@ -89,7 +89,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     // Assigning values to Constant parameters
     this.$host = options.$host || 'https://api.kuflow.com/v2024-06-14'
     this.authenticationOperations = new AuthenticationOperationsImpl(this)
-    this.vault = new VaultImpl(this)
+    this.kms = new KmsImpl(this)
     this.principalOperations = new PrincipalOperationsImpl(this)
     this.tenantOperations = new TenantOperationsImpl(this)
     this.tenantUserOperations = new TenantUserOperationsImpl(this)
@@ -100,7 +100,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
   }
 
   authenticationOperations: AuthenticationOperations
-  vault: Vault
+  kms: Kms
   principalOperations: PrincipalOperations
   tenantOperations: TenantOperations
   tenantUserOperations: TenantUserOperations

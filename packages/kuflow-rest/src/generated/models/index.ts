@@ -83,17 +83,11 @@ export interface DefaultErrorInfo {
   locationType?: string
 }
 
-export interface VaultCodecPayloads {
-  /** Tenant id. This attribute is required when an OAuth2 authentication is used. */
-  tenantId?: string
-  payloads: VaultCodecPayload[]
-}
-
-export interface VaultCodecPayload {
-  /** Payload data. */
-  metadata?: Record<string, Uint8Array>
-  /** Payload data */
-  data: Uint8Array
+export interface KmsKey {
+  /** Key Id */
+  id: string
+  /** Encryption/decryption key */
+  value: Uint8Array
 }
 
 export interface PrincipalPageItem {
@@ -607,16 +601,10 @@ export interface AuthenticationCreateAuthenticationOptionalParams extends coreCl
 export type AuthenticationCreateAuthenticationResponse = Authentication
 
 /** Optional parameters. */
-export interface VaultCodecEncodeOptionalParams extends coreClient.OperationOptions {}
+export interface KmsRetrieveKmsKeyOptionalParams extends coreClient.OperationOptions {}
 
-/** Contains response data for the codecEncode operation. */
-export type VaultCodecEncodeResponse = VaultCodecPayloads
-
-/** Optional parameters. */
-export interface VaultCodecDecodeOptionalParams extends coreClient.OperationOptions {}
-
-/** Contains response data for the codecDecode operation. */
-export type VaultCodecDecodeResponse = VaultCodecPayloads
+/** Contains response data for the retrieveKmsKey operation. */
+export type KmsRetrieveKmsKeyResponse = KmsKey
 
 /** Optional parameters. */
 export interface PrincipalFindPrincipalsOptionalParams extends coreClient.OperationOptions {
