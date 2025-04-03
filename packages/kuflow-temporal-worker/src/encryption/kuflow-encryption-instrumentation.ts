@@ -21,18 +21,20 @@
  * THE SOFTWARE.
  */
 
-import { defaultPayloadConverter, METADATA_ENCODING_KEY } from '@temporalio/common'
+import { defaultPayloadConverter, METADATA_ENCODING_KEY, ValueError } from '@temporalio/common'
 import type { Headers } from '@temporalio/workflow'
 
 export const HEADER_KEY_KUFLOW_ENCODING = 'x-kuflow-encoding'
 
 export const HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID = 'x-kuflow-encoding-encrypted-key-id'
 
-export const HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME = 'binary/encrypted?vendor=KuFlow'
+export const HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED = 'binary/encrypted?vendor=KuFlow'
+
+export const METADATA_KEY_ENCODING = METADATA_ENCODING_KEY
 
 export const METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID = METADATA_ENCODING_KEY + '-encrypted-key-id'
 
-export const METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME = 'binary/encrypted?vendor=KuFlow'
+export const METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED = 'binary/encrypted?vendor=KuFlow'
 
 export class EncryptionState {
   public static empty(): EncryptionState {
@@ -72,19 +74,23 @@ export function retrieveEncryptionState(header: Headers): EncryptionState {
   }
 
   const keyIdPayload = header[HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID]
+  if (keyIdPayload == null) {
+    throw new ValueError(`Header ${HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID} is required`)
+  }
+
   const keyId: string = defaultPayloadConverter.fromPayload(keyIdPayload)
 
   return EncryptionState.of(keyId)
 }
 
 export function isEncryptionRequired(header: Headers): boolean {
-  if (header[HEADER_KEY_KUFLOW_ENCODING] == null || header[HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID] == null) {
+  if (header[HEADER_KEY_KUFLOW_ENCODING] == null) {
     return false
   }
 
   const value = defaultPayloadConverter.fromPayload(header[HEADER_KEY_KUFLOW_ENCODING])
 
-  return value === HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME
+  return value === HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED
 }
 
 export function addEncryptionEncoding(encryptionState: EncryptionState, headers: Headers): Headers {
@@ -94,7 +100,7 @@ export function addEncryptionEncoding(encryptionState: EncryptionState, headers:
 
   return {
     ...headers,
-    [HEADER_KEY_KUFLOW_ENCODING]: defaultPayloadConverter.toPayload(METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME),
+    [HEADER_KEY_KUFLOW_ENCODING]: defaultPayloadConverter.toPayload(HEADER_VALUE_KUFLOW_ENCODING_ENCRYPTED),
     [HEADER_KEY_KUFLOW_ENCODING_ENCRYPTED_KEY_ID]: defaultPayloadConverter.toPayload(encryptionState.keyId),
   }
 }

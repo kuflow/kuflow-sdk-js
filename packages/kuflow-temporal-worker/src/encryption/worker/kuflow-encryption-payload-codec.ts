@@ -22,14 +22,15 @@
  */
 
 import type { KuFlowRestClient } from '@kuflow/kuflow-rest'
-import { METADATA_ENCODING_KEY, type Payload, type PayloadCodec, ValueError } from '@temporalio/common'
+import { type Payload, type PayloadCodec, ValueError } from '@temporalio/common'
 import { decode, encode } from '@temporalio/common/lib/encoding'
 import { temporal } from '@temporalio/proto'
 import type crypto from 'crypto'
 
 import {
+  METADATA_KEY_ENCODING,
   METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID,
-  METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME,
+  METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED,
 } from '../kuflow-encryption-instrumentation'
 import { type Cache, CacheBuilder } from './kuflow-cache'
 import { Ciphers } from './kuflow-crypto'
@@ -75,7 +76,7 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
 
     return {
       metadata: {
-        [METADATA_ENCODING_KEY]: encode(METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME),
+        [METADATA_KEY_ENCODING]: encode(METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED),
         [METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID]: encode(keyId),
       },
       data: encode(`${Ciphers.AES_256_GCM.algorithm}:${cipherTextValue}`),
@@ -85,7 +86,7 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
   private readonly decrypt = async (payload: Payload): Promise<Payload> => {
     if (
       payload.metadata == null ||
-      decode(payload.metadata?.[METADATA_ENCODING_KEY]) !== METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED_NAME
+      decode(payload.metadata?.[METADATA_KEY_ENCODING]) !== METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED
     ) {
       return payload
     }
@@ -96,7 +97,7 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
 
     const keyIdBytes = payload.metadata[METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID]
     if (keyIdBytes == null) {
-      throw new ValueError('Unable to decrypt Payload without encryption key id')
+      throw new ValueError('Payload key id is missing')
     }
 
     const keyId = decode(keyIdBytes)
@@ -107,7 +108,7 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
 
     const [cipherTextAlgorithm, cipherTextValue] = cipherText.split(':')
     if (cipherTextAlgorithm == null || cipherTextValue == null) {
-      throw new ValueError('Invalid cipherText format')
+      throw new ValueError('Invalid ciphered data format')
     }
 
     if (cipherTextAlgorithm !== Ciphers.AES_256_GCM.algorithm) {

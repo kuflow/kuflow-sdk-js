@@ -64,7 +64,7 @@ export class Cache<K, V> {
     // Check if the value exists and is not expired
     if (cached != null && this.expireAfterAccess > 0 && (cached.expiresAt == null || cached.expiresAt > Date.now())) {
       // Reset the TTL since it's being accessed
-      this.createOrUpdate(key, cached.value, this.expireAfterAccess)
+      this.createOrUpdateCacheEntry(key, cached.value, this.expireAfterAccess)
 
       return cached.value
     }
@@ -82,7 +82,7 @@ export class Cache<K, V> {
         const value = await loader()
 
         // Store the value in the cache
-        this.createOrUpdate(key, value, this.expireAfterAccess)
+        this.createOrUpdateCacheEntry(key, value, this.expireAfterAccess)
 
         return value
       } finally {
@@ -104,26 +104,19 @@ export class Cache<K, V> {
    * @param value - The value to store.
    */
   public put(key: K, value: V): void {
-    // Clear any existing timeout for this key
-    const cached = this.cache.get(key)
-    this.clearTimeoutCacheEntry(cached)
-
-    this.createOrUpdate(key, value, this.expireAfterWrite)
+    this.createOrUpdateCacheEntry(key, value, this.expireAfterWrite)
   }
 
   /**
-   * Remove a specific key from the cache.
+   * Invalidate a specific key from the cache.
    * @param key - The key to remove.
    */
   public invalidate(key: K): void {
-    const cached = this.cache.get(key)
-    this.clearTimeoutCacheEntry(cached)
-
-    this.cache.delete(key)
+    this.deleteCacheEntry(key)
   }
 
   /**
-   * Remove all items from the cache.
+   * Invalidate all items from the cache.
    */
   public invalidateAll(): void {
     for (const [, cached] of this.cache.entries()) {
@@ -134,18 +127,17 @@ export class Cache<K, V> {
   }
 
   /**
-   * Create or Update the cache cached item.
-   * @param key - The key of the item.
-   * @param value - The value of the item.
-   * @param ttl - The ttl of the item.
+   * Create or Update the cache cached entry.
+   * @param key - The key of the entry.
+   * @param value - The value of the entry.
+   * @param ttl - The ttl of the entry.
    */
-  private createOrUpdate(key: K, value: V, ttl: number): void {
+  private createOrUpdateCacheEntry(key: K, value: V, ttl: number): void {
     let expiresAt: number | undefined = undefined
     let timeoutId: NodeJS.Timeout | undefined = undefined
 
     // Clear any existing timeout for this key
-    const cached = this.cache.get(key)
-    this.clearTimeoutCacheEntry(cached)
+    this.deleteCacheEntry(key)
 
     if (ttl > 0) {
       expiresAt = Date.now() + ttl
@@ -158,6 +150,24 @@ export class Cache<K, V> {
 
     // Update or insert the new entry in the cache
     this.cache.set(key, { value, expiresAt, timeoutId })
+  }
+
+  /**
+   * Deletes a cache entry identified by the specified key.
+   * This will also clear any associated timeout for the cache entry.
+   *
+   * @param key - The key of the cache entry to be deleted.
+   * @return No return value.
+   */
+  private deleteCacheEntry(key: K): void {
+    const cached = this.cache.get(key)
+    if (cached == null) {
+      return
+    }
+
+    this.clearTimeoutCacheEntry(cached)
+
+    this.cache.delete(key)
   }
 
   private clearTimeoutCacheEntry(cached: CacheEntry<V> | undefined): void {
