@@ -25,6 +25,7 @@ import type { KuFlowRestClient } from '@kuflow/kuflow-rest'
 import { type Payload, type PayloadCodec, ValueError } from '@temporalio/common'
 import { decode, encode } from '@temporalio/common/lib/encoding'
 import { temporal } from '@temporalio/proto'
+import { Runtime } from '@temporalio/worker'
 import type crypto from 'crypto'
 
 import {
@@ -32,7 +33,7 @@ import {
   METADATA_KEY_ENCODING_ENCRYPTED_KEY_ID,
   METADATA_VALUE_KUFLOW_ENCODING_ENCRYPTED,
 } from '../kuflow-encryption-instrumentation'
-import { type Cache, CacheBuilder } from './kuflow-cache'
+import { CacheBuilder } from './kuflow-cache'
 import { Ciphers } from './kuflow-crypto'
 
 interface KuflowEncryptionPayloadCodecCto {
@@ -40,8 +41,11 @@ interface KuflowEncryptionPayloadCodecCto {
 }
 
 export class KuflowEncryptionPayloadCodec implements PayloadCodec {
-  private readonly kmsKeyCache: Cache<string, crypto.webcrypto.CryptoKey> = new CacheBuilder()
+  private readonly kmsKeyCache = CacheBuilder.builder<string, crypto.webcrypto.CryptoKey>()
     .withExpireAfterAccess(1, 'hours')
+    .withRemovalListener(key => {
+      Runtime.instance().logger.info(`Removed KMS key ${key} from cache`)
+    })
     .build()
 
   private readonly restClient: KuFlowRestClient
@@ -125,6 +129,8 @@ export class KuflowEncryptionPayloadCodec implements PayloadCodec {
   private async retrieveKey(keyId: string): Promise<crypto.webcrypto.CryptoKey> {
     return await this.kmsKeyCache.get(keyId, async () => {
       const key = await this.restClient.kmsOperations.retrieveKmsKey(keyId)
+
+      Runtime.instance().logger.info(`Loaded KMS key ${key.id} into cache`)
 
       return await Ciphers.AES_256_GCM.importKey(key.value)
     })

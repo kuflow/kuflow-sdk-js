@@ -23,11 +23,14 @@
 
 type CacheLoader<V> = () => Promise<V> | V
 
-type TimeUnit = 'hours' | 'minutes' | 'seconds' | 'milliseconds'
+type TimeUnit = 'hour' | 'hours' | 'minute' | 'minutes' | 'second' | 'seconds' | 'millisecond' | 'milliseconds'
 
-export interface CacheOptions {
+const NOO_OP = (): void => {} // eslint-disable-line @typescript-eslint/no-empty-function
+
+export interface CacheOptions<K> {
   expireAfterAccess: number // Time-to-live for cached items (in milliseconds)
   expireAfterWrite: number // Time-to-live for cached items (in milliseconds)
+  removalListener: (key: K) => void
 }
 
 interface CacheEntry<V> {
@@ -43,12 +46,15 @@ export class Cache<K, V> {
 
   private readonly expireAfterWrite: number
 
+  private readonly removalListener: (key: K) => void
+
   // Track ongoing loader operations for keys
   private readonly inProgressLoads = new Map<K, Promise<V>>()
 
-  public constructor(opts: CacheOptions) {
+  public constructor(opts: CacheOptions<K>) {
     this.expireAfterAccess = opts.expireAfterAccess
     this.expireAfterWrite = opts.expireAfterWrite
+    this.removalListener = opts.removalListener
   }
 
   /**
@@ -137,14 +143,15 @@ export class Cache<K, V> {
     let timeoutId: NodeJS.Timeout | undefined = undefined
 
     // Clear any existing timeout for this key
-    this.deleteCacheEntry(key)
+    const cached = this.cache.get(key)
+    this.clearTimeoutCacheEntry(cached)
 
     if (ttl > 0) {
       expiresAt = Date.now() + ttl
 
       // Schedule the item for automatic removal after the TTL expires
       timeoutId = setTimeout(() => {
-        this.cache.delete(key)
+        this.deleteCacheEntry(key)
       }, ttl)
     }
 
@@ -168,6 +175,8 @@ export class Cache<K, V> {
     this.clearTimeoutCacheEntry(cached)
 
     this.cache.delete(key)
+
+    this.removalListener(key)
   }
 
   private clearTimeoutCacheEntry(cached: CacheEntry<V> | undefined): void {
@@ -177,10 +186,16 @@ export class Cache<K, V> {
   }
 }
 
-export class CacheBuilder {
+export class CacheBuilder<K, V> {
   private expireAfterAccess = 0 // Default TTL is 0 (disabled by default)
 
   private expireAfterWrite = 0 // Default TTL is 0 (disabled by default)
+
+  private removalListener: (key: K) => void = NOO_OP
+
+  public static builder<K, V>(): CacheBuilder<K, V> {
+    return new CacheBuilder<K, V>()
+  }
 
   /**
    * Set the expiration time for the cache after accessing the element.
@@ -204,6 +219,18 @@ export class CacheBuilder {
     return this
   }
 
+  /**
+   * Sets a removal listener function to be called when an entry is removed.
+   *
+   * @param {Function} removalListener - A function that gets called with the key of the removed entry.
+   * @return {this} Returns the current instance to allow method chaining.
+   */
+  public withRemovalListener(removalListener: (key: K) => void): this {
+    this.removalListener = removalListener
+
+    return this
+  }
+
   private toMillis(time: number, unit: TimeUnit): number {
     if (time < 0) {
       throw new Error('Time must be greater than 0')
@@ -216,12 +243,16 @@ export class CacheBuilder {
 
   private multiplier(unit: TimeUnit): number {
     switch (unit) {
+      case 'hour':
       case 'hours':
         return 60 * 60 * 1000
+      case 'minute':
       case 'minutes':
         return 60 * 1000
+      case 'second':
       case 'seconds':
         return 1000
+      case 'millisecond':
       case 'milliseconds':
         return 1
     }
@@ -230,7 +261,11 @@ export class CacheBuilder {
   /**
    * Build and return the Cache instance configured with the specified options.
    */
-  public build<K, V>(): Cache<K, V> {
-    return new Cache<K, V>({ expireAfterAccess: this.expireAfterAccess, expireAfterWrite: this.expireAfterWrite })
+  public build(): Cache<K, V> {
+    return new Cache<K, V>({
+      expireAfterAccess: this.expireAfterAccess,
+      expireAfterWrite: this.expireAfterWrite,
+      removalListener: this.removalListener,
+    })
   }
 }

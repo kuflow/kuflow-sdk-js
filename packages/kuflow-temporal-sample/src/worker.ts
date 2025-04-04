@@ -74,12 +74,18 @@ async function run({
   await kuFlowTemporalConnection.runWorker()
 
   await kuFlowTemporalConnection.close()
+
+  Runtime.instance().logger.info('Worker connection successfully closed')
 }
 
-run(getEnv()).catch(err => {
-  console.error(err)
-  process.exit(1)
-})
+run(getEnv())
+  .then(() => {
+    process.exit(0)
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
 
 // Helpers for configuring the mTLS client and worker samples
 
