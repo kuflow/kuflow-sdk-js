@@ -46,6 +46,6 @@ export interface KuFlowTemporalConnectionOptions {
   }
   temporalio: {
     connection?: NativeConnectionOptions
-    worker?: WorkerOptions
+    worker?: Omit<WorkerOptions, 'connection' | 'interceptors' | 'dataConverter'>
   }
 }

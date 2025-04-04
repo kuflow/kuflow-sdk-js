@@ -77,6 +77,17 @@ export const $host: OperationURLParameter = {
   skipEncoding: true,
 }
 
+export const keyId: OperationURLParameter = {
+  parameterPath: 'keyId',
+  mapper: {
+    serializedName: 'keyId',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
+}
+
 export const size: OperationQueryParameter = {
   parameterPath: ['options', 'size'],
   mapper: {

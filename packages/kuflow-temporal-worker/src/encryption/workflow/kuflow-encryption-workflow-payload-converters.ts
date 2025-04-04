@@ -21,12 +21,17 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import {
+  BinaryPayloadConverter,
+  CompositePayloadConverter,
+  JsonPayloadConverter,
+  UndefinedPayloadConverter,
+} from '@temporalio/common'
+
+import { EncryptionPayloadConverter } from './kuflow-encryption-payload-converter'
+
+export const payloadConverter = new CompositePayloadConverter(
+  new UndefinedPayloadConverter(),
+  new BinaryPayloadConverter(),
+  new EncryptionPayloadConverter(new JsonPayloadConverter()),
+)

@@ -33,7 +33,7 @@
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@temporalio/activity": "1.10.3"
+    "@temporalio/activity": "1.11.7"
   },
   "publishConfig": {
     "access": "public"

@@ -21,12 +21,28 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import type {
+  ActivateInput,
+  ConcludeActivationInput,
+  ConcludeActivationOutput,
+  DisposeInput,
+  Next,
+  WorkflowInternalsInterceptor,
+} from '@temporalio/workflow'
+
+export class KuFlowEncryptionWorkflowInternalsInterceptor implements WorkflowInternalsInterceptor {
+  public activate(input: ActivateInput, next: Next<WorkflowInternalsInterceptor, 'activate'>): void {
+    next(input)
+  }
+
+  public concludeActivation(
+    input: ConcludeActivationInput,
+    next: Next<WorkflowInternalsInterceptor, 'concludeActivation'>,
+  ): ConcludeActivationOutput {
+    return next(input)
+  }
+
+  public dispose(input: DisposeInput, next: Next<WorkflowInternalsInterceptor, 'dispose'>): void {
+    next(input)
+  }
+}

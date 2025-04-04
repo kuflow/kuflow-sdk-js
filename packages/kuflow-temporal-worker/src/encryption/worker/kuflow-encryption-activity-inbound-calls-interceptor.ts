@@ -21,12 +21,31 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import type {
+  ActivityExecuteInput,
+  ActivityInboundCallsInterceptor,
+  ActivityInterceptors,
+  ActivityInterceptorsFactory,
+} from '@temporalio/worker'
+import type { Next } from '@temporalio/workflow'
+
+import { EncryptionWrapper, retrieveEncryptionState } from '../kuflow-encryption-instrumentation'
+
+class KuFlowEncryptionActivityInboundCallsInterceptor implements ActivityInboundCallsInterceptor {
+  public async execute(
+    input: ActivityExecuteInput,
+    next: Next<ActivityInboundCallsInterceptor, 'execute'>,
+  ): Promise<unknown> {
+    const output = await next(input)
+
+    const encryptionState = retrieveEncryptionState(input.headers)
+
+    return EncryptionWrapper.of(encryptionState, output)
+  }
+}
+
+export const kuFlowEncryptionActivityInterceptorsFactory: ActivityInterceptorsFactory = (): ActivityInterceptors => {
+  return {
+    inbound: new KuFlowEncryptionActivityInboundCallsInterceptor(),
+  }
+}

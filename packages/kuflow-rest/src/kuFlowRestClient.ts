@@ -27,6 +27,7 @@ import type { CommonClientOptions } from '@azure/core-client'
 import { KuFlowRestClientGenerated } from './generated'
 import {
   AuthenticationOperations,
+  KmsOperations,
   PrincipalOperations,
   ProcessItemOperations,
   ProcessOperations,
@@ -59,6 +60,11 @@ export class KuFlowRestClient {
    * Authentication API operations.
    */
   public readonly authenticationOperations: AuthenticationOperations
+
+  /**
+   * KMS API operations.
+   */
+  public readonly kmsOperations: KmsOperations
 
   /**
    * Principal API operations.
@@ -110,6 +116,7 @@ export class KuFlowRestClient {
     })
 
     this.authenticationOperations = new AuthenticationOperations(clientGenerated)
+    this.kmsOperations = new KmsOperations(clientGenerated)
     this.principalOperations = new PrincipalOperations(clientGenerated)
     this.tenantOperations = new TenantOperations(clientGenerated)
     this.tenantUserOperations = new TenantUserOperations(clientGenerated)

@@ -83,6 +83,13 @@ export interface DefaultErrorInfo {
   locationType?: string
 }
 
+export interface KmsKey {
+  /** Key Id */
+  id: string
+  /** Encryption/decryption key */
+  value: Uint8Array
+}
+
 export interface PrincipalPageItem {
   id?: string
   type?: PrincipalType
@@ -592,6 +599,12 @@ export interface AuthenticationCreateAuthenticationOptionalParams extends coreCl
 
 /** Contains response data for the createAuthentication operation. */
 export type AuthenticationCreateAuthenticationResponse = Authentication
+
+/** Optional parameters. */
+export interface KmsRetrieveKmsKeyOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the retrieveKmsKey operation. */
+export type KmsRetrieveKmsKeyResponse = KmsKey
 
 /** Optional parameters. */
 export interface PrincipalFindPrincipalsOptionalParams extends coreClient.OperationOptions {

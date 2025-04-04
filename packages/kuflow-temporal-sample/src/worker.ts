@@ -37,13 +37,13 @@ async function run({
   address,
   taskQueue,
   kuflowRestClientApiEndpoint,
-  kuflowRestClientApiUsername,
-  kuflowRestClientApiPassword,
+  kuflowRestClientApiClientId,
+  kuflowRestClientApiClientSecret,
 }: Env): Promise<void> {
   const kuFlowRestClient = new KuFlowRestClient(
     {
-      clientId: kuflowRestClientApiUsername,
-      clientSecret: kuflowRestClientApiPassword,
+      clientId: kuflowRestClientApiClientId,
+      clientSecret: kuflowRestClientApiClientSecret,
     },
     {
       endpoint: kuflowRestClientApiEndpoint,
@@ -74,12 +74,18 @@ async function run({
   await kuFlowTemporalConnection.runWorker()
 
   await kuFlowTemporalConnection.close()
+
+  Runtime.instance().logger.info('Worker connection successfully closed')
 }
 
-run(getEnv()).catch(err => {
-  console.error(err)
-  process.exit(1)
-})
+run(getEnv())
+  .then(() => {
+    process.exit(0)
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
 
 // Helpers for configuring the mTLS client and worker samples
 
@@ -96,8 +102,8 @@ export interface Env {
   address: string
   taskQueue: string
   kuflowRestClientApiEndpoint: string
-  kuflowRestClientApiUsername: string
-  kuflowRestClientApiPassword: string
+  kuflowRestClientApiClientId: string
+  kuflowRestClientApiClientSecret: string
 }
 
 export function getEnv(): Env {
@@ -106,7 +112,7 @@ export function getEnv(): Env {
     taskQueue: requiredEnv('TEMPORAL_TASK_QUEUE'),
 
     kuflowRestClientApiEndpoint: requiredEnv('KUFLOW_REST_CLIENT_API_ENDPOINT'),
-    kuflowRestClientApiUsername: requiredEnv('KUFLOW_REST_CLIENT_API_USERNAME'),
-    kuflowRestClientApiPassword: requiredEnv('KUFLOW_REST_CLIENT_API_PASSWORD'),
+    kuflowRestClientApiClientId: requiredEnv('KUFLOW_REST_CLIENT_API_CLIENT_ID'),
+    kuflowRestClientApiClientSecret: requiredEnv('KUFLOW_REST_CLIENT_API_CLIENT_SECRET'),
   }
 }

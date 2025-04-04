@@ -21,12 +21,14 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import type { KmsRetrieveKmsKeyOptionalParams, KmsRetrieveKmsKeyResponse } from '../models'
+
+/** Interface representing a Kms. */
+export interface Kms {
+  /**
+   * Get the requested key id.
+   * @param keyId The resource ID.
+   * @param options The options parameters.
+   */
+  retrieveKmsKey: (keyId: string, options?: KmsRetrieveKmsKeyOptionalParams) => Promise<KmsRetrieveKmsKeyResponse>
+}

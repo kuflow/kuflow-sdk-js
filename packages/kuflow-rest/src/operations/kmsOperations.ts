@@ -21,12 +21,34 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import type {
+  Kms as KmsOperationsGenerated,
+  KmsRetrieveKmsKeyOptionalParams,
+  KmsRetrieveKmsKeyResponse,
+  KuFlowRestClientGenerated,
+} from '../generated'
+
+/** Class containing KmsOperations operations. */
+export class KmsOperations {
+  private readonly kmsOperations: KmsOperationsGenerated
+
+  /**
+   * Initialize a new instance of the class KmsOperations class.
+   * @param clientGenerated Reference to the service client
+   */
+  public constructor(clientGenerated: KuFlowRestClientGenerated) {
+    this.kmsOperations = clientGenerated.kms
+  }
+
+  /**
+   * Get the requested key id.
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  public async retrieveKmsKey(
+    id: string,
+    options?: KmsRetrieveKmsKeyOptionalParams,
+  ): Promise<KmsRetrieveKmsKeyResponse> {
+    return await this.kmsOperations.retrieveKmsKey(id, options)
+  }
+}

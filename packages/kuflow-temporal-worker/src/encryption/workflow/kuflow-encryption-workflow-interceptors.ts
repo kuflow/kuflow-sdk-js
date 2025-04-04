@@ -21,12 +21,14 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+import type { WorkflowInterceptors } from '@temporalio/workflow'
+
+import { KuFlowEncryptionWorkflowInboundCallsInterceptor } from './kuflow-encryption-workflow-inbound-calls-interceptor'
+import { KuFlowEncryptionWorkflowInternalsInterceptor } from './kuflow-encryption-workflow-internals-interceptor'
+import { KuFlowEncryptionWorkflowOutboundCallsInterceptor } from './kuflow-encryption-workflow-outbound-calls-interceptor'
+
+export const interceptors = (): WorkflowInterceptors => ({
+  inbound: [new KuFlowEncryptionWorkflowInboundCallsInterceptor()],
+  outbound: [new KuFlowEncryptionWorkflowOutboundCallsInterceptor()],
+  internals: [new KuFlowEncryptionWorkflowInternalsInterceptor()],
+})

@@ -232,6 +232,29 @@ export const DefaultErrorInfo: coreClient.CompositeMapper = {
   },
 }
 
+export const KmsKey: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'KmsKey',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      value: {
+        serializedName: 'value',
+        required: true,
+        type: {
+          name: 'ByteArray',
+        },
+      },
+    },
+  },
+}
+
 export const PrincipalPageItem: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',

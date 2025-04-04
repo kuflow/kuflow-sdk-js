@@ -21,12 +21,6 @@
  * THE SOFTWARE.
  */
 
-export * from './authenticationOperations'
-export * from './kms'
-export * from './principalOperations'
-export * from './processItemOperations'
-export * from './processOperations'
-export * from './robotOperations'
-export * from './tenantOperations'
-export * from './tenantUserOperations'
-export * from './workerOperations'
+export * from './kuflow-encryption-workflow-inbound-calls-interceptor'
+export * from './kuflow-encryption-workflow-internals-interceptor'
+export * from './kuflow-encryption-workflow-outbound-calls-interceptor'
