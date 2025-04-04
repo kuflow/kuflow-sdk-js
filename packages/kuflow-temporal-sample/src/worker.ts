@@ -82,8 +82,8 @@ run(getEnv())
   .then(() => {
     process.exit(0)
   })
-  .catch(err => {
-    console.error(err)
+  .catch(error => {
+    console.error('Worker error', { error })
     process.exit(1)
   })
 
