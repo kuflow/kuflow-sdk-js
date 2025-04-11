@@ -187,6 +187,17 @@ export const id: OperationURLParameter = {
   },
 }
 
+export const principalId: OperationQueryParameter = {
+  parameterPath: ['options', 'principalId'],
+  mapper: {
+    serializedName: 'principalId',
+    type: {
+      name: 'Uuid',
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
 export const email: OperationQueryParameter = {
   parameterPath: ['options', 'email'],
   mapper: {

@@ -21,13 +21,16 @@
  * THE SOFTWARE.
  */
 
-export type * from './authenticationOperations'
-export type * from './group'
-export type * from './kms'
-export type * from './principalOperations'
-export type * from './processItemOperations'
-export type * from './processOperations'
-export type * from './robotOperations'
-export type * from './tenantOperations'
-export type * from './tenantUserOperations'
-export type * from './workerOperations'
+import type { GroupFindGroupsOptionalParams, GroupFindGroupsResponse } from '../models'
+
+/** Interface representing a Group. */
+export interface Group {
+  /**
+   * List all the Groups that have been created and the used credentials has access.
+   *
+   * Available sort query values: id, name
+   *
+   * @param options The options parameters.
+   */
+  findGroups: (options?: GroupFindGroupsOptionalParams) => Promise<GroupFindGroupsResponse>
+}

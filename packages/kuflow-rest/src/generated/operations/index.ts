@@ -22,6 +22,7 @@
  */
 
 export * from './authenticationOperations'
+export * from './group'
 export * from './kms'
 export * from './principalOperations'
 export * from './processItemOperations'
