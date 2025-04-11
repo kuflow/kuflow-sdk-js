@@ -124,6 +124,13 @@ export interface PrincipalApplication {
   id?: string
 }
 
+export interface GroupPageItem {
+  id: string
+  name: string
+  /** Tenant ID. */
+  tenantId: string
+}
+
 export interface TenantPageItem {
   id: string
   name: string
@@ -513,6 +520,10 @@ export interface PrincipalPage extends Page {
   content: PrincipalPageItem[]
 }
 
+export interface GroupPage extends Page {
+  content: GroupPageItem[]
+}
+
 export interface TenantPage extends Page {
   content: TenantPageItem[]
 }
@@ -637,6 +648,30 @@ export interface PrincipalRetrievePrincipalOptionalParams extends coreClient.Ope
 
 /** Contains response data for the retrievePrincipal operation. */
 export type PrincipalRetrievePrincipalResponse = Principal
+
+/** Optional parameters. */
+export interface GroupFindGroupsOptionalParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string[]
+  /** Filter by tenantId. */
+  tenantId?: string[]
+  /** Filter by principalId. */
+  principalId?: string
+}
+
+/** Contains response data for the findGroups operation. */
+export type GroupFindGroupsResponse = GroupPage
 
 /** Optional parameters. */
 export interface TenantFindTenantsOptionalParams extends coreClient.OperationOptions {
