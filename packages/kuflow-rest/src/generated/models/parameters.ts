@@ -195,7 +195,6 @@ export const principalId: OperationQueryParameter = {
       name: 'Uuid',
     },
   },
-  collectionFormat: 'Multi',
 }
 
 export const email: OperationQueryParameter = {
