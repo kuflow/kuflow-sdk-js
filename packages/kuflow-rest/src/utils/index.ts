@@ -22,6 +22,16 @@
  */
 
 import { type KuFlowFile, parseKuFlowFile } from './KuFlowFile'
+import { generateKuflowGroupString, type KuFlowGroup, parseKuFlowGroup } from './KuFlowGroup'
 import { generateKuflowPrincipalString, type KuFlowPrincipal, parseKuFlowPrincipal } from './KuFlowPrincipal'
 
-export { generateKuflowPrincipalString, type KuFlowFile, type KuFlowPrincipal, parseKuFlowFile, parseKuFlowPrincipal }
+export {
+  generateKuflowGroupString,
+  generateKuflowPrincipalString,
+  type KuFlowFile,
+  type KuFlowGroup,
+  type KuFlowPrincipal,
+  parseKuFlowFile,
+  parseKuFlowGroup,
+  parseKuFlowPrincipal,
+}
