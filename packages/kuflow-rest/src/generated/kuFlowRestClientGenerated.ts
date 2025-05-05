@@ -27,6 +27,7 @@ import * as coreClient from '@azure/core-client'
 import type { KuFlowRestClientGeneratedOptionalParams } from './models'
 import {
   AuthenticationOperationsImpl,
+  GroupImpl,
   KmsImpl,
   PrincipalOperationsImpl,
   ProcessItemOperationsImpl,
@@ -38,6 +39,7 @@ import {
 } from './operations'
 import type {
   AuthenticationOperations,
+  Group,
   Kms,
   PrincipalOperations,
   ProcessItemOperations,
@@ -72,6 +74,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     }
 
     const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`
+
     const userAgentPrefix = options.userAgentOptions?.userAgentPrefix
       ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
       : `${packageDetails}`
@@ -91,6 +94,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     this.authenticationOperations = new AuthenticationOperationsImpl(this)
     this.kms = new KmsImpl(this)
     this.principalOperations = new PrincipalOperationsImpl(this)
+    this.group = new GroupImpl(this)
     this.tenantOperations = new TenantOperationsImpl(this)
     this.tenantUserOperations = new TenantUserOperationsImpl(this)
     this.processOperations = new ProcessOperationsImpl(this)
@@ -102,6 +106,7 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
   authenticationOperations: AuthenticationOperations
   kms: Kms
   principalOperations: PrincipalOperations
+  group: Group
   tenantOperations: TenantOperations
   tenantUserOperations: TenantUserOperations
   processOperations: ProcessOperations
