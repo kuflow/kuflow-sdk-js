@@ -30,7 +30,7 @@ export interface SignalProcessItemPayload {
 
 export interface SignalProcessItem {
   /**
-   * Represents the unique identifier for a SignalProcessItem.
+   * The process item identifier.
    * This identifier is used to distinguish and refer to a specific signal process item in the workflow system.
    */
   id: string
@@ -43,23 +43,23 @@ export interface SignalProcessItem {
   type: 'TASK' | 'MESSAGE' | 'THREAD'
 
   /**
-   * Represents the payload associated with a specific signal processing item.
+   * The payload associated with a specific signal processing item.
    * This object contains information defining the specific item within a process
    * as well as its associated data structure.
    */
   payload: SignalProcessItemPayload
 
   /**
-   * Represents the unique identifier of the principal (user or system)
-   * who initiated the user action.
-   * This field is used to associate the user action with the entity that requested it.
+   * The timestamp when the request was made.
+   * This field is used to record the exact time the associated robot operation
+   * or process item task was requested.
    */
   requestTime: string
 
   /**
-   * The timestamp when the request was made.
-   * This field is used to record the exact time the associated robot operation
-   * or process item task was requested.
+   * The time zone associated with the request.
+   * This allows timestamp values to be interpreted in the context of a specific geographical region
+   * or offset from UTC.
    */
   requestTimeZone: string
 }
@@ -73,16 +73,16 @@ export interface SignalUserAction {
   userActionDefinitionCode: string
 
   /**
-   * Represents the unique identifier of the principal (user or system)
-   * who initiated the user action.
-   * This field is used to associate the user action with the entity that requested it.
+   * The timestamp when the request was made.
+   * This field is used to record the exact time the associated robot operation
+   * or process item task was requested.
    */
   requestTime: string
 
   /**
-   * The timestamp when the request was made.
-   * This field is used to record the exact time the associated robot operation
-   * or process item task was requested.
+   * The time zone associated with the request.
+   * This allows timestamp values to be interpreted in the context of a specific geographical region
+   * or offset from UTC.
    */
   requestTimeZone: string
 }
