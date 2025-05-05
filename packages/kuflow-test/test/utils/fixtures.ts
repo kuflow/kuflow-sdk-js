@@ -22,6 +22,8 @@
  */
 
 import type {
+  GroupPage,
+  GroupPageItem,
   Principal,
   PrincipalPage,
   Process,
@@ -59,6 +61,26 @@ export function mockPrincipalUser(): Principal {
       id: randomUUID(),
       email: `dummy-${randomInt(1, 1_000)}@example.com`,
     },
+  }
+}
+
+export function mockGroupPage(): GroupPage {
+  return {
+    metadata: {
+      size: 25,
+      page: 0,
+      totalElements: 1,
+      totalPages: 1,
+    },
+    content: [mockGroupPageItem()],
+  }
+}
+
+export function mockGroupPageItem(): GroupPageItem {
+  return {
+    id: randomUUID(),
+    name: 'My tenant name',
+    tenantId: randomUUID(),
   }
 }
 

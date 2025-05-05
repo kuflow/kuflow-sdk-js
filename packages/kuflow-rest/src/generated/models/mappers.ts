@@ -420,6 +420,36 @@ export const PrincipalApplication: coreClient.CompositeMapper = {
   },
 }
 
+export const GroupPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'GroupPageItem',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      name: {
+        serializedName: 'name',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
 export const TenantPageItem: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -2045,6 +2075,29 @@ export const PrincipalPage: coreClient.CompositeMapper = {
             type: {
               name: 'Composite',
               className: 'PrincipalPageItem',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const GroupPage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'GroupPage',
+    modelProperties: {
+      ...Page.type.modelProperties,
+      content: {
+        serializedName: 'content',
+        required: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'GroupPageItem',
             },
           },
         },

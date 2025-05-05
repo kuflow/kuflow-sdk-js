@@ -21,17 +21,16 @@
  * THE SOFTWARE.
  */
 
-import { type KuFlowFile, parseKuFlowFile } from './KuFlowFile'
-import { generateKuflowGroupString, type KuFlowGroup, parseKuFlowGroup } from './KuFlowGroup'
-import { generateKuflowPrincipalString, type KuFlowPrincipal, parseKuFlowPrincipal } from './KuFlowPrincipal'
+import type { GroupFindGroupsOptionalParams, GroupFindGroupsResponse } from '../models'
 
-export {
-  generateKuflowGroupString,
-  generateKuflowPrincipalString,
-  type KuFlowFile,
-  type KuFlowGroup,
-  type KuFlowPrincipal,
-  parseKuFlowFile,
-  parseKuFlowGroup,
-  parseKuFlowPrincipal,
+/** Interface representing a Group. */
+export interface Group {
+  /**
+   * List all the Groups that have been created and the used credentials has access.
+   *
+   * Available sort query values: id, name
+   *
+   * @param options The options parameters.
+   */
+  findGroups: (options?: GroupFindGroupsOptionalParams) => Promise<GroupFindGroupsResponse>
 }
