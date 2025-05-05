@@ -29,12 +29,60 @@ export interface SignalProcessItemPayload {
 }
 
 export interface SignalProcessItem {
+  /**
+   * The process item identifier.
+   * This identifier is used to distinguish and refer to a specific signal process item in the workflow system.
+   */
   id: string
+
+  /**
+   * Defines the type of the signal processing item.
+   * This field specifies the category or nature of the item being processed
+   * in the workflow system, such as tasks, messages, or threads.
+   */
   type: 'TASK' | 'MESSAGE' | 'THREAD'
+
+  /**
+   * The payload associated with a specific signal processing item.
+   * This object contains information defining the specific item within a process
+   * as well as its associated data structure.
+   */
   payload: SignalProcessItemPayload
+
+  /**
+   * The timestamp when the request was made.
+   * This field is used to record the exact time the associated robot operation
+   * or process item task was requested.
+   */
+  requestTime: string
+
+  /**
+   * The time zone associated with the request.
+   * This allows timestamp values to be interpreted in the context of a specific geographical region
+   * or offset from UTC.
+   */
+  requestTimeZone: string
 }
 
 export interface SignalUserAction {
+  /**
+   * The code that defines a user action.
+   * This code is used to identify and differentiate among various user actions
+   * within a workflow system.
+   */
   userActionDefinitionCode: string
-  requestInstant: string
+
+  /**
+   * The timestamp when the request was made.
+   * This field is used to record the exact time the associated robot operation
+   * or process item task was requested.
+   */
+  requestTime: string
+
+  /**
+   * The time zone associated with the request.
+   * This allows timestamp values to be interpreted in the context of a specific geographical region
+   * or offset from UTC.
+   */
+  requestTimeZone: string
 }
