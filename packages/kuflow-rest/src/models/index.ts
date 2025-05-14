@@ -107,6 +107,8 @@ export interface GroupFindGroupsOptionalExtParams extends coreClient.OperationOp
   principalId?: string
   /** Filter by tenantId. */
   tenantId?: string | string[]
+  /** Filter by group ids. */
+  groupId?: string | string[]
 }
 
 /** Optional parameters. */

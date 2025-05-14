@@ -12,6 +12,7 @@ Run all the tests with:
 
 ```bash
 npm run build
+npm run test
 ```
 
 ## Automatic way (CI): Create a new version and let to the CI publish the new version
