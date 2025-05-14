@@ -88,6 +88,7 @@ describe('API /groups', () => {
           page: 1,
           sort: 'sort1',
           principalId: 'dfa200e4-1876-4056-ab09-690bce3057f5',
+          groupId: '08182e24-9ede-408e-bd45-7944045a0761',
         })
         .reply(200, {})
 
@@ -96,6 +97,7 @@ describe('API /groups', () => {
         page: 1,
         sort: 'sort1',
         principalId: 'dfa200e4-1876-4056-ab09-690bce3057f5',
+        groupId: '08182e24-9ede-408e-bd45-7944045a0761',
       })
 
       scope.done()
@@ -109,6 +111,7 @@ describe('API /groups', () => {
           page: 1,
           sort: 'sort1',
           tenantId: 'dfa200e4-1876-4056-ab09-690bce3057f5',
+          groupId: '08182e24-9ede-408e-bd45-7944045a0761',
         })
         .reply(200, {})
 
@@ -117,6 +120,7 @@ describe('API /groups', () => {
         page: 1,
         sort: ['sort1'],
         tenantId: ['dfa200e4-1876-4056-ab09-690bce3057f5'],
+        groupId: '08182e24-9ede-408e-bd45-7944045a0761',
       })
 
       scope.done()
@@ -130,6 +134,7 @@ describe('API /groups', () => {
           page: 1,
           sort: ['sort1', 'sort2,&%'],
           tenantId: ['dfa200e4-1876-4056-ab09-690bce3057f5', '60c892d2-bf8e-4030-86a7-fca6700d88d3'],
+          groupId: ['e0b6a94b-bdc3-4824-b969-843ff02c5086', '961d7ac2-e7ff-47be-82d9-6195023772cf'],
         })
         .reply(200, {})
 
@@ -138,6 +143,7 @@ describe('API /groups', () => {
         page: 1,
         sort: ['sort1', 'sort2,&%'],
         tenantId: ['dfa200e4-1876-4056-ab09-690bce3057f5', '60c892d2-bf8e-4030-86a7-fca6700d88d3'],
+        groupId: ['e0b6a94b-bdc3-4824-b969-843ff02c5086', '961d7ac2-e7ff-47be-82d9-6195023772cf'],
       })
 
       scope.done()

@@ -664,6 +664,8 @@ export interface GroupFindGroupsOptionalParams extends coreClient.OperationOptio
    *
    */
   sort?: string[]
+  /** Filter by group ids. */
+  groupId?: string[]
   /** Filter by tenantId. */
   tenantId?: string[]
   /** Filter by principalId. */
