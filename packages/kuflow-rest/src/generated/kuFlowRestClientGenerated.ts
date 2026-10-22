@@ -27,6 +27,8 @@ import * as coreClient from '@azure/core-client'
 import type { KuFlowRestClientGeneratedOptionalParams } from './models'
 import {
   AuthenticationOperationsImpl,
+  BusinessArtifactOperationsImpl,
+  DocumentImpl,
   GroupImpl,
   KmsImpl,
   PrincipalOperationsImpl,
@@ -39,6 +41,8 @@ import {
 } from './operations'
 import type {
   AuthenticationOperations,
+  BusinessArtifactOperations,
+  Document,
   Group,
   Kms,
   PrincipalOperations,
@@ -74,7 +78,6 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     }
 
     const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`
-
     const userAgentPrefix = options.userAgentOptions?.userAgentPrefix
       ? `${options.userAgentOptions.userAgentPrefix} ${packageDetails}`
       : `${packageDetails}`
@@ -99,6 +102,8 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
     this.tenantUserOperations = new TenantUserOperationsImpl(this)
     this.processOperations = new ProcessOperationsImpl(this)
     this.processItemOperations = new ProcessItemOperationsImpl(this)
+    this.businessArtifactOperations = new BusinessArtifactOperationsImpl(this)
+    this.document = new DocumentImpl(this)
     this.workerOperations = new WorkerOperationsImpl(this)
     this.robotOperations = new RobotOperationsImpl(this)
   }
@@ -111,6 +116,8 @@ export class KuFlowRestClientGenerated extends coreClient.ServiceClient {
   tenantUserOperations: TenantUserOperations
   processOperations: ProcessOperations
   processItemOperations: ProcessItemOperations
+  businessArtifactOperations: BusinessArtifactOperations
+  document: Document
   workerOperations: WorkerOperations
   robotOperations: RobotOperations
 }

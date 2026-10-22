@@ -26,13 +26,15 @@ import {
   type JsonPatchOperation,
   KuFlowRestClient,
   type ProcessItemCreateParams,
+  type ProcessItemTaskAppendLogParams,
   type ProcessItemTaskAssignParams,
+  type ProcessItemTaskContextDataUpdateParams,
   type ProcessItemTaskDataUpdateParams,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
 
-import { mockProcessItem } from './utils/fixtures'
+import { mockProcessItem, mockProcessItemAiAssistance } from './utils/fixtures'
 import { streamToString } from './utils/stream'
 
 const clientId = 'USER1'
@@ -146,6 +148,29 @@ describe('API /process-items', () => {
         type: ['TASK', 'MESSAGE'],
         taskState: ['READY', 'CLAIMED'],
         processItemDefinitionCode: ['CODE_1', 'CODE_2'],
+      })
+
+      scope.done()
+    })
+
+    test('Check that deleted process items filter query params are correctly serialized', async () => {
+      const tenantId = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .get('/process-items')
+        .query({
+          size: 25,
+          page: 0,
+          tenantId,
+          processDefinitionCode: 'PROCESS_DEFINITION_CODE',
+          deleted: 'ONLY',
+        })
+        .reply(200, {})
+
+      await kuFlowRestClient.processItemOperations.findProcessItems({
+        tenantId,
+        processDefinitionCode: 'PROCESS_DEFINITION_CODE',
+        deleted: 'ONLY',
       })
 
       scope.done()
@@ -273,6 +298,48 @@ describe('API /process-items', () => {
     })
   })
 
+  describe('POST /process-items/{id}/task/~actions/complete', () => {
+    test('Check happy path', async () => {
+      const expectedObject = mockProcessItem()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(`/process-items/${expectedObject.id}/task/~actions/complete`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processItem = await kuFlowRestClient.processItemOperations.completeProcessItemTask(expectedObject.id)
+
+      scope.done()
+
+      expect(processItem).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('POST /process-items/{id}/task/~actions/append-log', () => {
+    test('Check happy path', async () => {
+      const expectedObject = mockProcessItem()
+      const params: ProcessItemTaskAppendLogParams = {
+        message: 'My log message',
+        level: 'WARN',
+      }
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(
+          `/process-items/${expectedObject.id}/task/~actions/append-log`,
+          body => body.message === params.message && body.level === params.level,
+        )
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processItem = await kuFlowRestClient.processItemOperations.appendProcessItemTaskLog(
+        expectedObject.id,
+        params,
+      )
+
+      scope.done()
+
+      expect(processItem).toStrictEqual(expectedObject)
+    })
+  })
+
   describe('PATCH /process-items/{id}/task/data', () => {
     test('Check happy path', async () => {
       const expectedObject = mockProcessItem()
@@ -326,6 +393,67 @@ describe('API /process-items', () => {
       const body = await streamToString(download.readableStreamBody)
 
       expect(body).toStrictEqual('{}')
+    })
+  })
+
+  describe('GET /process-items/{id}/~actions/ai-assistance', () => {
+    test('Check happy path', async () => {
+      const processItemId = randomUUID()
+      const expectedObject = mockProcessItemAiAssistance()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .get(`/process-items/${processItemId}/~actions/ai-assistance`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const aiAssistance = await kuFlowRestClient.processItemOperations.retrieveProcessItemAiAssistance(processItemId)
+
+      scope.done()
+
+      expect(aiAssistance).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('POST /process-items/{id}/~actions/ai-assistance', () => {
+    test('Check happy path', async () => {
+      const processItemId = randomUUID()
+      const expectedObject = mockProcessItemAiAssistance()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(
+          `/process-items/${processItemId}/~actions/ai-assistance`,
+          body => body.requestId === expectedObject.requestId,
+        )
+        .reply(202, JSON.stringify(expectedObject))
+
+      const aiAssistance = await kuFlowRestClient.processItemOperations.generateProcessItemAiAssistance(processItemId, {
+        requestId: expectedObject.requestId,
+      })
+
+      scope.done()
+
+      expect(aiAssistance).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('PUT /process-items/{id}/task/context-data', () => {
+    test('Check happy path', async () => {
+      const expectedObject = mockProcessItem()
+      const params: ProcessItemTaskContextDataUpdateParams = {
+        data: { value: { key: 'value' } },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .put(`/process-items/${expectedObject.id}/task/context-data`, body => body.data.value.key === 'value')
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processItem = await kuFlowRestClient.processItemOperations.updateProcessItemTaskContextData(
+        expectedObject.id,
+        params,
+      )
+
+      scope.done()
+
+      expect(processItem).toStrictEqual(expectedObject)
     })
   })
 })

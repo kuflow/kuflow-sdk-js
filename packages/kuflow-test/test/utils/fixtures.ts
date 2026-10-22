@@ -22,21 +22,31 @@
  */
 
 import type {
+  BusinessArtifact,
+  BusinessArtifactAction,
+  BusinessArtifactPage,
+  BusinessArtifactPageItem,
   GroupPage,
   GroupPageItem,
   Principal,
   PrincipalPage,
   Process,
+  ProcessAction,
   ProcessCreateParams,
   ProcessItem,
+  ProcessItemAiAssistance,
   ProcessItemPage,
   ProcessItemPageItem,
   ProcessPage,
   ProcessPageItem,
+  Robot,
+  RobotPage,
+  RobotPageItem,
   Tenant,
   TenantPage,
   TenantPageItem,
   TenantUser,
+  Worker,
 } from '@kuflow/kuflow-rest'
 import { randomInt, randomUUID } from 'crypto'
 
@@ -79,6 +89,7 @@ export function mockGroupPage(): GroupPage {
 export function mockGroupPageItem(): GroupPageItem {
   return {
     id: randomUUID(),
+    code: 'MY_GROUP_CODE',
     name: 'My tenant name',
     tenantId: randomUUID(),
   }
@@ -152,6 +163,7 @@ export function mockProcess(): Process {
     state: 'RUNNING',
     processDefinitionRef: {
       id: randomUUID(),
+      code: 'MY_PROCESS_DEFINITION_CODE',
       version: randomUUID(),
     },
     metadata: {
@@ -190,6 +202,7 @@ export function mockProcessPageItem(): ProcessPageItem {
     state: 'RUNNING',
     processDefinitionRef: {
       id: randomUUID(),
+      code: 'MY_PROCESS_DEFINITION_CODE',
       version: randomUUID(),
     },
     initiatorId: randomUUID(),
@@ -258,6 +271,158 @@ export function mockProcessItemPageItem(): ProcessItemPageItem {
       state: 'READY',
     },
 
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockProcessAction(): ProcessAction {
+  return {
+    id: randomUUID(),
+    type: 'START_RELATED_PROCESS',
+    status: 'COMPLETED',
+    processActionDefinitionRef: {
+      id: randomUUID(),
+      code: `CODE-${randomInt(1, 1_000)}`,
+    },
+    startRelatedProcess: {
+      processDefinitionId: randomUUID(),
+      processId: randomUUID(),
+    },
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockProcessItemAiAssistance(): ProcessItemAiAssistance {
+  return {
+    requestId: randomUUID(),
+    state: 'PENDING',
+    startedAt: new Date().toString(),
+  }
+}
+
+export function mockBusinessArtifactPage(): BusinessArtifactPage {
+  return {
+    metadata: {
+      size: 25,
+      page: 0,
+      totalElements: 2,
+      totalPages: 1,
+    },
+    content: [mockBusinessArtifactPageItem(), mockBusinessArtifactPageItem()],
+  }
+}
+
+export function mockBusinessArtifactPageItem(): BusinessArtifactPageItem {
+  return {
+    id: randomUUID(),
+    tenantId: randomUUID(),
+    businessArtifactDefinitionRef: {
+      id: randomUUID(),
+      code: 'MY_BUSINESS_ARTIFACT_DEFINITION_CODE',
+    },
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockBusinessArtifact(): BusinessArtifact {
+  return {
+    id: randomUUID(),
+    tenantId: randomUUID(),
+    businessArtifactDefinitionRef: {
+      id: randomUUID(),
+      code: 'MY_BUSINESS_ARTIFACT_DEFINITION_CODE',
+    },
+    data: {
+      valid: true,
+      value: {
+        CODE_1: `Value ${randomInt(1, 1_000)}`,
+        CODE_2: randomInt(1, 1_000),
+      },
+    },
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockBusinessArtifactAction(): BusinessArtifactAction {
+  return {
+    id: randomUUID(),
+    type: 'START_WORKFLOW',
+    status: 'REQUESTED',
+    businessArtifactActionDefinitionRef: {
+      id: randomUUID(),
+      code: `CODE-${randomInt(1, 1_000)}`,
+    },
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockRobot(): Robot {
+  return {
+    ...mockRobotPageItem(),
+    environmentVariables: {
+      KEY: 'value',
+    },
+  }
+}
+
+export function mockRobotPageItem(): RobotPageItem {
+  return {
+    id: randomUUID(),
+    code: `ROBOT_${randomInt(1, 1_000)}`,
+    name: 'My robot',
+    sourceType: 'PACKAGE',
+    sourceFile: {
+      id: randomUUID(),
+      name: 'robot.zip',
+      contentType: 'application/zip',
+      contentLength: randomInt(1, 1_000),
+      contentHash: randomUUID(),
+    },
+    tenantId: randomUUID(),
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockRobotPage(): RobotPage {
+  return {
+    metadata: {
+      size: 25,
+      page: 0,
+      totalElements: 1,
+      totalPages: 1,
+    },
+    content: [mockRobotPageItem()],
+  }
+}
+
+export function mockWorker(): Worker {
+  return {
+    id: randomUUID(),
+    identity: `identity-${randomInt(1, 1_000)}`,
+    taskQueue: 'MY_TASK_QUEUE',
+    workflowTypes: ['MyWorkflow'],
+    activityTypes: ['MyActivity'],
+    hostname: 'localhost',
+    ip: '127.0.0.1',
+    tenantId: randomUUID(),
     createdBy: randomUUID(),
     createdAt: new Date().toString(),
     lastModifiedBy: randomUUID(),

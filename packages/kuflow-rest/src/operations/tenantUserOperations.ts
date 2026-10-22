@@ -51,12 +51,13 @@ export class TenantUserOperations {
   public async findTenantUsers(
     options?: TenantUserFindTenantUsersOptionalExtParams,
   ): Promise<TenantUserFindTenantUsersResponse> {
-    const { sort, groupId, tenantId, email, ...optionsRest } = options ?? {}
+    const { sort, groupId, groupCode, tenantId, email, ...optionsRest } = options ?? {}
 
     return await this.tenantUserOperations.findTenantUsers({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
       groupId: typeof groupId === 'string' ? [groupId] : groupId,
+      groupCode: typeof groupCode === 'string' ? [groupCode] : groupCode,
       tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
       email: typeof email === 'string' ? [email] : email,
     })

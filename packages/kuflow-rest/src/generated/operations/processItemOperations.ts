@@ -26,6 +26,7 @@ import * as coreClient from '@azure/core-client'
 import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import type {
   JsonPatchOperation,
+  ProcessItemAiAssistanceGenerateParams,
   ProcessItemAppendProcessItemTaskLogOptionalParams,
   ProcessItemAppendProcessItemTaskLogResponse,
   ProcessItemAssignProcessItemTaskOptionalParams,
@@ -41,13 +42,20 @@ import type {
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
   ProcessItemFindProcessItemsOptionalParams,
   ProcessItemFindProcessItemsResponse,
+  ProcessItemGenerateProcessItemAiAssistanceOptionalParams,
+  ProcessItemGenerateProcessItemAiAssistanceResponse,
   ProcessItemPatchProcessItemTaskDataOptionalParams,
   ProcessItemPatchProcessItemTaskDataResponse,
+  ProcessItemRetrieveProcessItemAiAssistanceOptionalParams,
+  ProcessItemRetrieveProcessItemAiAssistanceResponse,
   ProcessItemRetrieveProcessItemOptionalParams,
   ProcessItemRetrieveProcessItemResponse,
   ProcessItemTaskAppendLogParams,
   ProcessItemTaskAssignParams,
+  ProcessItemTaskContextDataUpdateParams,
   ProcessItemTaskDataUpdateParams,
+  ProcessItemUpdateProcessItemTaskContextDataOptionalParams,
+  ProcessItemUpdateProcessItemTaskContextDataResponse,
   ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ProcessItemUpdateProcessItemTaskDataResponse,
 } from '../models'
@@ -83,6 +91,10 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
   /**
    * Create a Process Item and optionally fill its value.
    *
+   * To create a `TASK` or a `MESSAGE` inside a thread, set `processItemThreadId` to the id of a Process
+   * Item of
+   * type `THREAD` that belongs to the same Process.
+   *
    * If you want to add document type elements, you can pass a reference to an existing document type
    * element
    * indicating its 'uri'. This will copy that document into the element. In case you want to add a new
@@ -102,7 +114,10 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
   }
 
   /**
-   * Allow to get a process item by ID.
+   * Allow to get a process item by ID. A deleted Process Item (the ones of a deleted Process) is
+   * returned too,
+   * with its `deletedAt` and `deletedBy` fields set.
+   *
    * @param id The resource ID.
    * @param options The options parameters.
    */
@@ -111,6 +126,55 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
     options?: ProcessItemRetrieveProcessItemOptionalParams,
   ): Promise<ProcessItemRetrieveProcessItemResponse> {
     return await this.client.sendOperationRequest({ id, options }, retrieveProcessItemOperationSpec)
+  }
+
+  /**
+   * Return the status of the latest AI assistance run for the given process item.
+   *
+   * Poll this endpoint after triggering `generateProcessItemAiAssistance` to determine when
+   * the run has finished. Returns 404 when no run has ever been triggered for the process item.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  async retrieveProcessItemAiAssistance(
+    id: string,
+    options?: ProcessItemRetrieveProcessItemAiAssistanceOptionalParams,
+  ): Promise<ProcessItemRetrieveProcessItemAiAssistanceResponse> {
+    return await this.client.sendOperationRequest({ id, options }, retrieveProcessItemAiAssistanceOperationSpec)
+  }
+
+  /**
+   * Trigger an asynchronous AI assistance run for a process item and return its current state,
+   * identified
+   * by a client-supplied `requestId` (UUID). The `requestId` makes the call idempotent and lets a
+   * client launch successive AI assistance attempts on the same process item — one at a time.
+   *
+   * Behavior given the latest persisted run (if any) for the process item:
+   *
+   * - No prior run → schedules a new run and returns the initial PENDING state (202).
+   * - The stored `requestId` matches the incoming one → returns the current state of that run
+   *   without scheduling a new one (200). Use this to poll your own attempt.
+   * - The stored `requestId` differs and the run is in a final state (COMPLETED or FAILED) →
+   *   schedules a new run on the same record, replacing the previous result (202).
+   * - The stored `requestId` differs and the run is still PENDING → rejected with 409, since
+   *   another AI assistance attempt is already in progress on this process item.
+   *
+   * The AI prompt configuration comes from the process item definition.
+   *
+   * @param id The resource ID.
+   * @param processItemAiAssistanceGenerateParams Params identifying this AI assistance attempt.
+   * @param options The options parameters.
+   */
+  async generateProcessItemAiAssistance(
+    id: string,
+    processItemAiAssistanceGenerateParams: ProcessItemAiAssistanceGenerateParams,
+    options?: ProcessItemGenerateProcessItemAiAssistanceOptionalParams,
+  ): Promise<ProcessItemGenerateProcessItemAiAssistanceResponse> {
+    return await this.client.sendOperationRequest(
+      { id, processItemAiAssistanceGenerateParams, options },
+      generateProcessItemAiAssistanceOperationSpec,
+    )
   }
 
   /**
@@ -211,6 +275,26 @@ export class ProcessItemOperationsImpl implements ProcessItemOperations {
   }
 
   /**
+   * Allow to save a JSON context data validating that the data follow the related schema. If the data is
+   * invalid, then
+   * the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param processItemTaskContextDataUpdateParams Params used to update the JSON context data value.
+   * @param options The options parameters.
+   */
+  async updateProcessItemTaskContextData(
+    id: string,
+    processItemTaskContextDataUpdateParams: ProcessItemTaskContextDataUpdateParams,
+    options?: ProcessItemUpdateProcessItemTaskContextDataOptionalParams,
+  ): Promise<ProcessItemUpdateProcessItemTaskContextDataResponse> {
+    return await this.client.sendOperationRequest(
+      { id, processItemTaskContextDataUpdateParams, options },
+      updateProcessItemTaskContextDataOperationSpec,
+    )
+  }
+
+  /**
    * Given a task, generate a PDF from a Form type element with the data filled in, if any. If there are
    * multiple form values, they are packed into a ZIP.
    *
@@ -254,6 +338,9 @@ const findProcessItemsOperationSpec: coreClient.OperationSpec = {
     Parameters.page,
     Parameters.sort,
     Parameters.tenantId,
+    Parameters.processDefinitionId,
+    Parameters.processDefinitionCode,
+    Parameters.deleted,
     Parameters.processId,
     Parameters.typeParam1,
     Parameters.taskState,
@@ -296,6 +383,41 @@ const retrieveProcessItemOperationSpec: coreClient.OperationSpec = {
   },
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.accept],
+  serializer,
+}
+const retrieveProcessItemAiAssistanceOperationSpec: coreClient.OperationSpec = {
+  path: '/process-items/{id}/~actions/ai-assistance',
+  httpMethod: 'GET',
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProcessItemAiAssistance,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.accept],
+  serializer,
+}
+const generateProcessItemAiAssistanceOperationSpec: coreClient.OperationSpec = {
+  path: '/process-items/{id}/~actions/ai-assistance',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProcessItemAiAssistance,
+    },
+    202: {
+      bodyMapper: Mappers.ProcessItemAiAssistance,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.processItemAiAssistanceGenerateParams,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: 'json',
   serializer,
 }
 const claimProcessItemTaskOperationSpec: coreClient.OperationSpec = {
@@ -392,7 +514,24 @@ const patchProcessItemTaskDataOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.jsonPatch,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType2],
+  headerParameters: [Parameters.accept, Parameters.contentType1],
+  mediaType: 'json',
+  serializer,
+}
+const updateProcessItemTaskContextDataOperationSpec: coreClient.OperationSpec = {
+  path: '/process-items/{id}/task/context-data',
+  httpMethod: 'PUT',
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProcessItem,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.processItemTaskContextDataUpdateParams,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
   serializer,
 }

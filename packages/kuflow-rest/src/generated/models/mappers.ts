@@ -439,6 +439,13 @@ export const GroupPageItem: coreClient.CompositeMapper = {
           name: 'String',
         },
       },
+      code: {
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
       tenantId: {
         serializedName: 'tenantId',
         required: true,
@@ -480,7 +487,6 @@ export const JsonValue: coreClient.CompositeMapper = {
     modelProperties: {
       valid: {
         serializedName: 'valid',
-        readOnly: true,
         type: {
           name: 'Boolean',
         },
@@ -495,7 +501,6 @@ export const JsonValue: coreClient.CompositeMapper = {
       },
       errors: {
         serializedName: 'errors',
-        readOnly: true,
         type: {
           name: 'Sequence',
           element: {
@@ -550,6 +555,13 @@ export const ProcessDefinitionRef: coreClient.CompositeMapper = {
           name: 'Uuid',
         },
       },
+      code: {
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
     },
   },
 }
@@ -567,13 +579,31 @@ export const ProcessCreateParams: coreClient.CompositeMapper = {
       },
       processDefinitionId: {
         serializedName: 'processDefinitionId',
-        required: true,
         type: {
           name: 'Uuid',
         },
       },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processDefinitionCode: {
+        serializedName: 'processDefinitionCode',
+        type: {
+          name: 'String',
+        },
+      },
       metadata: {
         serializedName: 'metadata',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      entity: {
+        serializedName: 'entity',
         type: {
           name: 'Composite',
           className: 'JsonValue',
@@ -589,6 +619,12 @@ export const ProcessCreateParams: coreClient.CompositeMapper = {
         serializedName: 'initiatorEmail',
         type: {
           name: 'String',
+        },
+      },
+      relatedProcessId: {
+        serializedName: 'relatedProcessId',
+        type: {
+          name: 'Uuid',
         },
       },
     },
@@ -620,6 +656,265 @@ export const ProcessRelated: coreClient.CompositeMapper = {
               name: 'Uuid',
             },
           },
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateParams',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processActionDefinitionCode: {
+        serializedName: 'processActionDefinitionCode',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      createTask: {
+        serializedName: 'createTask',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateParamsCreateTask',
+        },
+      },
+      createProcessItemMessage: {
+        serializedName: 'createProcessItemMessage',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateParamsCreateProcessItemMessage',
+        },
+      },
+      startRelatedProcess: {
+        serializedName: 'startRelatedProcess',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateParamsStartRelatedProcess',
+        },
+      },
+      sendWorkflowSignal: {
+        serializedName: 'sendWorkflowSignal',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateParamsSendWorkflowSignal',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateParamsCreateTask: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateParamsCreateTask',
+    modelProperties: {
+      processItemThreadId: {
+        serializedName: 'processItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateParamsCreateProcessItemMessage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateParamsCreateProcessItemMessage',
+    modelProperties: {
+      text: {
+        serializedName: 'text',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      processItemThreadId: {
+        serializedName: 'processItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateParamsStartRelatedProcess: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateParamsStartRelatedProcess',
+    modelProperties: {
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+      entity: {
+        serializedName: 'entity',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateParamsSendWorkflowSignal: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateParamsSendWorkflowSignal',
+    modelProperties: {
+      input: {
+        serializedName: 'input',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionDefinitionRef: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionDefinitionRef',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      code: {
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionDownloadable: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionDownloadable',
+    modelProperties: {
+      documentUri: {
+        serializedName: 'documentUri',
+        type: {
+          name: 'String',
+        },
+      },
+      documentExpired: {
+        serializedName: 'documentExpired',
+        type: {
+          name: 'Boolean',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionStartRelatedProcess: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionStartRelatedProcess',
+    modelProperties: {
+      processDefinitionId: {
+        serializedName: 'processDefinitionId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateTask: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateTask',
+    modelProperties: {
+      processItemId: {
+        serializedName: 'processItemId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateProcessItemMessage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateProcessItemMessage',
+    modelProperties: {
+      processItemId: {
+        serializedName: 'processItemId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionCreateProcessItemThread: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionCreateProcessItemThread',
+    modelProperties: {
+      processItemId: {
+        serializedName: 'processItemId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessActionSendWorkflowSignal: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessActionSendWorkflowSignal',
+    modelProperties: {
+      signalName: {
+        serializedName: 'signalName',
+        type: {
+          name: 'String',
+        },
+      },
+      input: {
+        serializedName: 'input',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
         },
       },
     },
@@ -691,7 +986,6 @@ export const JsonPatchOperation: coreClient.CompositeMapper = {
       },
       value: {
         serializedName: 'value',
-        nullable: true,
         type: {
           name: 'any',
         },
@@ -826,6 +1120,12 @@ export const ProcessItemCreateParams: coreClient.CompositeMapper = {
           name: 'Uuid',
         },
       },
+      processItemThreadId: {
+        serializedName: 'processItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
       ownerId: {
         serializedName: 'ownerId',
         type: {
@@ -869,6 +1169,13 @@ export const ProcessItemTaskCreateParams: coreClient.CompositeMapper = {
     modelProperties: {
       data: {
         serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      contextData: {
+        serializedName: 'contextData',
         type: {
           name: 'Composite',
           className: 'JsonValue',
@@ -921,6 +1228,13 @@ export const ProcessItemTask: coreClient.CompositeMapper = {
       },
       data: {
         serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      contextData: {
+        serializedName: 'contextData',
         type: {
           name: 'Composite',
           className: 'JsonValue',
@@ -1008,6 +1322,101 @@ export const ProcessItemMessage: coreClient.CompositeMapper = {
   },
 }
 
+export const ProcessItemAiAssistance: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemAiAssistance',
+    modelProperties: {
+      requestId: {
+        serializedName: 'requestId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      state: {
+        serializedName: 'state',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['PENDING', 'COMPLETED', 'FAILED'],
+        },
+      },
+      embeddingPending: {
+        serializedName: 'embeddingPending',
+        type: {
+          name: 'Number',
+        },
+      },
+      embeddingProcessing: {
+        serializedName: 'embeddingProcessing',
+        type: {
+          name: 'Number',
+        },
+      },
+      retryAfterSeconds: {
+        serializedName: 'retryAfterSeconds',
+        type: {
+          name: 'Number',
+        },
+      },
+      model: {
+        serializedName: 'model',
+        type: {
+          name: 'String',
+        },
+      },
+      finishReason: {
+        serializedName: 'finishReason',
+        type: {
+          name: 'String',
+        },
+      },
+      errorCode: {
+        serializedName: 'errorCode',
+        type: {
+          name: 'String',
+        },
+      },
+      errorMessage: {
+        serializedName: 'errorMessage',
+        type: {
+          name: 'String',
+        },
+      },
+      startedAt: {
+        serializedName: 'startedAt',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      finishedAt: {
+        serializedName: 'finishedAt',
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemAiAssistanceGenerateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemAiAssistanceGenerateParams',
+    modelProperties: {
+      requestId: {
+        serializedName: 'requestId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
 export const ProcessItemTaskAssignParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -1063,6 +1472,419 @@ export const ProcessItemTaskDataUpdateParams: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemTaskContextDataUpdateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemTaskContextDataUpdateParams',
+    modelProperties: {
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactDefinitionRef: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactDefinitionRef',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      code: {
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactCreateParams',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionId: {
+        serializedName: 'businessArtifactDefinitionId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionCode: {
+        serializedName: 'businessArtifactDefinitionCode',
+        type: {
+          name: 'String',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactDataUpdateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactDataUpdateParams',
+    modelProperties: {
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateParams',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactActionDefinitionCode: {
+        serializedName: 'businessArtifactActionDefinitionCode',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      startWorkflow: {
+        serializedName: 'startWorkflow',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactActionCreateParamsStartWorkflow',
+        },
+      },
+      downloadable: {
+        serializedName: 'downloadable',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactActionCreateParamsDownloadable',
+        },
+      },
+      startProcess: {
+        serializedName: 'startProcess',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactActionCreateParamsStartProcess',
+        },
+      },
+      createArtifact: {
+        serializedName: 'createArtifact',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactActionCreateParamsCreateArtifact',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateParamsStartWorkflow: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateParamsStartWorkflow',
+    modelProperties: {
+      input: {
+        serializedName: 'input',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateParamsDownloadable: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateParamsDownloadable',
+    modelProperties: {
+      input: {
+        serializedName: 'input',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateParamsStartProcess: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateParamsStartProcess',
+    modelProperties: {
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+      entity: {
+        serializedName: 'entity',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateParamsCreateArtifact: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateParamsCreateArtifact',
+    modelProperties: {
+      value: {
+        serializedName: 'value',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionDefinitionRef: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionDefinitionRef',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      code: {
+        serializedName: 'code',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionStartWorkflow: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionStartWorkflow',
+    modelProperties: {
+      input: {
+        serializedName: 'input',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionStartProcess: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionStartProcess',
+    modelProperties: {
+      processDefinitionId: {
+        serializedName: 'processDefinitionId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionDownloadable: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionDownloadable',
+    modelProperties: {
+      input: {
+        serializedName: 'input',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      documentUri: {
+        serializedName: 'documentUri',
+        type: {
+          name: 'String',
+        },
+      },
+      documentExpired: {
+        serializedName: 'documentExpired',
+        type: {
+          name: 'Boolean',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateArtifact: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateArtifact',
+    modelProperties: {
+      businessArtifactDefinitionRef: {
+        serializedName: 'businessArtifactDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactDefinitionRef',
+        },
+      },
+      businessArtifactId: {
+        serializedName: 'businessArtifactId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      value: {
+        serializedName: 'value',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateArtifactPrepareParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateArtifactPrepareParams',
+    modelProperties: {
+      businessArtifactActionDefinitionCode: {
+        serializedName: 'businessArtifactActionDefinitionCode',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionCreateArtifactPrepare: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionCreateArtifactPrepare',
+    modelProperties: {
+      businessArtifactDefinitionRef: {
+        serializedName: 'businessArtifactDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactDefinitionRef',
+        },
+      },
+      value: {
+        serializedName: 'value',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionStartProcessPrepareParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionStartProcessPrepareParams',
+    modelProperties: {
+      businessArtifactActionDefinitionCode: {
+        serializedName: 'businessArtifactActionDefinitionCode',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactActionStartProcessPrepare: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactActionStartProcessPrepare',
+    modelProperties: {
+      processDefinitionId: {
+        serializedName: 'processDefinitionId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Dictionary',
+          value: { type: { name: 'any' } },
         },
       },
     },
@@ -1489,7 +2311,6 @@ export const TenantUserPageItem: coreClient.CompositeMapper = {
       id: {
         serializedName: 'id',
         required: true,
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
@@ -1497,7 +2318,6 @@ export const TenantUserPageItem: coreClient.CompositeMapper = {
       principalId: {
         serializedName: 'principalId',
         required: true,
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
@@ -1505,7 +2325,6 @@ export const TenantUserPageItem: coreClient.CompositeMapper = {
       tenantId: {
         serializedName: 'tenantId',
         required: true,
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
@@ -1544,7 +2363,6 @@ export const TenantUser: coreClient.CompositeMapper = {
       tenantId: {
         serializedName: 'tenantId',
         required: true,
-        readOnly: true,
         type: {
           name: 'Uuid',
         },
@@ -1553,121 +2371,32 @@ export const TenantUser: coreClient.CompositeMapper = {
   },
 }
 
-export const ProcessPageItem: coreClient.CompositeMapper = {
+export const AbstractDeleted: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessPageItem',
+    className: 'AbstractDeleted',
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
-      id: {
-        serializedName: 'id',
-        required: true,
+      deletedBy: {
+        serializedName: 'deletedBy',
         type: {
           name: 'Uuid',
         },
       },
-      state: {
-        serializedName: 'state',
-        required: true,
+      deletedAt: {
+        serializedName: 'deletedAt',
         type: {
-          name: 'Enum',
-          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
-        },
-      },
-      processDefinitionRef: {
-        serializedName: 'processDefinitionRef',
-        type: {
-          name: 'Composite',
-          className: 'ProcessDefinitionRef',
-        },
-      },
-      initiatorId: {
-        serializedName: 'initiatorId',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      tenantId: {
-        serializedName: 'tenantId',
-        required: true,
-        type: {
-          name: 'Uuid',
+          name: 'String',
         },
       },
     },
   },
 }
 
-export const Process: coreClient.CompositeMapper = {
+export const ProcessAction: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'Process',
-    modelProperties: {
-      ...AbstractAudited.type.modelProperties,
-      id: {
-        serializedName: 'id',
-        required: true,
-        type: {
-          name: 'Uuid',
-        },
-      },
-      state: {
-        serializedName: 'state',
-        required: true,
-        type: {
-          name: 'Enum',
-          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
-        },
-      },
-      processDefinitionRef: {
-        serializedName: 'processDefinitionRef',
-        type: {
-          name: 'Composite',
-          className: 'ProcessDefinitionRef',
-        },
-      },
-      metadata: {
-        serializedName: 'metadata',
-        type: {
-          name: 'Composite',
-          className: 'JsonValue',
-        },
-      },
-      entity: {
-        serializedName: 'entity',
-        type: {
-          name: 'Composite',
-          className: 'JsonValue',
-        },
-      },
-      processRelated: {
-        serializedName: 'processRelated',
-        type: {
-          name: 'Composite',
-          className: 'ProcessRelated',
-        },
-      },
-      initiatorId: {
-        serializedName: 'initiatorId',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      tenantId: {
-        serializedName: 'tenantId',
-        required: true,
-        type: {
-          name: 'Uuid',
-        },
-      },
-    },
-  },
-}
-
-export const ProcessItemPageItem: coreClient.CompositeMapper = {
-  type: {
-    name: 'Composite',
-    className: 'ProcessItemPageItem',
+    className: 'ProcessAction',
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1682,58 +2411,82 @@ export const ProcessItemPageItem: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
+          allowedValues: [
+            'DOWNLOADABLE',
+            'START_RELATED_PROCESS',
+            'START_WORKFLOW',
+            'CREATE_TASK',
+            'CREATE_PROCESS_ITEM_MESSAGE',
+            'CREATE_PROCESS_ITEM_THREAD',
+            'SEND_WORKFLOW_SIGNAL',
+          ],
         },
       },
-      processId: {
-        serializedName: 'processId',
+      status: {
+        serializedName: 'status',
         required: true,
         type: {
-          name: 'Uuid',
+          name: 'Enum',
+          allowedValues: ['REQUESTED', 'COMPLETED', 'CANCELED', 'ERROR'],
         },
       },
-      ownerId: {
-        serializedName: 'ownerId',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      tenantId: {
-        serializedName: 'tenantId',
-        required: true,
-        type: {
-          name: 'Uuid',
-        },
-      },
-      processItemDefinitionRef: {
-        serializedName: 'processItemDefinitionRef',
+      processActionDefinitionRef: {
+        serializedName: 'processActionDefinitionRef',
         type: {
           name: 'Composite',
-          className: 'ProcessItemDefinitionRef',
+          className: 'ProcessActionDefinitionRef',
         },
       },
-      task: {
-        serializedName: 'task',
+      downloadable: {
+        serializedName: 'downloadable',
         type: {
           name: 'Composite',
-          className: 'ProcessItemTaskPageItem',
+          className: 'ProcessActionDownloadable',
         },
       },
-      message: {
-        serializedName: 'message',
+      startRelatedProcess: {
+        serializedName: 'startRelatedProcess',
         type: {
           name: 'Composite',
-          className: 'ProcessItemMessagePageItem',
+          className: 'ProcessActionStartRelatedProcess',
+        },
+      },
+      createTask: {
+        serializedName: 'createTask',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateTask',
+        },
+      },
+      createProcessItemMessage: {
+        serializedName: 'createProcessItemMessage',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateProcessItemMessage',
+        },
+      },
+      createProcessItemThread: {
+        serializedName: 'createProcessItemThread',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionCreateProcessItemThread',
+        },
+      },
+      sendWorkflowSignal: {
+        serializedName: 'sendWorkflowSignal',
+        type: {
+          name: 'Composite',
+          className: 'ProcessActionSendWorkflowSignal',
         },
       },
     },
   },
 }
 
-export const ProcessItem: coreClient.CompositeMapper = {
+export const BusinessArtifactAction: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
-    className: 'ProcessItem',
+    className: 'BusinessArtifactAction',
     modelProperties: {
       ...AbstractAudited.type.modelProperties,
       id: {
@@ -1748,47 +2501,50 @@ export const ProcessItem: coreClient.CompositeMapper = {
         required: true,
         type: {
           name: 'Enum',
-          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
+          allowedValues: ['START_WORKFLOW', 'START_PROCESS', 'DOWNLOADABLE', 'CREATE_BUSINESS_ARTIFACT'],
         },
       },
-      processId: {
-        serializedName: 'processId',
+      status: {
+        serializedName: 'status',
         required: true,
         type: {
-          name: 'Uuid',
+          name: 'Enum',
+          allowedValues: ['REQUESTED', 'COMPLETED', 'CANCELED', 'ERROR'],
         },
       },
-      ownerId: {
-        serializedName: 'ownerId',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      tenantId: {
-        serializedName: 'tenantId',
-        type: {
-          name: 'Uuid',
-        },
-      },
-      processItemDefinitionRef: {
-        serializedName: 'processItemDefinitionRef',
+      businessArtifactActionDefinitionRef: {
+        serializedName: 'businessArtifactActionDefinitionRef',
         type: {
           name: 'Composite',
-          className: 'ProcessItemDefinitionRef',
+          className: 'BusinessArtifactActionDefinitionRef',
         },
       },
-      task: {
-        serializedName: 'task',
+      startWorkflow: {
+        serializedName: 'startWorkflow',
         type: {
           name: 'Composite',
-          className: 'ProcessItemTask',
+          className: 'BusinessArtifactActionStartWorkflow',
         },
       },
-      message: {
-        serializedName: 'message',
+      startProcess: {
+        serializedName: 'startProcess',
         type: {
           name: 'Composite',
-          className: 'ProcessItemMessage',
+          className: 'BusinessArtifactActionStartProcess',
+        },
+      },
+      downloadable: {
+        serializedName: 'downloadable',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactActionDownloadable',
+        },
+      },
+      createArtifact: {
+        serializedName: 'createArtifact',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactActionCreateArtifact',
         },
       },
     },
@@ -2198,6 +2954,29 @@ export const ProcessItemPage: coreClient.CompositeMapper = {
   },
 }
 
+export const BusinessArtifactPage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactPage',
+    modelProperties: {
+      ...Page.type.modelProperties,
+      content: {
+        serializedName: 'content',
+        required: true,
+        type: {
+          name: 'Sequence',
+          element: {
+            type: {
+              name: 'Composite',
+              className: 'BusinessArtifactPageItem',
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
 export const RobotPage: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -2295,6 +3074,365 @@ export const WebhookEventProcessItemTaskStateChanged: coreClient.CompositeMapper
         type: {
           name: 'Composite',
           className: 'WebhookEventProcessItemTaskStateChangedData',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessPageItem',
+    modelProperties: {
+      ...AbstractDeleted.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      uri: {
+        serializedName: 'uri',
+        type: {
+          name: 'String',
+        },
+      },
+      state: {
+        serializedName: 'state',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      processDefinitionRef: {
+        serializedName: 'processDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'ProcessDefinitionRef',
+        },
+      },
+      initiatorId: {
+        serializedName: 'initiatorId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const Process: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'Process',
+    modelProperties: {
+      ...AbstractDeleted.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      uri: {
+        serializedName: 'uri',
+        type: {
+          name: 'String',
+        },
+      },
+      state: {
+        serializedName: 'state',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+      processDefinitionRef: {
+        serializedName: 'processDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'ProcessDefinitionRef',
+        },
+      },
+      metadata: {
+        serializedName: 'metadata',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      entity: {
+        serializedName: 'entity',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
+        },
+      },
+      processRelated: {
+        serializedName: 'processRelated',
+        type: {
+          name: 'Composite',
+          className: 'ProcessRelated',
+        },
+      },
+      initiatorId: {
+        serializedName: 'initiatorId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItemPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItemPageItem',
+    modelProperties: {
+      ...AbstractDeleted.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      uri: {
+        serializedName: 'uri',
+        type: {
+          name: 'String',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
+        },
+      },
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processItemThreadId: {
+        serializedName: 'processItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      ownerId: {
+        serializedName: 'ownerId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processItemDefinitionRef: {
+        serializedName: 'processItemDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemDefinitionRef',
+        },
+      },
+      task: {
+        serializedName: 'task',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemTaskPageItem',
+        },
+      },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemMessagePageItem',
+        },
+      },
+    },
+  },
+}
+
+export const ProcessItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'ProcessItem',
+    modelProperties: {
+      ...AbstractDeleted.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      uri: {
+        serializedName: 'uri',
+        type: {
+          name: 'String',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['TASK', 'MESSAGE', 'THREAD'],
+        },
+      },
+      processId: {
+        serializedName: 'processId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processItemThreadId: {
+        serializedName: 'processItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      ownerId: {
+        serializedName: 'ownerId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      processItemDefinitionRef: {
+        serializedName: 'processItemDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemDefinitionRef',
+        },
+      },
+      task: {
+        serializedName: 'task',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemTask',
+        },
+      },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'ProcessItemMessage',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactPageItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactPageItem',
+    modelProperties: {
+      ...AbstractDeleted.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      uri: {
+        serializedName: 'uri',
+        type: {
+          name: 'String',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionRef: {
+        serializedName: 'businessArtifactDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactDefinitionRef',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifact: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifact',
+    modelProperties: {
+      ...AbstractDeleted.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      uri: {
+        serializedName: 'uri',
+        type: {
+          name: 'String',
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionRef: {
+        serializedName: 'businessArtifactDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactDefinitionRef',
+        },
+      },
+      data: {
+        serializedName: 'data',
+        type: {
+          name: 'Composite',
+          className: 'JsonValue',
         },
       },
     },

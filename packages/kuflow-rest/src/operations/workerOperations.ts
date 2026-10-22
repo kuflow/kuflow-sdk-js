@@ -23,7 +23,7 @@
 
 import type {
   KuFlowRestClientGenerated,
-  Worker,
+  WorkerCreateParams,
   WorkerCreateWorkerOptionalParams,
   WorkerCreateWorkerResponse,
   WorkerOperations as WorkerOperationsGenerated,
@@ -46,13 +46,13 @@ export class WorkerOperations {
    *
    * If already exist a worker for the same identity, the worker will be updated.
    *
-   * @param worker Worker to create or update
+   * @param workerCreateParams Worker to create or update
    * @param options The options parameters.
    */
   public async createWorker(
-    worker: Worker,
+    workerCreateParams: WorkerCreateParams,
     options?: WorkerCreateWorkerOptionalParams,
   ): Promise<WorkerCreateWorkerResponse> {
-    return await this.workerOperations.createWorker(worker, options)
+    return await this.workerOperations.createWorker(workerCreateParams, options)
   }
 }

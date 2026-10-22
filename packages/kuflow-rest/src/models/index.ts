@@ -25,12 +25,11 @@ import type * as coreClient from '@azure/core-client'
 import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import type {
+  DeletedQueryParam,
   PrincipalType,
   ProcessItemTaskState,
   ProcessItemType,
-  RobotAssetArchitecture,
-  RobotAssetPlatform,
-  RobotAssetType,
+  ProcessState,
   RobotFilterContext,
 } from '../generated'
 
@@ -59,10 +58,33 @@ export interface ProcessFindProcessesOptionalExtParams extends coreClient.Operat
   sort?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
-}
-
-export interface ProcessUploadProcessUserActionDocumentParams {
-  userActionValueId: string
+  /** Filter by process definition ids. */
+  processDefinitionId?: string | string[]
+  /** Filter by process definition codes. */
+  processDefinitionCode?: string | string[]
+  /** Filter by an array of process states. */
+  state?: ProcessState | ProcessState[]
+  /** Filter by an array of initiator ids, Principal ID. */
+  initiatorId?: string | string[]
+  /** Filter by an array of initiator emails. */
+  initiatorEmail?: string | string[]
+  /**
+   * Filter by process metadata field values. Each value is an expression with the format
+   * `fieldCode operation value1 value2...` (space-separated).
+   *
+   * Supported operations: `eq`, `le`, `ge`, `between`, `contains`, `in`.
+   *
+   * Filtering by metadata requires specifying exactly one `processDefinitionId` or `processDefinitionCode`.
+   */
+  metadata?: string | string[]
+  /**
+   * Deleted Processes filtering mode; when omitted, `EXCLUDE` applies. With `INCLUDE` or `ONLY`, deleted
+   * Processes are returned with their `deletedAt` and `deletedBy` fields set. They are only returned when the
+   * request identifies exactly one Process Definition — by exactly one `processDefinitionId`, or by exactly one
+   * `processDefinitionCode` together with exactly one `tenantId` (codes are unique per tenant) — and the
+   * credentials can delete any Process of that definition; otherwise they are silently left out.
+   */
+  deleted?: DeletedQueryParam
 }
 
 /** Optional parameters. */
@@ -84,6 +106,8 @@ export interface PrincipalFindPrincipalsOptionalExtParams extends coreClient.Ope
   type?: PrincipalType
   /** Filter principals that exists in one of group ids. */
   groupId?: string | string[]
+  /** Filter principals that exists in one of group codes. */
+  groupCode?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
 }
@@ -109,6 +133,8 @@ export interface GroupFindGroupsOptionalExtParams extends coreClient.OperationOp
   tenantId?: string | string[]
   /** Filter by group ids. */
   groupId?: string | string[]
+  /** Filter by group codes. */
+  groupCode?: string | string[]
 }
 
 /** Optional parameters. */
@@ -147,6 +173,8 @@ export interface TenantUserFindTenantUsersOptionalExtParams extends coreClient.O
   sort?: string | string[]
   /** Filter by group ids. */
   groupId?: string | string[]
+  /** Filter by group codes. */
+  groupCode?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
   /** Filter by email. */
@@ -170,6 +198,19 @@ export interface ProcessItemFindProcessItemsOptionalExtParams extends coreClient
   sort?: string | string[]
   /** Filter by tenantId. */
   tenantId?: string | string[]
+  /** Filter by process definition ids. */
+  processDefinitionId?: string | string[]
+  /** Filter by process definition codes. */
+  processDefinitionCode?: string | string[]
+  /**
+   * Deleted Process Items filtering mode; when omitted, `EXCLUDE` applies. The Process Items of a deleted
+   * Process are deleted with it. With `INCLUDE` or `ONLY`, deleted Process Items are returned with their
+   * `deletedAt` and `deletedBy` fields set. They are only returned when the request identifies exactly one
+   * Process Definition — by exactly one `processDefinitionId`, or by exactly one `processDefinitionCode`
+   * together with exactly one `tenantId` (codes are unique per tenant) — and the credentials can delete any
+   * Process of that definition; otherwise they are silently left out.
+   */
+  deleted?: DeletedQueryParam
   /** Filter by an array of process ids. */
   processId?: string | string[]
   /** Filter by an array of task states. */
@@ -178,6 +219,51 @@ export interface ProcessItemFindProcessItemsOptionalExtParams extends coreClient
   taskState?: ProcessItemTaskState | ProcessItemTaskState[]
   /** Filter by an array of process item definition codes. */
   processItemDefinitionCode?: string | string[]
+}
+
+/** Optional parameters. */
+export interface BusinessArtifactFindBusinessArtifactsOptionalExtParams extends coreClient.OperationOptions {
+  /** The number of records returned within a single API call. */
+  size?: number
+  /** The page number of the current page in the returned records, 0 is the first page. */
+  page?: number
+  /**
+   * Sorting criteria in the format: property{,asc|desc}. Example: createdAt,desc
+   *
+   * Default sort order is ascending. Multiple sort criteria are supported.
+   *
+   * Please refer to the method description for supported properties.
+   *
+   */
+  sort?: string | string[]
+  /** Filter by tenantId. */
+  tenantId?: string | string[]
+  /**
+   * Soft-deleted Business Artifacts filtering mode; when omitted, `EXCLUDE` applies. With `INCLUDE` or `ONLY`,
+   * deleted Business Artifacts are returned with their `deletedAt` and `deletedBy` fields set. They are only
+   * returned when the request identifies exactly one Business Artifact Definition — by exactly one
+   * `businessArtifactDefinitionId`, or by exactly one `businessArtifactDefinitionCode` together with exactly one
+   * `tenantId` (codes are unique per tenant) — and the credentials can archive or supervise its Business
+   * Artifacts; otherwise they are silently left out.
+   */
+  deleted?: DeletedQueryParam
+  /** Filter by an array of business artifact definition ids. */
+  businessArtifactDefinitionId?: string | string[]
+  /** Filter by an array of business artifact definition codes. */
+  businessArtifactDefinitionCode?: string | string[]
+  /**
+   * Filter by indexed field values. Each value is an expression with the format
+   * `fieldCode operation value1 value2...` (space-separated).
+   *
+   * Supported operations: `eq`, `le`, `ge`, `between`, `contains`, `in`.
+   */
+  value?: string | string[]
+}
+
+/** Optional parameters. */
+export interface ProcessCancelProcessItemsOptionalExtParams extends coreClient.OperationOptions {
+  /** Optional list of process item IDs to cancel. If omitted, all active process items are cancelled. */
+  processItemId?: string | string[]
 }
 
 /** Optional parameters. */
@@ -199,15 +285,4 @@ export interface RobotFindRobotExtParams extends coreClient.OperationOptions {
   tenantId?: string | string[]
   /** Filter by the specified context. */
   filterContext?: RobotFilterContext
-}
-
-export interface RobotDownloadRobotAssetParams {
-  /** The asset type **/
-  type: RobotAssetType
-  /** The asset version. **/
-  version: string
-  /** The asset platform. **/
-  platform: RobotAssetPlatform
-  /** The asset platform architecture. **/
-  architecture: RobotAssetArchitecture
 }

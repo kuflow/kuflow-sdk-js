@@ -21,6 +21,7 @@
  * THE SOFTWARE.
  */
 
+export type * from './business-artifact'
 export type * from './principal'
 export type * from './process'
 export type * from './process-item'
