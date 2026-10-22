@@ -4,7 +4,6 @@
 !.gitignore
 !.prettierignore
 !.prettierrc
-!.tool-versions
 
 ######################
 # Node
