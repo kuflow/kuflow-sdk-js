@@ -22,7 +22,7 @@
  */
 
 import type { FullOperationResponse } from '@azure/core-client'
-import type { Worker } from '@kuflow/kuflow-rest'
+import type { WorkerCreateParams } from '@kuflow/kuflow-rest'
 import { Runtime } from '@temporalio/worker'
 import os from 'os'
 
@@ -107,7 +107,7 @@ export class KuFlowWorkerInformationNotifier {
   }
 
   private async createOrUpdateWorker(): Promise<void> {
-    const workerRequest: Worker = {
+    const workerRequest: WorkerCreateParams = {
       identity: this.workerInformation.identity,
       ip: this.getIPAddress(),
       hostname: os.hostname(),

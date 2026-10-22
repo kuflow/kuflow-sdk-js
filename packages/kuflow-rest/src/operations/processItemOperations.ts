@@ -24,6 +24,7 @@
 import type {
   JsonPatchOperation,
   KuFlowRestClientGenerated,
+  ProcessItemAiAssistanceGenerateParams,
   ProcessItemAppendProcessItemTaskLogOptionalParams,
   ProcessItemAppendProcessItemTaskLogResponse,
   ProcessItemAssignProcessItemTaskOptionalParams,
@@ -38,13 +39,21 @@ import type {
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentOptionalParams,
   ProcessItemDownloadProcessItemTaskDataWebformsAsDocumentResponse,
   ProcessItemFindProcessItemsResponse,
+  ProcessItemGenerateProcessItemAiAssistanceOptionalParams,
+  ProcessItemGenerateProcessItemAiAssistanceResponse,
   ProcessItemOperations as ProcessItemOperationsGenerated,
   ProcessItemPatchProcessItemTaskDataOptionalParams,
+  ProcessItemPatchProcessItemTaskDataResponse,
+  ProcessItemRetrieveProcessItemAiAssistanceOptionalParams,
+  ProcessItemRetrieveProcessItemAiAssistanceResponse,
   ProcessItemRetrieveProcessItemOptionalParams,
   ProcessItemRetrieveProcessItemResponse,
   ProcessItemTaskAppendLogParams,
   ProcessItemTaskAssignParams,
+  ProcessItemTaskContextDataUpdateParams,
   ProcessItemTaskDataUpdateParams,
+  ProcessItemUpdateProcessItemTaskContextDataOptionalParams,
+  ProcessItemUpdateProcessItemTaskContextDataResponse,
   ProcessItemUpdateProcessItemTaskDataOptionalParams,
   ProcessItemUpdateProcessItemTaskDataResponse,
 } from '../generated'
@@ -72,12 +81,25 @@ export class ProcessItemOperations {
   public async findProcessItems(
     options?: ProcessItemFindProcessItemsOptionalExtParams,
   ): Promise<ProcessItemFindProcessItemsResponse> {
-    const { sort, tenantId, processId, type, taskState, processItemDefinitionCode, ...optionsRest } = options ?? {}
+    const {
+      sort,
+      tenantId,
+      processDefinitionId,
+      processDefinitionCode,
+      processId,
+      type,
+      taskState,
+      processItemDefinitionCode,
+      ...optionsRest
+    } = options ?? {}
 
     return await this.processItemOperations.findProcessItems({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
       tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
+      processDefinitionId: typeof processDefinitionId === 'string' ? [processDefinitionId] : processDefinitionId,
+      processDefinitionCode:
+        typeof processDefinitionCode === 'string' ? [processDefinitionCode] : processDefinitionCode,
       processId: typeof processId === 'string' ? [processId] : processId,
       type: typeof type === 'string' ? [type] : type,
       taskState: typeof taskState === 'string' ? [taskState] : taskState,
@@ -108,7 +130,9 @@ export class ProcessItemOperations {
   }
 
   /**
-   * Allow to get a task by ID.
+   * Allow to get a process item by ID. A deleted Process Item (the ones of a deleted Process) is
+   * returned too, with its `deletedAt` and `deletedBy` fields set.
+   *
    * @param id The resource ID.
    * @param options The options parameters.
    */
@@ -117,6 +141,55 @@ export class ProcessItemOperations {
     options?: ProcessItemRetrieveProcessItemOptionalParams,
   ): Promise<ProcessItemRetrieveProcessItemResponse> {
     return await this.processItemOperations.retrieveProcessItem(id, options)
+  }
+
+  /**
+   * Return the status of the latest AI assistance run for the given process item.
+   *
+   * Poll this endpoint after triggering `generateProcessItemAiAssistance` to determine when the run has
+   * finished. Returns 404 when no run has ever been triggered for the process item.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  public async retrieveProcessItemAiAssistance(
+    id: string,
+    options?: ProcessItemRetrieveProcessItemAiAssistanceOptionalParams,
+  ): Promise<ProcessItemRetrieveProcessItemAiAssistanceResponse> {
+    return await this.processItemOperations.retrieveProcessItemAiAssistance(id, options)
+  }
+
+  /**
+   * Trigger an asynchronous AI assistance run for a process item and return its current state, identified by
+   * a client-supplied `requestId` (UUID). The `requestId` makes the call idempotent and lets a client launch
+   * successive AI assistance attempts on the same process item — one at a time.
+   *
+   * Behavior given the latest persisted run (if any) for the process item:
+   *
+   * - No prior run → schedules a new run and returns the initial PENDING state (202).
+   * - The stored `requestId` matches the incoming one → returns the current state of that run without
+   *   scheduling a new one (200). Use this to poll your own attempt.
+   * - The stored `requestId` differs and the run is in a final state (COMPLETED or FAILED) → schedules a new
+   *   run on the same record, replacing the previous result (202).
+   * - The stored `requestId` differs and the run is still PENDING → rejected with 409, since another AI
+   *   assistance attempt is already in progress on this process item.
+   *
+   * The AI prompt configuration comes from the process item definition.
+   *
+   * @param id The resource ID.
+   * @param processItemAiAssistanceGenerateParams Params identifying this AI assistance attempt.
+   * @param options The options parameters.
+   */
+  public async generateProcessItemAiAssistance(
+    id: string,
+    processItemAiAssistanceGenerateParams: ProcessItemAiAssistanceGenerateParams,
+    options?: ProcessItemGenerateProcessItemAiAssistanceOptionalParams,
+  ): Promise<ProcessItemGenerateProcessItemAiAssistanceResponse> {
+    return await this.processItemOperations.generateProcessItemAiAssistance(
+      id,
+      processItemAiAssistanceGenerateParams,
+      options,
+    )
   }
 
   /**
@@ -203,8 +276,28 @@ export class ProcessItemOperations {
     id: string,
     jsonPatch: JsonPatchOperation[],
     options?: ProcessItemPatchProcessItemTaskDataOptionalParams,
-  ): Promise<ProcessItemUpdateProcessItemTaskDataResponse> {
+  ): Promise<ProcessItemPatchProcessItemTaskDataResponse> {
     return await this.processItemOperations.patchProcessItemTaskData(id, jsonPatch, options)
+  }
+
+  /**
+   * Allow to save a JSON context data validating that the data follow the related schema. If the data is
+   * invalid, then the json form is marked as invalid.
+   *
+   * @param id The resource ID.
+   * @param processItemTaskContextDataUpdateParams Params used to update the JSON context data value.
+   * @param options The options parameters.
+   */
+  public async updateProcessItemTaskContextData(
+    id: string,
+    processItemTaskContextDataUpdateParams: ProcessItemTaskContextDataUpdateParams,
+    options?: ProcessItemUpdateProcessItemTaskContextDataOptionalParams,
+  ): Promise<ProcessItemUpdateProcessItemTaskContextDataResponse> {
+    return await this.processItemOperations.updateProcessItemTaskContextData(
+      id,
+      processItemTaskContextDataUpdateParams,
+      options,
+    )
   }
 
   /**

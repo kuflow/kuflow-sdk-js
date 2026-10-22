@@ -21,12 +21,32 @@
  * THE SOFTWARE.
  */
 
-import type { JsonPatchOperation, JsonValue, Process, ProcessPage } from '@kuflow/kuflow-rest'
+import type {
+  DeletedQueryParam,
+  JsonPatchOperation,
+  JsonValue,
+  Process,
+  ProcessAction,
+  ProcessActionCreateParamsCreateProcessItemMessage,
+  ProcessActionCreateParamsCreateTask,
+  ProcessActionCreateParamsSendWorkflowSignal,
+  ProcessActionCreateParamsStartRelatedProcess,
+  ProcessPage,
+  ProcessState,
+} from '@kuflow/kuflow-rest'
 
 export interface ProcessFindRequest {
   page?: number
   size?: number
   sorts?: string[]
+  tenantIds?: string[]
+  processDefinitionIds?: string[]
+  processDefinitionCodes?: string[]
+  states?: ProcessState[]
+  initiatorIds?: string[]
+  initiatorEmails?: string[]
+  metadata?: string[]
+  deleted?: DeletedQueryParam
 }
 
 export interface ProcessFindResponse {
@@ -40,6 +60,13 @@ export interface ProcessRetrieveRequest {
 export interface ProcessRetrieveResponse {
   process: Process
 }
+
+export interface ProcessDeleteRequest {
+  processId: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ProcessDeleteResponse {}
 
 export interface ProcessEntityUpdateRequest {
   processId: string
@@ -84,5 +111,46 @@ export interface ProcessInitiatorChangeRequest {
 }
 
 export interface ProcessInitiatorChangeResponse {
+  process: Process
+}
+
+export interface ProcessActionCreateRequest {
+  processId: string
+  id?: string
+  processActionDefinitionCode: string
+  createTask?: ProcessActionCreateParamsCreateTask
+  createProcessItemMessage?: ProcessActionCreateParamsCreateProcessItemMessage
+  startRelatedProcess?: ProcessActionCreateParamsStartRelatedProcess
+  sendWorkflowSignal?: ProcessActionCreateParamsSendWorkflowSignal
+}
+
+export interface ProcessActionCreateResponse {
+  processAction: ProcessAction
+}
+
+export interface ProcessActionRetrieveRequest {
+  processId: string
+  processActionId: string
+}
+
+export interface ProcessActionRetrieveResponse {
+  processAction: ProcessAction
+}
+
+export interface ProcessActionCancelRequest {
+  processId: string
+  processActionId: string
+}
+
+export interface ProcessActionCancelResponse {
+  processAction: ProcessAction
+}
+
+export interface ProcessItemsCancelRequest {
+  processId: string
+  processItemIds?: string[]
+}
+
+export interface ProcessItemsCancelResponse {
   process: Process
 }

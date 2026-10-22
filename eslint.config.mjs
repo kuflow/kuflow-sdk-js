@@ -72,6 +72,7 @@ export default tseslint.config(
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
       '@typescript-eslint/strict-boolean-expressions': 'off',
+      'prefer-regex-literals': 'off',
     },
   },
 )

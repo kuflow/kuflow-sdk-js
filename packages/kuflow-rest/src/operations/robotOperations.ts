@@ -23,6 +23,9 @@
 
 import type {
   KuFlowRestClientGenerated,
+  RobotAssetArchitecture,
+  RobotAssetPlatform,
+  RobotAssetType,
   RobotDownloadRobotAssetOptionalParams,
   RobotDownloadRobotAssetResponse,
   RobotDownloadRobotSourceCodeOptionalParams,
@@ -32,7 +35,7 @@ import type {
   RobotRetrieveRobotOptionalParams,
   RobotRetrieveRobotResponse,
 } from '../generated'
-import type { RobotDownloadRobotAssetParams, RobotFindRobotExtParams } from '../models'
+import type { RobotFindRobotExtParams } from '../models'
 
 /** Class containing RobotOperations operations. */
 export class RobotOperations {
@@ -90,21 +93,22 @@ export class RobotOperations {
   /**
    * Given a robot, download the requested asset.
    * @param id The resource ID.
-   * @param robotDownloadRobotAssetParams Download params
+   * @param type The asset type.
+   * @param version The asset version.
+   * @param platform The asset platform.
+   * @param architecture The asset platform architecture.
    * @param options The options parameters.
    */
+  // Positional arguments, as in the generated client and the Java and Python SDKs.
+  // eslint-disable-next-line @typescript-eslint/max-params
   public async downloadRobotAsset(
     id: string,
-    robotDownloadRobotAssetParams: RobotDownloadRobotAssetParams,
+    type: RobotAssetType,
+    version: string,
+    platform: RobotAssetPlatform,
+    architecture: RobotAssetArchitecture,
     options?: RobotDownloadRobotAssetOptionalParams,
   ): Promise<RobotDownloadRobotAssetResponse> {
-    return await this.robotOperationsGenerated.downloadRobotAsset(
-      id,
-      robotDownloadRobotAssetParams.type,
-      robotDownloadRobotAssetParams.version,
-      robotDownloadRobotAssetParams.platform,
-      robotDownloadRobotAssetParams.architecture,
-      options,
-    )
+    return await this.robotOperationsGenerated.downloadRobotAsset(id, type, version, platform, architecture, options)
   }
 }

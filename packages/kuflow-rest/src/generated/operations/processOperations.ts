@@ -27,6 +27,11 @@ import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 import type { KuFlowRestClientGenerated } from '../kuFlowRestClientGenerated'
 import type {
   JsonPatchOperation,
+  ProcessActionCreateParams,
+  ProcessCancelProcessActionOptionalParams,
+  ProcessCancelProcessActionResponse,
+  ProcessCancelProcessItemsOptionalParams,
+  ProcessCancelProcessItemsResponse,
   ProcessCancelProcessOptionalParams,
   ProcessCancelProcessResponse,
   ProcessChangeInitiatorParams,
@@ -35,8 +40,11 @@ import type {
   ProcessCompleteProcessOptionalParams,
   ProcessCompleteProcessResponse,
   ProcessCreateParams,
+  ProcessCreateProcessActionOptionalParams,
+  ProcessCreateProcessActionResponse,
   ProcessCreateProcessOptionalParams,
   ProcessCreateProcessResponse,
+  ProcessDeleteProcessOptionalParams,
   ProcessDownloadProcessDocumentOptionalParams,
   ProcessDownloadProcessDocumentResponse,
   ProcessEntityUpdateParams,
@@ -47,6 +55,8 @@ import type {
   ProcessPatchProcessEntityResponse,
   ProcessPatchProcessMetadataOptionalParams,
   ProcessPatchProcessMetadataResponse,
+  ProcessRetrieveProcessActionOptionalParams,
+  ProcessRetrieveProcessActionResponse,
   ProcessRetrieveProcessOptionalParams,
   ProcessRetrieveProcessResponse,
   ProcessUpdateProcessEntityOptionalParams,
@@ -55,8 +65,6 @@ import type {
   ProcessUpdateProcessMetadataResponse,
   ProcessUploadProcessDocumentOptionalParams,
   ProcessUploadProcessDocumentResponse,
-  ProcessUploadProcessUserActionDocumentOptionalParams,
-  ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
 import * as Mappers from '../models/mappers'
 import * as Parameters from '../models/parameters'
@@ -102,7 +110,9 @@ export class ProcessOperationsImpl implements ProcessOperations {
   }
 
   /**
-   * Returns the requested Process when has access to do it.
+   * Returns the requested Process when has access to do it. A deleted Process is returned too, with its
+   * `deletedAt` and `deletedBy` fields set.
+   *
    * @param id The resource ID.
    * @param options The options parameters.
    */
@@ -111,6 +121,92 @@ export class ProcessOperationsImpl implements ProcessOperations {
     options?: ProcessRetrieveProcessOptionalParams,
   ): Promise<ProcessRetrieveProcessResponse> {
     return await this.client.sendOperationRequest({ id, options }, retrieveProcessOperationSpec)
+  }
+
+  /**
+   * Deletes the requested Process, and its Process Items with it. Only a finished Process (`COMPLETED`
+   * or
+   * `CANCELLED`) with nothing in progress, neither tasks still to be done nor workflows of its actions
+   * still
+   * running, can be deleted; otherwise it answers conflict. The deletion is soft: the Process is still
+   * returned
+   * by id and with `deleted=INCLUDE|ONLY`, with its `deletedAt` and `deletedBy` fields set, but it
+   * cannot be
+   * restored. Deleting a Process that is already deleted does nothing.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  async deleteProcess(id: string, options?: ProcessDeleteProcessOptionalParams): Promise<void> {
+    await this.client.sendOperationRequest({ id, options }, deleteProcessOperationSpec)
+  }
+
+  /**
+   * Invoke an action on a Process.
+   *
+   * Whether the call returns synchronously or asynchronously depends on the action type:
+   *
+   * - `START_WORKFLOW`, `DOWNLOADABLE`: dispatched to a background worker. The
+   *   response returns immediately with `status=REQUESTED`. Poll
+   *   `retrieveProcessAction` for the final state.
+   * - `START_RELATED_PROCESS`, `CREATE_TASK`, `CREATE_PROCESS_ITEM_MESSAGE`,
+   *   `CREATE_PROCESS_ITEM_THREAD`, `SEND_WORKFLOW_SIGNAL`: completed synchronously.
+   *   The response returns with `status=COMPLETED` (or an error status).
+   *
+   * If you want the method to be idempotent, please specify the `id` field in the request body.
+   *
+   * Actions of type `SEND_WORKFLOW_SIGNAL` whose definition declares an input form accept a
+   * `sendWorkflowSignal.input` payload: it is validated against the definition schema,
+   * persisted on the action and delivered inside the workflow signal. The input is not part
+   * of the idempotency key — replaying the same `id` with a different input returns the
+   * original action untouched.
+   *
+   * @param id The resource ID.
+   * @param processActionCreateParams Params identifying the action to invoke.
+   * @param options The options parameters.
+   */
+  async createProcessAction(
+    id: string,
+    processActionCreateParams: ProcessActionCreateParams,
+    options?: ProcessCreateProcessActionOptionalParams,
+  ): Promise<ProcessCreateProcessActionResponse> {
+    return await this.client.sendOperationRequest(
+      { id, processActionCreateParams, options },
+      createProcessActionOperationSpec,
+    )
+  }
+
+  /**
+   * Returns a Process action by its ID.
+   * @param id The resource ID.
+   * @param actionId The Process action ID.
+   * @param options The options parameters.
+   */
+  async retrieveProcessAction(
+    id: string,
+    actionId: string,
+    options?: ProcessRetrieveProcessActionOptionalParams,
+  ): Promise<ProcessRetrieveProcessActionResponse> {
+    return await this.client.sendOperationRequest({ id, actionId, options }, retrieveProcessActionOperationSpec)
+  }
+
+  /**
+   * Cancel a Process action.
+   *
+   * Only meaningful for asynchronous actions still in `REQUESTED` state. The
+   * action's status is set to `CANCELED`. If the action is already in a
+   * terminal state, no transition occurs.
+   *
+   * @param id The resource ID.
+   * @param actionId The Process action ID.
+   * @param options The options parameters.
+   */
+  async cancelProcessAction(
+    id: string,
+    actionId: string,
+    options?: ProcessCancelProcessActionOptionalParams,
+  ): Promise<ProcessCancelProcessActionResponse> {
+    return await this.client.sendOperationRequest({ id, actionId, options }, cancelProcessActionOperationSpec)
   }
 
   /**
@@ -143,6 +239,27 @@ export class ProcessOperationsImpl implements ProcessOperations {
   }
 
   /**
+   * Cancel Process Items in a Process.
+   *
+   * When processItemId query parameters are provided, only those specific
+   * process items are cancelled. When omitted, all active process items
+   * in the process are cancelled.
+   *
+   * For task process items, tasks in a cancellable state (ready, claimed)
+   * are set to 'cancelled'. Already cancelled tasks are treated as a no-op.
+   * The Process itself is not affected.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  async cancelProcessItems(
+    id: string,
+    options?: ProcessCancelProcessItemsOptionalParams,
+  ): Promise<ProcessCancelProcessItemsResponse> {
+    return await this.client.sendOperationRequest({ id, options }, cancelProcessItemsOperationSpec)
+  }
+
+  /**
    * Change the current initiator of a process.
    *
    * Allows you to choose a user (by email or principal identifier) or an application (principal
@@ -161,30 +278,6 @@ export class ProcessOperationsImpl implements ProcessOperations {
     return await this.client.sendOperationRequest(
       { id, processChangeInitiatorParams, options },
       changeProcessInitiatorOperationSpec,
-    )
-  }
-
-  /**
-   * Allow saving a user action document uploading the content.
-   *
-   * @param id The resource ID.
-   * @param fileContentType Document content type
-   * @param fileName Document name
-   * @param userActionValueId User action value ID related to de document
-   * @param file Document to save.
-   * @param options The options parameters.
-   */
-  async uploadProcessUserActionDocument(
-    id: string,
-    fileContentType: string,
-    fileName: string,
-    userActionValueId: string,
-    file: coreRestPipeline.RequestBodyType,
-    options?: ProcessUploadProcessUserActionDocumentOptionalParams,
-  ): Promise<ProcessUploadProcessUserActionDocumentResponse> {
-    return await this.client.sendOperationRequest(
-      { id, fileContentType, fileName, userActionValueId, file, options },
-      uploadProcessUserActionDocumentOperationSpec,
     )
   }
 
@@ -263,9 +356,11 @@ export class ProcessOperationsImpl implements ProcessOperations {
    * Upload a temporal document into the process that later on must be linked with a process domain
    * resource.
    *
-   * Documents uploaded with this API will be deleted after 24 hours as long as they have not been linked
+   * Documents uploaded with this API will be deleted after 2 hours as long as they have not been linked
    * to a
-   * process or process item..
+   * process or process item.
+   *
+   * **Deprecated:** use the `uploadDocument` operation with `targetUri=ku:process/{processId}` instead.
    *
    * @param id The resource ID.
    * @param fileContentType Document content type
@@ -288,6 +383,10 @@ export class ProcessOperationsImpl implements ProcessOperations {
 
   /**
    * Given a document uri download a document.
+   *
+   * **Deprecated:** use the `downloadDocument` operation instead; it resolves any document the
+   * credentials can read without requiring the owning Process in the path.
+   *
    * @param id The resource ID.
    * @param documentUri Document URI to download.
    * @param options The options parameters.
@@ -314,7 +413,19 @@ const findProcessesOperationSpec: coreClient.OperationSpec = {
       bodyMapper: Mappers.DefaultError,
     },
   },
-  queryParameters: [Parameters.size, Parameters.page, Parameters.sort, Parameters.tenantId],
+  queryParameters: [
+    Parameters.size,
+    Parameters.page,
+    Parameters.sort,
+    Parameters.tenantId,
+    Parameters.processDefinitionId,
+    Parameters.processDefinitionCode,
+    Parameters.state,
+    Parameters.initiatorId,
+    Parameters.initiatorEmail,
+    Parameters.metadata,
+    Parameters.deleted,
+  ],
   urlParameters: [Parameters.$host],
   headerParameters: [Parameters.accept],
   serializer,
@@ -354,6 +465,69 @@ const retrieveProcessOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 }
+const deleteProcessOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}',
+  httpMethod: 'DELETE',
+  responses: {
+    204: {},
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.accept],
+  serializer,
+}
+const createProcessActionOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/actions',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProcessAction,
+    },
+    201: {
+      bodyMapper: Mappers.ProcessAction,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  requestBody: Parameters.processActionCreateParams,
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.contentType, Parameters.accept],
+  mediaType: 'json',
+  serializer,
+}
+const retrieveProcessActionOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/actions/{actionId}',
+  httpMethod: 'GET',
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProcessAction,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  urlParameters: [Parameters.$host, Parameters.id, Parameters.actionId],
+  headerParameters: [Parameters.accept],
+  serializer,
+}
+const cancelProcessActionOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/actions/{actionId}/~actions/cancel',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.ProcessAction,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  urlParameters: [Parameters.$host, Parameters.id, Parameters.actionId],
+  headerParameters: [Parameters.accept],
+  serializer,
+}
 const completeProcessOperationSpec: coreClient.OperationSpec = {
   path: '/processes/{id}/~actions/complete',
   httpMethod: 'POST',
@@ -384,6 +558,22 @@ const cancelProcessOperationSpec: coreClient.OperationSpec = {
   headerParameters: [Parameters.accept],
   serializer,
 }
+const cancelProcessItemsOperationSpec: coreClient.OperationSpec = {
+  path: '/processes/{id}/~actions/cancel-process-items',
+  httpMethod: 'POST',
+  responses: {
+    200: {
+      bodyMapper: Mappers.Process,
+    },
+    default: {
+      bodyMapper: Mappers.DefaultError,
+    },
+  },
+  queryParameters: [Parameters.processItemId],
+  urlParameters: [Parameters.$host, Parameters.id],
+  headerParameters: [Parameters.accept],
+  serializer,
+}
 const changeProcessInitiatorOperationSpec: coreClient.OperationSpec = {
   path: '/processes/{id}/~actions/change-initiator',
   httpMethod: 'POST',
@@ -399,25 +589,6 @@ const changeProcessInitiatorOperationSpec: coreClient.OperationSpec = {
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [Parameters.contentType, Parameters.accept],
   mediaType: 'json',
-  serializer,
-}
-const uploadProcessUserActionDocumentOperationSpec: coreClient.OperationSpec = {
-  path: '/processes/{id}/~actions/upload-user-action-document',
-  httpMethod: 'POST',
-  responses: {
-    200: {
-      bodyMapper: Mappers.Process,
-    },
-    304: {},
-    default: {
-      bodyMapper: Mappers.DefaultError,
-    },
-  },
-  requestBody: Parameters.file,
-  queryParameters: [Parameters.fileContentType, Parameters.fileName, Parameters.userActionValueId],
-  urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.contentType1, Parameters.accept1],
-  mediaType: 'binary',
   serializer,
 }
 const updateProcessMetadataOperationSpec: coreClient.OperationSpec = {
@@ -450,7 +621,7 @@ const patchProcessMetadataOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.jsonPatch,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType2],
+  headerParameters: [Parameters.accept, Parameters.contentType1],
   mediaType: 'json',
   serializer,
 }
@@ -484,7 +655,7 @@ const patchProcessEntityOperationSpec: coreClient.OperationSpec = {
   },
   requestBody: Parameters.jsonPatch,
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.accept, Parameters.contentType2],
+  headerParameters: [Parameters.accept, Parameters.contentType1],
   mediaType: 'json',
   serializer,
 }
@@ -502,7 +673,7 @@ const uploadProcessDocumentOperationSpec: coreClient.OperationSpec = {
   requestBody: Parameters.file,
   queryParameters: [Parameters.fileContentType, Parameters.fileName],
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.contentType1, Parameters.accept1],
+  headerParameters: [Parameters.contentType2, Parameters.accept1],
   mediaType: 'binary',
   serializer,
 }

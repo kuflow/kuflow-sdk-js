@@ -47,6 +47,18 @@ function fixWrongObjectTypeValuesInMappers() {
   fs.writeFileSync(file, fileAsStr, 'utf8')
 }
 
+function fixUserAgentPackageDetails() {
+  let { file, fileAsStr } = readFile('kuFlowRestClientGenerated.ts')
+
+  fileAsStr = fileAsStr.replace(
+    /const packageDetails = `azsdk-js-kuflow-rest\/[^`]*`/,
+    "const packageDetails = `sdk-js-kuflow-rest/${require('../../package.json').version}`",
+  )
+
+  fs.writeFileSync(file, fileAsStr, 'utf8')
+}
+
 removeUnnecessaryUnionOptions()
 fixWrongObjectTypeValuesInModels()
 fixWrongObjectTypeValuesInMappers()
+fixUserAgentPackageDetails()

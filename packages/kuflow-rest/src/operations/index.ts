@@ -22,6 +22,8 @@
  */
 
 export * from './authenticationOperations'
+export * from './businessArtifactOperations'
+export * from './documentOperations'
 export * from './groupOperations'
 export * from './kmsOperations'
 export * from './principalOperations'

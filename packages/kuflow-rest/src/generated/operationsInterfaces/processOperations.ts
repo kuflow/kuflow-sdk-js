@@ -25,6 +25,11 @@ import type * as coreRestPipeline from '@azure/core-rest-pipeline'
 
 import type {
   JsonPatchOperation,
+  ProcessActionCreateParams,
+  ProcessCancelProcessActionOptionalParams,
+  ProcessCancelProcessActionResponse,
+  ProcessCancelProcessItemsOptionalParams,
+  ProcessCancelProcessItemsResponse,
   ProcessCancelProcessOptionalParams,
   ProcessCancelProcessResponse,
   ProcessChangeInitiatorParams,
@@ -33,8 +38,11 @@ import type {
   ProcessCompleteProcessOptionalParams,
   ProcessCompleteProcessResponse,
   ProcessCreateParams,
+  ProcessCreateProcessActionOptionalParams,
+  ProcessCreateProcessActionResponse,
   ProcessCreateProcessOptionalParams,
   ProcessCreateProcessResponse,
+  ProcessDeleteProcessOptionalParams,
   ProcessDownloadProcessDocumentOptionalParams,
   ProcessDownloadProcessDocumentResponse,
   ProcessEntityUpdateParams,
@@ -45,6 +53,8 @@ import type {
   ProcessPatchProcessEntityResponse,
   ProcessPatchProcessMetadataOptionalParams,
   ProcessPatchProcessMetadataResponse,
+  ProcessRetrieveProcessActionOptionalParams,
+  ProcessRetrieveProcessActionResponse,
   ProcessRetrieveProcessOptionalParams,
   ProcessRetrieveProcessResponse,
   ProcessUpdateProcessEntityOptionalParams,
@@ -53,8 +63,6 @@ import type {
   ProcessUpdateProcessMetadataResponse,
   ProcessUploadProcessDocumentOptionalParams,
   ProcessUploadProcessDocumentResponse,
-  ProcessUploadProcessUserActionDocumentOptionalParams,
-  ProcessUploadProcessUserActionDocumentResponse,
 } from '../models'
 
 /** Interface representing a ProcessOperations. */
@@ -81,7 +89,9 @@ export interface ProcessOperations {
     options?: ProcessCreateProcessOptionalParams,
   ) => Promise<ProcessCreateProcessResponse>
   /**
-   * Returns the requested Process when has access to do it.
+   * Returns the requested Process when has access to do it. A deleted Process is returned too, with its
+   * `deletedAt` and `deletedBy` fields set.
+   *
    * @param id The resource ID.
    * @param options The options parameters.
    */
@@ -89,6 +99,77 @@ export interface ProcessOperations {
     id: string,
     options?: ProcessRetrieveProcessOptionalParams,
   ) => Promise<ProcessRetrieveProcessResponse>
+  /**
+   * Deletes the requested Process, and its Process Items with it. Only a finished Process (`COMPLETED`
+   * or
+   * `CANCELLED`) with nothing in progress, neither tasks still to be done nor workflows of its actions
+   * still
+   * running, can be deleted; otherwise it answers conflict. The deletion is soft: the Process is still
+   * returned
+   * by id and with `deleted=INCLUDE|ONLY`, with its `deletedAt` and `deletedBy` fields set, but it
+   * cannot be
+   * restored. Deleting a Process that is already deleted does nothing.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  deleteProcess: (id: string, options?: ProcessDeleteProcessOptionalParams) => Promise<void>
+  /**
+   * Invoke an action on a Process.
+   *
+   * Whether the call returns synchronously or asynchronously depends on the action type:
+   *
+   * - `START_WORKFLOW`, `DOWNLOADABLE`: dispatched to a background worker. The
+   *   response returns immediately with `status=REQUESTED`. Poll
+   *   `retrieveProcessAction` for the final state.
+   * - `START_RELATED_PROCESS`, `CREATE_TASK`, `CREATE_PROCESS_ITEM_MESSAGE`,
+   *   `CREATE_PROCESS_ITEM_THREAD`, `SEND_WORKFLOW_SIGNAL`: completed synchronously.
+   *   The response returns with `status=COMPLETED` (or an error status).
+   *
+   * If you want the method to be idempotent, please specify the `id` field in the request body.
+   *
+   * Actions of type `SEND_WORKFLOW_SIGNAL` whose definition declares an input form accept a
+   * `sendWorkflowSignal.input` payload: it is validated against the definition schema,
+   * persisted on the action and delivered inside the workflow signal. The input is not part
+   * of the idempotency key — replaying the same `id` with a different input returns the
+   * original action untouched.
+   *
+   * @param id The resource ID.
+   * @param processActionCreateParams Params identifying the action to invoke.
+   * @param options The options parameters.
+   */
+  createProcessAction: (
+    id: string,
+    processActionCreateParams: ProcessActionCreateParams,
+    options?: ProcessCreateProcessActionOptionalParams,
+  ) => Promise<ProcessCreateProcessActionResponse>
+  /**
+   * Returns a Process action by its ID.
+   * @param id The resource ID.
+   * @param actionId The Process action ID.
+   * @param options The options parameters.
+   */
+  retrieveProcessAction: (
+    id: string,
+    actionId: string,
+    options?: ProcessRetrieveProcessActionOptionalParams,
+  ) => Promise<ProcessRetrieveProcessActionResponse>
+  /**
+   * Cancel a Process action.
+   *
+   * Only meaningful for asynchronous actions still in `REQUESTED` state. The
+   * action's status is set to `CANCELED`. If the action is already in a
+   * terminal state, no transition occurs.
+   *
+   * @param id The resource ID.
+   * @param actionId The Process action ID.
+   * @param options The options parameters.
+   */
+  cancelProcessAction: (
+    id: string,
+    actionId: string,
+    options?: ProcessCancelProcessActionOptionalParams,
+  ) => Promise<ProcessCancelProcessActionResponse>
   /**
    * Complete a Process. The state of Process is set to 'completed'.
    *
@@ -113,6 +194,24 @@ export interface ProcessOperations {
    */
   cancelProcess: (id: string, options?: ProcessCancelProcessOptionalParams) => Promise<ProcessCancelProcessResponse>
   /**
+   * Cancel Process Items in a Process.
+   *
+   * When processItemId query parameters are provided, only those specific
+   * process items are cancelled. When omitted, all active process items
+   * in the process are cancelled.
+   *
+   * For task process items, tasks in a cancellable state (ready, claimed)
+   * are set to 'cancelled'. Already cancelled tasks are treated as a no-op.
+   * The Process itself is not affected.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  cancelProcessItems: (
+    id: string,
+    options?: ProcessCancelProcessItemsOptionalParams,
+  ) => Promise<ProcessCancelProcessItemsResponse>
+  /**
    * Change the current initiator of a process.
    *
    * Allows you to choose a user (by email or principal identifier) or an application (principal
@@ -128,24 +227,6 @@ export interface ProcessOperations {
     processChangeInitiatorParams: ProcessChangeInitiatorParams,
     options?: ProcessChangeProcessInitiatorOptionalParams,
   ) => Promise<ProcessChangeProcessInitiatorResponse>
-  /**
-   * Allow saving a user action document uploading the content.
-   *
-   * @param id The resource ID.
-   * @param fileContentType Document content type
-   * @param fileName Document name
-   * @param userActionValueId User action value ID related to de document
-   * @param file Document to save.
-   * @param options The options parameters.
-   */
-  uploadProcessUserActionDocument: (
-    id: string,
-    fileContentType: string,
-    fileName: string,
-    userActionValueId: string,
-    file: coreRestPipeline.RequestBodyType,
-    options?: ProcessUploadProcessUserActionDocumentOptionalParams,
-  ) => Promise<ProcessUploadProcessUserActionDocumentResponse>
   /**
    * Save process metadata
    * @param id The resource ID.
@@ -203,9 +284,11 @@ export interface ProcessOperations {
    * Upload a temporal document into the process that later on must be linked with a process domain
    * resource.
    *
-   * Documents uploaded with this API will be deleted after 24 hours as long as they have not been linked
+   * Documents uploaded with this API will be deleted after 2 hours as long as they have not been linked
    * to a
-   * process or process item..
+   * process or process item.
+   *
+   * **Deprecated:** use the `uploadDocument` operation with `targetUri=ku:process/{processId}` instead.
    *
    * @param id The resource ID.
    * @param fileContentType Document content type
@@ -222,6 +305,10 @@ export interface ProcessOperations {
   ) => Promise<ProcessUploadProcessDocumentResponse>
   /**
    * Given a document uri download a document.
+   *
+   * **Deprecated:** use the `downloadDocument` operation instead; it resolves any document the
+   * credentials can read without requiring the owning Process in the path.
+   *
    * @param id The resource ID.
    * @param documentUri Document URI to download.
    * @param options The options parameters.

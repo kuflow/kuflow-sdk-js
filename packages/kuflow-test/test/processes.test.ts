@@ -24,18 +24,19 @@
 import { describe, expect, test } from '@jest/globals'
 import {
   type Document,
+  type JsonPatchOperation,
   KuFlowRestClient,
+  type ProcessActionCreateParams,
   type ProcessChangeInitiatorParams,
   type ProcessCreateParams,
   type ProcessEntityUpdateParams,
   type ProcessMetadataUpdateParams,
   type ProcessUploadProcessDocumentResponse,
-  type ProcessUploadProcessUserActionDocumentParams,
 } from '@kuflow/kuflow-rest'
 import { randomUUID } from 'crypto'
 import nock from 'nock'
 
-import { mockProcess, mockProcessCreateParams, mockProcessPage } from './utils/fixtures'
+import { mockProcess, mockProcessAction, mockProcessCreateParams, mockProcessPage } from './utils/fixtures'
 import { streamToString } from './utils/stream'
 
 const clientId = 'USER1'
@@ -125,6 +126,55 @@ describe('API /processes', () => {
         size: 30,
         page: 1,
         sort: ['sort1', 'sort2,&%'],
+      })
+
+      scope.done()
+    })
+
+    test('Check that state, initiator and metadata filter query params are correctly serialized', async () => {
+      const processDefinitionId = randomUUID()
+      const initiatorId = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .get('/processes')
+        .query({
+          size: 25,
+          page: 0,
+          processDefinitionId,
+          state: ['RUNNING', 'COMPLETED'],
+          initiatorId,
+          initiatorEmail: 'sample@kuflow.com',
+          metadata: 'FIELD eq 1',
+        })
+        .reply(200, {})
+
+      await kuFlowRestClient.processOperations.findProcesses({
+        processDefinitionId,
+        state: ['RUNNING', 'COMPLETED'],
+        initiatorId,
+        initiatorEmail: 'sample@kuflow.com',
+        metadata: 'FIELD eq 1',
+      })
+
+      scope.done()
+    })
+
+    test('Check that deleted processes filter query params are correctly serialized', async () => {
+      const processDefinitionId = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .get('/processes')
+        .query({
+          size: 25,
+          page: 0,
+          processDefinitionId,
+          deleted: 'INCLUDE',
+        })
+        .reply(200, {})
+
+      await kuFlowRestClient.processOperations.findProcesses({
+        processDefinitionId,
+        deleted: 'INCLUDE',
       })
 
       scope.done()
@@ -276,67 +326,37 @@ describe('API /processes', () => {
     })
   })
 
-  describe('POST /processes/{id}/~actions/upload-user-action-document', () => {
+  describe('PATCH /processes/{id}/metadata', () => {
     test('Check happy path', async () => {
       const expectedObject = mockProcess()
-      const params: ProcessUploadProcessUserActionDocumentParams = {
-        userActionValueId: randomUUID(),
-      }
-      const document: Document = {
-        contentType: 'application/json',
-        fileName: 'file.json',
-        fileContent: '{}',
-      }
+      const jsonPatch: JsonPatchOperation[] = [{ op: 'replace', path: '/CODE_1', value: 'value' }]
 
       const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .post(`/processes/${expectedObject.id}/~actions/upload-user-action-document`)
-        .query({
-          fileContentType: document.contentType,
-          fileName: document.fileName,
-          userActionValueId: params.userActionValueId,
-        })
+        .patch(`/processes/${expectedObject.id}/metadata`, body => body.length === 1 && body[0].path === '/CODE_1')
         .reply(200, JSON.stringify(expectedObject))
 
-      const processes = await kuFlowRestClient.processOperations.uploadProcessUserActionDocument(
-        expectedObject.id,
-        params,
-        document,
-      )
+      const process = await kuFlowRestClient.processOperations.patchProcessMetadata(expectedObject.id, jsonPatch)
 
       scope.done()
 
-      expect(processes).toStrictEqual(expectedObject)
+      expect(process).toStrictEqual(expectedObject)
     })
+  })
 
-    test('Check happy path if 304 return is allowed', async () => {
+  describe('PATCH /processes/{id}/entity', () => {
+    test('Check happy path', async () => {
       const expectedObject = mockProcess()
-      const params: ProcessUploadProcessUserActionDocumentParams = {
-        userActionValueId: randomUUID(),
-      }
-      const document: Document = {
-        contentType: 'application/json',
-        fileName: 'file.json',
-        fileContent: '{}',
-      }
+      const jsonPatch: JsonPatchOperation[] = [{ op: 'add', path: '/key', value: 'value' }]
 
       const scope = nock('https://api.kuflow.com/v2024-06-14')
-        .post(`/processes/${expectedObject.id}/~actions/upload-user-action-document`)
-        .query({
-          fileContentType: document.contentType,
-          fileName: document.fileName,
-          userActionValueId: params.userActionValueId,
-        })
-        .reply(304)
+        .patch(`/processes/${expectedObject.id}/entity`, body => body.length === 1 && body[0].path === '/key')
+        .reply(200, JSON.stringify(expectedObject))
 
-      const processes = await kuFlowRestClient.processOperations.uploadProcessUserActionDocument(
-        expectedObject.id,
-        params,
-        document,
-      )
+      const process = await kuFlowRestClient.processOperations.patchProcessEntity(expectedObject.id, jsonPatch)
 
       scope.done()
 
-      expect(processes).toBeUndefined()
+      expect(process).toStrictEqual(expectedObject)
     })
   })
 
@@ -383,6 +403,7 @@ describe('API /processes', () => {
         })
         .reply(200, JSON.stringify(expectedObject))
 
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       const processes = await kuFlowRestClient.processOperations.uploadProcessDocument(processId, document)
 
       scope.done()
@@ -403,6 +424,7 @@ describe('API /processes', () => {
         })
         .reply(200, '{}')
 
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       const download = await kuFlowRestClient.processOperations.downloadProcessDocument(processId, documentUri)
 
       scope.done()
@@ -415,6 +437,117 @@ describe('API /processes', () => {
       const body = await streamToString(download.readableStreamBody)
 
       expect(body).toStrictEqual('{}')
+    })
+  })
+
+  describe('DELETE /processes/{id}', () => {
+    test('Check happy path', async () => {
+      const processId = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .delete(`/processes/${processId}`)
+        .matchHeader('authorization', 'Bearer ' + token)
+        .reply(204)
+
+      await kuFlowRestClient.processOperations.deleteProcess(processId)
+
+      scope.done()
+    })
+  })
+
+  describe('POST /processes/{id}/actions', () => {
+    test('Check happy path', async () => {
+      const processId = randomUUID()
+      const expectedObject = mockProcessAction()
+      const params: ProcessActionCreateParams = {
+        id: expectedObject.id,
+        processActionDefinitionCode: expectedObject.processActionDefinitionRef.code,
+        startRelatedProcess: {
+          metadata: { value: { key: 'value' } },
+        },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(
+          `/processes/${processId}/actions`,
+          body => body.processActionDefinitionCode === params.processActionDefinitionCode,
+        )
+        .reply(201, JSON.stringify(expectedObject))
+
+      const processAction = await kuFlowRestClient.processOperations.createProcessAction(processId, params)
+
+      scope.done()
+
+      expect(processAction).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('GET /processes/{id}/actions/{actionId}', () => {
+    test('Check happy path', async () => {
+      const processId = randomUUID()
+      const expectedObject = mockProcessAction()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .get(`/processes/${processId}/actions/${expectedObject.id}`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processAction = await kuFlowRestClient.processOperations.retrieveProcessAction(processId, expectedObject.id)
+
+      scope.done()
+
+      expect(processAction).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('POST /processes/{id}/actions/{actionId}/~actions/cancel', () => {
+    test('Check happy path', async () => {
+      const processId = randomUUID()
+      const expectedObject = mockProcessAction()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(`/processes/${processId}/actions/${expectedObject.id}/~actions/cancel`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const processAction = await kuFlowRestClient.processOperations.cancelProcessAction(processId, expectedObject.id)
+
+      scope.done()
+
+      expect(processAction).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('POST /processes/{id}/~actions/cancel-process-items', () => {
+    test('Check happy path without process item ids', async () => {
+      const expectedObject = mockProcess()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(`/processes/${expectedObject.id}/~actions/cancel-process-items`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const process = await kuFlowRestClient.processOperations.cancelProcessItems(expectedObject.id)
+
+      scope.done()
+
+      expect(process).toStrictEqual(expectedObject)
+    })
+
+    test('Check that process item ids are correctly serialized', async () => {
+      const expectedObject = mockProcess()
+      const processItemId1 = randomUUID()
+      const processItemId2 = randomUUID()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(`/processes/${expectedObject.id}/~actions/cancel-process-items`)
+        .query({ processItemId: [processItemId1, processItemId2] })
+        .reply(200, JSON.stringify(expectedObject))
+
+      const process = await kuFlowRestClient.processOperations.cancelProcessItems(expectedObject.id, {
+        processItemId: [processItemId1, processItemId2],
+      })
+
+      scope.done()
+
+      expect(process).toStrictEqual(expectedObject)
     })
   })
 })

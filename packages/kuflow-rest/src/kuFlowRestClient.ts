@@ -27,6 +27,8 @@ import type { CommonClientOptions } from '@azure/core-client'
 import { KuFlowRestClientGenerated } from './generated'
 import {
   AuthenticationOperations,
+  BusinessArtifactOperations,
+  DocumentOperations,
   GroupOperations,
   KmsOperations,
   PrincipalOperations,
@@ -98,6 +100,16 @@ export class KuFlowRestClient {
   public readonly processItemOperations: ProcessItemOperations
 
   /**
+   * Business Artifact API operations.
+   */
+  public readonly businessArtifactOperations: BusinessArtifactOperations
+
+  /**
+   * Document API operations.
+   */
+  public readonly documentOperations: DocumentOperations
+
+  /**
    * Worker API operations.
    */
   public readonly workerOperations: WorkerOperations
@@ -129,6 +141,8 @@ export class KuFlowRestClient {
     this.tenantUserOperations = new TenantUserOperations(clientGenerated)
     this.processOperations = new ProcessOperations(clientGenerated)
     this.processItemOperations = new ProcessItemOperations(clientGenerated)
+    this.businessArtifactOperations = new BusinessArtifactOperations(clientGenerated)
+    this.documentOperations = new DocumentOperations(clientGenerated)
     this.workerOperations = new WorkerOperations(clientGenerated)
     this.robotOperations = new RobotOperations(clientGenerated)
   }

@@ -71,6 +71,7 @@ const findGroupsOperationSpec: coreClient.OperationSpec = {
     Parameters.page,
     Parameters.sort,
     Parameters.groupId,
+    Parameters.groupCode,
     Parameters.tenantId,
     Parameters.principalId,
   ],

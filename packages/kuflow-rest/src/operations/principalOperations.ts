@@ -51,13 +51,14 @@ export class PrincipalOperations {
   public async findPrincipals(
     options?: PrincipalFindPrincipalsOptionalExtParams,
   ): Promise<PrincipalFindPrincipalsResponse> {
-    const { sort, type, groupId, tenantId, ...optionsRest } = options ?? {}
+    const { sort, type, groupId, groupCode, tenantId, ...optionsRest } = options ?? {}
 
     return await this.principalOperations.findPrincipals({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
       type,
       groupId: typeof groupId === 'string' ? [groupId] : groupId,
+      groupCode: typeof groupCode === 'string' ? [groupCode] : groupCode,
       tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
     })
   }

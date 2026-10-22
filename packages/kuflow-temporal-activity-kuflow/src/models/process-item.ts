@@ -22,9 +22,11 @@
  */
 
 import type {
+  DeletedQueryParam,
   JsonPatchOperation,
   JsonValue,
   ProcessItem,
+  ProcessItemAiAssistance,
   ProcessItemMessageCreateParams,
   ProcessItemPage,
   ProcessItemTaskCreateParams,
@@ -37,10 +39,14 @@ export interface ProcessItemFindRequest {
   page?: number
   size?: number
   sorts?: string[]
+  tenantIds?: string[]
   processIds?: string[]
   types?: ProcessItemType[]
   taskStates?: ProcessItemTaskState[]
   processItemDefinitionCodes?: string[]
+  processDefinitionIds?: string[]
+  processDefinitionCodes?: string[]
+  deleted?: DeletedQueryParam
 }
 
 export interface ProcessItemFindResponse {
@@ -59,6 +65,7 @@ export interface ProcessItemCreateRequest {
   id: string
   type: ProcessItemType
   processId: string
+  processItemThreadId?: string
   ownerId?: string
   ownerEmail?: string
   processItemDefinitionCode?: string
@@ -95,6 +102,15 @@ export interface ProcessItemTaskDataUpdateResponse {
   processItem: ProcessItem
 }
 
+export interface ProcessItemTaskContextDataUpdateRequest {
+  processItemId: string
+  data: JsonValue
+}
+
+export interface ProcessItemTaskContextDataUpdateResponse {
+  processItem: ProcessItem
+}
+
 export interface ProcessItemTaskDataPatchRequest {
   processItemId: string
   jsonPatch: JsonPatchOperation[]
@@ -122,4 +138,21 @@ export interface ProcessItemTaskLogAppendRequest {
 
 export interface ProcessItemTaskLogAppendResponse {
   processItem: ProcessItem
+}
+
+export interface ProcessItemAiAssistanceGenerateRequest {
+  processItemId: string
+  requestId: string
+}
+
+export interface ProcessItemAiAssistanceGenerateResponse {
+  processItemAiAssistance: ProcessItemAiAssistance
+}
+
+export interface ProcessItemAiAssistanceRetrieveRequest {
+  processItemId: string
+}
+
+export interface ProcessItemAiAssistanceRetrieveResponse {
+  processItemAiAssistance: ProcessItemAiAssistance
 }

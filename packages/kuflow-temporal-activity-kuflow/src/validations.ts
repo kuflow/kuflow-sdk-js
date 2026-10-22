@@ -25,15 +25,33 @@ import { ApplicationFailure } from '@temporalio/activity'
 
 import { KuFlowFailureType } from './kuflow-failure-type'
 import type {
+  BusinessArtifactActionCancelRequest,
+  BusinessArtifactActionCreateArtifactPrepareRequest,
+  BusinessArtifactActionCreateRequest,
+  BusinessArtifactActionRetrieveRequest,
+  BusinessArtifactActionStartProcessPrepareRequest,
+  BusinessArtifactCreateRequest,
+  BusinessArtifactDeleteRequest,
+  BusinessArtifactPatchRequest,
+  BusinessArtifactRetrieveRequest,
+  BusinessArtifactUpdateRequest,
   PrincipalRetrieveRequest,
+  ProcessActionCancelRequest,
+  ProcessActionCreateRequest,
+  ProcessActionRetrieveRequest,
+  ProcessDeleteRequest,
   ProcessEntityPatchRequest,
   ProcessEntityUpdateRequest,
   ProcessInitiatorChangeRequest,
+  ProcessItemAiAssistanceGenerateRequest,
+  ProcessItemAiAssistanceRetrieveRequest,
   ProcessItemCreateRequest,
   ProcessItemRetrieveRequest,
+  ProcessItemsCancelRequest,
   ProcessItemTaskAssignRequest,
   ProcessItemTaskClaimRequest,
   ProcessItemTaskCompleteRequest,
+  ProcessItemTaskContextDataUpdateRequest,
   ProcessItemTaskDataPatchRequest,
   ProcessItemTaskDataUpdateRequest,
   ProcessItemTaskLogAppendRequest,
@@ -44,207 +62,283 @@ import type {
 } from './models'
 
 export function validateRetrievePrincipalRequest(request: PrincipalRetrieveRequest): void {
-  if (request.principalId == null) {
-    throw ApplicationFailure.nonRetryable("'principalId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requirePrincipalId(request.principalId)
 }
 
 export function validateRetrieveTenantUserRequest(request: TenantUserRetrieveRequest): void {
-  if (request.tenantUserId == null) {
-    throw ApplicationFailure.nonRetryable("'tenantUserId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireTenantUserId(request.tenantUserId)
 }
 
 export function validateRetrieveProcessRequest(request: ProcessRetrieveRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessId(request.processId)
+}
+
+export function validateProcessDeleteRequest(request: ProcessDeleteRequest): void {
+  requireProcessId(request.processId)
 }
 
 export function validateProcessEntityUpdateRequest(request: ProcessEntityUpdateRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-
-  if (request.entity == null) {
-    throw ApplicationFailure.nonRetryable("'entity' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessId(request.processId)
+  requireEntity(request.entity)
 }
 
 export function validateProcessEntityPatchRequest(request: ProcessEntityPatchRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-
-  if (request.jsonPatch == null) {
-    throw ApplicationFailure.nonRetryable("'jsonPatch' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessId(request.processId)
+  requireJsonPatch(request.jsonPatch)
 }
 
 export function validateProcessMetadataUpdateRequest(request: ProcessMetadataUpdateRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-
-  if (request.metadata == null) {
-    throw ApplicationFailure.nonRetryable("'metadata' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessId(request.processId)
+  requireMetadata(request.metadata)
 }
 
 export function validateProcessMetadataPatchRequest(request: ProcessMetadataPatchRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-
-  if (request.jsonPatch == null) {
-    throw ApplicationFailure.nonRetryable("'jsonPatch' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessId(request.processId)
+  requireJsonPatch(request.jsonPatch)
 }
 
 export function validateProcessInitiatorChangeRequest(request: ProcessInitiatorChangeRequest): void {
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+  requireProcessId(request.processId)
+  if (request.initiatorId == null && request.initiatorEmail == null) {
+    fail("'initiatorId' or 'initiatorEmail' is required")
   }
-  if (request.initiatorId == null || request.initiatorEmail == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'initiatorId' or 'initiatorEmail' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
+}
+
+export function validateProcessActionCreateRequest(request: ProcessActionCreateRequest): void {
+  requireProcessId(request.processId)
+  requireProcessActionDefinitionCode(request.processActionDefinitionCode)
+}
+
+export function validateProcessActionRetrieveRequest(request: ProcessActionRetrieveRequest): void {
+  requireProcessId(request.processId)
+  requireProcessActionId(request.processActionId)
+}
+
+export function validateProcessActionCancelRequest(request: ProcessActionCancelRequest): void {
+  requireProcessId(request.processId)
+  requireProcessActionId(request.processActionId)
+}
+
+export function validateProcessItemsCancelRequest(request: ProcessItemsCancelRequest): void {
+  requireProcessId(request.processId)
 }
 
 export function validateProcessItemRetrieveRequest(request: ProcessItemRetrieveRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
+  requireProcessItemId(request.processItemId)
 }
 
 export function validateProcessItemCreateRequest(request: ProcessItemCreateRequest): void {
-  if (request.id == null) {
-    throw ApplicationFailure.nonRetryable("'id' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireId(request.id)
+  requireProcessId(request.processId)
+  requireType(request.type)
 
-  if (request.processId == null) {
-    throw ApplicationFailure.nonRetryable("'processId' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-
-  if (request.type == null) {
-    throw ApplicationFailure.nonRetryable("'type' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
-
-  if (request.type === 'TASK') {
-    if (request.processItemDefinitionCode == null) {
-      throw ApplicationFailure.nonRetryable(
-        "'processItemDefinitionCode' is required for task items",
-        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-      )
-    }
+  if (request.type === 'TASK' && request.processItemDefinitionCode == null) {
+    fail("'processItemDefinitionCode' is required for task items")
   }
 
   if (request.type === 'MESSAGE') {
     if (request.message == null) {
-      throw ApplicationFailure.nonRetryable(
-        "'message' is required for message items",
-        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-      )
+      fail("'message' is required for message items")
     }
 
     if (request.message.text == null && request.message.data == null) {
-      throw ApplicationFailure.nonRetryable(
-        "'message.text' and/or 'message.data' is required for message items",
-        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-      )
+      fail("'message.text' and/or 'message.data' is required for message items")
     }
 
     if (request.message.data != null && request.message.dataStructureDataDefinitionCode == null) {
-      throw ApplicationFailure.nonRetryable(
-        "'message.dataStructureDataDefinitionCode' is required for message items when 'message.data' is set",
-        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-      )
+      fail("'message.dataStructureDataDefinitionCode' is required for message items when 'message.data' is set")
     }
   }
 
   if (request.type === 'THREAD') {
     if (request.processItemDefinitionCode == null) {
-      throw ApplicationFailure.nonRetryable(
-        "'processItemDefinitionCode' is required for thread items",
-        KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-      )
+      fail("'processItemDefinitionCode' is required for thread items")
+    }
+
+    if (request.processItemThreadId != null) {
+      fail("'processItemThreadId' is not allowed for thread items, threads cannot be nested")
     }
   }
 }
 
 export function validateProcessItemTaskCompleteRequest(request: ProcessItemTaskCompleteRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
+  requireProcessItemId(request.processItemId)
 }
 
 export function validateProcessItemTaskClaimRequest(request: ProcessItemTaskClaimRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
+  requireProcessItemId(request.processItemId)
 }
 
 export function validateProcessItemTaskAssignRequest(request: ProcessItemTaskAssignRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
+  requireProcessItemId(request.processItemId)
   if (request.ownerEmail == null && request.ownerId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'ownerEmail' or 'ownerId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
+    fail("'ownerEmail' or 'ownerId' is required")
   }
 }
 
 export function validateProcessItemTaskDataUpdateRequest(request: ProcessItemTaskDataUpdateRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
-  if (request.data == null) {
-    throw ApplicationFailure.nonRetryable("'data' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessItemId(request.processItemId)
+  requireData(request.data)
+}
+
+export function validateProcessItemTaskContextDataUpdateRequest(
+  request: ProcessItemTaskContextDataUpdateRequest,
+): void {
+  requireProcessItemId(request.processItemId)
+  requireData(request.data)
 }
 
 export function validateProcessItemTaskDataPatchRequest(request: ProcessItemTaskDataPatchRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
-  }
-  if (request.jsonPatch == null) {
-    throw ApplicationFailure.nonRetryable("'jsonPatch' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+  requireProcessItemId(request.processItemId)
+  requireJsonPatch(request.jsonPatch)
 }
 
 export function validateProcessItemTaskLogAppendRequest(request: ProcessItemTaskLogAppendRequest): void {
-  if (request.processItemId == null) {
-    throw ApplicationFailure.nonRetryable(
-      "'processItemId' is required",
-      KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE,
-    )
+  requireProcessItemId(request.processItemId)
+  requireMessage(request.message)
+  requireLevel(request.level)
+}
+
+export function validateProcessItemAiAssistanceGenerateRequest(request: ProcessItemAiAssistanceGenerateRequest): void {
+  requireProcessItemId(request.processItemId)
+  requireRequestId(request.requestId)
+}
+
+export function validateProcessItemAiAssistanceRetrieveRequest(request: ProcessItemAiAssistanceRetrieveRequest): void {
+  requireProcessItemId(request.processItemId)
+}
+
+export function validateBusinessArtifactCreateRequest(request: BusinessArtifactCreateRequest): void {
+  if (request.businessArtifactDefinitionId == null && request.businessArtifactDefinitionCode == null) {
+    fail("'businessArtifactDefinitionId' or 'businessArtifactDefinitionCode' is required")
   }
-  if (request.message == null) {
-    throw ApplicationFailure.nonRetryable("'message' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
+}
+
+export function validateBusinessArtifactRetrieveRequest(request: BusinessArtifactRetrieveRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+}
+
+export function validateBusinessArtifactDeleteRequest(request: BusinessArtifactDeleteRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+}
+
+export function validateBusinessArtifactUpdateRequest(request: BusinessArtifactUpdateRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireData(request.data)
+}
+
+export function validateBusinessArtifactPatchRequest(request: BusinessArtifactPatchRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireJsonPatch(request.jsonPatch)
+}
+
+export function validateBusinessArtifactActionCreateRequest(request: BusinessArtifactActionCreateRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireBusinessArtifactActionDefinitionCode(request.businessArtifactActionDefinitionCode)
+}
+
+export function validateBusinessArtifactActionRetrieveRequest(request: BusinessArtifactActionRetrieveRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireBusinessArtifactActionId(request.businessArtifactActionId)
+}
+
+export function validateBusinessArtifactActionCancelRequest(request: BusinessArtifactActionCancelRequest): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireBusinessArtifactActionId(request.businessArtifactActionId)
+}
+
+export function validateBusinessArtifactActionCreateArtifactPrepareRequest(
+  request: BusinessArtifactActionCreateArtifactPrepareRequest,
+): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireBusinessArtifactActionDefinitionCode(request.businessArtifactActionDefinitionCode)
+}
+
+export function validateBusinessArtifactActionStartProcessPrepareRequest(
+  request: BusinessArtifactActionStartProcessPrepareRequest,
+): void {
+  requireBusinessArtifactId(request.businessArtifactId)
+  requireBusinessArtifactActionDefinitionCode(request.businessArtifactActionDefinitionCode)
+}
+
+function requireId(id: unknown): void {
+  requireField(id, 'id')
+}
+
+function requireType(type: unknown): void {
+  requireField(type, 'type')
+}
+
+function requirePrincipalId(principalId: unknown): void {
+  requireField(principalId, 'principalId')
+}
+
+function requireTenantUserId(tenantUserId: unknown): void {
+  requireField(tenantUserId, 'tenantUserId')
+}
+
+function requireProcessId(processId: unknown): void {
+  requireField(processId, 'processId')
+}
+
+function requireProcessActionId(processActionId: unknown): void {
+  requireField(processActionId, 'processActionId')
+}
+
+function requireProcessActionDefinitionCode(processActionDefinitionCode: unknown): void {
+  requireField(processActionDefinitionCode, 'processActionDefinitionCode')
+}
+
+function requireProcessItemId(processItemId: unknown): void {
+  requireField(processItemId, 'processItemId')
+}
+
+function requireBusinessArtifactId(businessArtifactId: unknown): void {
+  requireField(businessArtifactId, 'businessArtifactId')
+}
+
+function requireBusinessArtifactActionId(businessArtifactActionId: unknown): void {
+  requireField(businessArtifactActionId, 'businessArtifactActionId')
+}
+
+function requireBusinessArtifactActionDefinitionCode(businessArtifactActionDefinitionCode: unknown): void {
+  requireField(businessArtifactActionDefinitionCode, 'businessArtifactActionDefinitionCode')
+}
+
+function requireEntity(entity: unknown): void {
+  requireField(entity, 'entity')
+}
+
+function requireMetadata(metadata: unknown): void {
+  requireField(metadata, 'metadata')
+}
+
+function requireData(data: unknown): void {
+  requireField(data, 'data')
+}
+
+function requireJsonPatch(jsonPatch: unknown): void {
+  requireField(jsonPatch, 'jsonPatch')
+}
+
+function requireMessage(message: unknown): void {
+  requireField(message, 'message')
+}
+
+function requireLevel(level: unknown): void {
+  requireField(level, 'level')
+}
+
+function requireRequestId(requestId: unknown): void {
+  requireField(requestId, 'requestId')
+}
+
+function requireField(value: unknown, fieldName: string): void {
+  if (value == null) {
+    fail(`'${fieldName}' is required`)
   }
-  if (request.level == null) {
-    throw ApplicationFailure.nonRetryable("'level' is required", KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
-  }
+}
+
+function fail(message: string): never {
+  throw ApplicationFailure.nonRetryable(message, KuFlowFailureType.ACTIVITIES_VALIDATION_FAILURE)
 }

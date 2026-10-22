@@ -89,6 +89,7 @@ const findPrincipalsOperationSpec: coreClient.OperationSpec = {
     Parameters.sort,
     Parameters.typeParam,
     Parameters.groupId,
+    Parameters.groupCode,
     Parameters.tenantId,
   ],
   urlParameters: [Parameters.$host],

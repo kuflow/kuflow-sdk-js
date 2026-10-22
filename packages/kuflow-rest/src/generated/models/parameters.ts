@@ -25,12 +25,20 @@ import type { OperationParameter, OperationQueryParameter, OperationURLParameter
 
 import {
   AuthenticationCreateParams as AuthenticationCreateParamsMapper,
+  BusinessArtifactActionCreateArtifactPrepareParams as BusinessArtifactActionCreateArtifactPrepareParamsMapper,
+  BusinessArtifactActionCreateParams as BusinessArtifactActionCreateParamsMapper,
+  BusinessArtifactActionStartProcessPrepareParams as BusinessArtifactActionStartProcessPrepareParamsMapper,
+  BusinessArtifactCreateParams as BusinessArtifactCreateParamsMapper,
+  BusinessArtifactDataUpdateParams as BusinessArtifactDataUpdateParamsMapper,
+  ProcessActionCreateParams as ProcessActionCreateParamsMapper,
   ProcessChangeInitiatorParams as ProcessChangeInitiatorParamsMapper,
   ProcessCreateParams as ProcessCreateParamsMapper,
   ProcessEntityUpdateParams as ProcessEntityUpdateParamsMapper,
+  ProcessItemAiAssistanceGenerateParams as ProcessItemAiAssistanceGenerateParamsMapper,
   ProcessItemCreateParams as ProcessItemCreateParamsMapper,
   ProcessItemTaskAppendLogParams as ProcessItemTaskAppendLogParamsMapper,
   ProcessItemTaskAssignParams as ProcessItemTaskAssignParamsMapper,
+  ProcessItemTaskContextDataUpdateParams as ProcessItemTaskContextDataUpdateParamsMapper,
   ProcessItemTaskDataUpdateParams as ProcessItemTaskDataUpdateParamsMapper,
   ProcessMetadataUpdateParams as ProcessMetadataUpdateParamsMapper,
   WorkerCreateParams as WorkerCreateParamsMapper,
@@ -160,6 +168,22 @@ export const groupId: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
+export const groupCode: OperationQueryParameter = {
+  parameterPath: ['options', 'groupCode'],
+  mapper: {
+    serializedName: 'groupCode',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
 export const tenantId: OperationQueryParameter = {
   parameterPath: ['options', 'tenantId'],
   mapper: {
@@ -213,9 +237,152 @@ export const email: OperationQueryParameter = {
   collectionFormat: 'Multi',
 }
 
+export const processDefinitionId: OperationQueryParameter = {
+  parameterPath: ['options', 'processDefinitionId'],
+  mapper: {
+    serializedName: 'processDefinitionId',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const processDefinitionCode: OperationQueryParameter = {
+  parameterPath: ['options', 'processDefinitionCode'],
+  mapper: {
+    serializedName: 'processDefinitionCode',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const state: OperationQueryParameter = {
+  parameterPath: ['options', 'state'],
+  mapper: {
+    serializedName: 'state',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Enum',
+          allowedValues: ['RUNNING', 'COMPLETED', 'CANCELLED'],
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const initiatorId: OperationQueryParameter = {
+  parameterPath: ['options', 'initiatorId'],
+  mapper: {
+    serializedName: 'initiatorId',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const initiatorEmail: OperationQueryParameter = {
+  parameterPath: ['options', 'initiatorEmail'],
+  mapper: {
+    serializedName: 'initiatorEmail',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const metadata: OperationQueryParameter = {
+  parameterPath: ['options', 'metadata'],
+  mapper: {
+    serializedName: 'metadata',
+    type: {
+      name: 'Sequence',
+      element: {
+        constraints: {
+          Pattern: new RegExp('^\\S+ (eq|le|ge|between|contains|in) \\S+( \\S+)*$'),
+        },
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const deleted: OperationQueryParameter = {
+  parameterPath: ['options', 'deleted'],
+  mapper: {
+    serializedName: 'deleted',
+    type: {
+      name: 'Enum',
+      allowedValues: ['EXCLUDE', 'INCLUDE', 'ONLY'],
+    },
+  },
+}
+
 export const processCreateParams: OperationParameter = {
   parameterPath: 'processCreateParams',
   mapper: ProcessCreateParamsMapper,
+}
+
+export const processActionCreateParams: OperationParameter = {
+  parameterPath: 'processActionCreateParams',
+  mapper: ProcessActionCreateParamsMapper,
+}
+
+export const actionId: OperationURLParameter = {
+  parameterPath: 'actionId',
+  mapper: {
+    serializedName: 'actionId',
+    required: true,
+    type: {
+      name: 'Uuid',
+    },
+  },
+}
+
+export const processItemId: OperationQueryParameter = {
+  parameterPath: ['options', 'processItemId'],
+  mapper: {
+    serializedName: 'processItemId',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
 }
 
 export const processChangeInitiatorParams: OperationParameter = {
@@ -223,7 +390,49 @@ export const processChangeInitiatorParams: OperationParameter = {
   mapper: ProcessChangeInitiatorParamsMapper,
 }
 
+export const processMetadataUpdateParams: OperationParameter = {
+  parameterPath: 'processMetadataUpdateParams',
+  mapper: ProcessMetadataUpdateParamsMapper,
+}
+
 export const contentType1: OperationParameter = {
+  parameterPath: ['options', 'contentType'],
+  mapper: {
+    defaultValue: 'application/json-patch+json',
+    isConstant: true,
+    serializedName: 'Content-Type',
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const jsonPatch: OperationParameter = {
+  parameterPath: 'jsonPatch',
+  mapper: {
+    constraints: {
+      MinItems: 1,
+    },
+    serializedName: 'jsonPatch',
+    required: true,
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Composite',
+          className: 'JsonPatchOperation',
+        },
+      },
+    },
+  },
+}
+
+export const processEntityUpdateParams: OperationParameter = {
+  parameterPath: 'processEntityUpdateParams',
+  mapper: ProcessEntityUpdateParamsMapper,
+}
+
+export const contentType2: OperationParameter = {
   parameterPath: ['options', 'contentType'],
   mapper: {
     defaultValue: 'application/octet-stream',
@@ -278,59 +487,6 @@ export const fileName: OperationQueryParameter = {
       name: 'String',
     },
   },
-}
-
-export const userActionValueId: OperationQueryParameter = {
-  parameterPath: 'userActionValueId',
-  mapper: {
-    serializedName: 'userActionValueId',
-    required: true,
-    type: {
-      name: 'Uuid',
-    },
-  },
-}
-
-export const processMetadataUpdateParams: OperationParameter = {
-  parameterPath: 'processMetadataUpdateParams',
-  mapper: ProcessMetadataUpdateParamsMapper,
-}
-
-export const contentType2: OperationParameter = {
-  parameterPath: ['options', 'contentType'],
-  mapper: {
-    defaultValue: 'application/json-patch+json',
-    isConstant: true,
-    serializedName: 'Content-Type',
-    type: {
-      name: 'String',
-    },
-  },
-}
-
-export const jsonPatch: OperationParameter = {
-  parameterPath: 'jsonPatch',
-  mapper: {
-    constraints: {
-      MinItems: 1,
-    },
-    serializedName: 'jsonPatch',
-    required: true,
-    type: {
-      name: 'Sequence',
-      element: {
-        type: {
-          name: 'Composite',
-          className: 'JsonPatchOperation',
-        },
-      },
-    },
-  },
-}
-
-export const processEntityUpdateParams: OperationParameter = {
-  parameterPath: 'processEntityUpdateParams',
-  mapper: ProcessEntityUpdateParamsMapper,
 }
 
 export const accept2: OperationParameter = {
@@ -427,6 +583,11 @@ export const processItemCreateParams: OperationParameter = {
   mapper: ProcessItemCreateParamsMapper,
 }
 
+export const processItemAiAssistanceGenerateParams: OperationParameter = {
+  parameterPath: 'processItemAiAssistanceGenerateParams',
+  mapper: ProcessItemAiAssistanceGenerateParamsMapper,
+}
+
 export const processItemTaskAssignParams: OperationParameter = {
   parameterPath: 'processItemTaskAssignParams',
   mapper: ProcessItemTaskAssignParamsMapper,
@@ -440,6 +601,11 @@ export const processItemTaskAppendLogParams: OperationParameter = {
 export const processItemTaskDataUpdateParams: OperationParameter = {
   parameterPath: 'processItemTaskDataUpdateParams',
   mapper: ProcessItemTaskDataUpdateParamsMapper,
+}
+
+export const processItemTaskContextDataUpdateParams: OperationParameter = {
+  parameterPath: 'processItemTaskContextDataUpdateParams',
+  mapper: ProcessItemTaskContextDataUpdateParamsMapper,
 }
 
 export const accept3: OperationParameter = {
@@ -458,6 +624,93 @@ export const propertyPath: OperationQueryParameter = {
   parameterPath: 'propertyPath',
   mapper: {
     serializedName: 'propertyPath',
+    required: true,
+    type: {
+      name: 'String',
+    },
+  },
+}
+
+export const businessArtifactDefinitionId: OperationQueryParameter = {
+  parameterPath: ['options', 'businessArtifactDefinitionId'],
+  mapper: {
+    serializedName: 'businessArtifactDefinitionId',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'Uuid',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const businessArtifactDefinitionCode: OperationQueryParameter = {
+  parameterPath: ['options', 'businessArtifactDefinitionCode'],
+  mapper: {
+    serializedName: 'businessArtifactDefinitionCode',
+    type: {
+      name: 'Sequence',
+      element: {
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const value: OperationQueryParameter = {
+  parameterPath: ['options', 'value'],
+  mapper: {
+    serializedName: 'value',
+    type: {
+      name: 'Sequence',
+      element: {
+        constraints: {
+          Pattern: new RegExp('^\\S+ (eq|le|ge|between|contains|in) \\S+( \\S+)*$'),
+        },
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+  collectionFormat: 'Multi',
+}
+
+export const businessArtifactCreateParams: OperationParameter = {
+  parameterPath: 'businessArtifactCreateParams',
+  mapper: BusinessArtifactCreateParamsMapper,
+}
+
+export const businessArtifactDataUpdateParams: OperationParameter = {
+  parameterPath: 'businessArtifactDataUpdateParams',
+  mapper: BusinessArtifactDataUpdateParamsMapper,
+}
+
+export const businessArtifactActionCreateParams: OperationParameter = {
+  parameterPath: 'businessArtifactActionCreateParams',
+  mapper: BusinessArtifactActionCreateParamsMapper,
+}
+
+export const businessArtifactActionCreateArtifactPrepareParams: OperationParameter = {
+  parameterPath: 'businessArtifactActionCreateArtifactPrepareParams',
+  mapper: BusinessArtifactActionCreateArtifactPrepareParamsMapper,
+}
+
+export const businessArtifactActionStartProcessPrepareParams: OperationParameter = {
+  parameterPath: 'businessArtifactActionStartProcessPrepareParams',
+  mapper: BusinessArtifactActionStartProcessPrepareParamsMapper,
+}
+
+export const targetUri: OperationQueryParameter = {
+  parameterPath: 'targetUri',
+  mapper: {
+    serializedName: 'targetUri',
     required: true,
     type: {
       name: 'String',

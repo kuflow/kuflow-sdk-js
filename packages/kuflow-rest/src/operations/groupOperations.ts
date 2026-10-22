@@ -47,7 +47,7 @@ export class GroupOperations {
    * @param options The options parameters.
    */
   public async findGroups(options?: GroupFindGroupsOptionalExtParams): Promise<GroupFindGroupsResponse> {
-    const { sort, principalId, tenantId, groupId, ...optionsRest } = options ?? {}
+    const { sort, principalId, tenantId, groupId, groupCode, ...optionsRest } = options ?? {}
 
     return await this.groupOperations.findGroups({
       ...optionsRest,
@@ -55,6 +55,7 @@ export class GroupOperations {
       principalId,
       tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
       groupId: typeof groupId === 'string' ? [groupId] : groupId,
+      groupCode: typeof groupCode === 'string' ? [groupCode] : groupCode,
     })
   }
 }

@@ -26,6 +26,10 @@ import type { FullOperationResponse } from '@azure/core-client'
 import type {
   JsonPatchOperation,
   KuFlowRestClientGenerated,
+  ProcessActionCreateParams,
+  ProcessCancelProcessActionOptionalParams,
+  ProcessCancelProcessActionResponse,
+  ProcessCancelProcessItemsResponse,
   ProcessCancelProcessOptionalParams,
   ProcessCancelProcessResponse,
   ProcessChangeInitiatorParams,
@@ -34,8 +38,11 @@ import type {
   ProcessCompleteProcessOptionalParams,
   ProcessCompleteProcessResponse,
   ProcessCreateParams,
+  ProcessCreateProcessActionOptionalParams,
+  ProcessCreateProcessActionResponse,
   ProcessCreateProcessOptionalParams,
   ProcessCreateProcessResponse,
+  ProcessDeleteProcessOptionalParams,
   ProcessDownloadProcessDocumentOptionalParams,
   ProcessDownloadProcessDocumentResponse,
   ProcessEntityUpdateParams,
@@ -46,6 +53,8 @@ import type {
   ProcessPatchProcessEntityResponse,
   ProcessPatchProcessMetadataOptionalParams,
   ProcessPatchProcessMetadataResponse,
+  ProcessRetrieveProcessActionOptionalParams,
+  ProcessRetrieveProcessActionResponse,
   ProcessRetrieveProcessOptionalParams,
   ProcessRetrieveProcessResponse,
   ProcessUpdateProcessEntityOptionalParams,
@@ -54,13 +63,11 @@ import type {
   ProcessUpdateProcessMetadataResponse,
   ProcessUploadProcessDocumentOptionalParams,
   ProcessUploadProcessDocumentResponse,
-  ProcessUploadProcessUserActionDocumentOptionalParams,
-  ProcessUploadProcessUserActionDocumentResponse,
 } from '../generated'
 import type {
   Document,
+  ProcessCancelProcessItemsOptionalExtParams,
   ProcessFindProcessesOptionalExtParams,
-  ProcessUploadProcessUserActionDocumentParams,
 } from '../models'
 
 /** Class containing ProcessOperations operations. */
@@ -83,12 +90,29 @@ export class ProcessOperations {
    * @param options The options parameters.
    */
   public async findProcesses(options?: ProcessFindProcessesOptionalExtParams): Promise<ProcessFindProcessesResponse> {
-    const { sort, tenantId, ...optionsRest } = options ?? {}
+    const {
+      sort,
+      tenantId,
+      processDefinitionId,
+      processDefinitionCode,
+      state,
+      initiatorId,
+      initiatorEmail,
+      metadata,
+      ...optionsRest
+    } = options ?? {}
 
     return await this.processOperations.findProcesses({
       ...optionsRest,
       sort: typeof sort === 'string' ? [sort] : sort,
       tenantId: typeof tenantId === 'string' ? [tenantId] : tenantId,
+      processDefinitionId: typeof processDefinitionId === 'string' ? [processDefinitionId] : processDefinitionId,
+      processDefinitionCode:
+        typeof processDefinitionCode === 'string' ? [processDefinitionCode] : processDefinitionCode,
+      state: typeof state === 'string' ? [state] : state,
+      initiatorId: typeof initiatorId === 'string' ? [initiatorId] : initiatorId,
+      initiatorEmail: typeof initiatorEmail === 'string' ? [initiatorEmail] : initiatorEmail,
+      metadata: typeof metadata === 'string' ? [metadata] : metadata,
     })
   }
 
@@ -117,7 +141,9 @@ export class ProcessOperations {
   }
 
   /**
-   * Returns the requested Process when has access to do it.
+   * Returns the requested Process when has access to do it. A deleted Process is returned too, with its
+   * `deletedAt` and `deletedBy` fields set.
+   *
    * @param id The resource ID.
    * @param options The options parameters.
    */
@@ -126,6 +152,78 @@ export class ProcessOperations {
     options?: ProcessRetrieveProcessOptionalParams,
   ): Promise<ProcessRetrieveProcessResponse> {
     return await this.processOperations.retrieveProcess(id, options)
+  }
+
+  /**
+   * Deletes the requested Process, and its Process Items with it. Only a finished Process (`COMPLETED` or
+   * `CANCELLED`) with nothing in progress, neither tasks still to be done nor workflows of its actions still
+   * running, can be deleted; otherwise it answers conflict. The deletion is soft: the Process is still returned
+   * by id and with `deleted=INCLUDE|ONLY`, with its `deletedAt` and `deletedBy` fields set, but it cannot be
+   * restored. Deleting a Process that is already deleted does nothing.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  public async deleteProcess(id: string, options?: ProcessDeleteProcessOptionalParams): Promise<void> {
+    await this.processOperations.deleteProcess(id, options)
+  }
+
+  /**
+   * Invoke an action on a Process.
+   *
+   * Whether the call returns synchronously or asynchronously depends on the action type:
+   *
+   * - `START_WORKFLOW`, `DOWNLOADABLE`: dispatched to a background worker. The response returns immediately
+   *   with `status=REQUESTED`. Poll `retrieveProcessAction` for the final state.
+   * - `START_RELATED_PROCESS`, `CREATE_TASK`, `CREATE_PROCESS_ITEM_MESSAGE`, `CREATE_PROCESS_ITEM_THREAD`,
+   *   `SEND_WORKFLOW_SIGNAL`: completed synchronously. The response returns with `status=COMPLETED` (or an
+   *   error status).
+   *
+   * If you want the method to be idempotent, please specify the `id` field in the request body.
+   *
+   * @param id The resource ID.
+   * @param processActionCreateParams Params identifying the action to invoke.
+   * @param options The options parameters.
+   */
+  public async createProcessAction(
+    id: string,
+    processActionCreateParams: ProcessActionCreateParams,
+    options?: ProcessCreateProcessActionOptionalParams,
+  ): Promise<ProcessCreateProcessActionResponse> {
+    return await this.processOperations.createProcessAction(id, processActionCreateParams, options)
+  }
+
+  /**
+   * Returns a Process action by its ID.
+   *
+   * @param id The resource ID.
+   * @param actionId The Process action ID.
+   * @param options The options parameters.
+   */
+  public async retrieveProcessAction(
+    id: string,
+    actionId: string,
+    options?: ProcessRetrieveProcessActionOptionalParams,
+  ): Promise<ProcessRetrieveProcessActionResponse> {
+    return await this.processOperations.retrieveProcessAction(id, actionId, options)
+  }
+
+  /**
+   * Cancel a Process action.
+   *
+   * Only meaningful for asynchronous actions still in `REQUESTED` state. The action's status is set to
+   * `CANCELED`. If the action is already in a terminal state, no transition occurs.
+   *
+   * @param id The resource ID.
+   * @param actionId The Process action ID.
+   * @param options The options parameters.
+   */
+  public async cancelProcessAction(
+    id: string,
+    actionId: string,
+    options?: ProcessCancelProcessActionOptionalParams,
+  ): Promise<ProcessCancelProcessActionResponse> {
+    return await this.processOperations.cancelProcessAction(id, actionId, options)
   }
 
   /**
@@ -161,6 +259,30 @@ export class ProcessOperations {
   }
 
   /**
+   * Cancel Process Items in a Process.
+   *
+   * When processItemId query parameters are provided, only those specific process items are cancelled. When
+   * omitted, all active process items in the process are cancelled.
+   *
+   * For task process items, tasks in a cancellable state (ready, claimed) are set to 'cancelled'. Already
+   * cancelled tasks are treated as a no-op. The Process itself is not affected.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  public async cancelProcessItems(
+    id: string,
+    options?: ProcessCancelProcessItemsOptionalExtParams,
+  ): Promise<ProcessCancelProcessItemsResponse> {
+    const { processItemId, ...optionsRest } = options ?? {}
+
+    return await this.processOperations.cancelProcessItems(id, {
+      ...optionsRest,
+      processItemId: typeof processItemId === 'string' ? [processItemId] : processItemId,
+    })
+  }
+
+  /**
    * Change the current initiator of a process.
    *
    * Allows you to choose a user (by email or principal identifier) or an application (principal identifier).
@@ -176,59 +298,6 @@ export class ProcessOperations {
     options?: ProcessChangeProcessInitiatorOptionalParams,
   ): Promise<ProcessChangeProcessInitiatorResponse> {
     return await this.processOperations.changeProcessInitiator(id, processChangeInitiatorParams, options)
-  }
-
-  /**
-   * Allow saving a user action document uploading the content.
-   *
-   * @param id The resource ID.
-   * @param processUploadProcessUserActionDocumentParams Params info
-   * @param document Document to upload.
-   * @param options The options parameters.
-   *
-   * @return the process if the document could be saved or undefined if not
-   */
-  public async uploadProcessUserActionDocument(
-    id: string,
-    processUploadProcessUserActionDocumentParams: ProcessUploadProcessUserActionDocumentParams,
-    document: Document,
-    options?: ProcessUploadProcessUserActionDocumentOptionalParams,
-  ): Promise<ProcessUploadProcessUserActionDocumentResponse | undefined> {
-    const fileContentType = document.contentType
-    const fileName = document.fileName
-    const file = document.fileContent
-    const userActionValueId = processUploadProcessUserActionDocumentParams.userActionValueId
-
-    let rawResponse: FullOperationResponse | undefined = undefined as FullOperationResponse | undefined
-    const optionsExt: ProcessUploadProcessUserActionDocumentOptionalParams = {
-      ...options,
-      onResponse: rawResponseInner => {
-        rawResponse = rawResponseInner
-      },
-    }
-
-    const process = await this.processOperations.uploadProcessUserActionDocument(
-      id,
-      fileContentType,
-      fileName,
-      userActionValueId,
-      file,
-      optionsExt,
-    )
-
-    if (rawResponse == null) {
-      return
-    }
-
-    if (options?.onResponse != null) {
-      options.onResponse(rawResponse, process)
-    }
-
-    if (rawResponse.status === 304) {
-      return
-    }
-
-    return process
   }
 
   /**
@@ -299,8 +368,10 @@ export class ProcessOperations {
    * Upload a temporal document into the process that later on must be linked with a process domain
    * resource.
    * <p>
-   * Documents uploaded with this API will be deleted after 24 hours as long as they have not been linked
+   * Documents uploaded with this API will be deleted after 2 hours as long as they have not been linked
    * to a process or process item.
+   *
+   * @deprecated use `DocumentOperations.uploadDocument` with `targetUri=ku:process/{processId}` instead.
    *
    * @param id The resource ID.
    * @param document Document to upload.
@@ -342,6 +413,10 @@ export class ProcessOperations {
 
   /**
    * Given a process and a documentUri, download a document.
+   *
+   * @deprecated use `DocumentOperations.downloadDocument` instead; it resolves any document the credentials
+   * can read without requiring the owning Process in the path.
+   *
    * @param id The resource ID.
    * @param documentUri Document URI to download.
    * @param options The options parameters.
