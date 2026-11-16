@@ -46,6 +46,12 @@ import type {
   BusinessArtifactCreateResponse,
   BusinessArtifactDeleteRequest,
   BusinessArtifactDeleteResponse,
+  BusinessArtifactFeedItemCreateRequest,
+  BusinessArtifactFeedItemCreateResponse,
+  BusinessArtifactFeedItemRetrieveRequest,
+  BusinessArtifactFeedItemRetrieveResponse,
+  BusinessArtifactFeedItemUpdateRequest,
+  BusinessArtifactFeedItemUpdateResponse,
   BusinessArtifactFindRequest,
   BusinessArtifactFindResponse,
   BusinessArtifactPatchRequest,
@@ -115,6 +121,9 @@ import {
   validateBusinessArtifactActionStartProcessPrepareRequest,
   validateBusinessArtifactCreateRequest,
   validateBusinessArtifactDeleteRequest,
+  validateBusinessArtifactFeedItemCreateRequest,
+  validateBusinessArtifactFeedItemRetrieveRequest,
+  validateBusinessArtifactFeedItemUpdateRequest,
   validateBusinessArtifactPatchRequest,
   validateBusinessArtifactRetrieveRequest,
   validateBusinessArtifactUpdateRequest,
@@ -510,6 +519,46 @@ export interface KuFlowActivities {
   KuFlow_Engine_prepareBusinessArtifactActionStartProcess: (
     request: BusinessArtifactActionStartProcessPrepareRequest,
   ) => Promise<BusinessArtifactActionStartProcessPrepareResponse>
+
+  /**
+   * Create a Business Artifact Feed Item.
+   *
+   * <p>Creates a thread or a message in the activity feed of a Business Artifact Definition. A message goes to the
+   * top level of the feed, or into a thread when `businessArtifactFeedItemThreadId` is set.
+   *
+   * <p>The `id` is required so that a retried activity does not create the item twice: the item is created once,
+   * and a retry returns the existing one.
+   *
+   * @param request must not be {@literal undefined}.
+   * @return business artifact feed item created
+   */
+  KuFlow_Engine_createBusinessArtifactFeedItem: (
+    request: BusinessArtifactFeedItemCreateRequest,
+  ) => Promise<BusinessArtifactFeedItemCreateResponse>
+
+  /**
+   * Retrieve a Business Artifact Feed Item.
+   *
+   * @param request must not be {@literal undefined}.
+   * @return business artifact feed item
+   */
+  KuFlow_Engine_retrieveBusinessArtifactFeedItem: (
+    request: BusinessArtifactFeedItemRetrieveRequest,
+  ) => Promise<BusinessArtifactFeedItemRetrieveResponse>
+
+  /**
+   * Update a Business Artifact Feed Item.
+   *
+   * <p>Replaces the content, status and progress of an existing item: a field left out is cleared. An item in a
+   * terminal status (`COMPLETED`, `FAILED`, `CANCELED`) is closed, and so are the messages of a closed thread: an
+   * update that leaves it as it is succeeds, and any other change is rejected.
+   *
+   * @param request must not be {@literal undefined}.
+   * @return business artifact feed item updated
+   */
+  KuFlow_Engine_updateBusinessArtifactFeedItem: (
+    request: BusinessArtifactFeedItemUpdateRequest,
+  ) => Promise<BusinessArtifactFeedItemUpdateResponse>
 }
 
 /**
@@ -558,6 +607,9 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
     KuFlow_Engine_prepareBusinessArtifactActionStartProcess: catchAllErrors(
       KuFlow_Engine_prepareBusinessArtifactActionStartProcess,
     ),
+    KuFlow_Engine_createBusinessArtifactFeedItem: catchAllErrors(KuFlow_Engine_createBusinessArtifactFeedItem),
+    KuFlow_Engine_retrieveBusinessArtifactFeedItem: catchAllErrors(KuFlow_Engine_retrieveBusinessArtifactFeedItem),
+    KuFlow_Engine_updateBusinessArtifactFeedItem: catchAllErrors(KuFlow_Engine_updateBusinessArtifactFeedItem),
   }
 
   async function KuFlow_Engine_retrievePrincipal(
@@ -1124,6 +1176,63 @@ export const createKuFlowActivities = (kuFlowRestClient: KuFlowRestClient): KuFl
 
     return {
       businessArtifactActionStartProcessPrepare,
+    }
+  }
+
+  async function KuFlow_Engine_createBusinessArtifactFeedItem(
+    request: BusinessArtifactFeedItemCreateRequest,
+  ): Promise<BusinessArtifactFeedItemCreateResponse> {
+    validateBusinessArtifactFeedItemCreateRequest(request)
+
+    const businessArtifactFeedItem = await kuFlowRestClient.businessArtifactOperations.createBusinessArtifactFeedItem({
+      id: request.id,
+      type: request.type,
+      tenantId: request.tenantId,
+      businessArtifactDefinitionId: request.businessArtifactDefinitionId,
+      businessArtifactDefinitionCode: request.businessArtifactDefinitionCode,
+      businessArtifactFeedItemThreadId: request.businessArtifactFeedItemThreadId,
+      status: request.status,
+      progress: request.progress,
+      thread: request.thread,
+      message: request.message,
+    })
+
+    return {
+      businessArtifactFeedItem,
+    }
+  }
+
+  async function KuFlow_Engine_retrieveBusinessArtifactFeedItem(
+    request: BusinessArtifactFeedItemRetrieveRequest,
+  ): Promise<BusinessArtifactFeedItemRetrieveResponse> {
+    validateBusinessArtifactFeedItemRetrieveRequest(request)
+
+    const businessArtifactFeedItem = await kuFlowRestClient.businessArtifactOperations.retrieveBusinessArtifactFeedItem(
+      request.businessArtifactFeedItemId,
+    )
+
+    return {
+      businessArtifactFeedItem,
+    }
+  }
+
+  async function KuFlow_Engine_updateBusinessArtifactFeedItem(
+    request: BusinessArtifactFeedItemUpdateRequest,
+  ): Promise<BusinessArtifactFeedItemUpdateResponse> {
+    validateBusinessArtifactFeedItemUpdateRequest(request)
+
+    const businessArtifactFeedItem = await kuFlowRestClient.businessArtifactOperations.updateBusinessArtifactFeedItem(
+      request.businessArtifactFeedItemId,
+      {
+        status: request.status,
+        progress: request.progress,
+        thread: request.thread,
+        message: request.message,
+      },
+    )
+
+    return {
+      businessArtifactFeedItem,
     }
   }
 }

@@ -689,6 +689,89 @@ export interface BusinessArtifactActionStartProcessPrepare {
   metadata?: Record<string, any>
 }
 
+/**
+ * Params to create a Business Artifact Feed Item. Either `businessArtifactDefinitionId` or
+ * `businessArtifactDefinitionCode` (with `tenantId`) must be provided. The populated sub-field (`thread`,
+ * `message`) is dictated by `type`.
+ *
+ */
+export interface BusinessArtifactFeedItemCreateParams {
+  id?: string
+  /** Type of a Business Artifact Feed Item. */
+  type: BusinessArtifactFeedItemType
+  tenantId?: string
+  businessArtifactDefinitionId?: string
+  businessArtifactDefinitionCode?: string
+  /**
+   * ID of the thread in which the message is created; without it, the message is created at the top level of
+   * the feed.
+   * Only allowed for items of type `MESSAGE`; it must reference a thread of the same Business Artifact
+   * Definition, written by the same credentials and not closed. It is not part of the idempotency key.
+   *
+   */
+  businessArtifactFeedItemThreadId?: string
+  /**
+   * Status of an item. `COMPLETED`, `FAILED` and `CANCELED` are terminal: they close the item, and a closed thread
+   * closes its messages.
+   *
+   */
+  status?: BusinessArtifactFeedItemStatus
+  /** Progress of an item. Without `total`, the progress is indeterminate. */
+  progress?: BusinessArtifactFeedItemProgress
+  thread?: BusinessArtifactFeedItemThreadParams
+  message?: BusinessArtifactFeedItemMessageParams
+}
+
+/** Progress of an item. Without `total`, the progress is indeterminate. */
+export interface BusinessArtifactFeedItemProgress {
+  completed: number
+  total?: number
+}
+
+export interface BusinessArtifactFeedItemThreadParams {
+  title: string
+  /** Description in Markdown format according to the specification https://spec.commonmark.org/ */
+  description?: string
+}
+
+export interface BusinessArtifactFeedItemMessageParams {
+  /** Message text in Markdown format according to the specification https://spec.commonmark.org/ */
+  text: string
+  /** Level of a message, `INFO` when not given. */
+  level?: BusinessArtifactFeedItemMessageLevel
+}
+
+export interface BusinessArtifactFeedItemThread {
+  title?: string
+  /** Description in Markdown format according to the specification https://spec.commonmark.org/ */
+  description?: string
+}
+
+export interface BusinessArtifactFeedItemMessage {
+  /** Message text in Markdown format according to the specification https://spec.commonmark.org/ */
+  text?: string
+  /** Level of a message, `INFO` when not given. */
+  level: BusinessArtifactFeedItemMessageLevel
+}
+
+/**
+ * Params to update a Business Artifact Feed Item. The populated sub-field (`thread`, `message`) must match the
+ * `type` of the item. They replace what it had: a field left out is cleared.
+ *
+ */
+export interface BusinessArtifactFeedItemUpdateParams {
+  /**
+   * Status of an item. `COMPLETED`, `FAILED` and `CANCELED` are terminal: they close the item, and a closed thread
+   * closes its messages.
+   *
+   */
+  status?: BusinessArtifactFeedItemStatus
+  /** Progress of an item. Without `total`, the progress is indeterminate. */
+  progress?: BusinessArtifactFeedItemProgress
+  thread?: BusinessArtifactFeedItemThreadParams
+  message?: BusinessArtifactFeedItemMessageParams
+}
+
 export interface WorkerCreateParams {
   identity: string
   taskQueue: string
@@ -875,6 +958,36 @@ export interface BusinessArtifactAction extends AbstractAudited {
    *
    */
   createArtifact?: BusinessArtifactActionCreateArtifact
+}
+
+/**
+ * An item of the activity feed of a Business Artifact Definition. The populated sub-field (`thread`, `message`) is
+ * dictated by `type`. `createdBy` is its author.
+ *
+ */
+export interface BusinessArtifactFeedItem extends AbstractAudited {
+  id: string
+  /** Type of a Business Artifact Feed Item. */
+  type: BusinessArtifactFeedItemType
+  /** Tenant ID. */
+  tenantId: string
+  businessArtifactDefinitionRef: BusinessArtifactDefinitionRef
+  /** ID of the thread this message is in, if any. */
+  businessArtifactFeedItemThreadId?: string
+  /**
+   * Status of an item. `COMPLETED`, `FAILED` and `CANCELED` are terminal: they close the item, and a closed thread
+   * closes its messages.
+   *
+   */
+  status?: BusinessArtifactFeedItemStatus
+  /** Progress of an item. Without `total`, the progress is indeterminate. */
+  progress?: BusinessArtifactFeedItemProgress
+  /** First time the item went `RUNNING`. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  startedAt?: string
+  /** When the item reached a terminal status. - date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z */
+  finishedAt?: string
+  thread?: BusinessArtifactFeedItemThread
+  message?: BusinessArtifactFeedItemMessage
 }
 
 export interface Worker extends AbstractAudited {
@@ -1135,6 +1248,12 @@ export type BusinessArtifactActionType =
   | 'CREATE_BUSINESS_ARTIFACT'
 /** Defines values for BusinessArtifactActionStatus. */
 export type BusinessArtifactActionStatus = 'REQUESTED' | 'COMPLETED' | 'CANCELED' | 'ERROR'
+/** Defines values for BusinessArtifactFeedItemType. */
+export type BusinessArtifactFeedItemType = 'THREAD' | 'MESSAGE'
+/** Defines values for BusinessArtifactFeedItemStatus. */
+export type BusinessArtifactFeedItemStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELED'
+/** Defines values for BusinessArtifactFeedItemMessageLevel. */
+export type BusinessArtifactFeedItemMessageLevel = 'INFO' | 'WARN' | 'ERROR'
 /** Defines values for RobotFilterContext. */
 export type RobotFilterContext = 'READY' | 'DEFAULT'
 /** Defines values for RobotSourceType. */
@@ -1719,6 +1838,24 @@ export interface BusinessArtifactDownloadBusinessArtifactDocumentResponse {
    */
   readableStreamBody?: NodeJS.ReadableStream
 }
+
+/** Optional parameters. */
+export interface BusinessArtifactCreateBusinessArtifactFeedItemOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the createBusinessArtifactFeedItem operation. */
+export type BusinessArtifactCreateBusinessArtifactFeedItemResponse = BusinessArtifactFeedItem
+
+/** Optional parameters. */
+export interface BusinessArtifactRetrieveBusinessArtifactFeedItemOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the retrieveBusinessArtifactFeedItem operation. */
+export type BusinessArtifactRetrieveBusinessArtifactFeedItemResponse = BusinessArtifactFeedItem
+
+/** Optional parameters. */
+export interface BusinessArtifactUpdateBusinessArtifactFeedItemOptionalParams extends coreClient.OperationOptions {}
+
+/** Contains response data for the updateBusinessArtifactFeedItem operation. */
+export type BusinessArtifactUpdateBusinessArtifactFeedItemResponse = BusinessArtifactFeedItem
 
 /** Optional parameters. */
 export interface DocumentUploadDocumentOptionalParams extends coreClient.OperationOptions {}

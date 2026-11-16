@@ -32,6 +32,9 @@ import type {
   BusinessArtifactActionStartProcessPrepareRequest,
   BusinessArtifactCreateRequest,
   BusinessArtifactDeleteRequest,
+  BusinessArtifactFeedItemCreateRequest,
+  BusinessArtifactFeedItemRetrieveRequest,
+  BusinessArtifactFeedItemUpdateRequest,
   BusinessArtifactPatchRequest,
   BusinessArtifactRetrieveRequest,
   BusinessArtifactUpdateRequest,
@@ -209,9 +212,8 @@ export function validateProcessItemAiAssistanceRetrieveRequest(request: ProcessI
 }
 
 export function validateBusinessArtifactCreateRequest(request: BusinessArtifactCreateRequest): void {
-  if (request.businessArtifactDefinitionId == null && request.businessArtifactDefinitionCode == null) {
-    fail("'businessArtifactDefinitionId' or 'businessArtifactDefinitionCode' is required")
-  }
+  requireBusinessArtifactDefinition(request.businessArtifactDefinitionId, request.businessArtifactDefinitionCode)
+  requireTenantIdWithBusinessArtifactDefinitionCode(request.tenantId, request.businessArtifactDefinitionCode)
 }
 
 export function validateBusinessArtifactRetrieveRequest(request: BusinessArtifactRetrieveRequest): void {
@@ -261,6 +263,42 @@ export function validateBusinessArtifactActionStartProcessPrepareRequest(
   requireBusinessArtifactActionDefinitionCode(request.businessArtifactActionDefinitionCode)
 }
 
+export function validateBusinessArtifactFeedItemCreateRequest(request: BusinessArtifactFeedItemCreateRequest): void {
+  requireId(request.id)
+  requireType(request.type)
+  requireBusinessArtifactDefinition(request.businessArtifactDefinitionId, request.businessArtifactDefinitionCode)
+  requireTenantIdWithBusinessArtifactDefinitionCode(request.tenantId, request.businessArtifactDefinitionCode)
+
+  if (request.type === 'THREAD') {
+    if (request.thread?.title == null) {
+      fail("'thread.title' is required for thread items")
+    }
+
+    if (request.businessArtifactFeedItemThreadId != null) {
+      fail("'businessArtifactFeedItemThreadId' is not allowed for thread items, threads cannot be nested")
+    }
+  }
+
+  if (request.type === 'MESSAGE') {
+    if (request.message?.text == null) {
+      fail("'message.text' is required for message items")
+    }
+  }
+}
+
+export function validateBusinessArtifactFeedItemRetrieveRequest(
+  request: BusinessArtifactFeedItemRetrieveRequest,
+): void {
+  requireBusinessArtifactFeedItemId(request.businessArtifactFeedItemId)
+}
+
+export function validateBusinessArtifactFeedItemUpdateRequest(request: BusinessArtifactFeedItemUpdateRequest): void {
+  requireBusinessArtifactFeedItemId(request.businessArtifactFeedItemId)
+  if (request.thread == null && request.message == null) {
+    fail("'thread' or 'message' is required")
+  }
+}
+
 function requireId(id: unknown): void {
   requireField(id, 'id')
 }
@@ -303,6 +341,28 @@ function requireBusinessArtifactActionId(businessArtifactActionId: unknown): voi
 
 function requireBusinessArtifactActionDefinitionCode(businessArtifactActionDefinitionCode: unknown): void {
   requireField(businessArtifactActionDefinitionCode, 'businessArtifactActionDefinitionCode')
+}
+
+function requireBusinessArtifactFeedItemId(businessArtifactFeedItemId: unknown): void {
+  requireField(businessArtifactFeedItemId, 'businessArtifactFeedItemId')
+}
+
+function requireBusinessArtifactDefinition(
+  businessArtifactDefinitionId: unknown,
+  businessArtifactDefinitionCode: unknown,
+): void {
+  if (businessArtifactDefinitionId == null && businessArtifactDefinitionCode == null) {
+    fail("'businessArtifactDefinitionId' or 'businessArtifactDefinitionCode' is required")
+  }
+}
+
+function requireTenantIdWithBusinessArtifactDefinitionCode(
+  tenantId: unknown,
+  businessArtifactDefinitionCode: unknown,
+): void {
+  if (businessArtifactDefinitionCode != null && tenantId == null) {
+    fail("'tenantId' is required when using 'businessArtifactDefinitionCode'")
+  }
 }
 
 function requireEntity(entity: unknown): void {
