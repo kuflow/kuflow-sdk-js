@@ -30,6 +30,8 @@ import {
   BusinessArtifactActionStartProcessPrepareParams as BusinessArtifactActionStartProcessPrepareParamsMapper,
   BusinessArtifactCreateParams as BusinessArtifactCreateParamsMapper,
   BusinessArtifactDataUpdateParams as BusinessArtifactDataUpdateParamsMapper,
+  BusinessArtifactFeedItemCreateParams as BusinessArtifactFeedItemCreateParamsMapper,
+  BusinessArtifactFeedItemUpdateParams as BusinessArtifactFeedItemUpdateParamsMapper,
   ProcessActionCreateParams as ProcessActionCreateParamsMapper,
   ProcessChangeInitiatorParams as ProcessChangeInitiatorParamsMapper,
   ProcessCreateParams as ProcessCreateParamsMapper,
@@ -705,6 +707,16 @@ export const businessArtifactActionCreateArtifactPrepareParams: OperationParamet
 export const businessArtifactActionStartProcessPrepareParams: OperationParameter = {
   parameterPath: 'businessArtifactActionStartProcessPrepareParams',
   mapper: BusinessArtifactActionStartProcessPrepareParamsMapper,
+}
+
+export const businessArtifactFeedItemCreateParams: OperationParameter = {
+  parameterPath: 'businessArtifactFeedItemCreateParams',
+  mapper: BusinessArtifactFeedItemCreateParamsMapper,
+}
+
+export const businessArtifactFeedItemUpdateParams: OperationParameter = {
+  parameterPath: 'businessArtifactFeedItemUpdateParams',
+  mapper: BusinessArtifactFeedItemUpdateParamsMapper,
 }
 
 export const targetUri: OperationQueryParameter = {

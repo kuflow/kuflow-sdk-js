@@ -31,6 +31,8 @@ import nock from 'nock'
 import {
   mockBusinessArtifact,
   mockBusinessArtifactAction,
+  mockBusinessArtifactFeedItemMessage,
+  mockBusinessArtifactFeedItemThread,
   mockBusinessArtifactPage,
   mockPrincipalUser,
   mockProcess,
@@ -93,6 +95,9 @@ describe('KuFlow activities', () => {
         'KuFlow_Engine_cancelBusinessArtifactAction',
         'KuFlow_Engine_prepareBusinessArtifactActionCreateArtifact',
         'KuFlow_Engine_prepareBusinessArtifactActionStartProcess',
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        'KuFlow_Engine_retrieveBusinessArtifactFeedItem',
+        'KuFlow_Engine_updateBusinessArtifactFeedItem',
       ].sort(),
     )
   })
@@ -757,6 +762,112 @@ describe('KuFlow activities', () => {
       scope.done()
       expect(response).toStrictEqual({ businessArtifactActionStartProcessPrepare: prepare })
     })
+
+    test('KuFlow_Engine_createBusinessArtifactFeedItem', async () => {
+      const businessArtifactFeedItem = mockBusinessArtifactFeedItemMessage()
+      const tenantId = randomUUID()
+      const businessArtifactDefinitionId = randomUUID()
+      const businessArtifactFeedItemThreadId = randomUUID()
+      const scope = nock(API)
+        .post(
+          '/business-artifact-feed-items',
+          body =>
+            body.id === businessArtifactFeedItem.id &&
+            body.type === 'MESSAGE' &&
+            body.tenantId === tenantId &&
+            body.businessArtifactDefinitionId === businessArtifactDefinitionId &&
+            body.businessArtifactDefinitionCode === 'BAD_CODE' &&
+            body.businessArtifactFeedItemThreadId === businessArtifactFeedItemThreadId &&
+            body.status === 'RUNNING' &&
+            body.progress.completed === 3 &&
+            body.progress.total === 10 &&
+            body.thread === undefined &&
+            body.message.text === 'Invoice imported' &&
+            body.message.level === 'WARN',
+        )
+        .reply(201, JSON.stringify(businessArtifactFeedItem))
+
+      const response = await kuFlowActivities.KuFlow_Engine_createBusinessArtifactFeedItem({
+        id: businessArtifactFeedItem.id,
+        type: 'MESSAGE',
+        tenantId,
+        businessArtifactDefinitionId,
+        businessArtifactDefinitionCode: 'BAD_CODE',
+        businessArtifactFeedItemThreadId,
+        status: 'RUNNING',
+        progress: { completed: 3, total: 10 },
+        message: { text: 'Invoice imported', level: 'WARN' },
+      })
+
+      scope.done()
+      expect(response).toStrictEqual({ businessArtifactFeedItem })
+    })
+
+    test('KuFlow_Engine_createBusinessArtifactFeedItem with a thread', async () => {
+      const businessArtifactFeedItem = mockBusinessArtifactFeedItemThread()
+      const businessArtifactDefinitionId = randomUUID()
+      const scope = nock(API)
+        .post(
+          '/business-artifact-feed-items',
+          body =>
+            body.id === businessArtifactFeedItem.id &&
+            body.type === 'THREAD' &&
+            body.businessArtifactDefinitionId === businessArtifactDefinitionId &&
+            body.thread.title === 'Invoice import' &&
+            body.thread.description === 'Importing the invoices' &&
+            body.message === undefined,
+        )
+        .reply(201, JSON.stringify(businessArtifactFeedItem))
+
+      const response = await kuFlowActivities.KuFlow_Engine_createBusinessArtifactFeedItem({
+        id: businessArtifactFeedItem.id,
+        type: 'THREAD',
+        businessArtifactDefinitionId,
+        thread: { title: 'Invoice import', description: 'Importing the invoices' },
+      })
+
+      scope.done()
+      expect(response).toStrictEqual({ businessArtifactFeedItem })
+    })
+
+    test('KuFlow_Engine_retrieveBusinessArtifactFeedItem', async () => {
+      const businessArtifactFeedItem = mockBusinessArtifactFeedItemThread()
+      const scope = nock(API)
+        .get(`/business-artifact-feed-items/${businessArtifactFeedItem.id}`)
+        .reply(200, JSON.stringify(businessArtifactFeedItem))
+
+      const response = await kuFlowActivities.KuFlow_Engine_retrieveBusinessArtifactFeedItem({
+        businessArtifactFeedItemId: businessArtifactFeedItem.id,
+      })
+
+      scope.done()
+      expect(response).toStrictEqual({ businessArtifactFeedItem })
+    })
+
+    test('KuFlow_Engine_updateBusinessArtifactFeedItem', async () => {
+      const businessArtifactFeedItem = mockBusinessArtifactFeedItemThread()
+      const scope = nock(API)
+        .put(
+          `/business-artifact-feed-items/${businessArtifactFeedItem.id}`,
+          body =>
+            body.status === 'COMPLETED' &&
+            body.progress.completed === 10 &&
+            body.progress.total === 10 &&
+            body.thread.title === 'Invoice import' &&
+            body.message === undefined,
+        )
+        .reply(200, JSON.stringify(businessArtifactFeedItem))
+
+      const response = await kuFlowActivities.KuFlow_Engine_updateBusinessArtifactFeedItem({
+        businessArtifactFeedItemId: businessArtifactFeedItem.id,
+        status: 'COMPLETED',
+        progress: { completed: 10, total: 10 },
+        thread: { title: 'Invoice import' },
+      })
+
+      scope.done()
+      expect(response).toStrictEqual({ businessArtifactFeedItem })
+    })
   })
 
   describe('Validations', () => {
@@ -841,6 +952,11 @@ describe('KuFlow activities', () => {
         { tenantId: id },
         "'businessArtifactDefinitionId' or 'businessArtifactDefinitionCode' is required",
       ],
+      [
+        'KuFlow_Engine_createBusinessArtifact',
+        { businessArtifactDefinitionCode: 'CODE', data },
+        "'tenantId' is required when using 'businessArtifactDefinitionCode'",
+      ],
       ['KuFlow_Engine_retrieveBusinessArtifact', {}, "'businessArtifactId' is required"],
       ['KuFlow_Engine_deleteBusinessArtifact', {}, "'businessArtifactId' is required"],
       ['KuFlow_Engine_updateBusinessArtifact', { data }, "'businessArtifactId' is required"],
@@ -896,6 +1012,64 @@ describe('KuFlow activities', () => {
         'KuFlow_Engine_prepareBusinessArtifactActionStartProcess',
         { businessArtifactId: id },
         "'businessArtifactActionDefinitionCode' is required",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { type: 'MESSAGE', businessArtifactDefinitionId: id, message: { text: 'A message' } },
+        "'id' is required",
+      ],
+      ['KuFlow_Engine_createBusinessArtifactFeedItem', { id, businessArtifactDefinitionId: id }, "'type' is required"],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { id, type: 'MESSAGE', message: { text: 'A message' } },
+        "'businessArtifactDefinitionId' or 'businessArtifactDefinitionCode' is required",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { id, type: 'MESSAGE', businessArtifactDefinitionCode: 'CODE', message: { text: 'A message' } },
+        "'tenantId' is required when using 'businessArtifactDefinitionCode'",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { id, type: 'THREAD', businessArtifactDefinitionId: id },
+        "'thread.title' is required for thread items",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { id, type: 'THREAD', businessArtifactDefinitionId: id, thread: { description: 'A description' } },
+        "'thread.title' is required for thread items",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        {
+          id,
+          type: 'THREAD',
+          businessArtifactDefinitionId: id,
+          businessArtifactFeedItemThreadId: id,
+          thread: { title: 'A thread' },
+        },
+        "'businessArtifactFeedItemThreadId' is not allowed for thread items, threads cannot be nested",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { id, type: 'MESSAGE', businessArtifactDefinitionId: id },
+        "'message.text' is required for message items",
+      ],
+      [
+        'KuFlow_Engine_createBusinessArtifactFeedItem',
+        { id, type: 'MESSAGE', businessArtifactDefinitionId: id, message: { level: 'INFO' } },
+        "'message.text' is required for message items",
+      ],
+      ['KuFlow_Engine_retrieveBusinessArtifactFeedItem', {}, "'businessArtifactFeedItemId' is required"],
+      [
+        'KuFlow_Engine_updateBusinessArtifactFeedItem',
+        { message: { text: 'A message' } },
+        "'businessArtifactFeedItemId' is required",
+      ],
+      [
+        'KuFlow_Engine_updateBusinessArtifactFeedItem',
+        { businessArtifactFeedItemId: id, status: 'COMPLETED' },
+        "'thread' or 'message' is required",
       ],
     ]
 

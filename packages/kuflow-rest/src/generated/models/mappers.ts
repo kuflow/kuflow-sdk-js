@@ -1891,6 +1891,246 @@ export const BusinessArtifactActionStartProcessPrepare: coreClient.CompositeMapp
   },
 }
 
+export const BusinessArtifactFeedItemCreateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemCreateParams',
+    modelProperties: {
+      id: {
+        serializedName: 'id',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['THREAD', 'MESSAGE'],
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionId: {
+        serializedName: 'businessArtifactDefinitionId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionCode: {
+        serializedName: 'businessArtifactDefinitionCode',
+        type: {
+          name: 'String',
+        },
+      },
+      businessArtifactFeedItemThreadId: {
+        serializedName: 'businessArtifactFeedItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      status: {
+        serializedName: 'status',
+        type: {
+          name: 'Enum',
+          allowedValues: ['PENDING', 'RUNNING', 'COMPLETED', 'FAILED', 'CANCELED'],
+        },
+      },
+      progress: {
+        serializedName: 'progress',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemProgress',
+        },
+      },
+      thread: {
+        serializedName: 'thread',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemThreadParams',
+        },
+      },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemMessageParams',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItemProgress: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemProgress',
+    modelProperties: {
+      completed: {
+        constraints: {
+          InclusiveMinimum: 0,
+        },
+        serializedName: 'completed',
+        required: true,
+        type: {
+          name: 'Number',
+        },
+      },
+      total: {
+        constraints: {
+          InclusiveMinimum: 1,
+        },
+        serializedName: 'total',
+        type: {
+          name: 'Number',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItemThreadParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemThreadParams',
+    modelProperties: {
+      title: {
+        constraints: {
+          MaxLength: 255,
+          MinLength: 1,
+        },
+        serializedName: 'title',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      description: {
+        constraints: {
+          MaxLength: 4000,
+        },
+        serializedName: 'description',
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItemMessageParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemMessageParams',
+    modelProperties: {
+      text: {
+        constraints: {
+          MaxLength: 4000,
+          MinLength: 1,
+        },
+        serializedName: 'text',
+        required: true,
+        type: {
+          name: 'String',
+        },
+      },
+      level: {
+        serializedName: 'level',
+        type: {
+          name: 'Enum',
+          allowedValues: ['INFO', 'WARN', 'ERROR'],
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItemThread: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemThread',
+    modelProperties: {
+      title: {
+        serializedName: 'title',
+        type: {
+          name: 'String',
+        },
+      },
+      description: {
+        serializedName: 'description',
+        type: {
+          name: 'String',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItemMessage: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemMessage',
+    modelProperties: {
+      text: {
+        serializedName: 'text',
+        type: {
+          name: 'String',
+        },
+      },
+      level: {
+        serializedName: 'level',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['INFO', 'WARN', 'ERROR'],
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItemUpdateParams: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItemUpdateParams',
+    modelProperties: {
+      status: {
+        serializedName: 'status',
+        type: {
+          name: 'Enum',
+          allowedValues: ['PENDING', 'RUNNING', 'COMPLETED', 'FAILED', 'CANCELED'],
+        },
+      },
+      progress: {
+        serializedName: 'progress',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemProgress',
+        },
+      },
+      thread: {
+        serializedName: 'thread',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemThreadParams',
+        },
+      },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemMessageParams',
+        },
+      },
+    },
+  },
+}
+
 export const WorkerCreateParams: coreClient.CompositeMapper = {
   type: {
     name: 'Composite',
@@ -2545,6 +2785,91 @@ export const BusinessArtifactAction: coreClient.CompositeMapper = {
         type: {
           name: 'Composite',
           className: 'BusinessArtifactActionCreateArtifact',
+        },
+      },
+    },
+  },
+}
+
+export const BusinessArtifactFeedItem: coreClient.CompositeMapper = {
+  type: {
+    name: 'Composite',
+    className: 'BusinessArtifactFeedItem',
+    modelProperties: {
+      ...AbstractAudited.type.modelProperties,
+      id: {
+        serializedName: 'id',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      type: {
+        serializedName: 'type',
+        required: true,
+        type: {
+          name: 'Enum',
+          allowedValues: ['THREAD', 'MESSAGE'],
+        },
+      },
+      tenantId: {
+        serializedName: 'tenantId',
+        required: true,
+        type: {
+          name: 'Uuid',
+        },
+      },
+      businessArtifactDefinitionRef: {
+        serializedName: 'businessArtifactDefinitionRef',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactDefinitionRef',
+        },
+      },
+      businessArtifactFeedItemThreadId: {
+        serializedName: 'businessArtifactFeedItemThreadId',
+        type: {
+          name: 'Uuid',
+        },
+      },
+      status: {
+        serializedName: 'status',
+        type: {
+          name: 'Enum',
+          allowedValues: ['PENDING', 'RUNNING', 'COMPLETED', 'FAILED', 'CANCELED'],
+        },
+      },
+      progress: {
+        serializedName: 'progress',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemProgress',
+        },
+      },
+      startedAt: {
+        serializedName: 'startedAt',
+        type: {
+          name: 'String',
+        },
+      },
+      finishedAt: {
+        serializedName: 'finishedAt',
+        type: {
+          name: 'String',
+        },
+      },
+      thread: {
+        serializedName: 'thread',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemThread',
+        },
+      },
+      message: {
+        serializedName: 'message',
+        type: {
+          name: 'Composite',
+          className: 'BusinessArtifactFeedItemMessage',
         },
       },
     },

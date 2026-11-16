@@ -24,6 +24,7 @@
 import type {
   BusinessArtifact,
   BusinessArtifactAction,
+  BusinessArtifactFeedItem,
   BusinessArtifactPage,
   BusinessArtifactPageItem,
   GroupPage,
@@ -363,6 +364,55 @@ export function mockBusinessArtifactAction(): BusinessArtifactAction {
     businessArtifactActionDefinitionRef: {
       id: randomUUID(),
       code: `CODE-${randomInt(1, 1_000)}`,
+    },
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockBusinessArtifactFeedItemThread(): BusinessArtifactFeedItem {
+  return {
+    id: randomUUID(),
+    type: 'THREAD',
+    tenantId: randomUUID(),
+    businessArtifactDefinitionRef: {
+      id: randomUUID(),
+      code: 'MY_BUSINESS_ARTIFACT_DEFINITION_CODE',
+    },
+    status: 'RUNNING',
+    progress: {
+      completed: 3,
+      total: 10,
+    },
+    startedAt: new Date().toString(),
+    thread: {
+      title: 'Invoice import',
+      description: 'Importing the invoices of **November**',
+    },
+    createdBy: randomUUID(),
+    createdAt: new Date().toString(),
+    lastModifiedBy: randomUUID(),
+    lastModifiedAt: new Date().toString(),
+  }
+}
+
+export function mockBusinessArtifactFeedItemMessage(): BusinessArtifactFeedItem {
+  return {
+    id: randomUUID(),
+    type: 'MESSAGE',
+    tenantId: randomUUID(),
+    businessArtifactDefinitionRef: {
+      id: randomUUID(),
+      code: 'MY_BUSINESS_ARTIFACT_DEFINITION_CODE',
+    },
+    businessArtifactFeedItemThreadId: randomUUID(),
+    status: 'COMPLETED',
+    finishedAt: new Date().toString(),
+    message: {
+      text: 'Invoice **INV-001** imported',
+      level: 'WARN',
     },
     createdBy: randomUUID(),
     createdAt: new Date().toString(),

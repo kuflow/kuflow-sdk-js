@@ -28,6 +28,8 @@ import {
   type BusinessArtifactActionStartProcessPrepare,
   type BusinessArtifactCreateParams,
   type BusinessArtifactDataUpdateParams,
+  type BusinessArtifactFeedItemCreateParams,
+  type BusinessArtifactFeedItemUpdateParams,
   type BusinessArtifactUploadBusinessArtifactDocumentResponse,
   type Document,
   type JsonPatchOperation,
@@ -36,7 +38,13 @@ import {
 import { randomUUID } from 'crypto'
 import nock from 'nock'
 
-import { mockBusinessArtifact, mockBusinessArtifactAction, mockBusinessArtifactPage } from './utils/fixtures'
+import {
+  mockBusinessArtifact,
+  mockBusinessArtifactAction,
+  mockBusinessArtifactFeedItemMessage,
+  mockBusinessArtifactFeedItemThread,
+  mockBusinessArtifactPage,
+} from './utils/fixtures'
 import { streamToString } from './utils/stream'
 
 const clientId = 'USER1'
@@ -366,6 +374,120 @@ describe('API /business-artifacts', () => {
       scope.done()
 
       expect(prepare).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('POST /business-artifact-feed-items', () => {
+    test('Check happy path - Thread', async () => {
+      const expectedObject = mockBusinessArtifactFeedItemThread()
+      const params: BusinessArtifactFeedItemCreateParams = {
+        id: expectedObject.id,
+        type: 'THREAD',
+        tenantId: expectedObject.tenantId,
+        businessArtifactDefinitionCode: expectedObject.businessArtifactDefinitionRef.code,
+        status: 'RUNNING',
+        progress: { completed: 3, total: 10 },
+        thread: { title: 'Invoice import' },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(
+          '/business-artifact-feed-items',
+          body =>
+            body.id === params.id &&
+            body.type === 'THREAD' &&
+            body.tenantId === params.tenantId &&
+            body.businessArtifactDefinitionCode === params.businessArtifactDefinitionCode &&
+            body.status === 'RUNNING' &&
+            body.progress.completed === 3 &&
+            body.progress.total === 10 &&
+            body.thread.title === 'Invoice import',
+        )
+        .reply(201, JSON.stringify(expectedObject))
+
+      const businessArtifactFeedItem =
+        await kuFlowRestClient.businessArtifactOperations.createBusinessArtifactFeedItem(params)
+
+      scope.done()
+
+      expect(businessArtifactFeedItem).toStrictEqual(expectedObject)
+    })
+
+    test('Check happy path - Message already created', async () => {
+      const expectedObject = mockBusinessArtifactFeedItemMessage()
+      const params: BusinessArtifactFeedItemCreateParams = {
+        id: expectedObject.id,
+        type: 'MESSAGE',
+        businessArtifactDefinitionId: expectedObject.businessArtifactDefinitionRef.id,
+        businessArtifactFeedItemThreadId: expectedObject.businessArtifactFeedItemThreadId,
+        message: { text: 'Invoice **INV-001** imported', level: 'WARN' },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post(
+          '/business-artifact-feed-items',
+          body =>
+            body.id === params.id &&
+            body.type === 'MESSAGE' &&
+            body.businessArtifactDefinitionId === params.businessArtifactDefinitionId &&
+            body.businessArtifactFeedItemThreadId === params.businessArtifactFeedItemThreadId &&
+            body.message.text === 'Invoice **INV-001** imported' &&
+            body.message.level === 'WARN',
+        )
+        .reply(200, JSON.stringify(expectedObject))
+
+      const businessArtifactFeedItem =
+        await kuFlowRestClient.businessArtifactOperations.createBusinessArtifactFeedItem(params)
+
+      scope.done()
+
+      expect(businessArtifactFeedItem).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('GET /business-artifact-feed-items/{id}', () => {
+    test('Check happy path', async () => {
+      const expectedObject = mockBusinessArtifactFeedItemThread()
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .get(`/business-artifact-feed-items/${expectedObject.id}`)
+        .reply(200, JSON.stringify(expectedObject))
+
+      const businessArtifactFeedItem =
+        await kuFlowRestClient.businessArtifactOperations.retrieveBusinessArtifactFeedItem(expectedObject.id)
+
+      scope.done()
+
+      expect(businessArtifactFeedItem).toStrictEqual(expectedObject)
+    })
+  })
+
+  describe('PUT /business-artifact-feed-items/{id}', () => {
+    test('Check happy path', async () => {
+      const expectedObject = mockBusinessArtifactFeedItemMessage()
+      const params: BusinessArtifactFeedItemUpdateParams = {
+        status: 'COMPLETED',
+        message: { text: 'Invoice **INV-001** imported', level: 'WARN' },
+      }
+
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .put(
+          `/business-artifact-feed-items/${expectedObject.id}`,
+          body =>
+            body.status === 'COMPLETED' &&
+            body.message.text === 'Invoice **INV-001** imported' &&
+            body.message.level === 'WARN',
+        )
+        .reply(200, JSON.stringify(expectedObject))
+
+      const businessArtifactFeedItem = await kuFlowRestClient.businessArtifactOperations.updateBusinessArtifactFeedItem(
+        expectedObject.id,
+        params,
+      )
+
+      scope.done()
+
+      expect(businessArtifactFeedItem).toStrictEqual(expectedObject)
     })
   })
 

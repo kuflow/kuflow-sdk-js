@@ -29,6 +29,8 @@ import type {
   BusinessArtifactCancelBusinessArtifactActionResponse,
   BusinessArtifactCreateBusinessArtifactActionOptionalParams,
   BusinessArtifactCreateBusinessArtifactActionResponse,
+  BusinessArtifactCreateBusinessArtifactFeedItemOptionalParams,
+  BusinessArtifactCreateBusinessArtifactFeedItemResponse,
   BusinessArtifactCreateBusinessArtifactOptionalParams,
   BusinessArtifactCreateBusinessArtifactResponse,
   BusinessArtifactCreateParams,
@@ -36,6 +38,8 @@ import type {
   BusinessArtifactDeleteBusinessArtifactOptionalParams,
   BusinessArtifactDownloadBusinessArtifactDocumentOptionalParams,
   BusinessArtifactDownloadBusinessArtifactDocumentResponse,
+  BusinessArtifactFeedItemCreateParams,
+  BusinessArtifactFeedItemUpdateParams,
   BusinessArtifactFindBusinessArtifactsResponse,
   BusinessArtifactOperations as BusinessArtifactOperationsGenerated,
   BusinessArtifactPatchBusinessArtifactDataOptionalParams,
@@ -48,10 +52,14 @@ import type {
   BusinessArtifactRestoreBusinessArtifactResponse,
   BusinessArtifactRetrieveBusinessArtifactActionOptionalParams,
   BusinessArtifactRetrieveBusinessArtifactActionResponse,
+  BusinessArtifactRetrieveBusinessArtifactFeedItemOptionalParams,
+  BusinessArtifactRetrieveBusinessArtifactFeedItemResponse,
   BusinessArtifactRetrieveBusinessArtifactOptionalParams,
   BusinessArtifactRetrieveBusinessArtifactResponse,
   BusinessArtifactUpdateBusinessArtifactDataOptionalParams,
   BusinessArtifactUpdateBusinessArtifactDataResponse,
+  BusinessArtifactUpdateBusinessArtifactFeedItemOptionalParams,
+  BusinessArtifactUpdateBusinessArtifactFeedItemResponse,
   BusinessArtifactUploadBusinessArtifactDocumentOptionalParams,
   BusinessArtifactUploadBusinessArtifactDocumentResponse,
   JsonPatchOperation,
@@ -297,6 +305,65 @@ export class BusinessArtifactOperations {
     return await this.businessArtifactOperations.prepareBusinessArtifactActionStartProcess(
       id,
       businessArtifactActionStartProcessPrepareParams,
+      options,
+    )
+  }
+
+  /**
+   * Creates a thread or a message in the activity feed of a Business Artifact Definition, the feed shown next to
+   * its list of Business Artifacts. The credentials need to manage the Business Artifact Definition.
+   *
+   * A message goes to the top level of the feed, or into a thread when `businessArtifactFeedItemThreadId` is set.
+   * Only the author of a thread adds messages to it.
+   *
+   * If you want the method to be idempotent, please specify the `id` field in the request body.
+   *
+   * @param businessArtifactFeedItemCreateParams Business Artifact Feed Item to create.
+   * @param options The options parameters.
+   */
+  public async createBusinessArtifactFeedItem(
+    businessArtifactFeedItemCreateParams: BusinessArtifactFeedItemCreateParams,
+    options?: BusinessArtifactCreateBusinessArtifactFeedItemOptionalParams,
+  ): Promise<BusinessArtifactCreateBusinessArtifactFeedItemResponse> {
+    return await this.businessArtifactOperations.createBusinessArtifactFeedItem(
+      businessArtifactFeedItemCreateParams,
+      options,
+    )
+  }
+
+  /**
+   * Returns the requested Business Artifact Feed Item when has access to do it.
+   *
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  public async retrieveBusinessArtifactFeedItem(
+    id: string,
+    options?: BusinessArtifactRetrieveBusinessArtifactFeedItemOptionalParams,
+  ): Promise<BusinessArtifactRetrieveBusinessArtifactFeedItemResponse> {
+    return await this.businessArtifactOperations.retrieveBusinessArtifactFeedItem(id, options)
+  }
+
+  /**
+   * Replaces what can change of an existing Business Artifact Feed Item: its content, status and progress. It never
+   * creates an item. Only its author updates it.
+   *
+   * An item in a terminal status (`COMPLETED`, `FAILED`, `CANCELED`) is closed, and so are the messages of a closed
+   * thread: an update that leaves it as it is succeeds, so a retried call is harmless, and any other change is
+   * rejected with a conflict. The status of an item cannot be removed once set.
+   *
+   * @param id The resource ID.
+   * @param businessArtifactFeedItemUpdateParams Params used to update the Business Artifact Feed Item.
+   * @param options The options parameters.
+   */
+  public async updateBusinessArtifactFeedItem(
+    id: string,
+    businessArtifactFeedItemUpdateParams: BusinessArtifactFeedItemUpdateParams,
+    options?: BusinessArtifactUpdateBusinessArtifactFeedItemOptionalParams,
+  ): Promise<BusinessArtifactUpdateBusinessArtifactFeedItemResponse> {
+    return await this.businessArtifactOperations.updateBusinessArtifactFeedItem(
+      id,
+      businessArtifactFeedItemUpdateParams,
       options,
     )
   }

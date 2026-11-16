@@ -30,6 +30,12 @@ import type {
   BusinessArtifactActionCreateParamsStartProcess,
   BusinessArtifactActionCreateParamsStartWorkflow,
   BusinessArtifactActionStartProcessPrepare,
+  BusinessArtifactFeedItem,
+  BusinessArtifactFeedItemMessageParams,
+  BusinessArtifactFeedItemProgress,
+  BusinessArtifactFeedItemStatus,
+  BusinessArtifactFeedItemThreadParams,
+  BusinessArtifactFeedItemType,
   BusinessArtifactPage,
   DeletedQueryParam,
   JsonPatchOperation,
@@ -144,4 +150,45 @@ export interface BusinessArtifactActionStartProcessPrepareRequest {
 
 export interface BusinessArtifactActionStartProcessPrepareResponse {
   businessArtifactActionStartProcessPrepare: BusinessArtifactActionStartProcessPrepare
+}
+
+export interface BusinessArtifactFeedItemCreateRequest {
+  id: string
+  type: BusinessArtifactFeedItemType
+  tenantId?: string
+  businessArtifactDefinitionId?: string
+  businessArtifactDefinitionCode?: string
+  /**
+   * ID of the thread in which the message is created; without it, the message is created at the top level of the
+   * feed. Only allowed for items of type `MESSAGE`.
+   */
+  businessArtifactFeedItemThreadId?: string
+  status?: BusinessArtifactFeedItemStatus
+  progress?: BusinessArtifactFeedItemProgress
+  thread?: BusinessArtifactFeedItemThreadParams
+  message?: BusinessArtifactFeedItemMessageParams
+}
+
+export interface BusinessArtifactFeedItemCreateResponse {
+  businessArtifactFeedItem: BusinessArtifactFeedItem
+}
+
+export interface BusinessArtifactFeedItemRetrieveRequest {
+  businessArtifactFeedItemId: string
+}
+
+export interface BusinessArtifactFeedItemRetrieveResponse {
+  businessArtifactFeedItem: BusinessArtifactFeedItem
+}
+
+export interface BusinessArtifactFeedItemUpdateRequest {
+  businessArtifactFeedItemId: string
+  status?: BusinessArtifactFeedItemStatus
+  progress?: BusinessArtifactFeedItemProgress
+  thread?: BusinessArtifactFeedItemThreadParams
+  message?: BusinessArtifactFeedItemMessageParams
+}
+
+export interface BusinessArtifactFeedItemUpdateResponse {
+  businessArtifactFeedItem: BusinessArtifactFeedItem
 }

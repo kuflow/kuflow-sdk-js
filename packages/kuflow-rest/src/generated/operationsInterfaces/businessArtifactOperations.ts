@@ -31,6 +31,8 @@ import type {
   BusinessArtifactCancelBusinessArtifactActionResponse,
   BusinessArtifactCreateBusinessArtifactActionOptionalParams,
   BusinessArtifactCreateBusinessArtifactActionResponse,
+  BusinessArtifactCreateBusinessArtifactFeedItemOptionalParams,
+  BusinessArtifactCreateBusinessArtifactFeedItemResponse,
   BusinessArtifactCreateBusinessArtifactOptionalParams,
   BusinessArtifactCreateBusinessArtifactResponse,
   BusinessArtifactCreateParams,
@@ -38,6 +40,8 @@ import type {
   BusinessArtifactDeleteBusinessArtifactOptionalParams,
   BusinessArtifactDownloadBusinessArtifactDocumentOptionalParams,
   BusinessArtifactDownloadBusinessArtifactDocumentResponse,
+  BusinessArtifactFeedItemCreateParams,
+  BusinessArtifactFeedItemUpdateParams,
   BusinessArtifactFindBusinessArtifactsOptionalParams,
   BusinessArtifactFindBusinessArtifactsResponse,
   BusinessArtifactPatchBusinessArtifactDataOptionalParams,
@@ -50,10 +54,14 @@ import type {
   BusinessArtifactRestoreBusinessArtifactResponse,
   BusinessArtifactRetrieveBusinessArtifactActionOptionalParams,
   BusinessArtifactRetrieveBusinessArtifactActionResponse,
+  BusinessArtifactRetrieveBusinessArtifactFeedItemOptionalParams,
+  BusinessArtifactRetrieveBusinessArtifactFeedItemResponse,
   BusinessArtifactRetrieveBusinessArtifactOptionalParams,
   BusinessArtifactRetrieveBusinessArtifactResponse,
   BusinessArtifactUpdateBusinessArtifactDataOptionalParams,
   BusinessArtifactUpdateBusinessArtifactDataResponse,
+  BusinessArtifactUpdateBusinessArtifactFeedItemOptionalParams,
+  BusinessArtifactUpdateBusinessArtifactFeedItemResponse,
   BusinessArtifactUploadBusinessArtifactDocumentOptionalParams,
   BusinessArtifactUploadBusinessArtifactDocumentResponse,
   JsonPatchOperation,
@@ -265,4 +273,53 @@ export interface BusinessArtifactOperations {
     documentUri: string,
     options?: BusinessArtifactDownloadBusinessArtifactDocumentOptionalParams,
   ) => Promise<BusinessArtifactDownloadBusinessArtifactDocumentResponse>
+  /**
+   * Creates a thread or a message in the activity feed of a Business Artifact Definition, the feed shown
+   * next to
+   * its list of Business Artifacts. The credentials need to manage the Business Artifact Definition.
+   *
+   * A message goes to the top level of the feed, or into a thread when
+   * `businessArtifactFeedItemThreadId` is set.
+   * Only the author of a thread adds messages to it.
+   *
+   * A thread or a message may have a `status` and a `progress`, to tell how the work it describes goes.
+   *
+   * If you want the method to be idempotent, please specify the `id` field in the request body.
+   *
+   * @param businessArtifactFeedItemCreateParams Business Artifact Feed Item to create
+   * @param options The options parameters.
+   */
+  createBusinessArtifactFeedItem: (
+    businessArtifactFeedItemCreateParams: BusinessArtifactFeedItemCreateParams,
+    options?: BusinessArtifactCreateBusinessArtifactFeedItemOptionalParams,
+  ) => Promise<BusinessArtifactCreateBusinessArtifactFeedItemResponse>
+  /**
+   * Returns the requested Business Artifact Feed Item when has access to do it.
+   * @param id The resource ID.
+   * @param options The options parameters.
+   */
+  retrieveBusinessArtifactFeedItem: (
+    id: string,
+    options?: BusinessArtifactRetrieveBusinessArtifactFeedItemOptionalParams,
+  ) => Promise<BusinessArtifactRetrieveBusinessArtifactFeedItemResponse>
+  /**
+   * Replaces what can change of an existing Business Artifact Feed Item: its content, status and
+   * progress. It never
+   * creates an item. Only its author updates it.
+   *
+   * An item in a terminal status (`COMPLETED`, `FAILED`, `CANCELED`) is closed, and so are the messages
+   * of a closed
+   * thread: an update that leaves it as it is succeeds, so a retried call is harmless, and any other
+   * change is
+   * rejected with a conflict. The status of an item cannot be removed once set.
+   *
+   * @param id The resource ID.
+   * @param businessArtifactFeedItemUpdateParams Params used to update the Business Artifact Feed Item.
+   * @param options The options parameters.
+   */
+  updateBusinessArtifactFeedItem: (
+    id: string,
+    businessArtifactFeedItemUpdateParams: BusinessArtifactFeedItemUpdateParams,
+    options?: BusinessArtifactUpdateBusinessArtifactFeedItemOptionalParams,
+  ) => Promise<BusinessArtifactUpdateBusinessArtifactFeedItemResponse>
 }
