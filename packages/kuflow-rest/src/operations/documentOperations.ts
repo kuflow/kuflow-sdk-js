@@ -44,19 +44,28 @@ export class DocumentOperations {
   }
 
   /**
-   * Upload a temporal document that later on must be linked with a domain resource of its target.
+   * Upload a temporal document that later on must be linked with a domain resource.
    *
-   * The target resource is identified by `targetUri`:
+   * The document belongs to the credentials that upload it, and its reference has the URI
+   * `ku:storage-staging/{id}`. Only those credentials can download it and link it, by sending its reference in
+   * the data of any resource they can update; the permission on that resource is checked when the data is saved.
    *
-   * - `ku:process/{processId}`: the document is deleted after 2 hours as long as it has not been linked to the
-   *   process or to one of its process items.
-   * - `ku:business-artifact/{businessArtifactId}`: the document is deleted after 2 hours as long as it has not
-   *   been linked to the business artifact.
+   * Documents not linked are deleted after 2 hours.
    *
-   * A target the credentials cannot read answers `404`.
+   * @param document Document to upload.
+   * @param options The options parameters.
+   */
+  public async uploadDocument(
+    document: Document,
+    options?: DocumentUploadDocumentOptionalParams,
+  ): Promise<DocumentUploadDocumentResponse>
+
+  /**
+   * Upload a temporal document that later on must be linked with a domain resource.
    *
-   * @param targetUri URI of the resource the document is uploaded for. Supported forms are `ku:process/{id}`
-   *                  and `ku:business-artifact/{id}`.
+   * @deprecated use `uploadDocument(document)` instead: the target is ignored.
+   *
+   * @param targetUri Ignored: the document can be linked to any resource the credentials can update.
    * @param document Document to upload.
    * @param options The options parameters.
    */
@@ -64,13 +73,36 @@ export class DocumentOperations {
     targetUri: string,
     document: Document,
     options?: DocumentUploadDocumentOptionalParams,
+  ): Promise<DocumentUploadDocumentResponse>
+
+  public async uploadDocument(
+    documentOrTargetUri: Document | string,
+    documentOrOptions?: Document | DocumentUploadDocumentOptionalParams,
+    options?: DocumentUploadDocumentOptionalParams,
   ): Promise<DocumentUploadDocumentResponse> {
+    // The deprecated signature still sends its target, which the API ignores
+    if (typeof documentOrTargetUri === 'string') {
+      const document = documentOrOptions as Document
+
+      return await this.documentOperations.uploadDocument(
+        document.contentType,
+        document.fileName,
+        document.fileContent,
+        {
+          ...options,
+          targetUri: documentOrTargetUri,
+        },
+      )
+    }
+
+    const document = documentOrTargetUri
+    const optionsUpload = documentOrOptions as DocumentUploadDocumentOptionalParams | undefined
+
     return await this.documentOperations.uploadDocument(
-      targetUri,
       document.contentType,
       document.fileName,
       document.fileContent,
-      options,
+      optionsUpload,
     )
   }
 

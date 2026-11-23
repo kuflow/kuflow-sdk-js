@@ -720,10 +720,9 @@ export const businessArtifactFeedItemUpdateParams: OperationParameter = {
 }
 
 export const targetUri: OperationQueryParameter = {
-  parameterPath: 'targetUri',
+  parameterPath: ['options', 'targetUri'],
   mapper: {
     serializedName: 'targetUri',
-    required: true,
     type: {
       name: 'String',
     },
