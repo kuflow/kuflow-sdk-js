@@ -22,6 +22,7 @@ Set the new version to release:
 ```bash
 npx lerna version --no-push --no-git-tag-version
 npm run format:write
+npm install --package-lock-only
 ```
 
 Commit and push the changes:
