@@ -368,7 +368,7 @@ export interface DocumentReference {
    *
    * Format: `kuflow-file:uri=<ku-uri>;type=<media-type>;size=<bytes>;name=<file-name>;`
    *
-   * Example: `kuflow-file:uri=ku:process/xxx/document/yyy;type=application/json;size=500;name=file.json;`
+   * Example: `kuflow-file:uri=ku:storage-staging/xxx;type=application/json;size=500;name=file.json;`
    *
    * Operations that receive a document uri accept both this full form and the inner `ku:`
    * document uri.
@@ -1106,8 +1106,7 @@ export interface ProcessPageItem extends AbstractDeleted {
   /** Process ID. */
   id: string
   /**
-   * Process resource URI, e.g. usable as `targetUri` of the `uploadDocument` operation.
-   * Format `ku:process/{id}`.
+   * Process resource URI. Format `ku:process/{id}`.
    *
    */
   uri?: string
@@ -1124,8 +1123,7 @@ export interface Process extends AbstractDeleted {
   /** Process ID. */
   id: string
   /**
-   * Process resource URI, e.g. usable as `targetUri` of the `uploadDocument` operation.
-   * Format `ku:process/{id}`.
+   * Process resource URI. Format `ku:process/{id}`.
    *
    */
   uri?: string
@@ -1183,8 +1181,7 @@ export interface BusinessArtifactPageItem extends AbstractDeleted {
   /** Business Artifact ID. */
   id: string
   /**
-   * Business Artifact resource URI, e.g. usable as `targetUri` of the `uploadDocument`
-   * operation. Format `ku:business-artifact/{id}`.
+   * Business Artifact resource URI. Format `ku:business-artifact/{id}`.
    *
    */
   uri?: string
@@ -1197,8 +1194,7 @@ export interface BusinessArtifact extends AbstractDeleted {
   /** Business Artifact ID. */
   id: string
   /**
-   * Business Artifact resource URI, e.g. usable as `targetUri` of the `uploadDocument`
-   * operation. Format `ku:business-artifact/{id}`.
+   * Business Artifact resource URI. Format `ku:business-artifact/{id}`.
    *
    */
   uri?: string
@@ -1858,7 +1854,13 @@ export interface BusinessArtifactUpdateBusinessArtifactFeedItemOptionalParams ex
 export type BusinessArtifactUpdateBusinessArtifactFeedItemResponse = BusinessArtifactFeedItem
 
 /** Optional parameters. */
-export interface DocumentUploadDocumentOptionalParams extends coreClient.OperationOptions {}
+export interface DocumentUploadDocumentOptionalParams extends coreClient.OperationOptions {
+  /**
+   * Ignored: the document can be linked to any resource the credentials can update.
+   *
+   */
+  targetUri?: string
+}
 
 /** Contains response data for the uploadDocument operation. */
 export type DocumentUploadDocumentResponse = DocumentReference

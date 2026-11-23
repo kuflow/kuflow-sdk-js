@@ -365,13 +365,11 @@ export class ProcessOperations {
   }
 
   /**
-   * Upload a temporal document into the process that later on must be linked with a process domain
-   * resource.
-   * <p>
-   * Documents uploaded with this API will be deleted after 2 hours as long as they have not been linked
-   * to a process or process item.
+   * Upload a temporal document that later on must be linked with a domain resource. It behaves as
+   * `DocumentOperations.uploadDocument`: the process of the path must be readable by the credentials, but the
+   * document is not bound to it and can be linked to any resource the credentials can update.
    *
-   * @deprecated use `DocumentOperations.uploadDocument` with `targetUri=ku:process/{processId}` instead.
+   * @deprecated use `DocumentOperations.uploadDocument` instead.
    *
    * @param id The resource ID.
    * @param document Document to upload.

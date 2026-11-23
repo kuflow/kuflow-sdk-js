@@ -37,6 +37,33 @@ const kuFlowRestClient = new KuFlowRestClient({ clientId, clientSecret })
 describe('API /documents', () => {
   describe('POST /documents/~actions/upload', () => {
     test('Check happy path', async () => {
+      const expectedObject: DocumentUploadDocumentResponse = {
+        documentUri: 'kuflow-file:uri=ku:storage-staging/xxx;type=application/json;size=500;name=file.json;',
+      }
+      const document: Document = {
+        contentType: 'application/json',
+        fileName: 'file.json',
+        fileContent: '{}',
+      }
+
+      // Without a target: the query is exactly these two parameters
+      const scope = nock('https://api.kuflow.com/v2024-06-14')
+        .post('/documents/~actions/upload', '{}')
+        .matchHeader('authorization', 'Bearer ' + token)
+        .query({
+          fileContentType: document.contentType,
+          fileName: document.fileName,
+        })
+        .reply(200, JSON.stringify(expectedObject))
+
+      const documentReference = await kuFlowRestClient.documentOperations.uploadDocument(document)
+
+      scope.done()
+
+      expect(documentReference).toStrictEqual(expectedObject)
+    })
+
+    test('Check the deprecated signature still sends its target', async () => {
       const targetUri = `ku:process/${randomUUID()}`
       const expectedObject: DocumentUploadDocumentResponse = {
         documentUri: 'kuflow-file:uri=xxx-yyy-zzz;type=application/json;size=500;name=file.json;',
@@ -57,6 +84,7 @@ describe('API /documents', () => {
         })
         .reply(200, JSON.stringify(expectedObject))
 
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       const documentReference = await kuFlowRestClient.documentOperations.uploadDocument(targetUri, document)
 
       scope.done()

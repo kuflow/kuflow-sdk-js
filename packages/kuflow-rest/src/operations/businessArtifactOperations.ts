@@ -369,14 +369,11 @@ export class BusinessArtifactOperations {
   }
 
   /**
-   * Upload a temporal document into the business artifact that later on must be linked with a business
-   * artifact domain resource.
+   * Upload a temporal document that later on must be linked with a domain resource. It behaves as
+   * `DocumentOperations.uploadDocument`: the business artifact of the path must be readable by the credentials, but
+   * the document is not bound to it and can be linked to any resource the credentials can update.
    *
-   * Documents uploaded with this API will be deleted after 2 hours as long as they have not been linked to a
-   * business artifact.
-   *
-   * @deprecated use `DocumentOperations.uploadDocument` with `targetUri=ku:business-artifact/{businessArtifactId}`
-   * instead.
+   * @deprecated use `DocumentOperations.uploadDocument` instead.
    *
    * @param id The resource ID.
    * @param document Document to upload.
